@@ -29,6 +29,9 @@ export type Database = {
           notifications_ilr_reminder: boolean
           notifications_monthly: boolean
           notifications_return_reminder: boolean
+          notified_120_day_at: string | null
+          notified_150_day_at: string | null
+          notified_monthly_summary_at: string | null
           onboarding_completed: boolean
           updated_at: string
           visa_route: string
@@ -43,6 +46,9 @@ export type Database = {
           notifications_ilr_reminder?: boolean
           notifications_monthly?: boolean
           notifications_return_reminder?: boolean
+          notified_120_day_at?: string | null
+          notified_150_day_at?: string | null
+          notified_monthly_summary_at?: string | null
           onboarding_completed?: boolean
           updated_at?: string
           visa_route?: string
@@ -57,6 +63,9 @@ export type Database = {
           notifications_ilr_reminder?: boolean
           notifications_monthly?: boolean
           notifications_return_reminder?: boolean
+          notified_120_day_at?: string | null
+          notified_150_day_at?: string | null
+          notified_monthly_summary_at?: string | null
           onboarding_completed?: boolean
           updated_at?: string
           visa_route?: string

@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { resend, EMAIL_FROM } from '@/lib/resend'
+import { welcomeEmail } from '@/lib/email/templates'
 
 // Handles the Supabase auth code exchange for:
 //   - Email verification (signup)
@@ -19,6 +22,41 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
+      // Send welcome email for new signups (not password reset or re-login).
+      // We detect a new signup by checking that the account was created within
+      // the last 5 minutes AND this isn't a password reset callback.
+      if (next !== '/auth/new-password') {
+        try {
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user?.email) {
+            const createdAt = new Date(user.created_at).getTime()
+            const isNewUser = Date.now() - createdAt < 5 * 60 * 1000
+
+            if (isNewUser) {
+              // Fetch name from profile (may not exist yet — that's fine)
+              const adminSupabase = createAdminClient()
+              const { data: profile } = await adminSupabase
+                .from('profiles')
+                .select('full_name')
+                .eq('id', user.id)
+                .single()
+
+              const tmpl = welcomeEmail({ name: profile?.full_name ?? null })
+              await resend.emails.send({
+                from: EMAIL_FROM,
+                to: user.email,
+                subject: tmpl.subject,
+                html: tmpl.html,
+                text: tmpl.text,
+              })
+            }
+          }
+        } catch (emailErr) {
+          // Never block login due to email failure
+          console.error('[auth/callback] welcome email error:', emailErr)
+        }
+      }
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

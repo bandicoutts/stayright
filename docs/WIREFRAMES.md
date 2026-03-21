@@ -165,3 +165,4 @@ See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do
 | 2026-03-21 | 1.5 | Full dashboard built: quota ring, qualifying period, recent trips, alert card, ILR timeline, sidebar shell. |
 | 2026-03-21 | 1.6 | Trips built: trip list, detail side panel, 3-step plan/log/edit flow, paywall modal. |
 | 2026-03-21 | 1.7 | Reports and Settings screens built. |
+| 2026-03-21 | 1.8 | Email notifications built (Resend): welcome, threshold 120/150, monthly summary, ILR reminder, return reminder. Cron routes added. |

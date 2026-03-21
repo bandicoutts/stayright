@@ -657,7 +657,7 @@ Account deletion is irreversible in v1. The UI makes this explicit ("This action
 **Decided by:** David Flynn-Coutts
 
 **Decision:**
-Stripe Checkout and Customer Portal sessions are created via Next.js API route handlers (`POST /api/stripe/checkout`, `POST /api/stripe/portal`). The client fetches the session URL and performs `window.location.href = url` to redirect. Webhooks are handled at `POST /api/stripe/webhook` using `request.text()` for raw body access (required for Stripe signature verification). The live URL at time of build is `https://ecstatic-hopper.vercel.app` — the Stripe webhook endpoint and `NEXT_PUBLIC_APP_URL` must be updated when the domain moves to `stayright.app`.
+Stripe Checkout and Customer Portal sessions are created via Next.js API route handlers (`POST /api/stripe/checkout`, `POST /api/stripe/portal`). The client fetches the session URL and performs `window.location.href = url` to redirect. Webhooks are handled at `POST /api/stripe/webhook` using `request.text()` for raw body access (required for Stripe signature verification). The production URL is `https://stayright.vercel.app` (Vercel project: stayright, linked to main branch). The Stripe webhook endpoint is `https://stayright.vercel.app/api/stripe/webhook` and `NEXT_PUBLIC_APP_URL` must be set to `https://stayright.vercel.app` in Vercel environment variables.
 
 **Reasoning:**
 API routes (not Server Actions) are used because Checkout and Portal session creation requires returning a URL to the client for redirect — Server Actions cannot return raw redirect URLs to the browser in this way. The webhook route requires raw body access for signature verification; App Router route handlers receive the raw body via `request.text()` without any parser configuration needed.
@@ -670,6 +670,29 @@ API routes (not Server Actions) are used because Checkout and Portal session cre
 Three Stripe env vars must be set before payments work: `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_ANNUAL`, `STRIPE_PRICE_LIFETIME`. The Stripe webhook endpoint must be registered in the Stripe Dashboard pointing to `{NEXT_PUBLIC_APP_URL}/api/stripe/webhook` with events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Webhooks are idempotent (upsert on `user_id`). Payment failures set `subscriptions.status = 'past_due'`, which triggers the red banner in the app layout.
 
 **Related:** PRD Section 4j; `src/lib/stripe.ts`; `src/app/api/stripe/`; `src/components/app/trips/PaywallModal.tsx`
+
+---
+
+### [DECISION-028] Email notifications: Resend SDK, Vercel Cron Jobs, threshold deduplication via profile columns
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Transactional email is delivered via the Resend SDK (server-only). Scheduled emails (monthly summary, daily threshold/reminder checks) run as Vercel Cron Jobs defined in `vercel.json`. Cron routes are protected by a `CRON_SECRET` env var checked against `Authorization: Bearer <secret>`. Threshold deduplication is handled by three new columns on `profiles`: `notified_120_day_at`, `notified_150_day_at`, `notified_monthly_summary_at`. The monthly cron uses idempotency (checks if already sent this calendar month). The return reminder uses departure_date arithmetic (fires for trips where `return_date IS NULL` AND `departure_date = today - 3`) to avoid a separate tracking column. The welcome email is sent in the auth callback immediately after `exchangeCodeForSession` succeeds for new users (detected by `created_at < 5 min ago`). All email sends are wrapped in try-catch so failures never block the user experience.
+
+**Reasoning:**
+Resend was chosen because it is the only provider currently in `.env.local.example` and it supports React Email / HTML string templates. Vercel Cron Jobs require no additional infrastructure (no separate cron service, no Supabase Edge Functions). Profile columns are the simplest deduplication mechanism that avoids a separate `notification_log` table. The departure_date arithmetic trick for return reminders avoids a `return_reminder_sent_at` column on trips at the cost of missing the reminder if the cron fails on that exact day.
+
+**Alternatives considered:**
+- Supabase Edge Functions with pg_cron — more complex infrastructure, harder to iterate on locally.
+- `notification_log` table for deduplication — cleaner but requires schema migration + join query on every cron run.
+- Return reminder via `return_reminder_sent_at` on trips — more robust but additional column + migration.
+
+**Consequences:**
+Five new env vars required: `RESEND_API_KEY`, `CRON_SECRET`. Domain `stayright.co.uk` must be verified in Resend before sending from `hello@stayright.co.uk`. Until domain is verified, use Resend's test domain. The migration `20260321000003_notification_tracking.sql` must be applied to production Supabase before the cron jobs run.
+
+**Related:** PRD Section 4i; `src/lib/resend.ts`; `src/lib/email/templates.ts`; `src/app/api/cron/`; `vercel.json`
 
 ---
 
@@ -715,3 +738,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.9 | Added DECISION-023 — PDF generation library (@react-pdf/renderer) and client-side execution pattern |
 | 2026-03-21 | 2.0 | Added DECISION-024 — recent exports deferred; DECISION-025 — notes→Reason for Travel; DECISION-026 — hard delete in v1 |
 | 2026-03-21 | 2.1 | Added DECISION-027 — Stripe integration pattern (API routes, client redirect, webhook raw body) |
+| 2026-03-21 | 2.2 | Updated DECISION-027 — production URL is stayright.vercel.app; Added DECISION-028 — Resend email notifications, Vercel Cron Jobs |
