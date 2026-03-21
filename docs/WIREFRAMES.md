@@ -68,10 +68,11 @@ Each subfolder below contains a screen.png and code.html.
 
 **Missing screens (no wireframe):**
 
-| Screen | Status |
-|--------|--------|
-| Sign Up / Log In — tabbed screen | **Built (no wireframe)** |
-| Email verification — post-signup holding screen | **Built (no wireframe)** |
+| Screen | File | Status |
+|--------|------|--------|
+| Sign Up / Log In — tabbed screen | `src/app/(auth)/login/` | **Built (no wireframe)** |
+| Email verification — post-signup holding screen | `src/app/(auth)/auth/verify-email/page.tsx` | **Built (no wireframe)** |
+| Auth callback — Supabase code exchange | `src/app/(auth)/auth/callback/route.ts` | **Built (no wireframe)** |
 
 ### Onboarding
 | Folder | Screen | Status |

@@ -1,14 +1,15 @@
-import { LoginTabs } from './LoginTabs'
+import type { Metadata } from 'next'
+import { LoginForm } from './LoginForm'
 
-export const metadata = {
-  title: 'Log in or Sign up — StayRight',
+export const metadata: Metadata = {
+  title: 'Sign in',
 }
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tab?: string }>
-}) {
-  const { tab } = await searchParams
-  return <LoginTabs defaultTab={tab === 'signup' ? 'signup' : 'login'} />
+interface Props {
+  searchParams: Promise<{ error?: string }>
+}
+
+export default async function LoginPage({ searchParams }: Props) {
+  const params = await searchParams
+  return <LoginForm initialError={params.error} />
 }

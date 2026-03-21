@@ -399,30 +399,30 @@ All routes in the app have Manrope and Inter available via CSS variables `--font
 
 ---
 
-### [DECISION-016] Authentication flow — Server Actions + Supabase SSR + two callback routes
+### [DECISION-016] Auth screens architecture — server/client split and route layout
 **Date:** 2026-03-21
 **Status:** Decided
-**Decided by:** Claude (agent)
+**Decided by:** Engineering
 
 **Decision:**
-All email/password auth operations (sign up, sign in, password reset request, set new password, resend verification, sign out) are implemented as Next.js Server Actions in `src/lib/auth/actions.ts`. Google OAuth is initiated client-side using the Supabase browser client (`src/lib/supabase/client.ts`) and `signInWithOAuth()`. Two Route Handlers handle Supabase's redirect callbacks:
-- `src/app/auth/confirm/route.ts` — verifies OTP token for email confirmation and password recovery links (`?token_hash=...&type=email|recovery`)
-- `src/app/auth/callback/route.ts` — exchanges the PKCE code for a session after Google OAuth (`?code=...`)
+Auth screens live in the `(auth)` route group (`src/app/(auth)/`), sharing a common layout that provides the logo header, centered content area, and footer. Each auth page owns its own content. Pages that handle form submission are client components (`'use client'`). Pages that only need to read `searchParams` or render static content are server components.
 
-The sign-up and log-in flows are combined on the `/login` route as a tabbed interface (`LoginTabs.tsx`). The `/signup` route redirects to `/login?tab=signup` so landing-page CTAs continue to work.
+The login page (`/login`) is split into a thin server component (`page.tsx`) that reads `searchParams` (required in Next.js 16 where `searchParams` is a Promise) and a client component (`LoginForm.tsx`) that holds all form state. This avoids the `useSearchParams()` Suspense boundary requirement.
+
+The Supabase auth code exchange is handled by a Route Handler at `/auth/callback`. The `next` query parameter controls where the user lands after a successful exchange: `/onboarding` for new signups and Google OAuth, `/auth/new-password` for password resets, `/dashboard` as the default.
 
 **Reasoning:**
-Server Actions run on the server, keep credentials server-side only, and integrate naturally with Next.js form submission and `useActionState`. The two-callback pattern is the canonical Supabase SSR pattern for Next.js App Router. Google OAuth initiation is browser-side because `signInWithOAuth` returns a redirect URL that the browser must follow immediately — attempting this in a Server Action can cause issues with PKCE cookie setting before the redirect. Combining sign-in and sign-up on one page reduces page count and matches the PRD "tabbed screen" spec.
+Next.js 16 made `params` and `searchParams` asynchronous (Promises). Client components cannot `await` them, and `useSearchParams()` requires a `<Suspense>` boundary. The server wrapper pattern eliminates both issues without adding a boundary component. The `(auth)` route group gives these screens their own layout (minimal, centred) without affecting URLs.
 
 **Alternatives considered:**
-- Route Handlers for all auth operations — rejected. Server Actions are the Next.js-recommended approach for form submissions; they integrate with `useActionState` for inline error display without extra client-side fetch logic.
-- Separate `/signup` page — rejected. PRD specifies a single tabbed screen. A redirect from `/signup` satisfies existing landing-page CTA links without creating a duplicate form.
-- Server Action for Google OAuth — rejected. `signInWithOAuth` in a Server Action can race with PKCE cookie setting. Browser-side initiation is more reliable and is the pattern documented by Supabase.
+- Use `useSearchParams()` wrapped in `<Suspense>` — works but adds boilerplate for every client page that needs URL params.
+- Put auth pages at root level without a route group — rejected. No shared layout, more repetition across pages.
+- Use middleware to handle auth redirects from the callback — rejected. The callback is a Route Handler; middleware cannot inspect auth codes.
 
 **Consequences:**
-All form error messages are returned from Server Actions and displayed inline via `useActionState`. Auth pages live in the `(auth)` route group with a shared centered layout. The middleware `isAuthRoute` check covers `/login` and `/signup`; other auth-adjacent routes (`/verify-email`, `/reset-password/*`) are intentionally accessible to both authenticated and unauthenticated users.
+Any new auth-related page (e.g. account linking, MFA setup) should follow the same pattern: place in `(auth)/`, use the server wrapper if `searchParams` are needed, keep form logic in a client component. Add the route to the `isAuthRoute` check in `src/middleware.ts` if logged-in users should be redirected away.
 
-**Related:** PRD.md Section 4a; DECISION-014 (Supabase client strategy); DECISION-015 (middleware)
+**Related:** DECISION-009, DECISION-014, DECISION-015, PRD Section 4a
 
 ---
 
