@@ -211,6 +211,49 @@ Any reference to wireframe file paths in documentation must use the landingpage2
 
 ---
 
+### [DECISION-008] Tailwind v4 CSS-based configuration
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering (build constraint)
+
+**Decision:**
+The project uses Tailwind CSS v4, which is installed by `create-next-app@16`. Tailwind v4 does not use a `tailwind.config.ts` file. All theme configuration (colors, fonts, radius) is done via `@theme` blocks in `src/app/globals.css`. Design tokens are also exported as CSS custom properties from `src/styles/tokens.css`.
+
+**Reasoning:**
+`create-next-app@16` (the latest version at the time of initialisation) automatically installs Tailwind v4. Migrating to v3 for a config file would add unnecessary complexity. Tailwind v4's `@theme` blocks provide equivalent configurability and integrate cleanly with CSS custom properties.
+
+**Alternatives considered:**
+- Downgrade to Tailwind v3 — rejected. Would require pinning the dependency and fighting against the framework default.
+- Maintain a `tailwind.config.ts` alongside CSS — rejected. Not valid in Tailwind v4; the JS config is ignored.
+
+**Consequences:**
+Color and font utilities use the `@theme` CSS variable names. Engineers should reference `src/app/globals.css @theme` block to see available utility classes. Custom colors are referenced with `text-[#006948]` syntax or via theme variables.
+
+**Related:** DECISION-001, DECISION-006
+
+---
+
+### [DECISION-009] Root layout holds fonts; marketing layout is a segment wrapper
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering (Next.js App Router constraint)
+
+**Decision:**
+Manrope and Inter fonts are loaded via `next/font/google` in `src/app/layout.tsx` (the root layout). The `(marketing)` route group layout (`src/app/(marketing)/layout.tsx`) is a simple segment wrapper that only exports SEO metadata — it does not include `<html>` or `<body>` tags.
+
+**Reasoning:**
+Next.js App Router requires exactly one `<html>` and `<body>` element, provided by the root layout. Nested layouts must not repeat these. Fonts loaded in the root layout are available to all routes including the future authenticated app under `(app)/`.
+
+**Alternatives considered:**
+- Load fonts separately in each route group layout — rejected. Not permitted; multiple `<html>` elements cause a build error.
+
+**Consequences:**
+All routes in the app have Manrope and Inter available via CSS variables `--font-manrope` and `--font-inter`. The root layout metadata is minimal; route-group and page-level `metadata` exports provide the actual SEO content.
+
+**Related:** DECISION-001, PRD Section 4k
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -243,3 +286,4 @@ Copy this template when adding a new decision:
 |------|---------|--------------|
 | 2026-03-21 | 1.0 | Initial decision log — 6 founding decisions documented |
 | 2026-03-21 | 1.1 | Added DECISION-007 — wireframe folder structure |
+| 2026-03-21 | 1.2 | Added DECISION-008 — Tailwind v4 CSS config; DECISION-009 — root layout fonts |
