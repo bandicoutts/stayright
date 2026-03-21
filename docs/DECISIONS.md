@@ -399,6 +399,33 @@ All routes in the app have Manrope and Inter available via CSS variables `--font
 
 ---
 
+### [DECISION-016] Auth screens architecture — server/client split and route layout
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+Auth screens live in the `(auth)` route group (`src/app/(auth)/`), sharing a common layout that provides the logo header, centered content area, and footer. Each auth page owns its own content. Pages that handle form submission are client components (`'use client'`). Pages that only need to read `searchParams` or render static content are server components.
+
+The login page (`/login`) is split into a thin server component (`page.tsx`) that reads `searchParams` (required in Next.js 16 where `searchParams` is a Promise) and a client component (`LoginForm.tsx`) that holds all form state. This avoids the `useSearchParams()` Suspense boundary requirement.
+
+The Supabase auth code exchange is handled by a Route Handler at `/auth/callback`. The `next` query parameter controls where the user lands after a successful exchange: `/onboarding` for new signups and Google OAuth, `/auth/new-password` for password resets, `/dashboard` as the default.
+
+**Reasoning:**
+Next.js 16 made `params` and `searchParams` asynchronous (Promises). Client components cannot `await` them, and `useSearchParams()` requires a `<Suspense>` boundary. The server wrapper pattern eliminates both issues without adding a boundary component. The `(auth)` route group gives these screens their own layout (minimal, centred) without affecting URLs.
+
+**Alternatives considered:**
+- Use `useSearchParams()` wrapped in `<Suspense>` — works but adds boilerplate for every client page that needs URL params.
+- Put auth pages at root level without a route group — rejected. No shared layout, more repetition across pages.
+- Use middleware to handle auth redirects from the callback — rejected. The callback is a Route Handler; middleware cannot inspect auth codes.
+
+**Consequences:**
+Any new auth-related page (e.g. account linking, MFA setup) should follow the same pattern: place in `(auth)/`, use the server wrapper if `searchParams` are needed, keep form logic in a client component. Add the route to the `isAuthRoute` check in `src/middleware.ts` if logged-in users should be redirected away.
+
+**Related:** DECISION-009, DECISION-014, DECISION-015, PRD Section 4a
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -434,3 +461,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.2 | Added DECISION-008 — Tailwind v4 CSS config; DECISION-009 — root layout fonts |
 | 2026-03-21 | 1.3 | Added DECISION-010 — multi-leg trips as single record; DECISION-011 — Crown Dependencies vs BOTs; DECISION-012 — monthly summary email format |
 | 2026-03-21 | 1.4 | Added DECISION-013 — database schema (3 tables); DECISION-014 — Supabase client strategy; DECISION-015 — middleware session + route protection |
+| 2026-03-21 | 1.5 | Added DECISION-016 — auth screens architecture (route group, server/client split, callback handler) |

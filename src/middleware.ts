@@ -48,7 +48,15 @@ export async function middleware(request: NextRequest) {
   }
 
   // Already signed in — redirect away from auth pages
-  const isAuthRoute = pathname === '/login' || pathname === '/signup'
+  // Note: /auth/callback and /auth/new-password are intentionally excluded:
+  //   callback must be reachable to complete the session exchange,
+  //   new-password requires the recovery session that the callback creates.
+  const isAuthRoute =
+    pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname === '/auth/verify-email' ||
+    pathname === '/auth/reset-password' ||
+    pathname === '/auth/check-email'
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
