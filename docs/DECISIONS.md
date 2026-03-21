@@ -451,6 +451,48 @@ Any new onboarding step added in future must ensure `onboarding_completed` is se
 
 ---
 
+### [DECISION-018] Absence engine as pure TypeScript functions in src/lib/calculations/
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+All 180-day absence calculations live in `src/lib/calculations/absenceEngine.ts` as pure functions with no framework dependencies. The engine exports: `calculateTripAbsenceDays`, `getCurrentRollingWindow`, `getPeakRollingWindow`, `getRiskStatus`, `getQualifyingPeriod`, `calculateWhatIf`, and `isCrownDependency`. Date arithmetic uses UTC to avoid timezone-shift bugs. Dashboard and reports call these functions server-side and pass pre-computed results as props to client components — no calculations happen in the browser.
+
+**Reasoning:**
+Pure functions are trivially unit-testable and can be imported by any server component, route handler, or cron job without framework coupling. UTC date parsing prevents off-by-one errors caused by local timezone offsets (a trip logged as "1 March" in BST must not be read as "28 February" in UTC).
+
+**Alternatives considered:**
+- Inline calculations in server components — rejected. Duplicates logic, makes testing hard.
+- Store calculations in the DB — explicitly rejected in DECISION-005.
+- Client-side calculations — rejected. PRD requires server-side for accuracy.
+
+**Consequences:**
+Any change to calculation logic must be made in `absenceEngine.ts`. The file carries a prominent warning comment. Future unit tests should target this file exclusively.
+
+**Related:** DECISION-002, DECISION-005, PRD Section 4c
+
+---
+
+### [DECISION-019] App shell uses (main) route group with sidebar layout
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+Authenticated app screens (dashboard, trips, reports, settings) live under `src/app/(app)/(main)/`. The `(main)` layout is a server component that fetches the authenticated user and renders the `Sidebar` client component. The `Sidebar` uses `usePathname()` for active-state highlighting and handles sign-out client-side via `supabase.auth.signOut()`. Onboarding uses its own layout outside `(main)` since it has different chrome.
+
+**Alternatives considered:**
+- Single layout for all authenticated routes — rejected. Onboarding needs minimal chrome; the app needs a sidebar.
+- Client-side layout with useEffect for auth check — rejected. Server component auth check is simpler and avoids flash of unauthenticated content.
+
+**Consequences:**
+All future authenticated screens (trips, reports, settings) go in `(app)/(main)/`. Each new route needs to be added to the `NAV_ITEMS` array in `Sidebar.tsx` when it's ready to be navigable.
+
+**Related:** DECISION-009, DECISION-015, DECISION-016
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -488,3 +530,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.4 | Added DECISION-013 — database schema (3 tables); DECISION-014 — Supabase client strategy; DECISION-015 — middleware session + route protection |
 | 2026-03-21 | 1.5 | Added DECISION-016 — auth screens architecture (route group, server/client split, callback handler) |
 | 2026-03-21 | 1.6 | Added DECISION-017 — onboarding state persisted via onboarding_completed column |
+| 2026-03-21 | 1.7 | Added DECISION-018 — absence engine as pure functions; DECISION-019 — (main) route group with sidebar |

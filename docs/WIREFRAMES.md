@@ -91,14 +91,14 @@ Note: The wireframe "walkthrough" step has been cut per PRD — users need data 
 ### Dashboard
 | Folder | Screen | Status |
 |--------|--------|--------|
-| v3_dashboard_overview/ | Main dashboard — default state with trips | Not built |
-| v3_currently_abroad_dashboard/ | Dashboard — currently abroad state | Not built |
+| v3_dashboard_overview/ | Main dashboard — default state with trips | **Built** |
+| v3_currently_abroad_dashboard/ | Dashboard — currently abroad state | **Built** (banner shown when a trip has no return date) |
 
 **Missing screens (no wireframe):**
 
-| Screen | Status |
-|--------|--------|
-| Dashboard — Empty State (new user, no trips) | Not built |
+| Screen | File | Status |
+|--------|------|--------|
+| Dashboard — Empty State (new user, no trips) | `src/app/(app)/(main)/dashboard/page.tsx` | **Built** (empty state handled inline) |
 
 ### Trips
 | Folder | Screen | Status |
@@ -158,3 +158,4 @@ See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do
 | 2026-03-21 | 1.2 | Added Status column to all screen tables. Marked landing page and cookie consent/policy as Built. All authenticated app screens marked Not built. Out-of-scope screens marked Out of scope. |
 | 2026-03-21 | 1.3 | Auth screens built: login/signup, verify-email, password reset (all 3 steps), auth callback. |
 | 2026-03-21 | 1.4 | Onboarding built: welcome, visa setup, bulk trip entry. Dashboard placeholder added. |
+| 2026-03-21 | 1.5 | Full dashboard built: quota ring, qualifying period, recent trips, alert card, ILR timeline, sidebar shell. |
