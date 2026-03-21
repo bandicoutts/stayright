@@ -563,6 +563,30 @@ The live calculation on `/trips/plan` correctly projects the rolling window forw
 
 ---
 
+### [DECISION-023] PDF generation library and execution pattern
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Use `@react-pdf/renderer` v4.3.2 for PDF generation. PDF documents are generated **client-side only**, via a dynamic `import()` inside the "Download PDF" button click handler in `ReportsClient`. The PDF Blob is created in the browser and downloaded directly — no server action, no API route, no Vercel function involvement.
+
+**Reasoning:**
+PDF generation only happens on explicit user action, so there is no need to involve the server. Client-side generation keeps the serverless functions small, avoids cold-start latency for a non-critical path, and simplifies the architecture. The library was verified compatible before installation: peer deps support React `^19.0.0`, no browser-only APIs in the source (`HTMLCanvasElement`, `window`, `document` are absent), ESM-only but handled correctly by Next.js 16 Turbopack via `import()`. On-disk footprint is 3MB — no risk of Vercel's 250MB bundle size limit.
+
+**Alternatives considered:**
+- **pdf-lib** — low-level, no React integration, would require manual coordinate-based layout for every table cell. Viable but significantly more code for the same result.
+- **Puppeteer / Playwright** — headless browser spins up a full Chromium instance. ~400MB+ dependency, Vercel serverless size limit risk, cold starts. Rejected.
+- **Server-side @react-pdf/renderer** (via Server Action or API route) — technically works (no browser APIs required), but adds unnecessary serverless complexity when the trigger is a client button click. Deferred unless server-side PDF generation becomes a requirement (e.g. auto-emailing reports).
+- **@vercel/og / Satori** — designed for OpenGraph image generation (SVG→PNG), not document PDFs. Does not produce multi-page downloadable PDFs. Rejected.
+
+**Consequences:**
+PDF generation is browser-only. If server-side generation is ever required (e.g. automatically emailing a PDF report as part of the monthly notification job), the pattern will need revisiting — most likely a dedicated API route using the server-compatible execution path of `@react-pdf/renderer`.
+
+**Related:** PRD Section 4g; `src/lib/pdf/reportDocuments.tsx`; `src/components/app/reports/ReportsClient.tsx`
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -601,3 +625,5 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.5 | Added DECISION-016 — auth screens architecture (route group, server/client split, callback handler) |
 | 2026-03-21 | 1.6 | Added DECISION-017 — onboarding state persisted via onboarding_completed column |
 | 2026-03-21 | 1.7 | Added DECISION-018 — absence engine as pure functions; DECISION-019 — (main) route group with sidebar |
+| 2026-03-21 | 1.8 | Added DECISION-020 — trip flow pages as standalone routes; DECISION-021 — paywall modal placeholder; DECISION-022 — calculateWhatIf uses return_date as today |
+| 2026-03-21 | 1.9 | Added DECISION-023 — PDF generation library (@react-pdf/renderer) and client-side execution pattern |
