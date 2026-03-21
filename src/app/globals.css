@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme {
+  /* Fonts */
+  --font-manrope: var(--font-manrope);
+  --font-inter: var(--font-inter);
+
+  /* Brand colors */
+  --color-primary: #006948;
+  --color-primary-end: #00855D;
+  --color-background: #F8F9FA;
+  --color-surface: #FFFFFF;
+  --color-surface-low: #F3F4F5;
+  --color-text-primary: #191C1D;
+  --color-text-secondary: #3D4A42;
+  --color-status-amber: #D97706;
+  --color-status-red: #BA1A1A;
+
+  /* Radius */
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
