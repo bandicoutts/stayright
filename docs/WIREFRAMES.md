@@ -12,6 +12,12 @@ These wireframes were created in Google Stitch and represent the intended visual
 
 **When in doubt: PRD > DESIGN.md > Wireframes**
 
+**Status key:**
+- `Built` — screen has been built and matches the PRD spec
+- `Built (no wireframe)` — screen built from PRD spec only; no Stitch export exists
+- `Not built` — screen not yet built
+- `Out of scope` — screen exists in wireframes but is cut from v1
+
 ---
 
 ## Folder Structure
@@ -32,12 +38,19 @@ Both folders preserve the original Stitch export structure. Each screen has its 
 ## Landing Page Screens
 Location: /docs/wireframes/landingpage2/
 
-| File | Description |
-|------|-------------|
-| screen.png | Full landing page — hero, features, pricing, trust bar, footer |
-| code.html | Stitch HTML reference |
+| File | Description | Status |
+|------|-------------|--------|
+| screen.png | Full landing page — hero, features, pricing, trust bar, footer | **Built** |
+| code.html | Stitch HTML reference | — |
 
-Note: The landing page wireframe contains several discrepancies with the PRD. See PRD.md Section 6 for the full list before building.
+Note: The landing page wireframe contains several discrepancies with the PRD. See PRD.md Section 6 for the full list. All discrepancies were resolved in favour of the PRD.
+
+**Screens without a wireframe, built from PRD spec:**
+
+| Screen | Component | Status |
+|--------|-----------|--------|
+| Cookie consent banner | `src/components/marketing/CookieBanner.tsx` | **Built (no wireframe)** |
+| Cookie policy page | `src/app/(marketing)/cookie-policy/page.tsx` | **Built (no wireframe)** |
 
 ---
 
@@ -47,40 +60,72 @@ Location: /docs/wireframes/web2/
 Each subfolder below contains a screen.png and code.html.
 
 ### Authentication
-| Folder | Screen |
+| Folder | Screen | Status |
+|--------|--------|--------|
+| v3_password_reset_1_request/ | Password reset — enter email | Not built |
+| v3_password_reset_2_check_email/ | Password reset — check inbox | Not built |
+| v3_password_reset_3_new_password/ | Password reset — set new password | Not built |
+
+**Missing screens (no wireframe):**
+
+| Screen | Status |
 |--------|--------|
-| v3_password_reset_1_request/ | Password reset — enter email |
-| v3_password_reset_2_check_email/ | Password reset — check inbox |
-| v3_password_reset_3_new_password/ | Password reset — set new password |
+| Sign Up / Log In — tabbed screen | Not built |
+| Email verification — post-signup holding screen | Not built |
 
 ### Onboarding
-| Folder | Screen |
+| Folder | Screen | Status |
+|--------|--------|--------|
+| v3_onboarding_1_welcome/ | Onboarding step 1 — welcome | Not built |
+| v3_onboarding_2_visa_setup/ | Onboarding step 2 — visa route and start date | Not built |
+
+**Missing screens (no wireframe):**
+
+| Screen | Status |
 |--------|--------|
-| v3_onboarding_1_welcome/ | Onboarding step 1 — welcome |
-| v3_onboarding_2_visa_setup/ | Onboarding step 2 — visa route and start date |
+| Onboarding — Bulk Trip Import | Not built |
+| Onboarding — Empty Dashboard (first view after onboarding) | Not built |
 
 ### Dashboard
-| Folder | Screen |
+| Folder | Screen | Status |
+|--------|--------|--------|
+| v3_dashboard_overview/ | Main dashboard — default state with trips | Not built |
+| v3_currently_abroad_dashboard/ | Dashboard — currently abroad state | Not built |
+
+**Missing screens (no wireframe):**
+
+| Screen | Status |
 |--------|--------|
-| v3_dashboard_overview/ | Main dashboard — default state with trips |
-| v3_currently_abroad_dashboard/ | Dashboard — currently abroad state |
+| Dashboard — Empty State (new user, no trips) | Not built |
 
 ### Trips
-| Folder | Screen |
+| Folder | Screen | Status |
+|--------|--------|--------|
+| v3_trip_history/ | Trip history list | Not built |
+| v3_trip_detail_web/ | Trip detail side panel | Not built |
+| v3_log_new_trip_modal/ | Plan a Trip — Step 2 (dates + what-if calculation) | Not built |
+
+**Missing screens (no wireframe):**
+
+| Screen | Status |
 |--------|--------|
-| v3_trip_history/ | Trip history list |
-| v3_trip_detail_web/ | Trip detail side panel |
-| v3_log_new_trip_modal/ | Plan a Trip — Step 2 (dates + what-if calculation) |
+| Plan a Trip — Step 1 Destination | Not built |
+| Plan a Trip — Step 3 Confirm | Not built |
 
 ### Reports
-| Folder | Screen |
-|--------|--------|
-| v3_reports_exports/ | Reports and exports screen |
+| Folder | Screen | Status |
+|--------|--------|--------|
+| v3_reports_exports/ | Reports and exports screen | Not built |
 
 ### Settings
-| Folder | Screen |
+| Folder | Screen | Status |
+|--------|--------|--------|
+| v3_settings/ | Settings screen | Not built |
+
+### Paywall
+| Screen | Status |
 |--------|--------|
-| v3_settings/ | Settings screen |
+| Paywall modal (no wireframe) | Not built |
 
 ---
 
@@ -88,11 +133,11 @@ Each subfolder below contains a screen.png and code.html.
 
 The following folders exist in /docs/wireframes/web2/ but are out of scope for v1. Do not build these.
 
-| Folder | Why out of scope |
-|--------|-----------------|
-| v3_calendar/ | Calendar view cut from v1 — see PRD Section 2.2 |
-| v3_calendar_web/ | Calendar view cut from v1 — see PRD Section 2.2 |
-| v3_trip_detail/ | Use v3_trip_detail_web/ instead — web version |
+| Folder | Why out of scope | Status |
+|--------|-----------------|--------|
+| v3_calendar/ | Calendar view cut from v1 — see PRD Section 2.2 | Out of scope |
+| v3_calendar_web/ | Calendar view cut from v1 — see PRD Section 2.2 | Out of scope |
+| v3_trip_detail/ | Use v3_trip_detail_web/ instead — web version | Out of scope |
 
 ---
 
@@ -108,3 +153,4 @@ See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do
 |------|---------|--------------|
 | 2026-03-21 | 1.0 | Initial wireframes index |
 | 2026-03-21 | 1.1 | Updated folder references to reflect actual structure — landingpage2/ and web2/ |
+| 2026-03-21 | 1.2 | Added Status column to all screen tables. Marked landing page and cookie consent/policy as Built. All authenticated app screens marked Not built. Out-of-scope screens marked Out of scope. |
