@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Check Your Inbox - StayRight</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#005237",
+                        "secondary-fixed": "#9ff4ca",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bfc9c1",
+                        "on-background": "#191c1d",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "on-secondary-fixed": "#002114",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "secondary": "#076c4b",
+                        "on-primary-fixed": "#002114",
+                        "surface": "#f8f9fa",
+                        "secondary-fixed-dim": "#83d7ae",
+                        "on-primary-fixed-variant": "#045137",
+                        "on-primary-container": "#7ec09e",
+                        "tertiary": "#521c1b",
+                        "inverse-surface": "#2e3132",
+                        "inverse-primary": "#92d5b2",
+                        "surface-dim": "#d9dadb",
+                        "on-tertiary-fixed-variant": "#713431",
+                        "outline": "#707973",
+                        "background": "#f8f9fa",
+                        "primary-fixed-dim": "#92d5b2",
+                        "on-secondary-container": "#11704f",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-bright": "#f8f9fa",
+                        "on-surface-variant": "#404943",
+                        "primary-fixed": "#adf1cd",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#3a0a0a",
+                        "tertiary-container": "#6e322f",
+                        "surface-tint": "#276a4e",
+                        "inverse-on-surface": "#f0f1f2",
+                        "tertiary-fixed": "#ffdad7",
+                        "primary": "#003623",
+                        "secondary-container": "#9cf1c7",
+                        "on-tertiary-container": "#ef9c96",
+                        "on-surface": "#191c1d",
+                        "on-error": "#ffffff",
+                        "primary-container": "#004f35",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(0, 79, 53, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center p-4">
+<!-- Mobile Frame Simulation (iPhone 14 Pro aspect ratio approx) -->
+<main class="w-full max-w-[393px] min-h-[852px] bg-surface relative flex flex-col overflow-hidden">
+<!-- Top App Bar / Logo Header -->
+<header class="flex flex-col items-center pt-12 pb-8 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-headline font-bold text-xl tracking-tighter text-primary">StayRight</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<section class="flex-1 flex flex-col items-center px-6 mt-8">
+<!-- Envelope Icon Section -->
+<div class="mb-8 flex items-center justify-center w-24 h-24 rounded-full bg-secondary-container/30">
+<span class="material-symbols-outlined text-[64px] text-secondary" data-icon="mail" style="font-variation-settings: 'FILL' 0;">mail</span>
+</div>
+<!-- Typography Content -->
+<div class="text-center space-y-4 max-w-[280px]">
+<h1 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Check your inbox</h1>
+<p class="font-body text-on-surface-variant leading-relaxed text-sm">
+                    Reset link sent to <span class="font-bold text-secondary">david@example.com</span>. Expires in 24 hours.
+                </p>
+</div>
+<!-- Resend Action -->
+<div class="mt-8">
+<button class="text-secondary font-semibold text-sm hover:opacity-80 transition-opacity active:scale-95 duration-150">
+                    Didn't receive it? Resend
+                </button>
+</div>
+</section>
+<!-- Fixed Bottom Actions -->
+<footer class="px-6 pb-12 pt-4 flex flex-col gap-6 items-center">
+<button class="text-on-surface-variant font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity active:scale-95 duration-150">
+<span class="material-symbols-outlined text-lg" data-icon="arrow_back">arrow_back</span>
+                Back to login
+            </button>
+<!-- Secondary Styled Button as per request (White bg, secondary border/text) -->
+<button class="w-full bg-surface-container-lowest border-2 border-secondary text-secondary font-headline font-bold py-4 rounded-full editorial-shadow active:scale-95 transition-all duration-150 text-base">
+                Open Gmail
+            </button>
+</footer>
+<!-- Bottom Notch Decorator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-on-surface/10 rounded-full"></div>
+</main>
+</body></html>

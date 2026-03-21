@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#2f1500",
+              "primary-fixed-dim": "#83d7ae",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#ffdad5",
+              "secondary": "#904d00",
+              "on-surface": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "surface": "#f8f9fa",
+              "primary": "#004f35",
+              "on-secondary-fixed-variant": "#6e3900",
+              "tertiary-fixed-dim": "#ffb4ab",
+              "surface-tint": "#076c4b",
+              "surface-dim": "#d9dadb",
+              "on-primary-container": "#91e5bc",
+              "on-primary-fixed": "#002114",
+              "on-tertiary-fixed": "#410002",
+              "background": "#f8f9fa",
+              "tertiary": "#8e0009",
+              "surface-bright": "#f8f9fa",
+              "secondary-fixed-dim": "#ffb77d",
+              "surface-container-highest": "#e1e3e4",
+              "secondary-fixed": "#ffdcc3",
+              "outline": "#6f7a72",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#ffc7c0",
+              "inverse-surface": "#2e3132",
+              "primary-fixed": "#9ff4ca",
+              "on-background": "#191c1d",
+              "primary-container": "#006948",
+              "on-primary-fixed-variant": "#005237",
+              "inverse-on-surface": "#f0f1f2",
+              "surface-container-high": "#e7e8e9",
+              "surface-container": "#edeeef",
+              "on-error-container": "#93000a",
+              "on-error": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-surface-variant": "#3f4943",
+              "tertiary-container": "#b61618",
+              "surface-container-low": "#f3f4f5",
+              "on-tertiary-fixed-variant": "#930009",
+              "on-secondary-container": "#663500",
+              "inverse-primary": "#83d7ae",
+              "surface-container-lowest": "#ffffff",
+              "outline-variant": "#bec9c1",
+              "secondary-container": "#fe932c"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .editorial-gradient {
+        background: linear-gradient(145deg, #004f35 0%, #006948 100%);
+      }
+      .botanical-shadow {
+        box-shadow: 0px 12px 32px rgba(0, 33, 20, 0.06);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen flex flex-col items-center justify-center p-6">
+<!-- Top Logo Branding -->
+<header class="mb-12 flex items-center gap-3">
+<div class="w-10 h-10 editorial-gradient rounded-xl flex items-center justify-center botanical-shadow">
+<span class="material-symbols-outlined text-primary-fixed text-2xl" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<h1 class="font-headline font-extrabold text-2xl tracking-tight text-primary">StayRight</h1>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-[480px] space-y-8">
+<!-- Verification Card -->
+<div class="bg-surface-container-lowest rounded-xl botanical-shadow p-10 flex flex-col items-center text-center">
+<!-- Hero Icon -->
+<div class="relative mb-8">
+<div class="w-20 h-20 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="mail">mail</span>
+</div>
+<div class="absolute -bottom-1 -right-1 w-8 h-8 editorial-gradient rounded-full flex items-center justify-center border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined text-sm text-primary-fixed" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+</div>
+<!-- Headline -->
+<h2 class="font-headline text-3xl font-bold text-primary mb-4 leading-tight">Verify your email address</h2>
+<!-- Body Copy -->
+<p class="text-on-surface-variant leading-relaxed mb-8">
+                We've sent a verification link to <span class="text-primary-container font-semibold">david@example.com</span>. Please click the link in that email to confirm your account and continue.
+            </p>
+<!-- Info Context Card (Tonal Layering) -->
+<div class="bg-surface-container-low rounded-lg p-5 w-full mb-8 flex items-start gap-4 text-left">
+<span class="material-symbols-outlined text-primary-container mt-0.5" data-icon="security">security</span>
+<p class="text-sm text-on-surface-variant leading-snug">
+                    This keeps your visa data secure and ensures only you can access your editorial concierge dashboard.
+                </p>
+</div>
+<!-- Primary Action -->
+<button class="w-full editorial-gradient text-on-primary font-semibold py-4 rounded-full botanical-shadow transition-transform active:scale-[0.98] mb-6">
+                Open Gmail
+            </button>
+<!-- Secondary Links Cluster -->
+<div class="flex flex-col gap-4">
+<button class="text-sm font-medium text-primary hover:underline transition-all">
+                    Resend verification email
+                </button>
+<button class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">
+                    Wrong email address?
+                </button>
+</div>
+</div>
+<!-- Support Footer -->
+<footer class="text-center">
+<p class="text-xs font-label uppercase tracking-widest text-outline">
+                Editorial Concierge Service • Secure Portal
+            </p>
+</footer>
+</main>
+</body></html>

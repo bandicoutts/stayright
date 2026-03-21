@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary-container": "#006948",
+                "surface-tint": "#076c4b",
+                "on-tertiary-fixed": "#410002",
+                "on-tertiary-fixed-variant": "#930009",
+                "on-primary-fixed": "#002114",
+                "on-surface": "#191c1d",
+                "surface-bright": "#f8f9fa",
+                "tertiary": "#8e0009",
+                "inverse-surface": "#2e3132",
+                "secondary-fixed": "#ffdcc3",
+                "error": "#ba1a1a",
+                "outline": "#6f7a72",
+                "surface-dim": "#d9dadb",
+                "surface-variant": "#e1e3e4",
+                "secondary-container": "#fe932c",
+                "primary": "#004f35",
+                "on-secondary-fixed": "#2f1500",
+                "tertiary-fixed-dim": "#ffb4ab",
+                "secondary-fixed-dim": "#ffb77d",
+                "surface-container": "#edeeef",
+                "on-error": "#ffffff",
+                "surface-container-low": "#f3f4f5",
+                "primary-fixed-dim": "#83d7ae",
+                "on-tertiary-container": "#ffc7c0",
+                "on-surface-variant": "#3f4943",
+                "surface": "#f8f9fa",
+                "surface-container-highest": "#e1e3e4",
+                "inverse-primary": "#83d7ae",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed-variant": "#005237",
+                "surface-container-high": "#e7e8e9",
+                "tertiary-fixed": "#ffdad5",
+                "background": "#f8f9fa",
+                "tertiary-container": "#b61618",
+                "secondary": "#904d00",
+                "surface-container-lowest": "#ffffff",
+                "on-background": "#191c1d",
+                "on-secondary-fixed-variant": "#6e3900",
+                "on-error-container": "#93000a",
+                "primary-fixed": "#9ff4ca",
+                "on-primary-container": "#91e5bc",
+                "inverse-on-surface": "#f0f1f2",
+                "outline-variant": "#bec9c1",
+                "on-primary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-secondary-container": "#663500"
+              },
+              fontFamily: {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(145deg, #004f35 0%, #006948 100%);
+        }
+        .tonal-lift {
+            box-shadow: 0px 12px 32px rgba(0, 33, 20, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex flex-col items-center py-12 px-6">
+<!-- Brand Identity Anchor -->
+<header class="flex flex-col items-center mb-10 text-center">
+<div class="flex items-center gap-2 mb-8">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<span class="font-headline text-2xl font-extrabold tracking-tight text-on-surface">StayRight</span>
+</div>
+<!-- Progress Indicator -->
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-primary-container"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></div>
+</div>
+</header>
+<!-- Main Focused Journey Canvas -->
+<main class="w-full max-w-[560px]">
+<div class="bg-surface-container-lowest rounded-xl tonal-lift p-10">
+<!-- Editorial Header -->
+<div class="mb-8">
+<span class="font-label text-xs font-bold tracking-[0.05em] text-on-surface-variant uppercase block mb-2">STEP 1 OF 2</span>
+<h1 class="font-headline text-2xl font-bold text-on-surface tracking-tight">Tell us about your visa</h1>
+</div>
+<!-- Form Content -->
+<div class="space-y-6">
+<!-- Field: Visa Route -->
+<div class="space-y-2">
+<label class="font-label text-[11px] font-bold text-on-surface-variant uppercase tracking-wider ml-1">Visa route</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 appearance-none text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20 cursor-pointer">
+<option selected="">Skilled Worker</option>
+<option>Student Visa</option>
+<option>Global Talent</option>
+<option>Health and Care Worker</option>
+</select>
+<div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-outline text-xl">expand_more</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Field: Visa Start Date -->
+<div class="space-y-2">
+<label class="font-label text-[11px] font-bold text-on-surface-variant uppercase tracking-wider ml-1">Visa start date</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20" type="text" value="14 January 2023"/>
+<div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-outline text-xl">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Field: UK Entry Date -->
+<div class="space-y-2">
+<label class="font-label text-[11px] font-bold text-on-surface-variant uppercase tracking-wider ml-1">UK entry date</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 px-5 text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20" type="text" value="14 January 2023"/>
+<div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-outline text-xl">calendar_today</span>
+</div>
+</div>
+<p class="text-[11px] text-on-surface-variant/70 leading-relaxed px-1">Check the stamp in your passport if you're unsure.</p>
+</div>
+</div>
+<!-- Auto-calculated Result Card -->
+<div class="bg-surface-container-low rounded-xl p-6 mt-4 border-l-4 border-primary-container">
+<div class="flex gap-4">
+<div class="flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-primary-container text-xl" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div class="space-y-1">
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Based on your route, your qualifying period is <span class="font-bold text-on-surface">5 years</span>.
+                            </p>
+<p class="text-sm text-on-surface-variant">
+                                ILR eligibility: <span class="font-bold text-primary-container">14 January 2028</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Primary Action -->
+<div class="pt-4 space-y-4">
+<button class="w-full bg-primary-gradient text-white font-semibold py-4 rounded-full flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-[0.98]">
+                        Continue
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+<button class="w-full text-on-surface-variant font-medium py-2 flex items-center justify-center gap-2 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                        Back
+                    </button>
+</div>
+</div>
+</div>
+<!-- Footer Help Context -->
+<footer class="mt-8 text-center">
+<p class="text-xs text-on-surface-variant/60 font-medium">
+                Need help with your application? <a class="text-primary-container font-bold hover:underline underline-offset-4" href="#">Contact concierge</a>
+</p>
+</footer>
+</main>
+</body></html>

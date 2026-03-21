@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StayRight | UK Visa Absence Tracker</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#006948",
+              "primary-variant": "#006948",
+              "background": "#F8F9FA",
+              "on-surface": "#191C1D",
+              "on-surface-variant": "#3f4943",
+              "secondary-container": "#c3e5d1",
+              "on-secondary-container": "#006948",
+              "surface-container": "#edeeef",
+              "surface-container-high": "#e7e8e9",
+              "surface-container-highest": "#e1e3e4",
+              "surface-container-low": "#f3f4f5",
+              "surface-container-lowest": "#ffffff",
+              "outline-variant": "#bec9c1",
+              "primary-fixed": "#c3e5d1",
+              "secondary-fixed": "#c8ead6",
+              "tertiary-fixed": "#ffdad7",
+              "secondary": "#006948",
+              "tertiary": "#732d2b",
+              "primary-fixed-dim": "#adcebb",
+              "secondary-fixed-dim": "#adcebb",
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+                "DEFAULT": "0.75rem",
+                "lg": "0.75rem",
+                "xl": "0.75rem",
+                "2xl": "1rem",
+                "3xl": "1.5rem",
+                "full": "9999px"
+            },
+          },
+        },
+      }</script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .bg-primary-gradient {
+        background-color: #006948 !important;
+        background-image: none !important;
+      }
+      /* Remove drop shadows as per request */
+      .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl {
+        box-shadow: none !important;
+      }
+      .tonal-card {
+        background-color: #ffffff;
+        border: none !important;
+      }
+      .circular-progress {
+        background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
+                    conic-gradient(#006948 calc(42/180 * 100%), #e7e8e9 0);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-outline-variant/10">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+<div class="flex items-center gap-2 text-2xl font-extrabold tracking-tighter text-[#191C1D] font-headline">
+<span class="material-symbols-outlined text-[#006948]" style="font-variation-settings: 'FILL' 1;">shield</span>
+            StayRight
+        </div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold tracking-tight" href="#">Features</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold tracking-tight" href="#">Pricing</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold tracking-tight" href="#">About</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold tracking-tight" href="#">Blog</a>
+</div>
+<div class="flex items-center space-x-4">
+<a class="text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">Login</a>
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">Get Started Free</button>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-6 py-16 md:py-24">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<span class="inline-block px-3 py-1 bg-secondary-container text-[#006948] text-xs font-bold tracking-widest uppercase rounded-full">Editorial Concierge</span>
+<h1 class="text-5xl md:text-7xl font-extrabold font-headline leading-[1.1] tracking-tight text-[#006948]">
+                    Know exactly where you <i class="text-[#006948]">stand.</i>
+</h1>
+<p class="text-lg md:text-xl text-on-surface-variant max-w-xl leading-relaxed">
+                    The definitive digital ledger for ILR and British Citizenship eligibility. Automated, compliant, and elegantly simple.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">
+                        Start Free Trial
+                    </button>
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">
+                        See how it works →
+                    </button>
+</div>
+</div>
+<div class="relative">
+<div class="aspect-square bg-surface-container-low rounded-3xl overflow-hidden flex items-center justify-center p-8">
+<!-- App Dashboard Card Mockup -->
+<div class="w-full max-w-sm bg-white rounded-2xl p-8 relative tonal-card border border-outline-variant/10">
+<div class="absolute top-6 right-6 px-2 py-1 bg-[#006948]/10 text-[#006948] text-[10px] font-bold rounded-md uppercase tracking-wider">SAFE</div>
+<div class="text-center mb-8">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Current Quota</p>
+<div class="relative inline-flex items-center justify-center">
+<div class="circular-progress w-40 h-40 rounded-full flex items-center justify-center">
+<div class="text-center">
+<span class="block text-2xl font-extrabold text-[#006948]">42 / 180</span>
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Days Used</span>
+</div>
+</div>
+</div>
+<p class="mt-4 text-sm font-semibold text-[#006948]">138 days remaining</p>
+</div>
+<div class="space-y-3">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/10 pb-2">Recent Trips</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#006948] text-lg">flight_takeoff</span>
+<span class="text-sm font-medium text-on-surface">Lisbon, Portugal</span>
+</div>
+<span class="text-xs text-on-surface-variant">12 Days</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#006948] text-lg">flight_takeoff</span>
+<span class="text-sm font-medium text-on-surface">New York, USA</span>
+</div>
+<span class="text-xs text-on-surface-variant">8 Days</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="bg-surface-container-low py-24">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16 space-y-4">
+<p class="text-[#006948] text-xs font-bold tracking-[0.2em] uppercase">The Features</p>
+<h2 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface">Compliance, <span class="italic text-[#006948]">Simplified.</span></h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto leading-relaxed">Everything you need to maintain your residency status without the spreadsheets or the stress.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Feature 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-[#006948] mb-6">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-3 text-on-surface">Rolling 12-month tracker</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Visual calendar and running total against the 180-day ILR limit</p>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-[#006948] mb-6">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-3 text-on-surface">Trip logging</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Log departures and returns in seconds from web or mobile</p>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-[#006948] mb-6">
+<span class="material-symbols-outlined">gpp_maybe</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-3 text-on-surface">Instant risk status</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Green / amber / red compliance indicator at a glance</p>
+</div>
+<!-- Feature 4 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed-dim flex items-center justify-center text-[#006948] mb-6">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-3 text-on-surface">Citizenship mode</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Switch to track the 450-day / 90-day British citizenship thresholds</p>
+</div>
+<!-- Feature 5 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed-dim flex items-center justify-center text-[#006948] mb-6">
+<span class="material-symbols-outlined">notifications_active</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-3 text-on-surface">Smart alerts</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Push and email reminders before you approach your limit</p>
+</div>
+<!-- Feature 6 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-outline-variant/30 flex items-center justify-center text-on-surface mb-6">
+<span class="material-symbols-outlined">ios_share</span>
+</div>
+<h3 class="text-xl font-bold font-headline mb-3 text-on-surface">Export ready</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Generate absence tables formatted for your ILR or SET(O) application</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="bg-surface-container py-24">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16 space-y-4">
+<h2 class="text-4xl font-extrabold font-headline tracking-tight text-[#006948]">Simple, transparent pricing.</h2>
+<p class="text-on-surface-variant">Choose the plan that fits your visa journey.</p>
+</div>
+<div class="flex items-center justify-center gap-4 mb-12">
+<span class="text-sm font-semibold text-on-surface">Monthly</span>
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">
+<div class="w-4 h-4 bg-white rounded-full translate-x-6"></div>
+</button>
+<span class="text-sm font-semibold text-on-surface">Annual</span>
+<span class="bg-[#D97706]/10 text-[#D97706] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Save 30%</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+<!-- Free Plan -->
+<div class="bg-surface-container-lowest p-8 rounded-xl flex flex-col border-outline-variant/20 tonal-card">
+<div class="mb-8">
+<h3 class="text-lg font-bold font-headline mb-2 text-on-surface">Free</h3>
+<div class="flex items-baseline">
+<span class="text-4xl font-extrabold font-headline text-on-surface">£0</span>
+<span class="text-on-surface-variant text-sm ml-2">/month</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Up to 10 trips logged
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Basic 180-day tracker
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Web only
+                        </li>
+</ul>
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">Get Started</button>
+</div>
+<!-- Pro Plan -->
+<div class="bg-surface-container-lowest p-8 rounded-xl flex flex-col border-2 border-[#006948] relative scale-105 z-10 tonal-card">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#006948] text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1 rounded-full">Most Popular</div>
+<div class="mb-8">
+<h3 class="text-lg font-bold font-headline mb-2 text-on-surface">Pro</h3>
+<div class="flex items-baseline">
+<span class="text-4xl font-extrabold font-headline text-on-surface">£2.99</span>
+<span class="text-on-surface-variant text-sm ml-2">/month</span>
+</div>
+<p class="text-xs text-[#006948] font-semibold mt-1">or £24.99/year</p>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Unlimited trips</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Rolling analysis</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Citizenship mode</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Smart push alerts</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Mobile app access</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> PDF audit-ready export</li>
+</ul>
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">Start Free Trial</button>
+</div>
+<!-- Family Plan -->
+<div class="bg-surface-container-lowest p-8 rounded-xl flex flex-col border-outline-variant/20 tonal-card">
+<div class="mb-8">
+<h3 class="text-lg font-bold font-headline mb-2 text-on-surface">Family</h3>
+<div class="flex items-baseline">
+<span class="text-4xl font-extrabold font-headline text-on-surface">£4.99</span>
+<span class="text-on-surface-variant text-sm ml-2">/month</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Everything in Pro</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Up to 4 profiles for dependants</li>
+<li class="flex items-center gap-3 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-[#006948] text-lg">check_circle</span> Shared family dashboard</li>
+</ul>
+<button class="px-6 py-2 bg-[#006948] text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">Start Free Trial</button>
+</div>
+</div>
+<p class="text-center mt-12 text-on-surface-variant text-sm font-medium">Cancel anytime. No hidden fees. Prices in GBP.</p>
+</div>
+</section>
+<!-- Final CTA (Bento Style) -->
+<section class="max-w-7xl mx-auto px-6 py-24">
+<div class="bg-[#006948] rounded-3xl p-12 md:p-24 overflow-hidden relative">
+<div class="relative z-10 max-w-2xl">
+<h2 class="text-4xl md:text-5xl font-extrabold font-headline text-white mb-6 leading-tight">Ready to secure your UK settlement?</h2>
+<p class="text-white/80 text-lg mb-10 leading-relaxed">Join 15,000+ visa holders who have stopped worrying about absence limits and started planning their future.</p>
+<button class="px-6 py-2 bg-white text-[#006948] text-sm font-bold rounded-xl active:scale-95 transition-transform">Create Free Account</button>
+</div>
+<!-- Abstract Decorative Element -->
+<div class="absolute -right-24 -bottom-24 w-96 h-96 bg-primary-variant rounded-full opacity-30 blur-3xl"></div>
+<div class="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full opacity-10 blur-3xl"></div>
+</div>
+</section>
+<!-- Trust Bar moved here -->
+<section class="bg-surface-container-low py-12 border-outline-variant/10">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+<div class="flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-[#006948] text-2xl">lock</span>
+<div>
+<p class="text-sm font-bold text-on-surface">GDPR Compliant</p>
+<p class="text-[11px] uppercase tracking-wider text-on-surface-variant">Enterprise security</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-[#006948] text-2xl">database</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Data stored in UK</p>
+<p class="text-[11px] uppercase tracking-wider text-on-surface-variant">Sovereign infrastructure</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-[#006948] text-2xl">groups</span>
+<div>
+<p class="text-sm font-bold text-on-surface">10,000+ visa holders</p>
+<p class="text-[11px] uppercase tracking-wider text-on-surface-variant">Trusted at scale</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-[#006948] text-2xl">info</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Not legal advice</p>
+<p class="text-[11px] uppercase tracking-wider text-on-surface-variant">Always verify with UKVI</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#191C1D] text-white w-full pt-16 pb-8 border-white/5">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-12 mb-16">
+<div class="col-span-2">
+<div class="flex items-center gap-2 text-2xl font-bold font-headline mb-6 text-white">
+<span class="material-symbols-outlined text-[#006948]" style="font-variation-settings: 'FILL' 1;">shield</span>
+          StayRight
+        </div>
+<p class="text-white/70 text-sm leading-relaxed max-w-xs">Master your UK immigration compliance with precision.</p>
+</div>
+<div>
+<h4 class="font-headline uppercase tracking-widest text-xs font-bold text-white mb-6">PRODUCT</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Features</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Pricing</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Changelog</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline uppercase tracking-widest text-xs font-bold text-white mb-6">LEGAL</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Terms of Service</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Cookie Policy</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">GDPR</a></li>
+</ul>
+</div>
+<div class="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-1">
+<div>
+<h4 class="font-headline uppercase tracking-widest text-xs font-bold text-white mb-6">SUPPORT</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Help Centre</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Contact</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Status</a></li>
+</ul>
+</div>
+<div class="mt-12 md:mt-0">
+<h4 class="font-headline uppercase tracking-widest text-xs font-bold text-white mb-6">COMPANY</h4>
+<ul class="space-y-4">
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">About Us</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Blog</a></li>
+<li><a class="text-white/60 hover:text-white transition-colors text-sm" href="#">Careers</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-white/50 text-sm">© 2025 StayRight UK. All rights reserved.</p>
+<div class="flex items-center gap-8">
+<div class="flex gap-5">
+<a class="text-white/60 hover:text-white transition-colors" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+</a>
+<a class="text-white/60 hover:text-white transition-colors" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451c.98 0 1.775-.773 1.775-1.729V1.729C24 .774 23.205 0 22.225 0z"></path></svg>
+</a>
+</div>
+<div class="flex items-center gap-2 text-white/60 text-sm font-medium cursor-pointer hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">language</span>
+          English (GB)
+        </div>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

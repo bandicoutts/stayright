@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f3f4f5",
+              "on-primary-fixed": "#002114",
+              "on-tertiary-fixed-variant": "#930009",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed-variant": "#005237",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#410002",
+              "tertiary-fixed": "#ffdad5",
+              "inverse-primary": "#83d7ae",
+              "secondary-fixed-dim": "#ffb77d",
+              "on-surface": "#191c1d",
+              "primary": "#004f35",
+              "on-primary-container": "#91e5bc",
+              "outline-variant": "#bec9c1",
+              "secondary": "#904d00",
+              "on-secondary-fixed": "#2f1500",
+              "surface-tint": "#076c4b",
+              "on-error-container": "#93000a",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#ffb4ab",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed-variant": "#6e3900",
+              "secondary-container": "#fe932c",
+              "error": "#ba1a1a",
+              "tertiary": "#8e0009",
+              "surface": "#f8f9fa",
+              "surface-container": "#edeeef",
+              "surface-container-highest": "#e1e3e4",
+              "on-background": "#191c1d",
+              "inverse-surface": "#2e3132",
+              "tertiary-container": "#b61618",
+              "surface-variant": "#e1e3e4",
+              "on-secondary": "#ffffff",
+              "primary-fixed": "#9ff4ca",
+              "on-tertiary-container": "#ffc7c0",
+              "secondary-fixed": "#ffdcc3",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f0f1f2",
+              "surface-bright": "#f8f9fa",
+              "primary-fixed-dim": "#83d7ae",
+              "primary-container": "#006948",
+              "background": "#f8f9fa",
+              "outline": "#6f7a72",
+              "on-secondary-container": "#663500",
+              "on-surface-variant": "#3f4943",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .botanical-shadow {
+            box-shadow: 0px 12px 32px rgba(0, 33, 20, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex flex-col items-center justify-center p-6">
+<!-- Top Branding Anchor (Logo above card) -->
+<div class="mb-12">
+<h1 class="font-headline font-bold text-2xl tracking-tighter text-primary">StayRight</h1>
+</div>
+<!-- Main Auth Canvas (Centred Card) -->
+<main class="w-full max-w-[480px]">
+<div class="bg-surface-container-lowest rounded-xl botanical-shadow p-8 md:p-10 flex flex-col gap-8">
+<!-- Navigation Back Link -->
+<div class="flex items-center">
+<a class="text-primary-container hover:text-primary transition-colors flex items-center gap-2 group" href="#">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+<span class="font-body text-sm font-medium">Back to login</span>
+</a>
+</div>
+<!-- Heading Section -->
+<div class="flex flex-col gap-3">
+<h2 class="font-headline text-2xl md:text-3xl font-bold text-on-surface tracking-tight">Forgot your password?</h2>
+<p class="font-body text-on-surface-variant leading-relaxed">Enter your email address and we'll send you a link to reset your password.</p>
+</div>
+<!-- Form Content -->
+<form class="flex flex-col gap-6" onsubmit="return false;">
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="font-label text-[0.6875rem] font-semibold tracking-widest text-on-surface-variant uppercase" for="email">
+                        EMAIL ADDRESS
+                    </label>
+<input class="w-full bg-surface-container-low border-none rounded-lg px-4 py-3.5 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary-fixed transition-all outline-none" id="email" placeholder="your@email.com" type="email"/>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-gradient-to-br from-[#004f35] to-[#006948] hover:from-[#003a27] hover:to-[#004f35] text-on-primary font-body font-semibold py-4 px-6 rounded-full botanical-shadow transition-transform active:scale-[0.98] duration-200" type="submit">
+                    Send reset link
+                </button>
+</form>
+<!-- Bottom Support Context (Internal Navigation suppression applies, so minimal footer info) -->
+<div class="pt-4 flex justify-center">
+<p class="font-label text-[0.6875rem] text-slate-400 tracking-wider uppercase">StayRight Editorial Concierge</p>
+</div>
+</div>
+</main>
+<!-- Global Footer (Suppressed based on Transactional/Task-Focused rule, but maintaining layout balance with a minimal copyright for branding) -->
+<footer class="mt-12 opacity-40 hover:opacity-100 transition-opacity">
+<div class="flex flex-col items-center gap-4">
+<span class="font-label text-[0.75rem] tracking-widest uppercase text-slate-500">© 2024 StayRight Editorial Concierge</span>
+</div>
+</footer>
+</body></html>

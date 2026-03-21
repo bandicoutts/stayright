@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "gen:types": "npx supabase gen types typescript --project-id rzulxdaiqdqsmckanebd > src/types/database.ts"
+    "dev": "npm --prefix .claude/worktrees/ecstatic-hopper run dev",
+    "build": "npm --prefix .claude/worktrees/ecstatic-hopper run build",
+    "start": "npm --prefix .claude/worktrees/ecstatic-hopper run start",
+    "lint": "npm --prefix .claude/worktrees/ecstatic-hopper run lint",
+    "gen:types": "npm --prefix .claude/worktrees/ecstatic-hopper run gen:types"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",

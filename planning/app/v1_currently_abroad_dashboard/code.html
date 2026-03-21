@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StayRight Dashboard — Currently Abroad</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed-dim": "#83d7ae",
+                        "on-surface": "#191c1d",
+                        "tertiary-fixed": "#ffdad7",
+                        "inverse-primary": "#92d5b2",
+                        "on-tertiary-fixed": "#3a0a0a",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed": "#002114",
+                        "secondary": "#076c4b",
+                        "outline-variant": "#bfc9c1",
+                        "primary": "#003623",
+                        "on-primary-container": "#7ec09e",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-fixed-variant": "#713431",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#045137",
+                        "on-primary-fixed": "#002114",
+                        "tertiary-fixed-dim": "#ffb3ae",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#9cf1c7",
+                        "on-secondary-fixed-variant": "#005237",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#276a4e",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#6e322f",
+                        "surface-variant": "#e1e3e4",
+                        "on-background": "#191c1d",
+                        "inverse-surface": "#2e3132",
+                        "primary-fixed": "#adf1cd",
+                        "on-tertiary-container": "#ef9c96",
+                        "surface-container": "#edeeef",
+                        "surface": "#f8f9fa",
+                        "tertiary": "#521c1b",
+                        "surface-container-highest": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "primary-container": "#004f35",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#404943",
+                        "outline": "#707973",
+                        "on-secondary-container": "#11704f",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "secondary-fixed": "#9ff4ca",
+                        "primary-fixed-dim": "#92d5b2",
+                        "surface-bright": "#f8f9fa",
+                        "amber-custom": "#D97706",
+                        "brand-green": "#006948",
+                        "brand-green-bright": "#00855D"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/85 backdrop-blur-md flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant/10">
+<img class="w-full h-full object-cover" data-alt="User profile portrait in soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3sYq_6hL_-RVvnJgOtUFxXxWam2eDY4ZmDTg6LAC9XPgEaNAxWb4Q7yKEfmapKg2YHXwn9gJBcYgeZIllThevhcxe0EWArYX7CyP3Awnqv99U89V0aEPl4sC3vAVgTNcjTNqDsnNO_HGQWcj5M60bxrbayUjBs9FNCaLAOiHehyYsJ2W9bxWl53Ydo2iA75oaocuw5Fbpr48hhOaRy_Aja0_fT_k08IObzLQrL269VJQV5NPzoldVTXIpVT6-jvmNoMJ7UeezVQ4"/>
+</div>
+<span class="text-2xl font-extrabold tracking-tighter text-emerald-900">StayRight</span>
+</div>
+<div class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-emerald-100/50 transition-colors">
+<span class="material-symbols-outlined text-emerald-900">notifications</span>
+<!-- Amber Notification Dot -->
+<div class="absolute top-2 right-2 w-2.5 h-2.5 bg-[#D97706] rounded-full border-2 border-slate-50"></div>
+</div>
+</header>
+<main class="mt-20 px-6 space-y-8">
+<!-- Status Banner -->
+<section class="bg-[#D97706]/10 rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#D97706]/20 flex items-center justify-center text-[#D97706]">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+<div>
+<p class="text-on-surface font-bold text-sm">Currently abroad · Day 8</p>
+<p class="text-on-surface-variant text-xs font-medium">Auckland, New Zealand</p>
+</div>
+</div>
+<a class="text-[#006948] text-xs font-bold tracking-tight" href="#">Log Return →</a>
+</section>
+<!-- Quota Ring Card -->
+<section class="space-y-4">
+<div class="bg-surface-container-lowest rounded-xl p-8 flex flex-col items-center justify-center shadow-sm">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Progress Ring -->
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-high" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="12"></circle>
+<circle class="text-primary" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-dasharray="552.92" stroke-dashoffset="375" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<div class="flex items-baseline">
+<span class="text-4xl font-extrabold font-headline tracking-tighter text-on-surface">58*</span>
+</div>
+<span class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">/ 180 days</span>
+</div>
+</div>
+<div class="mt-6 text-center space-y-2">
+<span class="inline-block px-3 py-1 bg-[#D97706]/10 text-[#D97706] text-[10px] font-extrabold tracking-widest uppercase rounded-full">ABROAD</span>
+<p class="text-xl font-bold text-[#D97706]">122 days remaining</p>
+<p class="text-[10px] text-on-surface-variant italic leading-tight">* includes current trip</p>
+</div>
+</div>
+</section>
+<!-- Active Trip Card -->
+<section class="space-y-4">
+<h2 class="text-sm font-bold tracking-widest text-on-surface-variant uppercase">Current Destination</h2>
+<div class="bg-[#D97706]/10 rounded-xl p-6 space-y-6">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<span class="text-3xl">🇳🇿</span>
+<div>
+<h3 class="text-lg font-bold text-on-surface">Auckland, New Zealand</h3>
+<p class="text-sm text-on-surface-variant">Departed 13 March 2026 · Day 8</p>
+</div>
+</div>
+</div>
+<button class="w-full py-4 rounded-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white font-bold text-sm shadow-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-base">flight_land</span>
+                    Log Return
+                </button>
+</div>
+</section>
+<!-- Recent Trips -->
+<section class="space-y-4 pb-12">
+<div class="flex justify-between items-center">
+<h2 class="text-sm font-bold tracking-widest text-on-surface-variant uppercase">Recent History</h2>
+<a class="text-xs font-bold text-brand-green" href="#">View All</a>
+</div>
+<div class="space-y-3">
+<!-- Trip Item 1 (Active) -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="text-2xl">🇳🇿</span>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Auckland, NZ</h4>
+<p class="text-xs text-[#D97706] font-semibold">In progress · 8 days</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Trip Item 2 (Past) -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="text-2xl">🇫🇷</span>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Paris, France</h4>
+<p class="text-xs text-on-surface-variant">Feb 12 - Feb 19 · 7 days</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Trip Item 3 (Past) -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between opacity-80">
+<div class="flex items-center gap-4">
+<span class="text-2xl">🇯🇵</span>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Tokyo, Japan</h4>
+<p class="text-xs text-on-surface-variant">Jan 05 - Jan 18 · 13 days</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-28 right-6 w-14 h-14 rounded-2xl bg-primary text-white shadow-xl flex items-center justify-center z-50">
+<span class="material-symbols-outlined text-2xl">keyboard_return</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-8 pt-4 bg-slate-50/85 backdrop-blur-md z-50 rounded-t-3xl shadow-[0px_-12px_32px_rgba(0,79,53,0.06)]">
+<div class="flex flex-col items-center justify-center bg-emerald-200 text-emerald-900 rounded-full px-5 py-1.5 transition-all">
+<span class="material-symbols-outlined fill-icon" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05rem] font-semibold mt-1">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-emerald-800/50 px-5 py-1.5 hover:bg-emerald-100 transition-colors">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05rem] font-semibold mt-1">Trips</span>
+</div>
+<div class="flex flex-col items-center justify-center text-emerald-800/50 px-5 py-1.5 hover:bg-emerald-100 transition-colors">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05rem] font-semibold mt-1">Calendar</span>
+</div>
+<div class="flex flex-col items-center justify-center text-emerald-800/50 px-5 py-1.5 hover:bg-emerald-100 transition-colors">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05rem] font-semibold mt-1">Reports</span>
+</div>
+<div class="flex flex-col items-center justify-center text-emerald-800/50 px-5 py-1.5 hover:bg-emerald-100 transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05rem] font-semibold mt-1">Settings</span>
+</div>
+</nav>
+</body></html>

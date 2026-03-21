@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trip Detail — AbsenceTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#045137",
+              "surface-dim": "#d9dadb",
+              "on-secondary-fixed": "#002114",
+              "on-primary-container": "#7ec09e",
+              "primary-fixed": "#adf1cd",
+              "on-tertiary": "#ffffff",
+              "surface-tint": "#276a4e",
+              "secondary-fixed": "#9ff4ca",
+              "secondary-container": "#9cf1c7",
+              "inverse-primary": "#92d5b2",
+              "background": "#f8f9fa",
+              "tertiary": "#521c1b",
+              "outline": "#707973",
+              "primary-container": "#004f35",
+              "on-tertiary-container": "#ef9c96",
+              "on-secondary": "#ffffff",
+              "surface-container-highest": "#e1e3e4",
+              "on-secondary-fixed-variant": "#005237",
+              "on-tertiary-fixed-variant": "#713431",
+              "on-primary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "outline-variant": "#bfc9c1",
+              "tertiary-fixed": "#ffdad7",
+              "on-primary-fixed": "#002114",
+              "on-error-container": "#93000a",
+              "on-background": "#191c1d",
+              "surface-container-lowest": "#ffffff",
+              "surface": "#f8f9fa",
+              "primary": "#003623",
+              "on-surface": "#191c1d",
+              "surface-bright": "#f8f9fa",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "tertiary-container": "#6e322f",
+              "secondary": "#076c4b",
+              "inverse-on-surface": "#f0f1f2",
+              "inverse-surface": "#2e3132",
+              "on-error": "#ffffff",
+              "on-secondary-container": "#11704f",
+              "surface-container-low": "#f3f4f5",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#3a0a0a",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#404943",
+              "surface-container": "#edeeef",
+              "primary-fixed-dim": "#92d5b2",
+              "secondary-fixed-dim": "#83d7ae"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background selection:bg-secondary-container">
+<!-- Screen Wrapper (iPhone 14 Pro 390px simulated) -->
+<div class="max-w-[390px] mx-auto min-h-screen relative flex flex-col pb-32">
+<!-- TopAppBar (Customized for Detail View) -->
+<header class="sticky top-0 z-50 bg-background/80 backdrop-blur-xl px-4 py-4 flex justify-between items-center">
+<button class="w-10 h-10 flex items-center justify-start text-on-background transition-all active:scale-90">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="font-headline font-bold text-lg tracking-tight text-on-background">Trip Detail</h1>
+<div class="flex items-center gap-3">
+<button class="text-secondary transition-all active:scale-90">
+<span class="material-symbols-outlined text-[22px]">edit</span>
+</button>
+<button class="text-error transition-all active:scale-90">
+<span class="material-symbols-outlined text-[22px]">delete</span>
+</button>
+</div>
+</header>
+<main class="flex-1 space-y-4 pt-2">
+<!-- Trip Summary Card -->
+<section class="mx-4 p-6 rounded-xl bg-surface-container-lowest shadow-[0px_12px_32px_rgba(0,79,53,0.06)] flex flex-col items-center">
+<div class="w-16 h-16 flex items-center justify-center text-5xl mb-4">
+                    🇵🇹
+                </div>
+<h2 class="font-headline font-bold text-2xl text-on-background mb-1">Lisbon, Portugal</h2>
+<p class="text-on-surface-variant font-medium mb-4">12 May – 19 May 2025</p>
+<div class="flex gap-2 mb-4">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase">7 days</span>
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase">SAFE</span>
+</div>
+<span class="font-label text-xs tracking-[0.05rem] uppercase text-on-surface-variant font-medium">Holiday</span>
+</section>
+<!-- Compliance Impact Card -->
+<section class="mx-4 p-5 rounded-xl bg-surface-container-low flex flex-col space-y-3">
+<h3 class="font-label text-[10px] tracking-[0.08rem] uppercase text-on-surface-variant font-bold">COMPLIANCE IMPACT</h3>
+<p class="text-on-background font-medium text-sm leading-relaxed">7 days added to your rolling window</p>
+<!-- Progress Bar Container -->
+<div class="space-y-2 pt-1">
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<!-- 42/180 is approx 23% -->
+<div class="h-full bg-secondary w-[23.33%] rounded-full"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[11px] font-bold text-on-surface-variant">42/180 DAYS</span>
+<span class="text-[11px] font-bold text-secondary">Window status: SAFE</span>
+</div>
+</div>
+</section>
+<!-- Notes Card -->
+<section class="mx-4 p-5 rounded-xl bg-surface-container-lowest shadow-[0px_12px_32px_rgba(0,79,53,0.06)] flex flex-col space-y-2 relative">
+<div class="flex justify-between items-start">
+<h3 class="font-label text-[10px] tracking-[0.08rem] uppercase text-on-surface-variant font-bold">NOTES</h3>
+<button class="text-secondary text-xs font-bold uppercase tracking-wider">Edit</button>
+</div>
+<p class="text-on-surface-variant text-sm font-medium italic">"Holiday with family"</p>
+</section>
+<!-- Timeline Card -->
+<section class="mx-4 p-5 rounded-xl bg-surface-container-lowest shadow-[0px_12px_32px_rgba(0,79,53,0.06)] flex flex-col space-y-4">
+<h3 class="font-label text-[10px] tracking-[0.08rem] uppercase text-on-surface-variant font-bold">TIMELINE</h3>
+<div class="relative pl-6 space-y-8">
+<!-- Vertical Connector Line -->
+<div class="absolute left-[7px] top-2 bottom-2 w-0.5 bg-surface-variant"></div>
+<!-- Departure -->
+<div class="relative flex items-center justify-between">
+<div class="absolute -left-6 w-4 h-4 rounded-full bg-secondary ring-4 ring-background z-10"></div>
+<div class="flex flex-col">
+<span class="text-on-background font-bold text-sm">12 May</span>
+<span class="text-on-surface-variant text-xs font-medium">Left UK</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-lg">flight_takeoff</span>
+</div>
+<!-- Return -->
+<div class="relative flex items-center justify-between">
+<div class="absolute -left-6 w-4 h-4 rounded-full bg-secondary ring-4 ring-background z-10"></div>
+<div class="flex flex-col">
+<span class="text-on-background font-bold text-sm">19 May</span>
+<span class="text-on-surface-variant text-xs font-medium">Returned</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-lg">flight_land</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Bottom Actions -->
+<footer class="fixed bottom-0 left-0 right-0 max-w-[390px] mx-auto p-6 bg-background/80 backdrop-blur-md flex flex-col items-center space-y-4">
+<button class="w-full bg-surface-container-high text-primary font-bold py-4 rounded-full transition-all active:scale-95 text-center">
+                Edit trip
+            </button>
+<button class="text-error font-bold text-sm transition-all active:opacity-70">
+                Delete trip
+            </button>
+<!-- iPhone Home Indicator Spacer -->
+<div class="h-2"></div>
+</footer>
+</div>
+</body></html>

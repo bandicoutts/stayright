@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StayRight Dashboard - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#003623",
+              "on-primary-container": "#7ec09e",
+              "secondary-fixed-dim": "#83d7ae",
+              "on-tertiary-fixed-variant": "#713431",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-background": "#191c1d",
+              "primary-container": "#004f35",
+              "inverse-primary": "#92d5b2",
+              "error": "#ba1a1a",
+              "outline": "#707973",
+              "background": "#f8f9fa",
+              "surface-tint": "#276a4e",
+              "surface-bright": "#f8f9fa",
+              "secondary-fixed": "#9ff4ca",
+              "tertiary-fixed": "#ffdad7",
+              "on-primary-fixed": "#002114",
+              "tertiary": "#521c1b",
+              "on-secondary-fixed-variant": "#005237",
+              "inverse-on-surface": "#f0f1f2",
+              "surface-container-highest": "#e1e3e4",
+              "surface-variant": "#e1e3e4",
+              "primary-fixed": "#adf1cd",
+              "surface-container-high": "#e7e8e9",
+              "tertiary-container": "#6e322f",
+              "on-tertiary-fixed": "#3a0a0a",
+              "surface-container": "#edeeef",
+              "secondary-container": "#9cf1c7",
+              "surface-container-low": "#f3f4f5",
+              "secondary": "#076c4b",
+              "outline-variant": "#bfc9c1",
+              "on-primary-fixed-variant": "#045137",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#11704f",
+              "inverse-surface": "#2e3132",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "surface": "#f8f9fa",
+              "primary-fixed-dim": "#92d5b2",
+              "on-tertiary-container": "#ef9c96",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#191c1d",
+              "on-secondary-fixed": "#002114",
+              "surface-dim": "#d9dadb",
+              "on-surface-variant": "#404943",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen pb-32">
+<!-- TopAppBar Shell (v1: small_center_aligned logic applied as header) -->
+<header class="sticky top-0 z-50 bg-[#f8f9fa]/85 dark:bg-slate-950/85 backdrop-blur-md flex justify-between items-center w-full px-4 h-16">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#004f35] text-2xl" data-icon="shield">shield</span>
+<span class="font-headline font-black text-lg text-[#003623] tracking-tight">StayRight</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="Close up professional headshot of a person" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-LIdvHa22F63v76qc693pQ51X6ZFdiFh4gemjKTGORdEyw7ScX_MlreIgp4LZDX8BGpOjBM349Aj5SK8rYWj6SzIn-ctT9PYxQsVwiA_q2U2ITk7SV4xFCRziPv7DpyNK1Af-AqsFGvRVZvSIkRO-az6pYA-IulB1MEXDd03j1Xnn4UZ3qe2RkdK4-I_MGqWM-JBQ-NdVg6i0aKJ_KNrQJhrEJUbPDE_Txd7hzW0KdrS34aUnpNeWOWLL6-IPEz2NwZojNzntcRA"/>
+</div>
+</div>
+</header>
+<main class="px-4 mt-4 space-y-6">
+<!-- Welcome Card (Full Width, #006948 context from prompt) -->
+<section class="bg-[#004f35] text-white p-6 rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="font-headline text-xl font-bold mb-1">You're all set</h2>
+<p class="font-body text-sm text-on-primary-container mb-4">Log your first trip to get started</p>
+<button class="bg-white text-[#004f35] px-5 py-2.5 rounded-full font-label text-sm font-semibold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+                    Log First Trip
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Decorative circle -->
+<div class="absolute -right-8 -bottom-8 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div>
+</section>
+<!-- Quota Ring Card -->
+<section class="flex flex-col items-center bg-surface-container-lowest p-8 rounded-xl">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Progress Background Track -->
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-high" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="12"></circle>
+</svg>
+<!-- Center Text -->
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline text-5xl font-extrabold text-primary">0</span>
+<span class="font-body text-sm text-on-surface-variant">/ 180 days</span>
+</div>
+</div>
+<div class="mt-6 text-center space-y-3">
+<p class="font-body text-sm text-[#3D4A42]">No trips logged yet</p>
+<div class="inline-flex items-center px-3 py-1 bg-surface-variant rounded-full text-[10px] font-bold tracking-widest text-on-surface-variant">
+                    NOT STARTED
+                </div>
+</div>
+</section>
+<!-- Qualifying Period Card -->
+<section class="bg-surface-container-lowest p-5 rounded-xl space-y-4">
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<span class="block font-label text-[10px] uppercase tracking-wider text-on-surface-variant">Qualifying Period</span>
+<p class="font-headline font-bold text-primary">ILR Track</p>
+</div>
+<span class="font-body text-xs font-medium text-secondary">0% Complete</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-0"></div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2">
+<div class="space-y-1">
+<p class="text-[11px] text-on-surface-variant font-medium">Started</p>
+<p class="text-sm font-semibold text-primary">14 Jan 2023</p>
+</div>
+<div class="space-y-1 text-right">
+<p class="text-[11px] text-on-surface-variant font-medium">ILR eligible</p>
+<p class="text-sm font-semibold text-primary">14 Jan 2028</p>
+</div>
+</div>
+</section>
+<!-- Empty Trips Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="font-headline font-bold text-lg text-primary">Recent Trips</h3>
+<button class="text-secondary font-label text-sm font-semibold">View all →</button>
+</div>
+<div class="bg-surface-container-low rounded-xl py-12 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant/20">
+<div class="w-16 h-16 bg-surface-variant rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+<p class="font-body text-sm text-[#3D4A42]">No trips logged yet</p>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-white rounded-xl shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-40" style="box-shadow: 0px 12px 32px rgba(0, 79, 53, 0.15);">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-3 pb-8 px-4 bg-[#f8f9fa]/85 backdrop-blur-xl border-t border-[#bfc9c1]/10 z-50 rounded-t-2xl">
+<!-- Home / Dashboard (Active) -->
+<a class="flex flex-col items-center justify-center bg-[#9cf1c7] text-[#003623] rounded-full px-5 py-1 transition-all duration-200 ease-out active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-wide uppercase mt-0.5">Home</span>
+</a>
+<!-- Visas -->
+<a class="flex flex-col items-center justify-center text-[#004f35]/60 px-5 py-1 hover:bg-[#076c4b]/5" href="#">
+<span class="material-symbols-outlined" data-icon="Assignment">assignment</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-wide uppercase mt-0.5">Visas</span>
+</a>
+<!-- Documents -->
+<a class="flex flex-col items-center justify-center text-[#004f35]/60 px-5 py-1 hover:bg-[#076c4b]/5" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-wide uppercase mt-0.5">Docs</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-[#004f35]/60 px-5 py-1 hover:bg-[#076c4b]/5" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[11px] font-medium tracking-wide uppercase mt-0.5">Profile</span>
+</a>
+</nav>
+</body></html>

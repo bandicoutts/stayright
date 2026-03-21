@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head><title>[v5] Trip History</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed-dim": "#92d5b2",
+              "on-surface-variant": "#404943",
+              "on-secondary-container": "#006948",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface": "#f8f9fa",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f3f4f5",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "error": "#ba1a1a",
+              "tertiary": "#521c1b",
+              "primary": "#006948",
+              "on-primary-fixed-variant": "#006948",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "on-secondary": "#ffffff",
+              "on-primary-container": "#7ec09e",
+              "primary-fixed": "#adf1cd",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "error-container": "#ffdad6",
+              "primary-container": "#006948",
+              "secondary-container": "#9cf1c7",
+              "on-background": "#191c1d",
+              "inverse-primary": "#92d5b2",
+              "tertiary-fixed": "#ffdad7",
+              "surface-bright": "#f8f9fa",
+              "on-secondary-fixed": "#002114",
+              "on-tertiary-fixed-variant": "#713431",
+              "on-tertiary-container": "#ef9c96",
+              "on-secondary-fixed-variant": "#005237",
+              "surface-container": "#edeeef",
+              "inverse-surface": "#2e3132",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#6e322f",
+              "surface-tint": "#006948",
+              "secondary-fixed-dim": "#83d7ae",
+              "surface-variant": "#e1e3e4",
+              "on-surface": "#191c1d",
+              "on-primary-fixed": "#002114",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#3a0a0a",
+              "inverse-on-surface": "#f0f1f2",
+              "outline": "#707973",
+              "outline-variant": "#bfc9c1",
+              "secondary": "#006948",
+              "secondary-fixed": "#9ff4ca"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-nav { backdrop-filter: blur(20px); }
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-surface pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-[#f8f9fa] dark:bg-gray-900 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#006948] dark:text-[#9cf1c7] cursor-pointer" data-icon="menu">menu</span>
+<h1 class="font-manrope font-bold tracking-tight text-xl font-extrabold text-[#006948] dark:text-[#9cf1c7]">Trip History</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#006948] dark:text-[#9cf1c7] p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded-full" data-icon="notifications">notifications</button>
+<div class="w-10 h-10 rounded-full bg-[#E5B58E] overflow-hidden">
+<img alt="Profile" data-alt="Warm orange user profile avatar" src="https://lh3.googleusercontent.com/aida-public/ALi7v7S2iVl-GqL8K3VlW2YlXmR1zI5w9N5qN6V8V-L6C5A2C8F3K6=s96-c"/>
+</div>
+</div>
+</header>
+<main class="mt-20 px-6 max-w-2xl mx-auto">
+<!-- Search Bar -->
+<div class="mb-8">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-[#006948]/40 transition-all font-body text-on-surface" placeholder="Search trips..." type="text"/>
+</div>
+</div>
+<!-- Quota Summary Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-4 mb-8 flex items-center justify-between shadow-[0_12_32_rgba(0,105,72,0.06)]">
+<div class="flex items-center gap-4">
+<div class="relative w-[30px] h-[30px]">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="15" cy="15" fill="transparent" r="12" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-[#006948]" cx="15" cy="15" fill="transparent" r="12" stroke="currentColor" stroke-dasharray="75.4" stroke-dashoffset="58" stroke-width="3"></circle>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Usage</span>
+<p class="text-sm font-semibold text-[#006948]">42 days used</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-[11px] font-label font-bold uppercase tracking-wider text-on-surface-variant">Remaining</span>
+<p class="text-sm font-bold text-[#006948]">138 days</p>
+</div>
+</div>
+<!-- Trip Cards List -->
+<div class="space-y-6">
+<!-- 1. Lisbon -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇵🇹</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Lisbon, Portugal</h3>
+<p class="text-on-surface-variant text-sm font-medium">12–19 May 2025</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">7 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 2. New York -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇺🇸</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">New York, USA</h3>
+<p class="text-on-surface-variant text-sm font-medium">2–14 Feb 2025</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">12 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 3. Auckland -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇳🇿</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Auckland, NZ</h3>
+<p class="text-on-surface-variant text-sm font-medium">18 Dec–3 Jan 2025</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">16 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 4. Paris -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇫🇷</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Paris, France</h3>
+<p class="text-on-surface-variant text-sm font-medium">4–8 Oct 2024</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">4 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 5. Auckland (Repeat) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇳🇿</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Auckland, NZ</h3>
+<p class="text-on-surface-variant text-sm font-medium">22 Jul–12 Aug 2024</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">21 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 6. Barcelona -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇪🇸</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Barcelona, Spain</h3>
+<p class="text-on-surface-variant text-sm font-medium">3–10 Jun 2024</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">7 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 7. New York (Repeat) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇺🇸</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">New York, USA</h3>
+<p class="text-on-surface-variant text-sm font-medium">15–28 Mar 2024</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">13 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+<!-- 8. Auckland (Past) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between group hover:translate-x-1 transition-transform">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇳🇿</div>
+<div>
+<h3 class="font-bold text-lg text-on-surface leading-tight">Auckland, NZ</h3>
+<p class="text-on-surface-variant text-sm font-medium">20 Dec–14 Jan 2024</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2">
+<span class="bg-surface-container-low text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">25 days</span>
+<span class="bg-secondary-container text-[#006948] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Safe</span>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-12 mb-8 text-center">
+<p class="text-[12px] font-label font-bold text-on-surface-variant tracking-wider uppercase">Showing 8 of 23 trips</p>
+<div class="mt-4 flex justify-center gap-2">
+<div class="w-8 h-1 bg-[#006948] rounded-full"></div>
+<div class="w-2 h-1 bg-surface-container-high rounded-full"></div>
+<div class="w-2 h-1 bg-surface-container-high rounded-full"></div>
+</div>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed right-6 bottom-[104px] w-14 h-14 bg-gradient-to-br from-[#006948] to-[#005237] text-on-primary rounded-full shadow-[0px_12px_32px_rgba(0,105,72,0.25)] flex items-center justify-center active:scale-95 transition-transform z-[60]">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#f8f9fa]/85 dark:bg-gray-900/85 backdrop-blur-xl rounded-t-3xl shadow-[0_-4px_20px_rgba(0,105,72,0.04)]">
+<!-- Dashboard -->
+<div class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Dashboard</span>
+</div>
+<!-- Trips (ACTIVE) -->
+<div class="flex flex-col items-center justify-center text-[#006948] dark:text-[#9cf1c7] bg-[#9cf1c7]/30 rounded-2xl px-4 py-1 transition-all duration-300">
+<span class="material-symbols-outlined mb-1" data-icon="flight_takeoff" style="font-variation-settings: 'FILL' 1;">flight_takeoff</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Trips</span>
+</div>
+<!-- Calendar -->
+<div class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined mb-1" data-icon="calendar_today">calendar_today</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Calendar</span>
+</div>
+<!-- Reports -->
+<div class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined mb-1" data-icon="assessment">assessment</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Reports</span>
+</div>
+<!-- Settings -->
+<div class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Settings</span>
+</div>
+</nav>
+</body></html>

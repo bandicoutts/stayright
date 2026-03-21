@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[v5] Settings — StayRight</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed-dim": "#92d5b2",
+              "on-surface-variant": "#404943",
+              "on-secondary-container": "#11704f",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface": "#f8f9fa",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f3f4f5",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "error": "#ba1a1a",
+              "tertiary": "#521c1b",
+              "primary": "#006948",
+              "on-primary-fixed-variant": "#045137",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "on-secondary": "#ffffff",
+              "on-primary-container": "#7ec09e",
+              "primary-fixed": "#adf1cd",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "error-container": "#ffdad6",
+              "primary-container": "#004f35",
+              "secondary-container": "#9cf1c7",
+              "on-background": "#191c1d",
+              "inverse-primary": "#92d5b2",
+              "tertiary-fixed": "#ffdad7",
+              "surface-bright": "#f8f9fa",
+              "on-secondary-fixed": "#002114",
+              "on-tertiary-fixed-variant": "#713431",
+              "on-tertiary-container": "#ef9c96",
+              "on-secondary-fixed-variant": "#005237",
+              "surface-container": "#edeeef",
+              "inverse-surface": "#2e3132",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#6e322f",
+              "surface-tint": "#276a4e",
+              "secondary-fixed-dim": "#83d7ae",
+              "surface-variant": "#e1e3e4",
+              "on-surface": "#191c1d",
+              "on-primary-fixed": "#002114",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#3a0a0a",
+              "inverse-on-surface": "#f0f1f2",
+              "outline": "#707973",
+              "outline-variant": "#bfc9c1",
+              "secondary": "#006948",
+              "secondary-fixed": "#9ff4ca"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-[#f8f9fa] dark:bg-gray-900 sticky top-0 z-50 grid grid-cols-3 items-center w-full px-6 py-4">
+<div class="flex justify-start">
+<button class="material-symbols-outlined p-2 text-[#006948] hover:bg-gray-100 transition-colors rounded-full -ml-2">menu</button>
+</div>
+<div class="flex justify-center">
+<h1 class="font-headline font-extrabold tracking-tight text-xl text-[#006948] whitespace-nowrap">Settings</h1>
+</div>
+<div class="flex items-center justify-end gap-2">
+<button class="material-symbols-outlined p-2 text-[#006948] hover:bg-gray-100 transition-colors rounded-full">notifications</button>
+<div class="w-10 h-10 rounded-full bg-[#fcd34d] flex items-center justify-center overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="User profile avatar icon" src="https://lh3.googleusercontent.com/a/ACg8ocIW_K9j97N9VwY6W0S8yK7N4X2v8B3J5W0Z0G0Z0G0Z=s96-c"/>
+</div>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-6 py-8 space-y-12">
+<!-- Section 1: VISA PROFILE -->
+<section class="space-y-6">
+<header class="flex items-center justify-between px-1">
+<h2 class="font-label text-[0.75rem] font-semibold tracking-[0.05rem] text-outline uppercase">VISA PROFILE</h2>
+</header>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">Name</label>
+<input class="bg-transparent border-none p-0 focus:ring-0 font-medium text-on-surface" type="text" value="David Flynn-Coutts"/>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">Route</label>
+<div class="flex justify-between items-center">
+<span class="font-medium">Skilled Worker</span>
+<span class="material-symbols-outlined text-outline">expand_more</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">Visa start</label>
+<span class="font-medium text-on-surface">14 January 2023</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1 opacity-60">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">Qualifying period</label>
+<span class="font-medium text-on-surface">5 years</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">ILR target</label>
+<span class="font-bold text-[#006948] font-headline text-lg tracking-tight">14 January 2028</span>
+</div>
+<!-- Toggle -->
+<div class="bg-surface-container-high/40 p-1.5 rounded-full flex gap-1">
+<button class="flex-1 py-2.5 px-4 bg-[#006948] text-white rounded-full font-label text-sm font-semibold transition-all">ILR Mode</button>
+<button class="flex-1 py-2.5 px-4 text-outline font-label text-sm font-semibold hover:bg-surface-container-high transition-all rounded-full">Citizenship Mode</button>
+</div>
+</div>
+</section>
+<!-- Section 2: NOTIFICATIONS -->
+<section class="space-y-6">
+<h2 class="font-label text-[0.75rem] font-semibold tracking-[0.05rem] text-outline uppercase px-1">NOTIFICATIONS</h2>
+<div class="bg-surface-container-lowest rounded-xl divide-y divide-surface-container-low overflow-hidden shadow-[0_12px_32px_rgba(0,105,72,0.04)]">
+<div class="flex items-center justify-between p-5">
+<span class="font-medium">Warn at 120 days</span>
+<div class="w-12 h-6 bg-[#006948] rounded-full relative">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-5">
+<span class="font-medium">Warn at 150 days</span>
+<div class="w-12 h-6 bg-[#006948] rounded-full relative">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-5">
+<span class="font-medium">Log return reminder</span>
+<div class="w-12 h-6 bg-[#006948] rounded-full relative">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-5">
+<span class="font-medium">ILR reminder 90 days before</span>
+<div class="w-12 h-6 bg-[#006948] rounded-full relative">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-5">
+<span class="font-medium">Renewal reminder</span>
+<div class="w-12 h-6 bg-[#006948] rounded-full relative">
+<div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Subscription Card -->
+<div class="bg-[#006948] p-8 rounded-xl relative overflow-hidden text-white shadow-xl">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+<div class="inline-flex items-center bg-[#FFB000] text-[#006948] font-bold text-[10px] px-2 py-0.5 rounded-sm tracking-widest mb-4">PRO</div>
+<h3 class="font-headline text-2xl font-bold mb-1">Pro Plan</h3>
+<p class="font-headline text-4xl font-extrabold mb-6">£2.99 <span class="text-lg font-medium opacity-80">/ month</span></p>
+<p class="text-sm font-body opacity-70 mb-8">Renews 14 April 2026</p>
+<button class="w-full bg-white text-[#006948] py-4 rounded-full font-bold text-sm hover:bg-opacity-90 transition-all uppercase tracking-wider">Manage subscription</button>
+</div>
+<!-- Section 3: ACCOUNT -->
+<section class="space-y-6">
+<h2 class="font-label text-[0.75rem] font-semibold tracking-[0.05rem] text-outline uppercase px-1">ACCOUNT</h2>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">Email</label>
+<span class="font-medium text-on-surface">david@example.com</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] text-outline font-bold uppercase tracking-wider">Password</label>
+<div class="flex justify-between items-center">
+<span class="font-medium tracking-widest">•••••••••</span>
+<button class="text-[#006948] font-semibold text-sm">Change password</button>
+</div>
+</div>
+<button class="text-error font-semibold text-sm px-1 pt-2">Delete account</button>
+</div>
+</section>
+<!-- Data & Privacy Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl space-y-4 shadow-[0_12px_32px_rgba(0,105,72,0.04)]">
+<div class="space-y-1">
+<h4 class="font-label font-bold text-sm text-on-surface">Data &amp; Privacy</h4>
+<p class="text-sm text-on-surface-variant">All data stored in the UK. GDPR compliant.</p>
+</div>
+<button class="w-full bg-surface-container-high text-[#006948] py-4 rounded-full font-bold text-sm hover:bg-surface-container-highest transition-all uppercase tracking-wider">Export my data</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#f8f9fa]/85 dark:bg-gray-900/85 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,105,72,0.04)]">
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">flight_takeoff</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">calendar_today</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Calendar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined mb-1">assessment</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Reports</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#006948] dark:text-[#9cf1c7] bg-[#9cf1c7]/30 rounded-2xl px-4 py-1" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase">Settings</span>
+</a>
+</nav>
+</body></html>

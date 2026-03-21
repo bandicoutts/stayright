@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StayRight - Onboarding Walkthrough</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#003623",
+              "on-primary-container": "#7ec09e",
+              "secondary-fixed-dim": "#83d7ae",
+              "on-tertiary-fixed-variant": "#713431",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-background": "#191c1d",
+              "primary-container": "#004f35",
+              "inverse-primary": "#92d5b2",
+              "error": "#ba1a1a",
+              "outline": "#707973",
+              "background": "#f8f9fa",
+              "surface-tint": "#276a4e",
+              "surface-bright": "#f8f9fa",
+              "secondary-fixed": "#9ff4ca",
+              "tertiary-fixed": "#ffdad7",
+              "on-primary-fixed": "#002114",
+              "tertiary": "#521c1b",
+              "on-secondary-fixed-variant": "#005237",
+              "inverse-on-surface": "#f0f1f2",
+              "surface-container-highest": "#e1e3e4",
+              "surface-variant": "#e1e3e4",
+              "primary-fixed": "#adf1cd",
+              "surface-container-high": "#e7e8e9",
+              "tertiary-container": "#6e322f",
+              "on-tertiary-fixed": "#3a0a0a",
+              "surface-container": "#edeeef",
+              "secondary-container": "#9cf1c7",
+              "surface-container-low": "#f3f4f5",
+              "secondary": "#076c4b",
+              "outline-variant": "#bfc9c1",
+              "on-primary-fixed-variant": "#045137",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#11704f",
+              "inverse-surface": "#2e3132",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "surface": "#f8f9fa",
+              "primary-fixed-dim": "#92d5b2",
+              "on-tertiary-container": "#ef9c96",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#191c1d",
+              "on-secondary-fixed": "#002114",
+              "surface-dim": "#d9dadb",
+              "on-surface-variant": "#404943",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-background min-h-screen flex flex-col">
+<!-- Top Bar: Shared Component Logic -->
+<header class="bg-[#f8f9fa] flex justify-center items-center w-full px-6 py-4 fixed top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#006948] text-2xl" data-icon="shield">shield</span>
+<span class="font-headline font-extrabold text-xl tracking-tight text-[#003623]">StayRight</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 pb-32 px-6 flex flex-col">
+<!-- Progress Indicator -->
+<div class="flex justify-center gap-2 mb-10">
+<div class="h-1.5 w-1.5 rounded-full bg-outline-variant opacity-40"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-outline-variant opacity-40"></div>
+<div class="h-1.5 w-6 rounded-full bg-[#006948]"></div>
+</div>
+<!-- Header Section -->
+<div class="mb-10">
+<span class="font-label text-[0.75rem] font-medium tracking-[0.05rem] text-[#3D4A42] uppercase block mb-2">STEP 2 OF 2</span>
+<h1 class="font-headline text-3xl font-bold tracking-tight text-on-background leading-tight">
+                Here's what we track
+            </h1>
+</div>
+<!-- Feature Rows: Asymmetric Tonal Layering -->
+<div class="space-y-6">
+<!-- Feature 1 -->
+<div class="flex items-start gap-4 p-5 rounded-xl bg-surface-container-lowest transition-transform active:scale-95 duration-150">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[#006948] text-[28px]" data-icon="progress_activity">progress_activity</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline font-bold text-lg text-primary">180-day rolling window</h3>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Every rolling 12-month period tracked automatically</p>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="flex items-start gap-4 p-5 rounded-xl bg-surface-container-lowest transition-transform active:scale-95 duration-150">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[#006948] text-[28px]" data-icon="calendar_today">calendar_today</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline font-bold text-lg text-primary">Trip logging</h3>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Log trips in seconds, impact calculated instantly</p>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="flex items-start gap-4 p-5 rounded-xl bg-surface-container-lowest transition-transform active:scale-95 duration-150">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[#006948] text-[28px]" data-icon="notifications">notifications</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline font-bold text-lg text-primary">Smart alerts</h3>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">Warned before you approach limits, not after</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Action Area -->
+<footer class="fixed bottom-0 left-0 w-full px-6 pb-10 pt-6 bg-gradient-to-t from-background via-background/90 to-transparent">
+<div class="max-w-md mx-auto flex flex-col items-center gap-6">
+<button class="text-primary font-medium flex items-center gap-2 transition-opacity hover:opacity-70 active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+                Back
+            </button>
+<button class="w-full bg-primary-container text-on-primary font-headline font-bold py-4 px-8 rounded-full flex justify-center items-center gap-3 transition-all hover:shadow-lg active:scale-[0.98] bg-gradient-to-b from-secondary to-primary-container shadow-[0px_12px_32px_rgba(0,79,53,0.06)]">
+                Take me to my dashboard
+                <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Image Fallback Descriptions for Accessibility/UI Integrity -->
+<div class="hidden">
+<img data-alt="Soft botanical green gradient background pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY8uvDWA34ioHer0hLcK7J9JvQyHHyv7WTeqVe4pYwRcXsGaL7kK6JbBjwf16nofKjt7qbSH_9goaecWxX4g9KaI7C7t85Y8JtV2yVt-6xG_M4HY_MyByf76i_pq2CxG37GZs6Wbdbs8Q1pha-Iqw9p39VQRx1UN2Pa4mO_8pen0YZ9TRAfNit0px2qXHJdc0bEx5nBjm2mHvQoS07OY3PXenSpDjAKuWxXazoBwkCCn-cteWdb2iW7Q1RzeRrtSyDOLzmv2XhHDk"/>
+<img data-alt="Circular quota tracking illustration in deep forest green" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbPFY2yuSngN5oFvLlnQIytAMjeahppquxE-sLQn6Y7Th6RvUjlCYeI7aQf274pHwhPH5_bXrkmukDUi4o_mcqEPqC1_ClLMHP1znvCmi-tYdjF-DZyHOzHyXYzfHPT5X2neKcLkOWAVmX9Rf86USuLq1X-1Z2LlxxH-ZX90ooHx2XLv1kUjAMqoztKIJ56C2MKF841B_fjNaLbqy89ihuDGcFxnIHIXu_yY_5D_eT3FNdfv0jOaPLCPMLJr1_YZ-7bSFQyu6N-ws"/>
+<img data-alt="Minimalist calendar interface element in botanical green" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnaW9qsVwQmwZTa9oV5X8IqJ84TMPLqBwJhiadXBVMyvaE3Pom-5GLE-KrTYyUmv18A1Sa__5Uyy9hLAjMLn1XHTqGEuU6R8TB7VGLwdnsTSMPrWqsexIyUptogBgx2o8T29JH8uvSro6itwQTP1F2memA72zbQVEJlrw9-xQtSdxusEtBJWdtXy0VKLOzqh5ZIpZe1EewnDwjg5F1tIqTIkYe5dnS_5xLT8fmHlRRbxz88w6p83TwHmM_mheEDIhiDbQFkRlJ8OE"/>
+<img data-alt="Modern notification bell icon with a soft shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD0RolBRg7n4eO9lU1zUpXgluUfFN2rzbNUFOdDq5BumOW8SJ7KrRzmL8EWS_VHYByxna-_y6KiW_-cez8rdc1JWEVwbKTTJfAu5TRuJ-eKzc1M57Ss8OYRPhhqzSD1cUUE1HcToQfhYnuIGoapkPR9TvgbVE1WkQ5RTI6vpmg7qGZhs9uGbKUTfpnD2xCI51momEX_zqht7cHMCP1C-2fiPN994T6sigYdTgdIYYAV4BK1vnlhN6iIcwVW8G8zDu1nXKvHWLRpiA"/>
+</div>
+</body></html>

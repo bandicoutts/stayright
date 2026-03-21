@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>[v5] Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed-dim": "#92d5b2",
+              "on-surface-variant": "#404943",
+              "on-secondary-container": "#11704f",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface": "#f8f9fa",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f3f4f5",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "error": "#ba1a1a",
+              "tertiary": "#521c1b",
+              "primary": "#006948", // Updated to Fix 4
+              "on-primary-fixed-variant": "#045137",
+              "tertiary-fixed-dim": "#ffb3ae",
+              "on-secondary": "#ffffff",
+              "on-primary-container": "#7ec09e",
+              "primary-fixed": "#adf1cd",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "error-container": "#ffdad6",
+              "primary-container": "#006948", // Updated to Fix 4
+              "secondary-container": "#9cf1c7",
+              "on-background": "#191c1d",
+              "inverse-primary": "#92d5b2",
+              "tertiary-fixed": "#ffdad7",
+              "surface-bright": "#f8f9fa",
+              "on-secondary-fixed": "#002114",
+              "on-tertiary-fixed-variant": "#713431",
+              "on-tertiary-container": "#ef9c96",
+              "on-secondary-fixed-variant": "#005237",
+              "surface-container": "#edeeef",
+              "inverse-surface": "#2e3132",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#6e322f",
+              "surface-tint": "#006948", // Updated to Fix 4
+              "secondary-fixed-dim": "#83d7ae",
+              "surface-variant": "#e1e3e4",
+              "on-surface": "#191c1d",
+              "on-primary-fixed": "#002114",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#3a0a0a",
+              "inverse-on-surface": "#f0f1f2",
+              "outline": "#707973",
+              "outline-variant": "#bfc9c1",
+              "secondary": "#006948", // Updated to Fix 4
+              "secondary-fixed": "#9ff4ca"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(0, 105, 72, 0.06);
+        }
+        .compliance-ring {
+            background: conic-gradient(#006948 calc(42/180 * 360deg), #e7e8e9 0); /* Updated to Fix 4 */
+        }
+        .fab-gradient {
+            background: linear-gradient(135deg, #006948 0%, #004f35 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-[#f8f9fa] dark:bg-gray-900 flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#3d4a42] dark:text-gray-400 cursor-pointer">menu</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[#006948] font-bold" style="font-variation-settings: 'FILL' 1;">shield</span> <!-- Fix 2 -->
+<h1 class="font-manrope font-extrabold text-xl tracking-tight text-[#006948] dark:text-[#9cf1c7]">StayRight</h1> <!-- Fix 4 applied to StayRight -->
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#3d4a42] dark:text-gray-400 cursor-pointer">notifications</span>
+<div class="w-10 h-10 rounded-full bg-[#f9c7a2] overflow-hidden flex items-center justify-center"> <!-- Fix 1: Warm/Orange avatar -->
+<span class="material-symbols-outlined text-[#e07a5f] text-3xl" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+</div>
+</header>
+<main class="px-6 max-w-5xl mx-auto space-y-8 mt-4">
+<!-- Welcome Section -->
+<section>
+<h2 class="font-headline font-extrabold text-4xl text-[#006948] tracking-tight">Good morning, David</h2> <!-- Fix 4 -->
+<p class="font-label text-sm font-semibold text-on-surface-variant mt-1 uppercase tracking-wider">Skilled Worker → ILR</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Quota Ring card -->
+<div class="md:col-span-5 bg-surface-container-lowest rounded-xl p-8 editorial-shadow relative flex flex-col items-center justify-center">
+<div class="absolute top-6 right-6 px-3 py-1 bg-[#006948]/10 rounded-full">
+<span class="font-label text-[10px] font-semibold tracking-wider text-[#006948] uppercase">SAFE</span>
+</div>
+<!-- Circular Progress -->
+<div class="relative w-48 h-48 rounded-full flex items-center justify-center compliance-ring">
+<div class="absolute inset-4 bg-surface-container-lowest rounded-full flex flex-col items-center justify-center">
+<span class="font-headline font-extrabold text-6xl text-[#006948]">42</span> <!-- Fix 4 -->
+<span class="font-body text-on-surface-variant text-sm mt-1">/ 180 days</span>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="font-body font-semibold text-[#006948]">138 days remaining</p>
+<p class="font-label text-xs text-on-surface-variant/70 mt-1">Until next compliance threshold</p>
+</div>
+</div>
+<!-- Qualifying period card -->
+<div class="md:col-span-7">
+<div class="bg-surface-container-lowest rounded-xl p-8 editorial-shadow flex flex-col justify-center h-full">
+<h3 class="font-label text-[10px] font-bold tracking-widest text-on-surface-variant uppercase mb-6">QUALIFYING PERIOD</h3>
+<div class="relative w-full h-3 bg-surface-container-high rounded-full overflow-hidden mb-4">
+<div class="absolute top-0 left-0 h-full bg-[#006948] rounded-full" style="width: 63%;"></div>
+</div>
+<div class="flex justify-between items-end">
+<div class="space-y-1">
+<p class="font-label text-[10px] text-on-surface-variant uppercase">Started</p>
+<p class="font-headline font-bold text-[#006948]">14 Jan 2023</p>
+</div>
+<div class="text-right space-y-1">
+<p class="font-label text-[10px] text-on-surface-variant uppercase">ILR eligible</p>
+<p class="font-headline font-bold text-[#006948]">14 Jan 2028</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Trips Section -->
+<section class="space-y-6">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline font-bold text-2xl text-[#006948]">Recent Trips</h3> <!-- Fix 4 -->
+<a class="font-body font-semibold text-[#006948] hover:underline flex items-center gap-1" href="#">
+                    View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="space-y-4">
+<!-- Trip 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between group cursor-pointer transition-colors hover:bg-white editorial-shadow">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇵🇹</div>
+<div>
+<p class="font-headline font-bold text-[#006948]">Lisbon, Portugal</p> <!-- Fix 4 -->
+<p class="font-body text-sm text-on-surface-variant">12–19 May · 7 days</p>
+</div>
+</div>
+<div class="px-4 py-1 bg-[#006948]/10 rounded-full">
+<span class="font-label text-[10px] font-bold tracking-wider text-[#006948] uppercase">Safe</span>
+</div>
+</div>
+<!-- Trip 2 -->
+<div class="bg-surface-container-low p-6 rounded-xl flex items-center justify-between group cursor-pointer transition-colors hover:bg-surface-container-lowest">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇺🇸</div>
+<div>
+<p class="font-headline font-bold text-[#006948]">New York, USA</p> <!-- Fix 4 -->
+<p class="font-body text-sm text-on-surface-variant">2–14 Feb · 12 days</p>
+</div>
+</div>
+<div class="px-4 py-1 bg-[#006948]/10 rounded-full">
+<span class="font-label text-[10px] font-bold tracking-wider text-[#006948] uppercase">Safe</span>
+</div>
+</div>
+<!-- Trip 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between group cursor-pointer transition-colors hover:bg-white editorial-shadow">
+<div class="flex items-center gap-5">
+<div class="text-3xl">🇳🇿</div>
+<div>
+<p class="font-headline font-bold text-[#006948]">Auckland, NZ</p> <!-- Fix 4 -->
+<p class="font-body text-sm text-on-surface-variant">18 Dec–3 Jan · 16 days</p>
+</div>
+</div>
+<div class="px-4 py-1 bg-[#006948]/10 rounded-full">
+<span class="font-label text-[10px] font-bold tracking-wider text-[#006948] uppercase">Safe</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<!-- Fix 3: 56px (w-14 h-14), #006948 gradient, 16px above tab bar (bottom-24 if tab bar is ~80px) -->
+<button class="fixed bottom-[92px] right-6 w-14 h-14 fab-gradient text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform z-50">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#f8f9fa]/85 dark:bg-gray-900/85 backdrop-blur-xl shadow-2xl rounded-t-3xl">
+<!-- Dashboard (Active) -->
+<a class="flex flex-col items-center justify-center text-[#006948] dark:text-[#9cf1c7] bg-[#006948]/10 rounded-2xl px-4 py-1 scale-90 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase mt-1">Dashboard</span>
+</a>
+<!-- Trips -->
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">flight_takeoff</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase mt-1">Trips</span>
+</a>
+<!-- Calendar -->
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase mt-1">Calendar</span>
+</a>
+<!-- Reports -->
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase mt-1">Reports</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-[#3d4a42] dark:text-gray-400 hover:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-manrope text-[10px] font-semibold tracking-wider uppercase mt-1">Settings</span>
+</a>
+</nav>
+</body></html>
