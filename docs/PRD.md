@@ -846,6 +846,7 @@ There is **no Calendar** nav item in v1.
 | Layer | Technology | Notes |
 |---|---|---|
 | **Frontend + API** | Next.js (App Router) | TypeScript, strict mode throughout |
+| **Styling** | Tailwind CSS | Utility-first CSS framework for all styling |
 | **Database + Auth** | Supabase (Postgres) | Row Level Security enabled on all tables. Supabase Auth for email/password + Google OAuth. |
 | **Hosting** | Vercel | Connected to GitHub for auto-deploys on push to `main` |
 | **Version Control** | GitHub | Repository: `bandicoutts/stayright` |
@@ -886,3 +887,4 @@ There is **no Calendar** nav item in v1.
 |---|---|---|---|
 | 2026-03-21 | v1.0 | PM | Initial PRD |
 | 2026-03-21 | v1.1 | PM | Removed 14-day trial (free tier is try-before-you-buy). Added lifetime plan (£49.99) to Section 3. Added Sections 4l (Paywall Modal), 4m (Cookie Consent), 4n (Analytics), 4o (Security). Added PWA, WCAG 2.1 AA, and browser support to scope. Added data retention policy and help centre spec to Settings. Added compliance disclaimer to dashboard. Added tech stack (Section 7). Resolved all open questions except 3 deferred. Changed landing page nav from "Visa Rules" to anchor links. Updated Pro CTA from "Start 14-Day Trial" to "Upgrade to Pro". Added webhook idempotency and rate limiting specs. Added ILR Mode toggle "Coming soon" behaviour. |
+| 2026-03-21 | v1.2 | PM | Added Tailwind CSS to tech stack. |
