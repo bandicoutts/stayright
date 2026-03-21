@@ -426,6 +426,31 @@ Any new auth-related page (e.g. account linking, MFA setup) should follow the sa
 
 ---
 
+### [DECISION-017] Onboarding state persisted via `onboarding_completed` column
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+A boolean column `onboarding_completed` (default `false`) is added to the `profiles` table to track whether a user has finished or skipped onboarding. The onboarding layout server components read this flag and redirect to `/dashboard` if it is true. When a user completes or skips onboarding, the flag is set to `true` via a Server Action before redirecting. Mid-flow persistence is achieved by reading from the DB: if `visa_start_date IS NOT NULL` but `onboarding_completed IS FALSE`, the user is placed at the trips step.
+
+Server Actions (`src/app/(app)/onboarding/actions.ts`) handle all DB writes: `saveVisaProfileAction` (step 1), `saveTripAction` / `deleteTripAction` (step 2), `skipOnboardingAction`, and `completeOnboardingAction`. Each trip is saved to the DB immediately when added, so the list is durable across sessions.
+
+**Reasoning:**
+A DB flag is the simplest durable signal. `localStorage` would be lost on a different device; session storage is lost on tab close. Inferring completion from data presence (e.g. `visa_start_date IS NOT NULL`) is ambiguous — a user might have set their visa date but never finished trip entry. An explicit flag eliminates all ambiguity.
+
+**Alternatives considered:**
+- `localStorage` for onboarding step — rejected. Not durable across devices or browser restarts.
+- Infer completion from `visa_start_date IS NOT NULL` — rejected. Ambiguous — doesn't distinguish mid-flow from genuinely complete.
+- Separate `onboarding_step` integer column — rejected. Overkill. Three steps, and the DB data itself tells us which step was reached.
+
+**Consequences:**
+Any new onboarding step added in future must ensure `onboarding_completed` is set to `true` at the end of the final step. The `profiles.onboarding_completed` flag is the authoritative signal for all auth-callback redirects.
+
+**Related:** PRD Section 4b, DECISION-013, DECISION-014
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -462,3 +487,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.3 | Added DECISION-010 — multi-leg trips as single record; DECISION-011 — Crown Dependencies vs BOTs; DECISION-012 — monthly summary email format |
 | 2026-03-21 | 1.4 | Added DECISION-013 — database schema (3 tables); DECISION-014 — Supabase client strategy; DECISION-015 — middleware session + route protection |
 | 2026-03-21 | 1.5 | Added DECISION-016 — auth screens architecture (route group, server/client split, callback handler) |
+| 2026-03-21 | 1.6 | Added DECISION-017 — onboarding state persisted via onboarding_completed column |

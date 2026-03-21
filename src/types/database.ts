@@ -29,6 +29,7 @@ export type Database = {
           notifications_ilr_reminder: boolean
           notifications_monthly: boolean
           notifications_return_reminder: boolean
+          onboarding_completed: boolean
           updated_at: string
           visa_route: string
           visa_start_date: string | null
@@ -42,6 +43,7 @@ export type Database = {
           notifications_ilr_reminder?: boolean
           notifications_monthly?: boolean
           notifications_return_reminder?: boolean
+          onboarding_completed?: boolean
           updated_at?: string
           visa_route?: string
           visa_start_date?: string | null
@@ -55,6 +57,7 @@ export type Database = {
           notifications_ilr_reminder?: boolean
           notifications_monthly?: boolean
           notifications_return_reminder?: boolean
+          onboarding_completed?: boolean
           updated_at?: string
           visa_route?: string
           visa_start_date?: string | null
