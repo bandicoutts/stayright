@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#e1e3e4",
+              "background": "#f8f9fa",
+              "tertiary-fixed-dim": "#ffb4ab",
+              "secondary-fixed-dim": "#ffb77d",
+              "outline": "#6f7a72",
+              "surface-bright": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "on-error": "#ffffff",
+              "on-surface-variant": "#3f4943",
+              "on-secondary-container": "#663500",
+              "on-primary-fixed": "#002114",
+              "primary-container": "#006948",
+              "error": "#ba1a1a",
+              "surface-container-high": "#e7e8e9",
+              "on-background": "#191c1d",
+              "surface-container-low": "#f3f4f5",
+              "outline-variant": "#bec9c1",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#9ff4ca",
+              "tertiary": "#8e0009",
+              "on-tertiary-fixed": "#410002",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "tertiary-container": "#b61618",
+              "on-primary-container": "#91e5bc",
+              "on-secondary-fixed-variant": "#6e3900",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#005237",
+              "inverse-primary": "#83d7ae",
+              "surface-container": "#edeeef",
+              "primary-fixed-dim": "#83d7ae",
+              "tertiary-fixed": "#ffdad5",
+              "secondary-fixed": "#ffdcc3",
+              "error-container": "#ffdad6",
+              "surface-tint": "#076c4b",
+              "surface": "#f8f9fa",
+              "on-secondary-fixed": "#2f1500",
+              "surface-dim": "#d9dadb",
+              "inverse-surface": "#2e3132",
+              "secondary": "#904d00",
+              "on-surface": "#191c1d",
+              "on-tertiary-container": "#ffc7c0",
+              "on-primary": "#ffffff",
+              "secondary-container": "#fe932c",
+              "on-tertiary-fixed-variant": "#930009",
+              "primary": "#004f35",
+              "inverse-on-surface": "#f0f1f2"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .botanical-shadow {
+            box-shadow: 0px 12px 32px rgba(0, 33, 20, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 flex flex-col py-4 bg-[#f3f4f5] dark:bg-slate-900 z-50">
+<div class="px-6 py-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-[#006948] text-3xl" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="text-2xl font-extrabold text-[#191C1D] dark:text-white font-headline tracking-tight">StayRight</span>
+</div>
+<nav class="flex-1 flex flex-col space-y-1">
+<a class="bg-[#9ff4ca] text-[#002114] rounded-full mx-4 px-4 py-2 transition-all duration-300 flex items-center gap-3 font-headline font-medium text-sm tracking-tight scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 px-8 py-3 flex items-center gap-3 font-headline font-medium text-sm tracking-tight hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+<span>Trips</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 px-8 py-3 flex items-center gap-3 font-headline font-medium text-sm tracking-tight hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span>Reports</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 px-8 py-3 flex items-center gap-3 font-headline font-medium text-sm tracking-tight hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 px-6 border-t border-outline-variant/20">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container shrink-0">
+<img class="w-full h-full object-cover" data-alt="User profile portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4JE7D0PQIyO9VRouWEyhnUEc1CJS-tEXgjKSzKBGLlnc24IuJIRWKKw38EaLhs3xn8WdpT_jzA-cXZpFfalyofAXqkMVi3Gt_homBz8UC_OGaDpRsZMFAOfvLYmtvzWsT7F4omRH-l1NOQpvqpWpqeaPVbEVwyKt3hpjObVMwtYlx6fwGxPuaTfqdaYMBxhEqtOyxpDUf6sUFRgE1HlMGrpZMiYW0ODwsnZOV8DfBYEKlPSXG-PoYIXUHUpAEeY1Nl_yEOVu2_rws"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-headline font-bold text-sm text-[#006948] truncate">David Flynn-Coutts</p>
+<p class="font-body text-[10px] text-on-surface-variant truncate uppercase tracking-tight">Skilled Worker → ILR</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[240px] min-h-screen">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 bg-[#f8f9fa]/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center h-16 px-8 w-full">
+<div>
+<h1 class="font-headline font-bold text-xl text-[#006948] dark:text-[#006948]">Good morning, David</h1>
+<p class="font-body text-xs text-on-surface-variant -mt-1">Skilled Worker → ILR</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-[#006948] w-64" placeholder="Search..." type="text"/>
+</div>
+<span class="material-symbols-outlined text-slate-500 hover:text-[#006948] cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-500 hover:text-[#006948] cursor-pointer transition-colors" data-icon="help_outline">help_outline</span>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container ml-2">
+<img class="w-full h-full object-cover" data-alt="User profile portrait close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4JE7D0PQIyO9VRouWEyhnUEc1CJS-tEXgjKSzKBGLlnc24IuJIRWKKw38EaLhs3xn8WdpT_jzA-cXZpFfalyofAXqkMVi3Gt_homBz8UC_OGaDpRsZMFAOfvLYmtvzWsT7F4omRH-l1NOQpvqpWpqeaPVbEVwyKt3hpjObVMwtYlx6fwGxPuaTfqdaYMBxhEqtOyxpDUf6sUFRgE1HlMGrpZMiYW0ODwsnZOV8DfBYEKlPSXG-PoYIXUHUpAEeY1Nl_yEOVu2_rws"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Grid Layout (2/3 + 1/3) -->
+<div class="p-8 grid grid-cols-12 gap-8 max-w-7xl">
+<!-- Left Column (8/12 = 2/3) -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Quota Ring Card -->
+<section class="bg-white p-10 rounded-xl relative botanical-shadow border border-surface-container-high">
+<div class="absolute top-6 right-8">
+<span class="px-3 py-1 bg-[#9ff4ca] text-[#002114] text-[10px] font-extrabold rounded-full tracking-wider uppercase">SAFE</span>
+</div>
+<div class="flex flex-col items-center justify-center py-4">
+<div class="relative w-56 h-56 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-variant" cx="112" cy="112" fill="transparent" r="100" stroke="currentColor" stroke-width="14"></circle>
+<circle cx="112" cy="112" fill="transparent" r="100" stroke="#006948" stroke-dasharray="628.3" stroke-dashoffset="144" stroke-linecap="round" stroke-width="14"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-headline text-6xl font-extrabold text-[#191C1D]">42</span>
+<span class="font-body text-base text-on-surface-variant mt-1">/ 180 days</span>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="font-headline text-2xl font-bold text-[#006948]">138 days remaining</p>
+</div>
+</div>
+</section>
+<!-- Qualifying Period (Linear Progress) -->
+<section class="bg-surface-container-low p-8 rounded-lg">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h3 class="font-headline text-lg font-bold text-[#006948]">Qualifying Year Progress</h3>
+<p class="font-body text-sm text-on-surface-variant">Period monitoring since 14 Jan 2023</p>
+</div>
+<span class="font-headline text-2xl font-bold text-[#006948]">63%</span>
+</div>
+<div class="w-full h-3 bg-white rounded-full overflow-hidden">
+<div class="h-full bg-[#006948] rounded-full" style="width: 63%"></div>
+</div>
+<div class="flex justify-between mt-3">
+<span class="font-label text-[10px] text-on-surface-variant uppercase">Started 14 Jan 2023</span>
+<span class="font-label text-[10px] text-on-surface-variant uppercase">ILR eligible: 14 Jan 2028</span>
+</div>
+</section>
+<!-- Recent History -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline text-xl font-bold text-[#006948]">Recent History</h3>
+<button class="text-sm font-medium text-[#006948] hover:underline transition-all">View All Activity</button>
+</div>
+<div class="space-y-4">
+<!-- Trip Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg botanical-shadow flex items-center justify-between group transition-all hover:translate-x-1">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-[#9ff4ca] flex items-center justify-center text-[#002114] text-2xl">🇵🇹</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Lisbon, Portugal</h4>
+<p class="font-body text-sm text-on-surface-variant">12–19 May · 7 days</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-[#9ff4ca] text-[#002114] text-[10px] font-bold uppercase tracking-wider rounded-full">Safe</span>
+<span class="material-symbols-outlined text-outline-variant cursor-pointer group-hover:text-[#006948]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<!-- Trip Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-lg botanical-shadow flex items-center justify-between group transition-all hover:translate-x-1">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-[#9ff4ca] flex items-center justify-center text-[#002114] text-2xl">🇺🇸</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">New York, USA</h4>
+<p class="font-body text-sm text-on-surface-variant">2–14 Feb · 12 days</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-[#9ff4ca] text-[#002114] text-[10px] font-bold uppercase tracking-wider rounded-full">Safe</span>
+<span class="material-symbols-outlined text-outline-variant cursor-pointer group-hover:text-[#006948]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (4/12 = 1/3) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
+<!-- Amber Alert Card (Top) -->
+<section class="bg-[#fe932c]/10 p-6 rounded-xl border-l-4 border-[#904d00] relative overflow-hidden">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-[#904d00]" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div>
+<h4 class="font-headline font-bold text-[#663500]">Plan ahead</h4>
+<p class="font-body text-sm text-[#663500]/80 mt-1">
+                            Your next trip could push your rolling window to 71 days. You have 138 days of safe travel remaining.
+                        </p>
+</div>
+</div>
+</section>
+<!-- ILR Timeline Card (Middle) -->
+<section class="bg-surface-container-low p-8 rounded-lg">
+<h3 class="font-headline text-lg font-bold text-[#006948] mb-6">ILR Eligibility Timeline</h3>
+<div class="relative border-l-2 border-outline-variant ml-2 pl-6 space-y-8">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-[#006948] border-4 border-background"></div>
+<span class="font-label text-[10px] uppercase text-on-surface-variant block mb-1">Target Eligibility</span>
+<h4 class="font-headline text-md font-bold text-on-surface">14 January 2028</h4>
+<p class="font-body text-xs text-on-surface-variant mt-1">2 years, 9 months away.</p>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative opacity-60">
+<div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-outline-variant border-4 border-background"></div>
+<span class="font-label text-[10px] uppercase text-on-surface-variant block mb-1">Status</span>
+<h4 class="font-headline text-md font-bold text-on-surface">Indefinite Leave to Remain</h4>
+<p class="font-body text-xs text-on-surface-variant mt-1">Application window opens Dec 2027.</p>
+</div>
+</div>
+</section>
+<!-- Quick Action Buttons (Bottom) -->
+<section class="space-y-4">
+<h3 class="font-label text-[11px] font-bold text-[#006948] uppercase tracking-widest px-1">PLAN YOUR NEXT TRIP</h3>
+<div class="flex flex-col gap-6">
+<div>
+<button class="flex items-center justify-between w-full h-14 px-6 bg-gradient-to-r from-[#006948] to-[#005237] text-white rounded-full botanical-shadow transition-all active:scale-95 group mb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="travel_explore">travel_explore</span>
+<span class="font-headline font-bold">Plan a Trip →</span>
+</div>
+</button>
+<p class="px-2 font-body text-[11px] text-on-surface-variant">See the impact before you book</p>
+</div>
+<div>
+<button class="flex items-center justify-between w-full h-14 px-6 bg-surface-container-high text-[#006948] hover:bg-surface-container-highest rounded-full border border-outline-variant/10 transition-all active:scale-95 group mb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-headline font-bold">Log a Past Trip</span>
+</div>
+</button>
+<p class="px-2 font-body text-[11px] text-on-surface-variant">Add trips you've already taken</p>
+</div>
+</div>
+</section>
+<!-- Mini Map/Destination Context -->
+<section class="bg-surface-container-low p-4 rounded-lg overflow-hidden">
+<div class="h-32 w-full rounded-md bg-surface-container-highest relative overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-40" data-alt="Abstract geographical map silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmtn0v7muQRFOQ--bVW8SLFivDS-WfxXIDRl8kOsn3xSo1dt5YG7WSwwZXf9sACAiwu-IKJfIFjj-crFCCJTEszpq7KVK0taeojFF0t0gfv9Ytl51z3fpAeM1v8yyjXdIXqLJ2hFtXsdYdMASCFhQxhK2TZehXLhRfx35nM67xSabNIuIKmpFOzP4KLUVSN80xSKe5CAsPlbE-mBBxjSNC8V6gXh2cf19wprN5fyF2GqmMFCE6K-TujtMk6C0JaK8aZKrsrr9DGGL0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="font-label text-[10px] uppercase text-[#006948] font-bold">Current Base</span>
+<h4 class="font-headline font-extrabold text-on-surface">London, UK</h4>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>

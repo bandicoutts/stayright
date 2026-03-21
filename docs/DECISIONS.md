@@ -190,6 +190,27 @@ Engineers working on the landing page read landing.DESIGN.md. Engineers working 
 
 ---
 
+### [DECISION-007] Wireframe folder structure
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+Wireframes are stored in /docs/wireframes/ preserving the original Stitch export folder structure. Landing page screens are in /docs/wireframes/landingpage2/ and all authenticated app screens are in /docs/wireframes/web2/. Subfolders use the original Stitch naming convention (e.g. v3_dashboard_overview/).
+
+**Reasoning:**
+Manually renaming and reorganising 20+ folders and files added unnecessary effort with no meaningful benefit to the engineer. The original Stitch naming is descriptive enough. The WIREFRAMES.md index maps each folder to its screen purpose, so engineers do not need to rely on the folder names alone.
+
+**Alternatives considered:**
+- Rename and reorganise into semantic folders (auth/, dashboard/, trips/ etc.) — rejected. High effort, low value. The index in WIREFRAMES.md provides the same navigation.
+
+**Consequences:**
+Any reference to wireframe file paths in documentation must use the landingpage2/ and web2/ folder structure. The WIREFRAMES.md index is the canonical map between screen names and folder locations.
+
+**Related:** /docs/WIREFRAMES.md
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -221,3 +242,4 @@ Copy this template when adding a new decision:
 | Date | Version | What changed |
 |------|---------|--------------|
 | 2026-03-21 | 1.0 | Initial decision log — 6 founding decisions documented |
+| 2026-03-21 | 1.1 | Added DECISION-007 — wireframe folder structure |

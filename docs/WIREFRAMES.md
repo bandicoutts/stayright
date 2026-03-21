@@ -7,89 +7,98 @@ These wireframes were created in Google Stitch and represent the intended visual
 **Important rules:**
 - PRD.md overrides wireframes on scope and feature decisions
 - DESIGN.md overrides wireframes on colour, typography, and component rules
-- Some wireframe screens contain copy, features, and pricing that have been superseded — see the Known Discrepancies section in PRD.md
+- Some wireframe screens contain copy, features, and pricing that have been superseded — see Section 6 of PRD.md for the full discrepancy list
 - If a wireframe shows a feature marked as out of scope in the PRD, do not build it
 
 **When in doubt: PRD > DESIGN.md > Wireframes**
 
 ---
 
-## Screen Index
+## Folder Structure
 
-### Landing Page
-Location: /docs/wireframes/landing/
+Wireframes are stored in two folders reflecting the two Stitch projects:
 
-- hero-nav.png — Hero section and navigation bar
-- features.png — 6-feature grid section _(note: Citizenship mode card replaced — see PRD discrepancies)_
-- pricing.png — Free + Pro pricing cards _(note: Family tier removed — see PRD)_
-- trust-footer.png — Trust bar and footer
+```
+/docs/wireframes/
+├── landingpage2/     ← landing page screens
+├── web2/             ← all authenticated app screens
+└── MISSING_SCREENS.md
+```
+
+Both folders preserve the original Stitch export structure. Each screen has its own subfolder containing screen.png (the visual) and code.html (the Stitch-generated HTML reference).
+
+---
+
+## Landing Page Screens
+Location: /docs/wireframes/landingpage2/
+
+| File | Description |
+|------|-------------|
+| screen.png | Full landing page — hero, features, pricing, trust bar, footer |
+| code.html | Stitch HTML reference |
+
+Note: The landing page wireframe contains several discrepancies with the PRD. See PRD.md Section 6 for the full list before building.
+
+---
+
+## Authenticated App Screens
+Location: /docs/wireframes/web2/
+
+Each subfolder below contains a screen.png and code.html.
 
 ### Authentication
-Location: /docs/wireframes/auth/
-
-- signup-login.png — Tabbed auth screen (Google OAuth + email)
-- email-verification.png — Post-signup verification holding screen
-- password-reset-request.png — Forgot password entry screen
-- password-reset-check-email.png — Check your inbox screen
-- password-reset-new-password.png — Set new password screen
+| Folder | Screen |
+|--------|--------|
+| v3_password_reset_1_request/ | Password reset — enter email |
+| v3_password_reset_2_check_email/ | Password reset — check inbox |
+| v3_password_reset_3_new_password/ | Password reset — set new password |
 
 ### Onboarding
-Location: /docs/wireframes/onboarding/
-
-- onboarding-welcome.png — Welcome screen
-- onboarding-visa-setup.png — Visa route and start date entry
-- onboarding-walkthrough.png — Feature introduction (3 features)
-- onboarding-import-trips.png — Bulk past trip entry step _(note: this step is in the PRD spec — if the Stitch export does not include it, build to the PRD spec)_
-- onboarding-empty-dashboard.png — First dashboard view, empty state
+| Folder | Screen |
+|--------|--------|
+| v3_onboarding_1_welcome/ | Onboarding step 1 — welcome |
+| v3_onboarding_2_visa_setup/ | Onboarding step 2 — visa route and start date |
 
 ### Dashboard
-Location: /docs/wireframes/dashboard/
-
-- dashboard-default.png — Main dashboard, logged trips present
-- dashboard-empty.png — Dashboard, new user, no trips logged
-- dashboard-abroad.png — Dashboard, user currently has an active trip
+| Folder | Screen |
+|--------|--------|
+| v3_dashboard_overview/ | Main dashboard — default state with trips |
+| v3_currently_abroad_dashboard/ | Dashboard — currently abroad state |
 
 ### Trips
-Location: /docs/wireframes/trips/
-
-- trip-history.png — Full trip list with search and filters
-- trip-detail.png — Side panel showing individual trip detail
-- plan-trip-step1.png — Log/Plan flow, Step 1: Destination
-- plan-trip-step2.png — Log/Plan flow, Step 2: Dates + what-if calculation panel _(this is the most important screen in the product)_
-- plan-trip-step3.png — Log/Plan flow, Step 3: Confirmation
+| Folder | Screen |
+|--------|--------|
+| v3_trip_history/ | Trip history list |
+| v3_trip_detail_web/ | Trip detail side panel |
+| v3_log_new_trip_modal/ | Plan a Trip — Step 2 (dates + what-if calculation) |
 
 ### Reports
-Location: /docs/wireframes/reports/
-
-- reports.png — Reports and exports screen _(note: Citizenship Absence Report card removed — see PRD)_
+| Folder | Screen |
+|--------|--------|
+| v3_reports_exports/ | Reports and exports screen |
 
 ### Settings
-Location: /docs/wireframes/settings/
-
-- settings.png — Full settings screen _(note: concierge chat card removed — see PRD)_ _(note: correct price is £2.99/month)_
-
----
-
-## Screens Out of Scope for V1
-
-The following screens exist in Stitch but are not being built in v1. Do not reference them during development.
-
-- All mobile screens (v1 through v5)
-- Calendar screen (web)
-- Any screen referencing Citizenship mode
-- Family plan screens or pricing
+| Folder | Screen |
+|--------|--------|
+| v3_settings/ | Settings screen |
 
 ---
 
-## Adding wireframe images
+## Out of Scope for V1
 
-Images should be exported from Stitch as PNG files and placed in the relevant subfolder above. Name each file exactly as shown in the index above so links resolve correctly.
+The following folders exist in /docs/wireframes/web2/ but are out of scope for v1. Do not build these.
 
-To add images:
-1. Export PNGs from Stitch
-2. Name them to match the filenames above
-3. Upload to the relevant /docs/wireframes/ subfolder
-4. GitHub will render them inline when viewing this file
+| Folder | Why out of scope |
+|--------|-----------------|
+| v3_calendar/ | Calendar view cut from v1 — see PRD Section 2.2 |
+| v3_calendar_web/ | Calendar view cut from v1 — see PRD Section 2.2 |
+| v3_trip_detail/ | Use v3_trip_detail_web/ instead — web version |
+
+---
+
+## Missing Screens
+
+See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do not have Stitch exports. These must be built to the PRD spec without a wireframe reference.
 
 ---
 
@@ -97,4 +106,5 @@ To add images:
 
 | Date | Version | What changed |
 |------|---------|--------------|
-| 2026-03-21 | 1.0 | Initial wireframes index created |
+| 2026-03-21 | 1.0 | Initial wireframes index |
+| 2026-03-21 | 1.1 | Updated folder references to reflect actual structure — landingpage2/ and web2/ |
