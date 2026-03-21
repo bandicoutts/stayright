@@ -1,14 +1,36 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { SettingsClient } from '@/components/app/settings/SettingsClient'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Settings — StayRight' }
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.onboarding_completed) redirect('/onboarding')
+
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', user.id)
+    .single()
+
   return (
-    <div className="p-6 md:p-8">
-      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">
-        Settings
-      </h1>
-      <p className="text-sm text-[#3D4A42]">Account settings — coming soon.</p>
-    </div>
+    <SettingsClient
+      profile={profile}
+      subscription={subscription ?? null}
+      userEmail={user.email ?? ''}
+    />
   )
 }

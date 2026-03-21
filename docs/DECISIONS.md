@@ -587,6 +587,70 @@ PDF generation is browser-only. If server-side generation is ever required (e.g.
 
 ---
 
+### [DECISION-024] Recent exports list deferred — no DB table in v1
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+The PRD §4g acceptance criterion "Recent exports are shown in a sidebar list with date, type, and re-download option" and the associated stale-data warning are deferred from v1. The Reports page shows the three report type cards and generates PDFs on demand — no report generation history is persisted to the database.
+
+**Reasoning:**
+Implementing a `report_exports` table requires an additional Supabase migration, a `updated_at`-based staleness check against the trips table, and a re-download flow (which is simply re-generation from current data anyway). Since Stripe is not yet built, no user is on a paid Pro plan in the current deployment — the feature cannot be meaningfully tested. Deferring keeps the v1 surface area focused.
+
+**Alternatives considered:**
+- localStorage-based history — breaks across devices, not acceptable for a compliance tool.
+- Full DB table with report history — correct long-term approach; deferred to v1.1.
+
+**Consequences:**
+Free users see all three report cards but hit the paywall on any "Download PDF" click. Pro users generate PDFs on demand. No generation history is shown. The stale-data warning is not implemented. Add `report_exports` table and stale detection in the first post-launch iteration.
+
+**Related:** PRD Section 4g; DECISION-023; `src/app/(app)/(main)/reports/`
+
+---
+
+### [DECISION-025] `notes` field maps to "Reason for Travel" in ILR Absence Table PDF
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+The ILR Absence Table PDF includes a "Reason for Travel" column (matching the SET(O) form format). The `trips.notes` field is used as the value for this column. No separate `reason_for_travel` field is added to the trips table or trip form.
+
+**Reasoning:**
+The PRD specifies a "Reason for Travel" column in the PDF but does not specify a distinct form field for it — the trip form has a `notes` field which serves the same semantic purpose. Adding a separate field would require a DB migration and an extra input in the trip form for marginal gain. Users who want to capture travel reasons can use the notes field.
+
+**Alternatives considered:**
+- Add a `reason_for_travel` column to `trips` table — requires migration, extra UI. Deferred.
+
+**Consequences:**
+The trip form's "Notes" field implicitly serves as "Reason for Travel" for ILR report purposes. This should be noted in the trip form placeholder text and/or help copy in a future iteration.
+
+**Related:** PRD Section 4g; `src/lib/pdf/reportDocuments.tsx`; `src/app/(app)/(main)/trips/`
+
+---
+
+### [DECISION-026] Account deletion is a hard delete in v1
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+`deleteAccountAction` performs an immediate hard delete: trips → subscriptions → profiles → auth user (via admin client). The PRD §4h data retention policy ("soft-deleted, retained 30 days") is not implemented in v1.
+
+**Reasoning:**
+Soft-delete with 30-day recovery requires a `deleted_at` column on all tables, a scheduled cleanup job (cron or Supabase Edge Function), and a recovery flow. None of these infrastructure pieces exist yet. For v1, hard delete is safe and simpler. The 30-day retention policy is an aspirational goal that requires a post-launch engineering sprint to implement properly.
+
+**Alternatives considered:**
+- Add `deleted_at` column and soft-delete immediately — requires migration on all three tables and a scheduler.
+
+**Consequences:**
+Account deletion is irreversible in v1. The UI makes this explicit ("This action cannot be undone") and requires typing "delete my account" to confirm. Post-launch: add `deleted_at` to profiles/trips/subscriptions and a scheduled Edge Function to purge rows older than 30 days.
+
+**Related:** PRD Section 4h; `src/app/(app)/(main)/settings/actions.ts`
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:

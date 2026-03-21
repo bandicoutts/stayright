@@ -1,14 +1,54 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { ReportsClient } from '@/components/app/reports/ReportsClient'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Reports — StayRight' }
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('onboarding_completed, full_name, visa_route, visa_start_date')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.onboarding_completed) redirect('/onboarding')
+
+  const { data: rawTrips } = await supabase
+    .from('trips')
+    .select('id, destination, departure_date, return_date, notes')
+    .eq('user_id', user.id)
+    .order('departure_date', { ascending: true })
+
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('plan')
+    .eq('user_id', user.id)
+    .single()
+
+  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+
   return (
-    <div className="p-6 md:p-8">
-      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">
-        Reports
-      </h1>
-      <p className="text-sm text-[#3D4A42]">PDF exports — coming soon.</p>
-    </div>
+    <ReportsClient
+      profile={{
+        fullName: profile.full_name,
+        visaRoute: profile.visa_route,
+        visaStartDate: profile.visa_start_date,
+      }}
+      trips={(rawTrips ?? []).map((t) => ({
+        id: t.id,
+        destination: t.destination,
+        departure_date: t.departure_date,
+        return_date: t.return_date,
+        notes: t.notes,
+      }))}
+      isPro={isPro}
+    />
   )
 }
