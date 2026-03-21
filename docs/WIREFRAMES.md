@@ -76,15 +76,17 @@ Each subfolder below contains a screen.png and code.html.
 ### Onboarding
 | Folder | Screen | Status |
 |--------|--------|--------|
-| v3_onboarding_1_welcome/ | Onboarding step 1 — welcome | Not built |
-| v3_onboarding_2_visa_setup/ | Onboarding step 2 — visa route and start date | Not built |
+| v3_onboarding_1_welcome/ | Onboarding step 1 — welcome | **Built** |
+| v3_onboarding_2_visa_setup/ | Onboarding step 2 — visa route and start date | **Built** |
+
+Note: The wireframe "walkthrough" step has been cut per PRD — users need data entry, not a feature tour.
 
 **Missing screens (no wireframe):**
 
-| Screen | Status |
-|--------|--------|
-| Onboarding — Bulk Trip Import | Not built |
-| Onboarding — Empty Dashboard (first view after onboarding) | Not built |
+| Screen | File | Status |
+|--------|------|--------|
+| Onboarding — Bulk Trip Import (step 3) | `src/app/(app)/onboarding/trips/` | **Built (no wireframe)** |
+| Dashboard placeholder (post-onboarding) | `src/app/(app)/dashboard/page.tsx` | **Built (no wireframe)** — full dashboard is next |
 
 ### Dashboard
 | Folder | Screen | Status |
@@ -154,4 +156,5 @@ See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do
 | 2026-03-21 | 1.0 | Initial wireframes index |
 | 2026-03-21 | 1.1 | Updated folder references to reflect actual structure — landingpage2/ and web2/ |
 | 2026-03-21 | 1.2 | Added Status column to all screen tables. Marked landing page and cookie consent/policy as Built. All authenticated app screens marked Not built. Out-of-scope screens marked Out of scope. |
-| 2026-03-21 | 1.3 | Marked all 5 auth screens as Built or Built (no wireframe). |
+| 2026-03-21 | 1.3 | Auth screens built: login/signup, verify-email, password reset (all 3 steps), auth callback. |
+| 2026-03-21 | 1.4 | Onboarding built: welcome, visa setup, bulk trip entry. Dashboard placeholder added. |
