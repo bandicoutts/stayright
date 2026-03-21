@@ -1,0 +1,5 @@
+# Stitch wireframe source files (raw exports)
+planning/
+
+# macOS
+.DS_Store
