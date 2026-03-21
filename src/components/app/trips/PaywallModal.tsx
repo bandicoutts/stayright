@@ -24,9 +24,17 @@ const BENEFITS = [
   'Audit-ready PDF exports',
 ]
 
+// Map modal plan IDs to the API's plan keys
+const PLAN_API_MAP: Record<PlanId, string> = {
+  monthly: 'pro_monthly',
+  annual: 'pro_annual',
+  lifetime: 'pro_lifetime',
+}
+
 export function PaywallModal({ open, onClose, inline = false }: Props) {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('monthly')
-  const [toast, setToast] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
   // Focus close button on open (modal mode)
@@ -50,11 +58,26 @@ export function PaywallModal({ open, onClose, inline = false }: Props) {
 
   const currentPlan = PLANS.find((p) => p.id === selectedPlan)!
 
-  function handleUpgrade() {
-    // TODO: wire to Stripe Checkout in the payments sprint (DECISION-021)
-    console.warn('[PaywallModal] Stripe Checkout not yet wired. Plan selected:', selectedPlan)
-    setToast(true)
-    setTimeout(() => setToast(false), 3000)
+  async function handleUpgrade() {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: PLAN_API_MAP[selectedPlan] }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.url) {
+        setError(data.error ?? 'Something went wrong. Please try again.')
+        return
+      }
+      window.location.href = data.url
+    } catch {
+      setError('Could not connect to payment provider. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const content = (
@@ -149,16 +172,14 @@ export function PaywallModal({ open, onClose, inline = false }: Props) {
       {/* CTA */}
       <button
         onClick={handleUpgrade}
-        className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+        disabled={loading}
+        className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Upgrade to Pro — {currentPlan.detail}
+        {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
       </button>
 
-      {/* Coming soon toast */}
-      {toast && (
-        <div className="mt-3 px-4 py-2 bg-[#191C1D]/8 rounded-xl text-xs text-center text-[#3D4A42]">
-          Payments coming soon — thank you for your patience!
-        </div>
+      {error && (
+        <p className="mt-2 text-xs text-center text-[#BA1A1A]">{error}</p>
       )}
 
       {/* Dismiss */}

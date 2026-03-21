@@ -201,6 +201,10 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
 
+  // ---- Subscription management ----
+  const [portalLoading, setPortalLoading] = useState(false)
+  const [portalError, setPortalError] = useState<string | null>(null)
+
   // ---- ILR target date (computed) ----
   const ilrDate = visaStart
     ? (() => {
@@ -509,13 +513,30 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
           </div>
           {subscription?.plan && subscription.plan !== 'free' && subscription.plan !== 'pro_lifetime' && (
             <button
-              disabled
-              title="Stripe Customer Portal — coming soon"
-              className="px-4 py-2 bg-[#F3F4F5] text-[#3D4A42] text-sm font-semibold rounded-xl cursor-not-allowed opacity-60"
+              onClick={async () => {
+                setPortalLoading(true)
+                setPortalError(null)
+                try {
+                  const res = await fetch('/api/stripe/portal', { method: 'POST' })
+                  const data = await res.json()
+                  if (!res.ok || !data.url) {
+                    setPortalError(data.error ?? 'Could not open billing portal.')
+                    return
+                  }
+                  window.location.href = data.url
+                } catch {
+                  setPortalError('Could not connect. Please try again.')
+                } finally {
+                  setPortalLoading(false)
+                }
+              }}
+              disabled={portalLoading}
+              className="px-4 py-2 bg-[#006948] text-white text-sm font-semibold rounded-xl hover:bg-[#00855D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Manage subscription
+              {portalLoading ? 'Opening…' : 'Manage subscription'}
             </button>
           )}
+          {portalError && <p className="mt-2 text-xs text-[#BA1A1A]">{portalError}</p>}
         </div>
         {(!subscription?.plan || subscription.plan === 'free') && (
           <p className="mt-3 text-xs text-[#3D4A42]">
