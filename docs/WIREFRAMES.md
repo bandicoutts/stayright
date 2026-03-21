@@ -104,16 +104,19 @@ Note: The wireframe "walkthrough" step has been cut per PRD — users need data 
 ### Trips
 | Folder | Screen | Status |
 |--------|--------|--------|
-| v3_trip_history/ | Trip history list | Not built |
-| v3_trip_detail_web/ | Trip detail side panel | Not built |
-| v3_log_new_trip_modal/ | Plan a Trip — Step 2 (dates + what-if calculation) | Not built |
+| v3_trip_history/ | Trip history list | **Built** |
+| v3_trip_detail_web/ | Trip detail side panel | **Built** |
+| v3_log_new_trip_modal/ | Plan a Trip — Step 2 (dates + what-if calculation) | **Built** |
 
 **Missing screens (no wireframe):**
 
-| Screen | Status |
-|--------|--------|
-| Plan a Trip — Step 1 Destination | Not built |
-| Plan a Trip — Step 3 Confirm | Not built |
+| Screen | File | Status |
+|--------|------|--------|
+| Plan a Trip — Step 1 Destination | `src/components/app/trips/TripFlowClient.tsx` | **Built (no wireframe)** |
+| Plan a Trip — Step 3 Confirm | `src/components/app/trips/TripFlowClient.tsx` | **Built (no wireframe)** |
+| Log a Trip (same flow, no "Just checking") | `src/app/(app)/(main)/trips/log/page.tsx` | **Built (no wireframe)** |
+| Edit Trip (pre-filled flow) | `src/app/(app)/(main)/trips/[id]/edit/page.tsx` | **Built (no wireframe)** |
+| Paywall modal | `src/components/app/trips/PaywallModal.tsx` | **Built (no wireframe)** |
 
 ### Reports
 | Folder | Screen | Status |
@@ -160,3 +163,4 @@ See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do
 | 2026-03-21 | 1.3 | Auth screens built: login/signup, verify-email, password reset (all 3 steps), auth callback. |
 | 2026-03-21 | 1.4 | Onboarding built: welcome, visa setup, bulk trip entry. Dashboard placeholder added. |
 | 2026-03-21 | 1.5 | Full dashboard built: quota ring, qualifying period, recent trips, alert card, ILR timeline, sidebar shell. |
+| 2026-03-21 | 1.6 | Trips built: trip list, detail side panel, 3-step plan/log/edit flow, paywall modal. |
