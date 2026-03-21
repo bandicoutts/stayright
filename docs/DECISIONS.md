@@ -211,6 +211,80 @@ Any reference to wireframe file paths in documentation must use the landingpage2
 
 ---
 
+### [DECISION-013] Database schema — three tables: profiles, trips, subscriptions
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+The StayRight database has three tables in the `public` schema:
+
+- `profiles` — extends `auth.users` with visa profile data (visa route, visa start date) and notification preferences. One row per user, created automatically on signup via trigger.
+- `trips` — one row per UK absence period. Stores `departure_date`, `return_date` (nullable — null means currently abroad), `destination` (free text), and `notes`. No calculated values stored (DECISION-005).
+- `subscriptions` — one row per user. Stores Stripe IDs, plan (`free` | `pro_monthly` | `pro_annual` | `pro_lifetime`), and status. Writable only by service role (Stripe webhooks); users can read their own row.
+
+**Reasoning:**
+Three tables maps cleanly to the three data domains. Keeping notification preferences in `profiles` avoids a separate `notification_settings` table for what is a simple set of boolean toggles. Keeping Stripe IDs in `subscriptions` (separate from `profiles`) means the payments domain is isolated and the service role writes are scoped to one table.
+
+**Alternatives considered:**
+- Storing notification prefs in a separate table — rejected. Five boolean columns on `profiles` is simpler and there is no use case for querying notification prefs independently of the profile.
+- Storing Stripe IDs on `profiles` — rejected. Mixes payment concerns into the profile table. Subscription writes need service role bypass; isolating to one table makes the RLS policy clearer.
+- Using Supabase's built-in `user_metadata` for profile data — rejected. Not queryable with standard SQL; no type safety; harder to enforce constraints.
+
+**Consequences:**
+All API routes and server components fetch profile + subscription data together for most authenticated requests. A helper that returns `{ profile, subscription }` for the current user avoids duplicate queries.
+
+**Related:** DECISION-001, DECISION-005, PRD Section 4h, 4j
+
+---
+
+### [DECISION-014] @supabase/ssr for Next.js App Router; separate browser, server, and admin clients
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+Three Supabase client functions are defined in `src/lib/supabase/`:
+
+- `client.ts` — `createClient()` using `@supabase/ssr` `createBrowserClient`. Use in Client Components (`'use client'`).
+- `server.ts` — `createClient()` using `@supabase/ssr` `createServerClient` with Next.js `cookies()`. Use in Server Components, Server Actions, and Route Handlers.
+- `admin.ts` — `createAdminClient()` using the base `@supabase/supabase-js` client with the service role key. Bypasses RLS. Use only in API routes (Stripe webhooks, server-side admin operations). Never import in Client Components.
+
+**Reasoning:**
+`@supabase/ssr` is the Supabase-recommended package for Next.js App Router. It handles cookie-based session management required for SSR. The browser/server split is required because App Router Server Components cannot use browser APIs. The admin client is separated into its own file so it is impossible to accidentally import it on the client — the service role key would be exposed if bundled client-side.
+
+**Alternatives considered:**
+- Using `@supabase/auth-helpers-nextjs` — rejected. Deprecated in favour of `@supabase/ssr`.
+- Single client for all contexts — rejected. Browser and server clients require different cookie handling. Mixing them causes session management bugs in SSR.
+
+**Consequences:**
+Developers must always use the correct client for the context: `src/lib/supabase/client.ts` in Client Components, `src/lib/supabase/server.ts` everywhere else, `src/lib/supabase/admin.ts` only for privileged operations.
+
+**Related:** DECISION-001, DECISION-013
+
+---
+
+### [DECISION-015] Next.js middleware handles session refresh and route protection
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+`src/middleware.ts` runs on every non-static request and handles two things: (1) refreshes the Supabase session so tokens do not expire mid-session; (2) redirects unauthenticated users away from authenticated routes (`/dashboard`, `/trips`, `/reports`, `/settings`, `/onboarding`) to `/login`, and redirects authenticated users away from auth pages (`/login`, `/signup`) to `/dashboard`.
+
+**Reasoning:**
+Supabase's `@supabase/ssr` documentation requires session refresh in middleware to prevent token expiry in Server Components. Combining route protection in the same middleware avoids a separate auth check in every Server Component or layout.
+
+**Alternatives considered:**
+- Per-layout auth check in Server Components — rejected. Requires duplicating the session check in every layout and still needs the middleware session refresh. More code, same result.
+
+**Consequences:**
+Any new authenticated route must be added to the `isAppRoute` check in `src/middleware.ts`. Any new public route does not need any changes — it is public by default.
+
+**Related:** DECISION-013, DECISION-014
+
+---
+
 ### [DECISION-010] Multi-leg trips are a single trip record
 **Date:** 2026-03-21
 **Status:** Decided
@@ -359,3 +433,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.1 | Added DECISION-007 — wireframe folder structure |
 | 2026-03-21 | 1.2 | Added DECISION-008 — Tailwind v4 CSS config; DECISION-009 — root layout fonts |
 | 2026-03-21 | 1.3 | Added DECISION-010 — multi-leg trips as single record; DECISION-011 — Crown Dependencies vs BOTs; DECISION-012 — monthly summary email format |
+| 2026-03-21 | 1.4 | Added DECISION-013 — database schema (3 tables); DECISION-014 — Supabase client strategy; DECISION-015 — middleware session + route protection |
