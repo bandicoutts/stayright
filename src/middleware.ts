@@ -48,6 +48,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Already signed in — redirect away from auth pages
+  // /verify-email and /reset-password/* are accessible while signed out; no redirect needed for those.
   const isAuthRoute = pathname === '/login' || pathname === '/signup'
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()

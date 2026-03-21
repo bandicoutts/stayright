@@ -399,6 +399,33 @@ All routes in the app have Manrope and Inter available via CSS variables `--font
 
 ---
 
+### [DECISION-016] Authentication flow — Server Actions + Supabase SSR + two callback routes
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Claude (agent)
+
+**Decision:**
+All email/password auth operations (sign up, sign in, password reset request, set new password, resend verification, sign out) are implemented as Next.js Server Actions in `src/lib/auth/actions.ts`. Google OAuth is initiated client-side using the Supabase browser client (`src/lib/supabase/client.ts`) and `signInWithOAuth()`. Two Route Handlers handle Supabase's redirect callbacks:
+- `src/app/auth/confirm/route.ts` — verifies OTP token for email confirmation and password recovery links (`?token_hash=...&type=email|recovery`)
+- `src/app/auth/callback/route.ts` — exchanges the PKCE code for a session after Google OAuth (`?code=...`)
+
+The sign-up and log-in flows are combined on the `/login` route as a tabbed interface (`LoginTabs.tsx`). The `/signup` route redirects to `/login?tab=signup` so landing-page CTAs continue to work.
+
+**Reasoning:**
+Server Actions run on the server, keep credentials server-side only, and integrate naturally with Next.js form submission and `useActionState`. The two-callback pattern is the canonical Supabase SSR pattern for Next.js App Router. Google OAuth initiation is browser-side because `signInWithOAuth` returns a redirect URL that the browser must follow immediately — attempting this in a Server Action can cause issues with PKCE cookie setting before the redirect. Combining sign-in and sign-up on one page reduces page count and matches the PRD "tabbed screen" spec.
+
+**Alternatives considered:**
+- Route Handlers for all auth operations — rejected. Server Actions are the Next.js-recommended approach for form submissions; they integrate with `useActionState` for inline error display without extra client-side fetch logic.
+- Separate `/signup` page — rejected. PRD specifies a single tabbed screen. A redirect from `/signup` satisfies existing landing-page CTA links without creating a duplicate form.
+- Server Action for Google OAuth — rejected. `signInWithOAuth` in a Server Action can race with PKCE cookie setting. Browser-side initiation is more reliable and is the pattern documented by Supabase.
+
+**Consequences:**
+All form error messages are returned from Server Actions and displayed inline via `useActionState`. Auth pages live in the `(auth)` route group with a shared centered layout. The middleware `isAuthRoute` check covers `/login` and `/signup`; other auth-adjacent routes (`/verify-email`, `/reset-password/*`) are intentionally accessible to both authenticated and unauthenticated users.
+
+**Related:** PRD.md Section 4a; DECISION-014 (Supabase client strategy); DECISION-015 (middleware)
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -434,3 +461,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.2 | Added DECISION-008 — Tailwind v4 CSS config; DECISION-009 — root layout fonts |
 | 2026-03-21 | 1.3 | Added DECISION-010 — multi-leg trips as single record; DECISION-011 — Crown Dependencies vs BOTs; DECISION-012 — monthly summary email format |
 | 2026-03-21 | 1.4 | Added DECISION-013 — database schema (3 tables); DECISION-014 — Supabase client strategy; DECISION-015 — middleware session + route protection |
+| 2026-03-21 | 1.5 | Added DECISION-016 — authentication flow (Server Actions + Supabase SSR + callback routes) |

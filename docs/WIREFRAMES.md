@@ -62,16 +62,16 @@ Each subfolder below contains a screen.png and code.html.
 ### Authentication
 | Folder | Screen | Status |
 |--------|--------|--------|
-| v3_password_reset_1_request/ | Password reset — enter email | Not built |
-| v3_password_reset_2_check_email/ | Password reset — check inbox | Not built |
-| v3_password_reset_3_new_password/ | Password reset — set new password | Not built |
+| v3_password_reset_1_request/ | Password reset — enter email | **Built** |
+| v3_password_reset_2_check_email/ | Password reset — check inbox | **Built** |
+| v3_password_reset_3_new_password/ | Password reset — set new password | **Built** |
 
 **Missing screens (no wireframe):**
 
 | Screen | Status |
 |--------|--------|
-| Sign Up / Log In — tabbed screen | Not built |
-| Email verification — post-signup holding screen | Not built |
+| Sign Up / Log In — tabbed screen | **Built (no wireframe)** |
+| Email verification — post-signup holding screen | **Built (no wireframe)** |
 
 ### Onboarding
 | Folder | Screen | Status |
@@ -154,3 +154,4 @@ See /docs/wireframes/MISSING_SCREENS.md for screens specified in the PRD that do
 | 2026-03-21 | 1.0 | Initial wireframes index |
 | 2026-03-21 | 1.1 | Updated folder references to reflect actual structure — landingpage2/ and web2/ |
 | 2026-03-21 | 1.2 | Added Status column to all screen tables. Marked landing page and cookie consent/policy as Built. All authenticated app screens marked Not built. Out-of-scope screens marked Out of scope. |
+| 2026-03-21 | 1.3 | Marked all 5 auth screens as Built or Built (no wireframe). |
