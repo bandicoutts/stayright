@@ -493,6 +493,76 @@ All future authenticated screens (trips, reports, settings) go in `(app)/(main)/
 
 ---
 
+### [DECISION-020] Trip flow pages are standalone routes, not overlay modals
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+`/trips/plan`, `/trips/log`, and `/trips/[id]/edit` are implemented as standalone Next.js App Router pages rather than client-side overlay modals. The "modal" language in the PRD is UI intent, not a technical specification. After a save or cancel action, users are redirected to `/trips` via `router.push('/trips')`.
+
+**Reasoning:**
+Standalone pages are simpler to implement, have better URL semantics (users can bookmark or deep-link), support browser back navigation natively, and integrate cleanly with Next.js Server Components for data loading. Client-side modal routing would require URL state management (e.g. `?modal=plan`) plus a parallel route or intercepting route, adding significant complexity with no user-facing benefit.
+
+**Alternatives considered:**
+- Next.js intercepting routes (`@modal`) — rejected. Adds folder structure complexity and intercepting route edge cases (direct navigation, hard refresh). Not worth the overhead for three forms.
+- `?action=plan` URL state + client-side modal — rejected. Requires the trips page to be a client component to read the URL state, and the calculation data must still be fetched server-side.
+
+**Consequences:**
+`/trips/plan`, `/trips/log`, and `/trips/[id]/edit` are regular pages under `(app)/(main)/trips/`. Each loads its data server-side and renders `TripFlowClient`. The user experience is functionally equivalent to a modal — the sidebar is preserved and the back button works.
+
+**Related:** PRD Section 4e, 4f; DECISION-019
+
+---
+
+### [DECISION-021] Paywall modal UI is built; Stripe Checkout is deferred to payments sprint
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+The `PaywallModal` component (`src/components/app/trips/PaywallModal.tsx`) is fully built to the PRD §4l spec — including plan selection cards, benefit list, and CTA button — but clicking "Upgrade to Pro" shows a "Coming soon" toast rather than opening Stripe Checkout. The Stripe integration will be wired in the dedicated payments sprint.
+
+The component accepts an `inline` prop. When `inline={true}`, it renders as a full-width card (no overlay backdrop), used on `/trips/plan` and `/trips/log` when a Free user has reached the 3-trip limit. When `inline={false}` (default), it renders as a focus-trapped overlay modal, used from the `TripsClient` add trip button.
+
+**Reasoning:**
+Building the paywall UI now ensures paywall triggers are correctly gated in the trip flow. Deferring Stripe prevents blocking the trip feature on payment infrastructure. The `inline` variant avoids shipping dead pages (a Free user navigating to `/trips/plan` with 3 trips would otherwise see an empty page).
+
+**Alternatives considered:**
+- Skip the paywall UI until Stripe is ready — rejected. Paywall gates must be present for Free users to avoid broken flows. The UI stub communicates intent correctly.
+- Redirect to a dedicated paywall page — rejected. A redirect to `/upgrade` is a worse user experience than an inline gate on the page they already navigated to.
+
+**Consequences:**
+When the payments sprint is built, `handleUpgrade()` in `PaywallModal.tsx` must be wired to the Stripe Checkout Server Action. No other changes are required in the trip flow.
+
+**Related:** PRD Section 3.3, 4j, 4l; DECISION-020
+
+---
+
+### [DECISION-022] calculateWhatIf uses return_date as the `today` parameter for future trips
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** Engineering
+
+**Decision:**
+In `TripFlowClient.tsx`, the live what-if calculation calls `calculateWhatIf(existingTrips, hypotheticalTrip, new Date(return_date), visaStartDate)` — passing the hypothetical trip's return date as the `today` parameter instead of the current date.
+
+**Reasoning:**
+`calculateWhatIf` calls `getCurrentRollingWindow` with the provided `today`, which calculates a 12-month window ending on that date. If `today = new Date()` (the current date) and the trip departs in 3 months, the rolling window is `[today − 1 year, today]`. Future absence days are outside this window and would not be counted, giving a misleadingly safe result. Passing `today = return_date` computes the rolling window as `[return_date − 1 year, return_date]`, which correctly shows the user where they will stand when they return.
+
+This gives the user the right answer to the question: "How many days will I have used when I get back from this trip?"
+
+**Alternatives considered:**
+- Use `new Date()` as today — rejected. Correct for past and present trips but gives wrong results for any future trip, which is the primary use case of the "Plan a Trip" feature.
+- Create a new engine function that projects forward — rejected. `calculateWhatIf` already accepts a `today` parameter for exactly this reason. No new function needed.
+
+**Consequences:**
+The live calculation on `/trips/plan` correctly projects the rolling window forward to the return date. For past trips (log/edit mode), `return_date` is in the past, so this has no difference in behaviour — the window ends before today, which is the correct snapshot.
+
+**Related:** PRD Section 4e; DECISION-018; `src/lib/calculations/absenceEngine.ts`
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:

@@ -1,0 +1,684 @@
+'use client'
+
+import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  isCrownDependency,
+  calculateWhatIf,
+  calculateTripAbsenceDays,
+  getRiskStatus,
+} from '@/lib/calculations/absenceEngine'
+import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
+import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/actions'
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface InitialTrip {
+  id: string
+  destination: string
+  departure_date: string
+  return_date: string | null
+  notes: string | null
+}
+
+interface TripFlowClientProps {
+  mode: 'plan' | 'log' | 'edit'
+  existingTrips: TripInput[]
+  visaStartDate?: string
+  isPro: boolean
+  tripCount: number
+  initialTrip?: InitialTrip
+}
+
+// ---------------------------------------------------------------------------
+// Risk config (WCAG: colour + text label — colour alone fails WCAG)
+// ---------------------------------------------------------------------------
+
+const RISK_CONFIG = {
+  SAFE:    { bg: 'bg-[#006948]/10',  text: 'text-[#006948]',  label: 'Safe'    },
+  WARNING: { bg: 'bg-[#D97706]/10',  text: 'text-[#D97706]',  label: 'Warning' },
+  DANGER:  { bg: 'bg-[#BA1A1A]/10',  text: 'text-[#BA1A1A]',  label: 'Danger'  },
+  BREACH:  { bg: 'bg-[#8E0009]/10',  text: 'text-[#8E0009]',  label: 'Breach'  },
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function todayISO() {
+  return new Date().toISOString().split('T')[0]
+}
+
+function formatDateRange(dep: string, ret: string | null): string {
+  if (!ret) return 'Currently abroad'
+  if (dep === ret) return '0 days'
+
+  const d = new Date(dep + 'T00:00:00Z')
+  const r = new Date(ret + 'T00:00:00Z')
+
+  const depDay = d.getUTCDate()
+  const retDay = r.getUTCDate()
+  const depMonth = d.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
+  const retMonth = r.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
+  const depYear = d.getUTCFullYear()
+  const retYear = r.getUTCFullYear()
+
+  if (depYear === retYear && depMonth === retMonth) {
+    return `${depDay}–${retDay} ${retMonth} ${retYear}`
+  }
+  if (depYear === retYear) {
+    return `${depDay} ${depMonth} – ${retDay} ${retMonth} ${retYear}`
+  }
+  return `${depDay} ${depMonth} ${depYear} – ${retDay} ${retMonth} ${retYear}`
+}
+
+function formatWindowDate(date: Date): string {
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Step indicator
+// ---------------------------------------------------------------------------
+
+function StepDots({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="flex items-center gap-2 mb-8">
+      {Array.from({ length: total }).map((_, i) => (
+        <div
+          key={i}
+          className={`h-1.5 rounded-full transition-all ${
+            i < current ? 'w-8 bg-[#006948]' : i === current - 1 ? 'w-8 bg-[#006948]' : 'w-8 bg-[#191C1D]/15'
+          }`}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Live calculation panel
+// ---------------------------------------------------------------------------
+
+function CalcPanel({
+  result,
+  tripDays,
+  windowEndDate,
+}: {
+  result: RollingWindowResult
+  tripDays: number
+  windowEndDate: Date
+}) {
+  const cfg = RISK_CONFIG[result.status]
+  const remaining = Math.max(0, 180 - result.days)
+  const barPct = Math.min(100, (result.days / 180) * 100)
+
+  return (
+    <div className="mt-4 p-4 bg-[#F8F9FA] rounded-xl space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-[#3D4A42]">This trip</span>
+        <span className="text-sm font-semibold text-[#191C1D]">{tripDays} {tripDays === 1 ? 'day' : 'days'}</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-[#3D4A42]">Days remaining after</span>
+        <span className="text-sm font-semibold text-[#191C1D]">{remaining} days</span>
+      </div>
+
+      {/* Progress bar */}
+      <div>
+        <div className="flex justify-between text-xs text-[#3D4A42] mb-1">
+          <span>{result.days} / 180 days used</span>
+          <span>Rolling window to {formatWindowDate(windowEndDate)}</span>
+        </div>
+        <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-500 ${
+              result.status === 'SAFE' ? 'bg-[#006948]' :
+              result.status === 'WARNING' ? 'bg-[#D97706]' : 'bg-[#BA1A1A]'
+            }`}
+            style={{ width: `${barPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Risk badge */}
+      <div className="flex items-center gap-2">
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
+          {cfg.label}
+        </span>
+        {result.status === 'SAFE' && (
+          <span className="text-xs text-[#3D4A42]">Safe to travel</span>
+        )}
+        {result.status === 'WARNING' && (
+          <span className="text-xs text-[#D97706]">Approaching the limit — plan carefully</span>
+        )}
+        {result.status === 'DANGER' && (
+          <span className="text-xs text-[#BA1A1A]">Very close to the 180-day limit</span>
+        )}
+      </div>
+
+      {/* Breach warning */}
+      {result.status === 'BREACH' && (
+        <div className="p-3 bg-[#BA1A1A]/8 border border-[#BA1A1A]/25 rounded-xl">
+          <p className="text-xs font-semibold text-[#BA1A1A]">
+            This trip would push you to {result.days}/180 days in the rolling window ending{' '}
+            {formatWindowDate(windowEndDate)}. You would breach the absence limit.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
+export function TripFlowClient({
+  mode,
+  existingTrips,
+  visaStartDate,
+  isPro: _isPro,
+  tripCount: _tripCount,
+  initialTrip,
+}: TripFlowClientProps) {
+  const router = useRouter()
+
+  // For edit mode, exclude the trip being edited from existingTrips so we don't
+  // double-count it during the live what-if calculation
+  const baseTrips = useMemo(() => {
+    if (mode === 'edit' && initialTrip) {
+      return existingTrips.filter((t) => t.id !== initialTrip.id)
+    }
+    return existingTrips
+  }, [mode, initialTrip, existingTrips])
+
+  // Step state
+  const [step, setStep] = useState<1 | 2 | 3>(1)
+
+  // Form values — pre-fill for edit mode
+  const [destination, setDestination] = useState(initialTrip?.destination ?? '')
+  const [departureDate, setDepartureDate] = useState(initialTrip?.departure_date ?? '')
+  const [returnDate, setReturnDate] = useState(initialTrip?.return_date ?? '')
+  const [returnDateKnown, setReturnDateKnown] = useState(
+    mode === 'edit' ? initialTrip?.return_date !== null : true
+  )
+  const [notes, setNotes] = useState(initialTrip?.notes ?? '')
+
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const isCrownDep = destination.trim().length > 0 && isCrownDependency(destination)
+
+  // ---------------------------------------------------------------------------
+  // Live calculation (Step 2)
+  // ---------------------------------------------------------------------------
+
+  const calcResult = useMemo<{ result: RollingWindowResult; tripDays: number; windowEnd: Date } | null>(() => {
+    if (!departureDate || !returnDate || !returnDateKnown) return null
+    if (returnDate <= departureDate) return null
+
+    if (isCrownDep) {
+      return {
+        result: {
+          days: 0,
+          status: 'SAFE',
+          windowStart: new Date(),
+          windowEnd: new Date(returnDate + 'T00:00:00Z'),
+        },
+        tripDays: 0,
+        windowEnd: new Date(returnDate + 'T00:00:00Z'),
+      }
+    }
+
+    // Use return_date as `today` so future trips project the rolling window correctly
+    // (DECISION-022)
+    const projectedToday = new Date(returnDate + 'T00:00:00Z')
+    const result = calculateWhatIf(
+      baseTrips,
+      { destination, departure_date: departureDate, return_date: returnDate },
+      projectedToday,
+      visaStartDate
+    )
+
+    const tripDays = calculateTripAbsenceDays({
+      destination,
+      departure_date: departureDate,
+      return_date: returnDate,
+    })
+
+    return { result, tripDays, windowEnd: result.windowEnd }
+  }, [departureDate, returnDate, returnDateKnown, destination, isCrownDep, baseTrips, visaStartDate])
+
+  // Risk status for confirm step summary
+  const confirmRisk = useMemo(() => {
+    if (!returnDate || !returnDateKnown) return null
+    if (isCrownDep) return 'SAFE' as const
+    if (!departureDate || returnDate <= departureDate) return null
+    const days = calculateTripAbsenceDays({
+      destination,
+      departure_date: departureDate,
+      return_date: returnDate,
+    })
+    return getRiskStatus(days)
+  }, [destination, departureDate, returnDate, returnDateKnown, isCrownDep])
+
+  // ---------------------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------------------
+
+  function handleStep1Next() {
+    if (!destination.trim()) {
+      setError('Please enter a destination.')
+      return
+    }
+    setError(null)
+    setStep(2)
+  }
+
+  function handleStep2Next() {
+    if (!departureDate) {
+      setError('Please enter a departure date.')
+      return
+    }
+    if (returnDateKnown) {
+      if (!returnDate) {
+        setError("Please enter a return date, or choose \"I'll log my return later\".")
+        return
+      }
+      if (returnDate <= departureDate) {
+        setError('Departure date must be before the return date.')
+        return
+      }
+    }
+    setError(null)
+    setStep(3)
+  }
+
+  function handleLeavingToday() {
+    setDepartureDate(todayISO())
+  }
+
+  function handleLogReturnLater() {
+    setReturnDateKnown(false)
+    setReturnDate('')
+  }
+
+  function handleEnterReturnDate() {
+    setReturnDateKnown(true)
+  }
+
+  async function handleSave() {
+    setSaving(true)
+    setError(null)
+
+    const data = {
+      destination: destination.trim(),
+      departure_date: departureDate,
+      return_date: returnDateKnown && returnDate ? returnDate : null,
+      notes: notes.trim() || null,
+    }
+
+    let result
+    if (mode === 'edit' && initialTrip) {
+      result = await updateTripAction(initialTrip.id, data)
+    } else {
+      result = await addTripAction(data)
+    }
+
+    if ('error' in result) {
+      setError(result.error)
+      setSaving(false)
+      return
+    }
+
+    router.push('/trips')
+  }
+
+  function handleJustChecking() {
+    router.push('/trips')
+  }
+
+  // ---------------------------------------------------------------------------
+  // Step labels
+  // ---------------------------------------------------------------------------
+
+  const pageTitle =
+    mode === 'plan' ? 'Plan a trip' :
+    mode === 'log'  ? 'Log a trip' :
+                     'Edit trip'
+
+  const pageSubtitle =
+    mode === 'plan' ? 'See the impact on your 180-day window before you book.' :
+    mode === 'log'  ? "Add a trip you've already taken." :
+                     'Update the details for this trip.'
+
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
+
+  return (
+    <div className="p-6 md:p-8 max-w-xl">
+      <div className="mb-6">
+        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D]">
+          {pageTitle}
+        </h1>
+        <p className="text-sm text-[#3D4A42] mt-0.5">{pageSubtitle}</p>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 md:p-8">
+        <StepDots current={step} total={3} />
+
+        {/* ── Step 1: Destination ─────────────────────────────────────── */}
+        {step === 1 && (
+          <div>
+            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+              Step 1 of 3
+            </p>
+            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D] mb-5">
+              Where are you going?
+            </h2>
+
+            {error && (
+              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+                {error}
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label htmlFor="destination" className="block text-sm font-medium text-[#191C1D] mb-1.5">
+                Destination
+              </label>
+              <input
+                id="destination"
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                placeholder="e.g. Portugal, Dubai, Multi-destination"
+                autoFocus
+                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              />
+            </div>
+
+            {/* Crown Dependency panel */}
+            {isCrownDep && (
+              <div className="mb-4 px-4 py-3 bg-[#006948]/8 border border-[#006948]/20 rounded-xl flex items-start gap-3">
+                <span className="text-[#006948] text-sm font-semibold shrink-0">✓</span>
+                <p className="text-sm text-[#191C1D]">
+                  <span className="font-semibold">Crown Dependencies count as UK presence.</span>{' '}
+                  This trip will not affect your absence record.
+                </p>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={handleStep1Next}
+              className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+            >
+              Next →
+            </button>
+          </div>
+        )}
+
+        {/* ── Step 2: Dates ───────────────────────────────────────────── */}
+        {step === 2 && (
+          <div>
+            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+              Step 2 of 3
+            </p>
+            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D] mb-1">
+              When are you travelling?
+            </h2>
+            <p className="text-sm text-[#3D4A42] mb-5">
+              <span className="font-medium text-[#191C1D]">{destination}</span>
+            </p>
+
+            {error && (
+              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+                {error}
+              </div>
+            )}
+
+            {/* Departure date */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="departure_date" className="text-sm font-medium text-[#191C1D]">
+                  Departed UK
+                </label>
+                <button
+                  type="button"
+                  onClick={handleLeavingToday}
+                  className="text-xs text-[#006948] hover:underline cursor-pointer"
+                >
+                  I'm leaving today
+                </button>
+              </div>
+              <input
+                id="departure_date"
+                type="date"
+                value={departureDate}
+                onChange={(e) => setDepartureDate(e.target.value)}
+                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              />
+            </div>
+
+            {/* Return date */}
+            {returnDateKnown ? (
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label htmlFor="return_date" className="text-sm font-medium text-[#191C1D]">
+                    Returned to UK
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleLogReturnLater}
+                    className="text-xs text-[#006948] hover:underline cursor-pointer"
+                  >
+                    I'll log my return later
+                  </button>
+                </div>
+                <input
+                  id="return_date"
+                  type="date"
+                  value={returnDate}
+                  min={departureDate || undefined}
+                  onChange={(e) => setReturnDate(e.target.value)}
+                  className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+                />
+              </div>
+            ) : (
+              <div className="mb-4 px-4 py-3 bg-[#D97706]/8 border border-[#D97706]/20 rounded-xl flex items-center justify-between">
+                <p className="text-sm text-[#191C1D]">
+                  Trip will be saved as <span className="font-semibold">Currently abroad</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={handleEnterReturnDate}
+                  className="text-xs text-[#006948] hover:underline cursor-pointer shrink-0 ml-3"
+                >
+                  Enter date
+                </button>
+              </div>
+            )}
+
+            {/* Live calculation panel */}
+            {isCrownDep && departureDate && (
+              <div className="mb-4 px-4 py-3 bg-[#006948]/8 border border-[#006948]/20 rounded-xl">
+                <p className="text-sm text-[#191C1D]">
+                  <span className="font-semibold text-[#006948]">0 absence days.</span>{' '}
+                  Crown Dependencies count as UK presence.
+                </p>
+              </div>
+            )}
+
+            {!isCrownDep && calcResult && (
+              <CalcPanel
+                result={calcResult.result}
+                tripDays={calcResult.tripDays}
+                windowEndDate={calcResult.windowEnd}
+              />
+            )}
+
+            {/* Validation error for date order */}
+            {returnDateKnown && returnDate && departureDate && returnDate <= departureDate && (
+              <p className="mt-3 text-sm text-[#BA1A1A]">
+                Departure date must be before the return date.
+              </p>
+            )}
+
+            <div className="flex gap-3 mt-5">
+              <button
+                type="button"
+                onClick={() => { setStep(1); setError(null) }}
+                className="px-4 py-3 text-sm text-[#3D4A42] border border-[#191C1D]/15 rounded-xl hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+              >
+                ← Back
+              </button>
+              <button
+                type="button"
+                onClick={handleStep2Next}
+                className="flex-1 bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Step 3: Confirm ─────────────────────────────────────────── */}
+        {step === 3 && (
+          <div>
+            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+              Step 3 of 3
+            </p>
+            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D] mb-5">
+              {mode === 'plan' ? 'Review your trip' : 'Confirm and save'}
+            </h2>
+
+            {error && (
+              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+                {error}
+              </div>
+            )}
+
+            {/* Trip summary card */}
+            <div className="bg-[#F8F9FA] rounded-xl p-4 mb-4 space-y-2">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-[#191C1D]">{destination}</p>
+                  <p className="text-xs text-[#3D4A42] mt-0.5">
+                    {formatDateRange(departureDate, returnDateKnown && returnDate ? returnDate : null)}
+                  </p>
+                </div>
+                {confirmRisk && (
+                  <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${RISK_CONFIG[confirmRisk].bg} ${RISK_CONFIG[confirmRisk].text}`}>
+                    {RISK_CONFIG[confirmRisk].label}
+                  </span>
+                )}
+                {!returnDateKnown && (
+                  <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#D97706]/10 text-[#D97706]">
+                    Currently abroad
+                  </span>
+                )}
+              </div>
+
+              {returnDateKnown && returnDate && !isCrownDep && (
+                <p className="text-xs text-[#3D4A42]">
+                  {calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate })} absence {calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate }) === 1 ? 'day' : 'days'}
+                </p>
+              )}
+              {isCrownDep && (
+                <p className="text-xs text-[#006948] font-medium">
+                  Crown Dependency — 0 absence days
+                </p>
+              )}
+            </div>
+
+            {/* Rolling window impact */}
+            {calcResult && (
+              <div className="bg-[#F8F9FA] rounded-xl p-4 mb-4">
+                <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-wider mb-2">
+                  Rolling window impact
+                </p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#3D4A42]">Days used (after this trip)</span>
+                  <span className="font-semibold text-[#191C1D]">{calcResult.result.days} / 180</span>
+                </div>
+                <div className="w-full h-1.5 bg-[#191C1D]/8 rounded-full overflow-hidden mt-2">
+                  <div
+                    className={`h-full rounded-full ${
+                      calcResult.result.status === 'SAFE' ? 'bg-[#006948]' :
+                      calcResult.result.status === 'WARNING' ? 'bg-[#D97706]' : 'bg-[#BA1A1A]'
+                    }`}
+                    style={{ width: `${Math.min(100, (calcResult.result.days / 180) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Notes */}
+            <div className="mb-5">
+              <label htmlFor="notes" className="block text-sm font-medium text-[#191C1D] mb-1.5">
+                Notes <span className="text-[#3D4A42] font-normal">(optional)</span>
+              </label>
+              <textarea
+                id="notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="e.g. Dubai → Bangkok → London (multi-leg)"
+                rows={2}
+                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow resize-none"
+              />
+            </div>
+
+            {/* Action buttons */}
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              >
+                {saving
+                  ? 'Saving…'
+                  : mode === 'plan'
+                  ? 'Save this trip'
+                  : mode === 'edit'
+                  ? 'Save changes'
+                  : 'Save trip'}
+              </button>
+
+              {mode === 'plan' && (
+                <button
+                  type="button"
+                  onClick={handleJustChecking}
+                  disabled={saving}
+                  className="w-full border border-[#191C1D]/15 text-[#3D4A42] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#F8F9FA] transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  Just checking
+                </button>
+              )}
+            </div>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => { setStep(2); setError(null) }}
+                className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors cursor-pointer"
+              >
+                ← Back
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

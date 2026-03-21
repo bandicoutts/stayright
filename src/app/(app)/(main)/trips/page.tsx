@@ -1,14 +1,55 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { TripsClient } from '@/components/app/trips/TripsClient'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Trips — StayRight' }
 
-export default function TripsPage() {
+export default async function TripsPage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  // Profile check
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('onboarding_completed, visa_start_date')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.onboarding_completed) redirect('/onboarding')
+
+  // All trips, most recent first
+  const { data: rawTrips } = await supabase
+    .from('trips')
+    .select('id, destination, departure_date, return_date, notes')
+    .eq('user_id', user.id)
+    .order('departure_date', { ascending: false })
+
+  const trips = (rawTrips ?? []).map((t) => ({
+    id: t.id,
+    destination: t.destination,
+    departure_date: t.departure_date,
+    return_date: t.return_date,
+    notes: t.notes,
+  }))
+
+  // Subscription plan (default to free if no row)
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('plan')
+    .eq('user_id', user.id)
+    .single()
+
+  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+
   return (
-    <div className="p-6 md:p-8">
-      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">
-        Trips
-      </h1>
-      <p className="text-sm text-[#3D4A42]">Trip log — coming soon.</p>
-    </div>
+    <TripsClient
+      trips={trips}
+      visaStartDate={profile.visa_start_date ?? undefined}
+      isPro={isPro}
+    />
   )
 }
