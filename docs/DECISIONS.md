@@ -211,6 +211,77 @@ Any reference to wireframe file paths in documentation must use the landingpage2
 
 ---
 
+### [DECISION-010] Multi-leg trips are a single trip record
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+A multi-leg trip (e.g. London → Dubai → Bangkok → London) is stored as a single trip record. The record uses the first UK departure date and the final UK return date. Intermediate destinations and stopover dates are not tracked by the calculation engine. Users may record multiple destinations in the trip notes field for their own reference. The trip log shows one row per trip record.
+
+**Reasoning:**
+The Home Office assesses when the applicant left the UK and when they came back — not where they went in between. Tracking intermediate legs adds schema complexity and UI complexity (multi-row trip entries, leg-level editing) with no compliance benefit. The calculation is identical whether the trip has one destination or ten. One record per UK departure/return pair keeps the data model simple and the UI uncluttered.
+
+**Alternatives considered:**
+- Track each leg as a separate trip record — rejected. Overcomplicates the schema, the trip list UI, and the editing flow. Does not change the absence calculation.
+- Add a "legs" sub-table under trips — rejected. Same overengineering problem. No ILR compliance benefit.
+
+**Consequences:**
+The `trips` table has one row per UK absence period. The destination field is a free-text string; users enter whatever is meaningful to them ("Dubai and Bangkok", "Multiple destinations"). The notes field is available for additional detail. The what-if simulator and trip log both operate on first-departure/final-return dates only.
+
+**Related:** PRD.md Section 4c, 4e, 4f; Open Question 1 (resolved)
+
+---
+
+### [DECISION-011] Crown Dependencies count as UK presence; BOTs count as absence
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+Following the 2025 rule update, time spent in Jersey, Guernsey, and the Isle of Man counts toward UK continuous residence. If a trip's destination is one of these three Crown Dependencies, the calculation engine returns `absence_days = 0` regardless of the dates entered.
+
+All other destinations outside Great Britain and Northern Ireland count as absence, including British Overseas Territories (Gibraltar, Bermuda, Cayman Islands, Falkland Islands, etc.). This is the conservative and safe approach — BOTs are not part of the UK for immigration purposes and Home Office guidance on discretion is ambiguous.
+
+All trip detail views display a permanent note: "Time in Crown Dependencies (Jersey, Guernsey, Isle of Man) does not count as absence. Time in British Overseas Territories (Gibraltar, Bermuda etc.) does count as absence. If you are unsure, consult an immigration adviser."
+
+**Reasoning:**
+The Crown Dependencies exception is settled law following the 2025 update and must be implemented correctly. The BOT position is deliberately conservative — treating BOT time as absence protects users. If the Home Office later clarifies that certain BOTs count as presence, this can be updated without data migration (calculations are always computed on read).
+
+**Alternatives considered:**
+- Treat all non-UK destinations as absence — rejected. Would incorrectly penalise users who spent time in Crown Dependencies after the 2025 rule change.
+- Ask users to manually flag Crown Dependency trips — rejected. Adds UI friction and risks user error on a legal question where StayRight should be authoritative.
+- Treat BOTs as UK presence — rejected. Home Office guidance is ambiguous. Conservative approach protects users from inadvertently breaching.
+
+**Consequences:**
+The engine must check whether a trip's destination matches the Crown Dependencies list before applying the standard formula. The destination field is free text, so matching requires normalised comparison (case-insensitive, alias-aware: "Jersey", "St Helier", "Isle of Man", "IOM", etc. should all match). A curated destination list with Crown Dependency flags is required in the data model.
+
+**Related:** PRD.md Section 4c, 4f; Open Question 3 (resolved)
+
+---
+
+### [DECISION-012] Monthly summary email — 7-section HTML format with plain text fallback
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+The monthly summary email is an HTML email sent via Resend on the 1st of each month to all Pro users with the monthly summary toggle enabled. It has 7 sections: Header, Status Card, Key Stats, Recent Trips, Next Known Trip, CTA Button, Footer. A plain text fallback is always generated alongside the HTML version. The full spec is in PRD Section 4i.
+
+**Reasoning:**
+A structured HTML email with a status card and progress bar communicates compliance status more effectively than plain text. The 7-section order follows the user's attention: status first, then context (stats, recent trips), then action (CTA). Keeping recent trips to a maximum of 3 rows prevents the email from becoming a full trip dump — that's what the app is for.
+
+**Alternatives considered:**
+- Plain text only — rejected. Compliance information benefits from visual hierarchy (colour-coded risk badge, progress bar). Plain text fallback is still required for email client compatibility.
+- Link to a hosted web version of the report — rejected. Adds a hosted page that must be generated and secured. The CTA to log in to the dashboard achieves the same goal without extra infrastructure.
+
+**Consequences:**
+The Resend email template must be built as a React Email component (or equivalent) that accepts the monthly stats as props and renders both HTML and plain text. The template must match the StayRight brand (#006948 header, Manrope headlines, Inter body, white background). The subject line uses the dynamic pattern from PRD Section 5.9.
+
+**Related:** PRD.md Section 4i, Section 5.9; Open Question 2 (resolved)
+
+---
+
 ### [DECISION-008] Tailwind v4 CSS-based configuration
 **Date:** 2026-03-21
 **Status:** Decided
@@ -287,3 +358,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.0 | Initial decision log — 6 founding decisions documented |
 | 2026-03-21 | 1.1 | Added DECISION-007 — wireframe folder structure |
 | 2026-03-21 | 1.2 | Added DECISION-008 — Tailwind v4 CSS config; DECISION-009 — root layout fonts |
+| 2026-03-21 | 1.3 | Added DECISION-010 — multi-leg trips as single record; DECISION-011 — Crown Dependencies vs BOTs; DECISION-012 — monthly summary email format |

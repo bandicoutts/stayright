@@ -1,6 +1,6 @@
 # StayRight v1 — Product Requirements Document
 
-> **Status:** Final
+> **Status:** Final — v1.3
 > **Last updated:** 2026-03-21
 > **Author:** David Flynn-Coutts
 > **Document authority:** When there is a conflict between this document and the Stitch wireframes, this document wins.
@@ -218,6 +218,18 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 - Example: Depart 1 March, return 8 March → 6 days of absence (2, 3, 4, 5, 6, 7 March)
 - Example: Depart 1 March, return 2 March → 0 days of absence (no full days outside UK)
 
+**Crown Dependencies — special case (0 absence days):**
+
+Following the 2025 rule update, time spent in Jersey, Guernsey, and the Isle of Man counts toward UK continuous residence and must **not** be counted as absence.
+
+- If a trip's destination is Jersey, Guernsey, or Isle of Man, the engine returns `absence_days = 0` regardless of dates entered
+- These three are the only exceptions — all other destinations outside Great Britain and Northern Ireland count as absence
+- British Overseas Territories (Gibraltar, Bermuda, Cayman Islands, Falkland Islands, etc.) are **not** Crown Dependencies and count as absence in full
+
+**Multi-leg trips:**
+
+A multi-leg trip (user travels to multiple destinations before returning to the UK) is recorded as a single trip using the first UK departure date and the final UK return date. Intermediate destinations and stopover dates are not tracked by the engine — only the full period outside the UK matters for compliance. Users may record multiple destinations in the trip notes field for their own reference.
+
 > [!NOTE]
 > Some immigration solicitors advise clients to count the departure day as an absence as an additional personal buffer. StayRight uses the official formula. Conservative buffers are applied through warning thresholds (120 and 150 days) rather than through a non-standard formula. This ensures calculations match what the Home Office uses while giving users a meaningful safety margin.
 
@@ -252,6 +264,8 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 - [ ] Trips with dates before the visa start date are stored but excluded from the calculation
 - [ ] The engine handles trips that span the boundary of a 12-month window correctly (split the trip across windows)
 - [ ] All calculations are performed server-side (not client-only) to ensure accuracy
+- [ ] A trip to Jersey, Guernsey, or Isle of Man returns 0 absence days regardless of dates
+- [ ] A trip to Gibraltar or any British Overseas Territory counts absence as normal
 
 **Edge cases:**
 - Trip spans the boundary of two 12-month windows → the days within each window are counted separately toward that window's total
@@ -259,6 +273,8 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 - User changes their visa start date after logging trips → all calculations must recalculate
 - Leap years → use actual calendar dates, not a fixed 365-day assumption
 - Trips that overlap with each other → count each calendar day only once (de-duplicate overlapping ranges)
+- Multi-leg trip (multiple destinations, single trip record) → calculate absence using first departure and final return dates only; intermediate stopovers are irrelevant to the engine
+- Crown Dependency trip (Jersey / Guernsey / Isle of Man) → absence days = 0; trip is stored but contributes nothing to the rolling window
 
 ---
 
@@ -301,7 +317,7 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 **Flow:**
 1. User clicks "Plan a Trip →" on the dashboard
 2. Modal opens with a 3-step flow: Destination → Dates → Confirm
-3. **Step 1 (Destination):** Free text destination field
+3. **Step 1 (Destination):** Free text destination field. If the user enters Jersey, Guernsey, or Isle of Man, the live calculation panel shows 0 absence days and a note: "Time in Crown Dependencies does not count as absence."
 4. **Step 2 (Dates):** Departure date + Return date. As soon as both dates are entered, a **live calculation panel** appears showing:
    - "This trip: X days" (calculated using the absence formula)
    - "Y days remaining" after this trip
@@ -323,9 +339,10 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 
 **Edge cases:**
 - Return date is before departure date → show validation error
-- Trip dates overlap with an existing trip → show warning but allow (user may be entering a multi-leg trip)
+- Trip dates overlap with an existing trip → show warning but allow (user may be entering a multi-leg trip stored as one record)
 - User enters dates far in the future (e.g. 2 years) → the rolling window calculation should project forward correctly
 - User enters a trip that starts in the past and ends in the future → treat as a valid trip
+- Multi-leg trip (e.g. London → Dubai → Bangkok → London) → user enters the first UK departure date and final UK return date as a single trip; they may note destinations in the notes field; calculation uses only the UK-to-UK period
 
 **Wireframe reference:** `web2/v3_log_new_trip_modal`
 
@@ -339,7 +356,13 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 - List view, sorted by departure date descending (most recent first)
 - Each entry shows: destination, departure date, return date, duration (X days), risk chip
 - Trips with no return date show "Currently abroad" status
-- Trip detail: clicking a trip opens a detail view showing all trip data + its contribution to the rolling window at the time
+- Multi-leg trips are shown as a single row using the first departure date and final return date. The trip's destination field shows whatever the user entered (e.g. "Dubai, Bangkok").
+- Trip detail: clicking a trip opens a detail view showing all trip data + its contribution to the rolling window at the time. For Crown Dependency trips, the contribution is shown as 0 days with a note explaining why.
+
+**Crown Dependencies note in trip detail:**
+
+All trip detail views must include the following note (in small text, always visible):
+> "Time in Crown Dependencies (Jersey, Guernsey, Isle of Man) does not count as absence. Time in British Overseas Territories (Gibraltar, Bermuda etc.) does count as absence. If you are unsure, consult an immigration adviser."
 
 **Actions:**
 - **Add trip** — same modal as the what-if simulator but with a "Save" action (no "Just checking" option)
@@ -354,11 +377,15 @@ This follows the official Home Office position (Appendix Continuous Residence gu
 - [ ] Delete trip shows a confirmation dialog: "Delete this trip? This will recalculate your absence record."
 - [ ] After any add/edit/delete, the dashboard quota ring and all calculations update immediately
 - [ ] Free users see the paywall modal (Section 4l) when attempting to add a 4th trip
+- [ ] Crown Dependency trips (Jersey, Guernsey, Isle of Man) show 0 absence days in the trip detail with an explanatory note
+- [ ] Trip detail always displays the Crown Dependencies / BOT disclaimer note
+- [ ] Multi-leg trips display as a single row; the destination field shows the user's entered text
 
 **Edge cases:**
 - Deleting a trip that was causing a breach → status should recalculate to SAFE/WARNING as appropriate
 - Editing a trip's dates to overlap with another trip → show warning but allow
 - Trip list is empty → show empty state (see Copy section)
+- Crown Dependency trip edited to a non-Crown-Dependency destination → recalculate absence days using the actual date range
 
 **Wireframe references:** `web2/v3_trip_history`, `web2/v3_trip_detail`
 
@@ -455,10 +482,33 @@ The help centre is a static set of FAQ pages hosted at `/help` within the app. C
 | **ILR reminder** | 90 days before ILR eligibility date | "Your ILR application window opens in 90 days" | Pro only |
 | **Log return reminder** | 3 days after a trip's planned return date if no return logged | "Welcome back — don't forget to log your return" | Pro only |
 
+**Monthly summary email — detailed spec:**
+
+Format: HTML email via Resend with StayRight brand styling. A plain text fallback must always be generated alongside the HTML version.
+
+Sent on the 1st of each month to all Pro users with monthly summary notifications enabled.
+
+Subject line: `"Your {month} absence summary — {daysUsed}/180 days used"`
+
+Email sections in order:
+
+1. **Header** — StayRight logo + wordmark. Headline: "Your {month} Absence Summary". Subheadline: "Here's where you stand this month." Background: `#006948`.
+2. **Status card** — Large number "{daysUsed} / 180". Risk badge (SAFE / WARNING / DANGER) in the appropriate status colour. Label: "In your current rolling 12-month window." Linear progress bar in the status colour.
+3. **Key stats** — Three items inline: Days remaining: `{daysRemaining}` · Trips this month: `{tripsThisMonth}` · Qualifying period: `{percentComplete}% complete`.
+4. **Recent trips** (only if trips occurred in the past month) — Simple table: Destination | Dates | Days. Maximum 3 rows. If more than 3, show "View all trips →" link to the app.
+5. **Next known trip** (if a future trip is logged) — "{destination} · {departureDate}". Note: "This trip will use {days} of your remaining {daysRemaining} days." If no future trip logged: "No upcoming trips logged. Plan a trip →" link to `/dashboard`.
+6. **CTA button** — "View your full compliance dashboard →". Filled `#006948` gradient button. Links to `/dashboard`.
+7. **Footer** — "You're receiving this because you have monthly summaries enabled. [Manage preferences] · [Unsubscribe]". Small text disclaimer: "Not legal advice. Always verify with UKVI."
+
 **Acceptance criteria:**
 - [ ] Welcome email is sent to all users after email verification
 - [ ] Threshold emails fire once per threshold crossing, not repeatedly
-- [ ] Monthly summary includes: rolling window count, risk status, number of trips in the past month, next known trip
+- [ ] Monthly summary is sent on the 1st of each month to Pro users with the toggle enabled
+- [ ] Monthly summary renders correctly in HTML with all 7 sections
+- [ ] Monthly summary has a plain text fallback version
+- [ ] Monthly summary subject line uses the dynamic pattern: "Your {month} absence summary — {daysUsed}/180 days used"
+- [ ] Recent trips table shows a maximum of 3 rows; shows "View all trips" link if more
+- [ ] If no future trip is logged, the next trip section shows "No upcoming trips logged"
 - [ ] All emails include an unsubscribe link and match the StayRight brand (botanical green, Manrope headers)
 - [ ] Email delivery is controlled by the toggles in Settings
 - [ ] Emails are not sent to Free users (except welcome email)
@@ -466,6 +516,7 @@ The help centre is a static set of FAQ pages hosted at `/help` within the app. C
 **Edge cases:**
 - User crosses 120 days and 150 days on the same day (large trip) → send both emails
 - User's rolling window drops below a threshold after being above it → do not re-trigger the alert if it rises again within the same rolling window
+- Monthly summary sent on 1st February for a user with no trips in January → recent trips section is omitted; show "No trips in {month}" instead
 
 ---
 
@@ -861,16 +912,15 @@ There is **no Calendar** nav item in v1.
 
 ### Can Resolve During Build
 
-| # | Question | Context |
-|---|---|---|
-| 1 | **Should the what-if simulator allow planning multiple trips at once?** | Current design is single-trip. "I want to plan two trips this summer" is plausible. Could add in v1.1. |
-| 2 | **Should the monthly summary email include a link to view the report online, or just summary stats?** | Keeping it simple (summary stats + CTA to log in) is probably sufficient for v1. |
-| 3 | **How do we handle British Overseas Territories?** | Trips to e.g. Gibraltar or the Channel Islands — are these counted as UK or abroad? Immigration law is ambiguous here. |
+All previously open questions are now resolved. No outstanding questions block the v1 build.
 
 ### Resolved
 
 | # | Question | Resolution |
 |---|---|---|
+| ~~1~~ | ~~Multi-leg trip planning~~ | **Resolved.** Multi-leg trips are stored as a single trip record using the first UK departure date and final UK return date. Intermediate destinations are not tracked by the engine. Users may note them in the notes field. See Section 4c and 4f. |
+| ~~2~~ | ~~Monthly summary email format~~ | **Resolved.** HTML email via Resend with plain text fallback. 7-section format defined in Section 4i. |
+| ~~3~~ | ~~British Overseas Territories~~ | **Resolved.** All time outside the UK counts as absence, including BOTs (Gibraltar, Bermuda, etc.). Exception: Crown Dependencies (Jersey, Guernsey, Isle of Man) count as UK presence following the 2025 rule update — engine returns 0 absence days for these destinations. See Section 4c. |
 | ~~4~~ | ~~Tech stack~~ | **Resolved.** Next.js + Supabase + Vercel + Stripe + Resend. See Section 7. |
 | ~~5~~ | ~~Email delivery~~ | **Resolved.** Resend for all transactional and marketing emails. |
 | ~~6~~ | ~~14-day trial~~ | **Resolved.** No trial. Free tier serves as try-before-you-buy. See Section 2.2. |
@@ -888,3 +938,4 @@ There is **no Calendar** nav item in v1.
 | 2026-03-21 | v1.0 | PM | Initial PRD |
 | 2026-03-21 | v1.1 | PM | Removed 14-day trial (free tier is try-before-you-buy). Added lifetime plan (£49.99) to Section 3. Added Sections 4l (Paywall Modal), 4m (Cookie Consent), 4n (Analytics), 4o (Security). Added PWA, WCAG 2.1 AA, and browser support to scope. Added data retention policy and help centre spec to Settings. Added compliance disclaimer to dashboard. Added tech stack (Section 7). Resolved all open questions except 3 deferred. Changed landing page nav from "Visa Rules" to anchor links. Updated Pro CTA from "Start 14-Day Trial" to "Upgrade to Pro". Added webhook idempotency and rate limiting specs. Added ILR Mode toggle "Coming soon" behaviour. |
 | 2026-03-21 | v1.2 | PM | Added Tailwind CSS to tech stack. |
+| 2026-03-21 | v1.3 | PM | Resolved all remaining open questions. Added Crown Dependencies exception to Section 4c (Jersey, Guernsey, Isle of Man = 0 absence days). Added multi-leg trip model to Sections 4c, 4e, 4f. Added Crown Dependencies note to Section 4f trip detail. Replaced monthly summary email stub in Section 4i with full 7-section HTML email spec including plain text fallback requirement. Marked open questions 1, 2, 3 as resolved in Section 8. |
