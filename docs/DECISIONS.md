@@ -651,6 +651,28 @@ Account deletion is irreversible in v1. The UI makes this explicit ("This action
 
 ---
 
+### [DECISION-027] Stripe integration pattern: server-side API routes, client redirect
+**Date:** 2026-03-21
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Stripe Checkout and Customer Portal sessions are created via Next.js API route handlers (`POST /api/stripe/checkout`, `POST /api/stripe/portal`). The client fetches the session URL and performs `window.location.href = url` to redirect. Webhooks are handled at `POST /api/stripe/webhook` using `request.text()` for raw body access (required for Stripe signature verification). The live URL at time of build is `https://ecstatic-hopper.vercel.app` — the Stripe webhook endpoint and `NEXT_PUBLIC_APP_URL` must be updated when the domain moves to `stayright.app`.
+
+**Reasoning:**
+API routes (not Server Actions) are used because Checkout and Portal session creation requires returning a URL to the client for redirect — Server Actions cannot return raw redirect URLs to the browser in this way. The webhook route requires raw body access for signature verification; App Router route handlers receive the raw body via `request.text()` without any parser configuration needed.
+
+**Alternatives considered:**
+- Server Actions for checkout — cannot return a URL for `window.location.href` redirect in a type-safe way without additional complexity.
+- `@stripe/stripe-js` + client-side `redirectToCheckout` — deprecated by Stripe in favour of server-created sessions with URL redirect.
+
+**Consequences:**
+Three Stripe env vars must be set before payments work: `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_ANNUAL`, `STRIPE_PRICE_LIFETIME`. The Stripe webhook endpoint must be registered in the Stripe Dashboard pointing to `{NEXT_PUBLIC_APP_URL}/api/stripe/webhook` with events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Webhooks are idempotent (upsert on `user_id`). Payment failures set `subscriptions.status = 'past_due'`, which triggers the red banner in the app layout.
+
+**Related:** PRD Section 4j; `src/lib/stripe.ts`; `src/app/api/stripe/`; `src/components/app/trips/PaywallModal.tsx`
+
+---
+
 ## Template for new entries
 
 Copy this template when adding a new decision:
@@ -691,3 +713,5 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 1.7 | Added DECISION-018 — absence engine as pure functions; DECISION-019 — (main) route group with sidebar |
 | 2026-03-21 | 1.8 | Added DECISION-020 — trip flow pages as standalone routes; DECISION-021 — paywall modal placeholder; DECISION-022 — calculateWhatIf uses return_date as today |
 | 2026-03-21 | 1.9 | Added DECISION-023 — PDF generation library (@react-pdf/renderer) and client-side execution pattern |
+| 2026-03-21 | 2.0 | Added DECISION-024 — recent exports deferred; DECISION-025 — notes→Reason for Travel; DECISION-026 — hard delete in v1 |
+| 2026-03-21 | 2.1 | Added DECISION-027 — Stripe integration pattern (API routes, client redirect, webhook raw body) |
