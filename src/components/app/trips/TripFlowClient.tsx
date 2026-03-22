@@ -7,6 +7,7 @@ import {
   calculateWhatIf,
   calculateTripAbsenceDays,
   getRiskStatus,
+  hasOverlappingTrip,
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
 import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/actions'
@@ -265,6 +266,14 @@ export function TripFlowClient({
     return { result, tripDays, windowEnd: result.windowEnd }
   }, [departureDate, returnDate, returnDateKnown, destination, isCrownDep, baseTrips, visaStartDate])
 
+  // Overlap detection — live check against baseTrips while the user fills in dates
+  // baseTrips already excludes the trip being edited in edit mode (see above)
+  const overlapWarning = useMemo(() => {
+    if (!departureDate) return false
+    const retDate = returnDateKnown && returnDate ? returnDate : null
+    return hasOverlappingTrip(baseTrips, departureDate, retDate)
+  }, [departureDate, returnDate, returnDateKnown, baseTrips])
+
   // Risk status for confirm step summary
   const confirmRisk = useMemo(() => {
     if (!returnDate || !returnDateKnown) return null
@@ -305,6 +314,11 @@ export function TripFlowClient({
         setError('Departure date must be before the return date.')
         return
       }
+    }
+    // Block if the new dates collide with an existing trip
+    if (overlapWarning) {
+      setError('These dates overlap with an existing trip. Please check your trip history.')
+      return
     }
     setError(null)
     setStep(3)
@@ -549,6 +563,17 @@ export function TripFlowClient({
               <p className="mt-3 text-sm text-[#BA1A1A]">
                 Departure date must be before the return date.
               </p>
+            )}
+
+            {/* Overlap warning — live, shown as soon as a collision is detected */}
+            {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
+              <div className="mt-4 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+                <span className="shrink-0 text-base">⚠️</span>
+                <p className="text-sm text-[#D97706]">
+                  These dates overlap with an existing trip. Adjust the dates or check
+                  your trip history before continuing.
+                </p>
+              </div>
             )}
 
             <div className="flex gap-3 mt-5">

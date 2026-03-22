@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -36,6 +37,27 @@ export async function addTripAction(
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
+  // Overlap check — fetch existing trips and verify no date range collision
+  const { data: existingTrips } = await supabase
+    .from('trips')
+    .select('id, destination, departure_date, return_date')
+    .eq('user_id', user.id)
+
+  if (
+    hasOverlappingTrip(
+      (existingTrips ?? []).map((t) => ({
+        id: t.id,
+        destination: t.destination,
+        departure_date: t.departure_date,
+        return_date: t.return_date,
+      })),
+      data.departure_date,
+      data.return_date ?? null
+    )
+  ) {
+    return { error: 'These dates overlap with an existing trip. Please check your trip history.' }
+  }
+
   const { data: savedTrip, error } = await supabase
     .from('trips')
     .insert({
@@ -67,6 +89,28 @@ export async function updateTripAction(
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
+
+  // Overlap check — exclude the trip being edited (id) from the comparison
+  const { data: existingTrips } = await supabase
+    .from('trips')
+    .select('id, destination, departure_date, return_date')
+    .eq('user_id', user.id)
+
+  if (
+    hasOverlappingTrip(
+      (existingTrips ?? []).map((t) => ({
+        id: t.id,
+        destination: t.destination,
+        departure_date: t.departure_date,
+        return_date: t.return_date,
+      })),
+      data.departure_date,
+      data.return_date ?? null,
+      id // exclude self
+    )
+  ) {
+    return { error: 'These dates overlap with an existing trip. Please check your trip history.' }
+  }
 
   const { data: updatedTrip, error } = await supabase
     .from('trips')

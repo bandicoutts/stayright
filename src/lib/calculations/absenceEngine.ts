@@ -224,6 +224,34 @@ export function getQualifyingPeriod(
 }
 
 /**
+ * Returns true if the given departure/return range overlaps with any trip in
+ * the list.  Two ranges overlap when they share at least one interior day —
+ * strictly: dep_A < ret_B AND dep_B < ret_A.
+ *
+ * Using strict inequality means back-to-back trips where one's return date
+ * equals the next trip's departure date are allowed (the user arrived home
+ * and left again on the same calendar day).
+ *
+ * Pass excludeId to skip one trip (edit mode: exclude the trip being updated).
+ * A null returnDate means the trip is ongoing — treated as far future.
+ */
+export function hasOverlappingTrip(
+  trips: TripInput[],
+  departureDate: string,
+  returnDate: string | null,
+  excludeId?: string
+): boolean {
+  const FAR_FUTURE = '9999-12-31'
+  const newEnd = returnDate ?? FAR_FUTURE
+
+  return trips.some((t) => {
+    if (excludeId && t.id === excludeId) return false
+    const existingEnd = t.return_date ?? FAR_FUTURE
+    return departureDate < existingEnd && t.departure_date < newEnd
+  })
+}
+
+/**
  * Calculates what-if: how many absence days would the user have in their
  * current rolling window if they added a hypothetical trip?
  */
