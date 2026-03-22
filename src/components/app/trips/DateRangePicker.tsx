@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatDate } from '@/lib/utils/dateFormatters'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -41,15 +42,6 @@ function todayISO(): string {
   return toISO(d.getFullYear(), d.getMonth(), d.getDate())
 }
 
-function formatShort(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number)
-  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  })
-}
 
 function daysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate()
@@ -282,7 +274,7 @@ export function DateRangePicker({
           <p className={`text-sm font-semibold leading-snug ${
             departureDate ? 'text-[#191C1D]' : 'text-[#3D4A42]/40'
           }`}>
-            {departureDate ? formatShort(departureDate) : '—'}
+            {departureDate ? formatDate(departureDate) : '—'}
           </p>
         </button>
 
@@ -310,7 +302,7 @@ export function DateRangePicker({
             {!returnDateKnown
               ? 'Currently abroad'
               : returnDate
-              ? formatShort(returnDate)
+              ? formatDate(returnDate)
               : '—'}
           </p>
         </button>

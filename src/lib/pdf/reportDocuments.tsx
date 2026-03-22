@@ -15,6 +15,7 @@ import {
   isCrownDependency,
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
+import { formatDate } from '@/lib/utils/dateFormatters'
 
 // ---------------------------------------------------------------------------
 // Shared types
@@ -202,17 +203,6 @@ const s = StyleSheet.create({
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDate(iso: string): string {
-  const [y, m, d] = iso.split('-')
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  return `${parseInt(d)} ${months[parseInt(m) - 1]} ${y}`
-}
-
-function formatIlrDate(iso: string): string {
-  // Returns e.g. "14 Jan 2028"
-  return formatDate(iso)
-}
-
 function addYears(iso: string, years: number): string {
   const d = new Date(iso + 'T00:00:00Z')
   d.setUTCFullYear(d.getUTCFullYear() + years)
@@ -242,7 +232,7 @@ function PageHeader({ title, profile, generatedOn }: {
   profile: ReportProfile
   generatedOn: string
 }) {
-  const ilrDate = profile.visaStartDate ? formatIlrDate(addYears(profile.visaStartDate, 5)) : 'N/A'
+  const ilrDate = profile.visaStartDate ? formatDate(addYears(profile.visaStartDate, 5)) : 'N/A'
   const visaStart = profile.visaStartDate ? formatDate(profile.visaStartDate) : 'N/A'
 
   return (

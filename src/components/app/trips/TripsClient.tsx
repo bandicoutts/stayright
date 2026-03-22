@@ -14,6 +14,7 @@ import { PaywallModal } from './PaywallModal'
 import { TripDrawer } from './TripDrawer'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
+import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -36,29 +37,6 @@ interface TripsClientProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function formatDateRange(dep: string, ret: string | null): string {
-  if (!ret) return 'Currently abroad'
-  if (dep === ret) return '0 days'
-
-  const d = new Date(dep + 'T00:00:00Z')
-  const r = new Date(ret + 'T00:00:00Z')
-
-  const depDay = d.getUTCDate()
-  const retDay = r.getUTCDate()
-  const depMonth = d.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
-  const retMonth = r.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
-  const depYear = d.getUTCFullYear()
-  const retYear = r.getUTCFullYear()
-
-  if (depYear === retYear && depMonth === retMonth) {
-    return `${depDay}–${retDay} ${retMonth} ${retYear}`
-  }
-  if (depYear === retYear) {
-    return `${depDay} ${depMonth} – ${retDay} ${retMonth} ${retYear}`
-  }
-  return `${depDay} ${depMonth} ${depYear} – ${retDay} ${retMonth} ${retYear}`
-}
 
 function toTripInput(t: TripRow): TripInput {
   return { id: t.id, destination: t.destination, departure_date: t.departure_date, return_date: t.return_date }
@@ -344,15 +322,6 @@ function SidePanel({
     : isCrownDep ? 'SAFE' as const : null
   const cfg = status ? RISK_CONFIG[status] : null
 
-  function fmt(d: string) {
-    return new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      timeZone: 'UTC',
-    })
-  }
-
   return (
     <div className="w-full md:w-80 shrink-0">
       <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-5">
@@ -377,12 +346,12 @@ function SidePanel({
         <div className="space-y-1.5 mb-4 text-sm">
           <div className="flex justify-between">
             <span className="text-[#3D4A42]">Departed UK</span>
-            <span className="font-medium text-[#191C1D]">{fmt(trip.departure_date)}</span>
+            <span className="font-medium text-[#191C1D]">{formatDate(trip.departure_date)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-[#3D4A42]">Returned to UK</span>
             <span className="font-medium text-[#191C1D]">
-              {trip.return_date ? fmt(trip.return_date) : 'Currently abroad'}
+              {trip.return_date ? formatDate(trip.return_date) : 'Currently abroad'}
             </span>
           </div>
         </div>

@@ -15,6 +15,7 @@ import { DestinationAutocomplete } from './DestinationAutocomplete'
 import { DateRangePicker } from './DateRangePicker'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
+import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -43,37 +44,6 @@ interface TripFlowClientProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDateRange(dep: string, ret: string | null): string {
-  if (!ret) return 'Currently abroad'
-  if (dep === ret) return '0 days'
-
-  const d = new Date(dep + 'T00:00:00Z')
-  const r = new Date(ret + 'T00:00:00Z')
-
-  const depDay = d.getUTCDate()
-  const retDay = r.getUTCDate()
-  const depMonth = d.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
-  const retMonth = r.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
-  const depYear = d.getUTCFullYear()
-  const retYear = r.getUTCFullYear()
-
-  if (depYear === retYear && depMonth === retMonth) {
-    return `${depDay}–${retDay} ${retMonth} ${retYear}`
-  }
-  if (depYear === retYear) {
-    return `${depDay} ${depMonth} – ${retDay} ${retMonth} ${retYear}`
-  }
-  return `${depDay} ${depMonth} ${depYear} – ${retDay} ${retMonth} ${retYear}`
-}
-
-function formatWindowDate(date: Date): string {
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  })
-}
 
 // ---------------------------------------------------------------------------
 // Step indicator
@@ -126,7 +96,7 @@ function CalcPanel({
       <div>
         <div className="flex justify-between text-xs text-[#3D4A42] mb-1">
           <span>{result.days} / 180 days used</span>
-          <span>Rolling window to {formatWindowDate(windowEndDate)}</span>
+          <span>Rolling window to {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</span>
         </div>
         <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden">
           <div
@@ -160,7 +130,7 @@ function CalcPanel({
         <div className="p-3 bg-[#BA1A1A]/8 border border-[#BA1A1A]/25 rounded-xl">
           <p className="text-xs font-semibold text-[#BA1A1A]">
             This trip would push you to {result.days}/180 days in the rolling window ending{' '}
-            {formatWindowDate(windowEndDate)}. You would breach the absence limit.
+            {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}. You would breach the absence limit.
           </p>
         </div>
       )}

@@ -8,6 +8,7 @@ import { track } from '@/lib/posthog'
 import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
 import { DestinationAutocomplete } from '@/components/app/trips/DestinationAutocomplete'
 import { DateRangePicker } from '@/components/app/trips/DateRangePicker'
+import { formatDate } from '@/lib/utils/dateFormatters'
 
 type TripRow = {
   id: string
@@ -35,15 +36,6 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
   const [addingTrip, setAddingTrip] = useState(false)
   const [completing, setCompleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  function formatDate(dateStr: string) {
-    return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      timeZone: 'UTC',
-    })
-  }
 
   // Live overlap detection against already-added trips
   const overlapWarning = useMemo(() => {
