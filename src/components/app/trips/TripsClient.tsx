@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   isCrownDependency,
   calculateTripAbsenceDays,
@@ -11,6 +11,7 @@ import {
 import type { TripInput } from '@/lib/calculations/absenceEngine'
 import { deleteTripAction } from '@/app/(app)/(main)/trips/actions'
 import { PaywallModal } from './PaywallModal'
+import { TripDrawer } from './TripDrawer'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -78,6 +79,7 @@ function toTripInput(t: TripRow): TripInput {
 
 export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
@@ -86,13 +88,32 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
 
   const selectedTrip = trips.find((t) => t.id === selectedId) ?? null
 
-  function handleAddTrip() {
+  // ---------------------------------------------------------------------------
+  // Drawer state — driven by ?drawer=plan|log|edit&tripId=xxx URL params
+  // ---------------------------------------------------------------------------
+  const rawDrawerMode = searchParams.get('drawer')
+  const drawerMode =
+    rawDrawerMode === 'plan' || rawDrawerMode === 'log' || rawDrawerMode === 'edit'
+      ? rawDrawerMode
+      : null
+  const drawerTripId = searchParams.get('tripId')
+  const drawerInitialTrip = drawerTripId
+    ? (trips.find((t) => t.id === drawerTripId) ?? undefined)
+    : undefined
+  // Only open if mode is valid; edit mode also requires the trip to exist
+  const drawerOpen = drawerMode !== null && (drawerMode !== 'edit' || drawerInitialTrip !== undefined)
+
+  function openDrawer(mode: 'plan' | 'log') {
     // All saved trips count toward the Free tier limit (including null return_date)
     if (!isPro && trips.length >= 3) {
       setShowPaywall(true)
       return
     }
-    router.push('/trips/log')
+    router.push(`/trips?drawer=${mode}`)
+  }
+
+  function handleAddTrip() {
+    openDrawer('log')
   }
 
   async function handleDelete(id: string) {
@@ -235,7 +256,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
             trip={selectedTrip}
             contribution={getPanelContribution(selectedTrip)}
             visaStartDate={visaStartDate}
-            onEdit={() => router.push(`/trips/${selectedTrip.id}/edit`)}
+            onEdit={() => router.push(`/trips?drawer=edit&tripId=${selectedTrip.id}`)}
             onDelete={() => setDeleteTarget(selectedTrip.id)}
             onClose={() => setSelectedId(null)}
           />
@@ -287,6 +308,18 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
         open={showPaywall}
         onClose={() => setShowPaywall(false)}
         triggerReason="trip_limit"
+      />
+
+      {/* Trip drawer — plan / log / edit modes */}
+      <TripDrawer
+        open={drawerOpen}
+        mode={drawerMode ?? 'log'}
+        onClose={() => router.push('/trips')}
+        existingTrips={trips.map(toTripInput)}
+        visaStartDate={visaStartDate}
+        isPro={isPro}
+        tripCount={trips.length}
+        initialTrip={drawerInitialTrip}
       />
     </div>
   )

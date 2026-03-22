@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { TripsClient } from '@/components/app/trips/TripsClient'
 import type { Metadata } from 'next'
@@ -46,10 +47,12 @@ export default async function TripsPage() {
   const isPro = subscription?.plan !== 'free' && subscription?.plan != null
 
   return (
-    <TripsClient
-      trips={trips}
-      visaStartDate={profile.visa_start_date ?? undefined}
-      isPro={isPro}
-    />
+    <Suspense fallback={null}>
+      <TripsClient
+        trips={trips}
+        visaStartDate={profile.visa_start_date ?? undefined}
+        isPro={isPro}
+      />
+    </Suspense>
   )
 }

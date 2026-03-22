@@ -170,7 +170,7 @@ export default async function DashboardPage() {
           {/* CTAs */}
           <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 space-y-3">
             <Link
-              href="/trips/plan"
+              href="/trips?drawer=plan"
               className="flex items-center justify-between w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               <span>Plan a trip</span>
@@ -180,7 +180,7 @@ export default async function DashboardPage() {
               See the impact before you book
             </p>
             <Link
-              href="/trips/log"
+              href="/trips?drawer=log"
               className="flex items-center justify-between w-full border border-[#191C1D]/15 text-[#191C1D] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#F8F9FA] transition-colors"
             >
               <span>Log a past trip</span>

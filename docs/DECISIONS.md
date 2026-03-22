@@ -788,6 +788,28 @@ In `TripsClient`, before opening the drawer, check `!isPro && tripCount >= 3`. I
 
 ---
 
+### [DECISION-032] Remove Recent Trips card from dashboard — status-only view
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** David Coutts
+
+**Decision:**
+The Recent Trips card (last 3 trips rendered inline on the dashboard) has been removed. The dashboard is now purely a compliance status screen: quota ring, qualifying period progress, ILR timeline, and quick-action CTAs. A compact summary line replaces the trip cards: "{n} trips logged · {n} days abroad recorded" with a "View all trips →" link to `/trips`.
+
+**Reasoning:**
+The dashboard's job is to answer "am I compliant?" at a glance. Rendering trip rows on the same screen duplicates the trips page, creates visual clutter, and distracts from the quota ring — the primary compliance indicator. The compact summary gives the same at-a-glance context (how many trips, total days) without the noise. Detailed trip history belongs on the dedicated `/trips` page.
+
+**Alternatives considered:**
+- Keep recent trips — rejected. Adds clutter without information value; the trips page is one tap away.
+- Collapse recent trips behind a toggle — rejected. Unnecessary complexity; the compact summary achieves the goal more cleanly.
+
+**Consequences:**
+Dashboard page.tsx no longer imports `TripRow` or `getRiskStatus`. The `recentTrips` slice computation is removed. The compact summary replaces it with `tripCount` and `totalDaysAbroad` already computed in the dashboard.
+
+**Related:** PRD §4e (dashboard), UX improvements plan
+
+---
+
 Copy this template when adding a new decision:
 
 ### [DECISION-XXX] Short title
@@ -832,3 +854,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.3 | Added DECISION-029 — PostHog analytics (consent-gated, typed wrapper, 11 events from PRD §4n) |
 | 2026-03-22 | 2.4 | Added DECISION-030 — PWA manifest + service worker; push notifications deferred to v2 |
 | 2026-03-22 | 2.5 | Added DECISION-031 — trip drawer paywall behaviour (skip drawer, fire PaywallModal on TripsClient) |
+| 2026-03-22 | 2.6 | Added DECISION-032 — remove Recent Trips card from dashboard (status-only view) |
