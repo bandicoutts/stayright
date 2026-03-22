@@ -698,6 +698,38 @@ Five new env vars required: `RESEND_API_KEY`, `CRON_SECRET`. Domain `stayright.c
 
 ## Template for new entries
 
+### [DECISION-030] PWA: manifest + offline service worker; push notifications deferred to v2
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Implement PWA as: (1) `src/app/manifest.ts` using the Next.js 16 file convention (no library), (2) a custom service worker at `public/sw.js` with cache-first for static assets and network-first with cache fallback for page navigations, (3) production-only SW registration via a client component. Push notifications are deferred to v2.
+
+**Reasoning:**
+- The manifest file convention in Next.js 16 requires no additional library.
+- A custom SW avoids the complexity and maintenance overhead of `serwist`/`next-pwa` for the simple caching strategy needed in v1.
+- SW is production-only to prevent stale Turbopack chunks interfering with local development.
+- Push notifications require: VAPID key management, storing per-user push subscription objects in the DB, wiring sends into the cron job, and a SW push handler. This is substantial scope. Email notifications (Resend) already cover the same alert delivery requirement for v1.
+
+**Caching strategy:**
+- `/_next/static/*` — cache-first (immutable, content-addressed by Next.js build)
+- Navigation requests (HTML pages) — network-first, offline fallback to last cached version
+- `/api/*`, `/auth/*` — network-only (never cache live data or auth callbacks)
+- Cross-origin (Supabase, Stripe, PostHog) — not intercepted
+
+**Offline behaviour:**
+Pages visited at least once while online are available offline in read-only mode. Users who have never loaded a page while online see a brief offline message.
+
+**Consequences:**
+- Push notification requirement from PRD §1.1 is deferred — PRD updated accordingly.
+- Proper rasterised PNG icons (192×192, 512×512) should be designed before public launch; current icon is SVG (supported by Chrome/Edge/Firefox; Safari uses the apple-touch-icon meta tag).
+- When `stayright.app` domain is live, verify SW scope and HTTPS (SW requires HTTPS — satisfied by Vercel).
+
+**Related:** PRD §1.1 (scope), DECISION-028 (Resend email notifications)
+
+---
+
 ### [DECISION-029] PostHog analytics: client-only SDK, consent-gated init, typed wrapper
 **Date:** 2026-03-22
 **Status:** Decided
@@ -776,3 +808,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 2.1 | Added DECISION-027 — Stripe integration pattern (API routes, client redirect, webhook raw body) |
 | 2026-03-21 | 2.2 | Updated DECISION-027 — production URL is stayright.vercel.app; Added DECISION-028 — Resend email notifications, Vercel Cron Jobs |
 | 2026-03-22 | 2.3 | Added DECISION-029 — PostHog analytics (consent-gated, typed wrapper, 11 events from PRD §4n) |
+| 2026-03-22 | 2.4 | Added DECISION-030 — PWA manifest + service worker; push notifications deferred to v2 |

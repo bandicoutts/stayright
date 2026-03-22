@@ -52,7 +52,7 @@ The primary use case is **decision support at the point of booking**, not daily 
 | Area | What's Included |
 |---|---|
 | **Platform** | Responsive web app (desktop + mobile-optimised). No native mobile app. |
-| **PWA** | Progressive Web App — the web app must be installable on mobile home screens, work offline for viewing existing trip data (read-only), and support push notifications for alert delivery. |
+| **PWA** | Progressive Web App — the web app must be installable on mobile home screens and work offline for viewing existing trip data (read-only). Push notifications deferred to v2 (DECISION-030) — email notifications cover alert delivery in v1. |
 | **Authentication** | Google OAuth + email/password signup, email verification, password reset |
 | **Onboarding** | Visa route selection, visa start date entry, bulk past trip entry |
 | **Dashboard** | Quota ring (days used / 180), qualifying period progress bar, "Plan a Trip" CTA, recent trip history, ILR eligibility timeline, amber alert card, compliance disclaimer |

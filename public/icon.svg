@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Rounded square background — safe zone for maskable icon -->
+  <rect width="512" height="512" rx="114" fill="#006948"/>
+  <!-- Shield body -->
+  <path d="M256 100 L388 148 C388 148 388 270 388 278 C388 358 328 406 256 432 C184 406 124 358 124 278 C124 270 124 148 124 148 Z" fill="white"/>
+  <!-- Checkmark -->
+  <path d="M196 260 L236 300 L316 212" stroke="#006948" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
