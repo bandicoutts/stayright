@@ -810,6 +810,35 @@ Dashboard page.tsx no longer imports `TripRow` or `getRiskStatus`. The `recentTr
 
 ---
 
+### [DECISION-033] Split name into first_name + last_name; defer last name to settings and PDF generation
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** David Coutts
+
+**Decision:**
+The user's name is split into two separate database columns: `first_name` (NOT NULL) and `last_name` (nullable). First name is collected at onboarding (visa setup step). Last name is deferred — it appears as an optional field in Settings → Visa Profile, and is only *required* when the user generates their first PDF export. If `last_name` is absent at PDF generation time, an inline prompt appears before the PDF is created: the user enters (or confirms) their first and last name, the record is saved to their profile, and the PDF generates immediately with the full name.
+
+**Reasoning:**
+Onboarding is the highest-anxiety moment in the product. The user has just signed up and wants to reach a populated dashboard as quickly as possible. Every additional required field is a reason to bounce. First name alone is sufficient for the dashboard greeting ("Good morning, David") and for identifying the user. Last name is not needed until the PDF export — which is also the moment the user has the highest motivation to provide it, because they are actively preparing documents for a Home Office application and want their name to appear correctly. Collecting last name at the point of maximum motivation rather than maximum friction is the better experience.
+
+**Alternatives considered:**
+- Collect full name at signup — rejected. Adds friction at the highest-anxiety point in the flow. Many people also don't use a "last name" in the same way (mononyms, compound names) and a mandatory single field forces awkward workarounds.
+- Collect full name at onboarding visa setup step — rejected. Same reasoning as above; no feature at onboarding actually requires a last name.
+- Single `name` column — rejected. Makes the PDF "last name required" check brittle (requires string splitting) and the settings UI awkward (one combined field vs. two clearly labelled fields).
+- Ask for last name in settings only, not as a PDF pre-generation prompt — rejected. Users who never visit settings would be blocked at PDF generation with no clear path forward. The inline prompt is lower friction.
+
+**Consequences:**
+- `profiles` table: add `first_name text NOT NULL` and `last_name text` columns. If a `name` column already exists, write a migration to split it and drop the old column. Update all references in the codebase.
+- Onboarding visa setup step: collects `first_name` only (required). No `last_name` field.
+- Settings → Visa Profile: two fields — "First name" (required) and "Last name" (optional, helper text: "Used in PDF exports").
+- Dashboard greeting: "Good morning, {firstName}".
+- PDF generation in `ReportsClient`: check `profile.last_name` before generating. If absent, show an inline form (first name pre-filled and editable, last name required). On confirm, `upsert` the profile with both name fields, then proceed to generate. If present, generate immediately.
+- PDF header: "Name: {firstName} {lastName}".
+
+**Related:** PRD §4b (onboarding), §4g (PDF export), §4h (settings), DECISION-013 (database schema — profiles table)
+
+---
+
 Copy this template when adding a new decision:
 
 ### [DECISION-XXX] Short title
@@ -855,3 +884,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.4 | Added DECISION-030 — PWA manifest + service worker; push notifications deferred to v2 |
 | 2026-03-22 | 2.5 | Added DECISION-031 — trip drawer paywall behaviour (skip drawer, fire PaywallModal on TripsClient) |
 | 2026-03-22 | 2.6 | Added DECISION-032 — remove Recent Trips card from dashboard (status-only view) |
+| 2026-03-22 | 2.7 | Added DECISION-033 — split name into first_name + last_name; defer last name to settings and PDF generation |

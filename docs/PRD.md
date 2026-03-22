@@ -171,12 +171,14 @@ The paywall is a modal (see Section 4l for full spec).
 
 **Flow:**
 1. **Welcome screen** — "Welcome to StayRight" → "Let's go" / "Skip setup"
-2. **Visa setup** — Select visa route (Skilled Worker pre-selected), enter visa start date, confirm qualifying period (auto-calculated as 5 years from start date)
+2. **Visa setup** — Enter first name (required), select visa route (Skilled Worker pre-selected), enter visa start date, confirm qualifying period (auto-calculated as 5 years from start date). **No last name field at this stage** — see DECISION-033.
 3. **Bulk past trip entry** — "Add your travel history" — a streamlined form to quickly add multiple past trips (destination + departure date + return date). Show a running count: "3 trips added". Allow "Add another" or "Done".
 4. **Dashboard** — Arrive at a populated dashboard showing the quota ring based on entered trips
 
 **Acceptance criteria:**
 - [ ] Onboarding starts automatically after first login / email verification
+- [ ] First name (required) is collected in the visa setup step and saved to `profiles.first_name`
+- [ ] No last name field during onboarding — deferred to Settings and PDF generation (see §4g, §4h, DECISION-033)
 - [ ] Visa start date is required; route defaults to "Skilled Worker"
 - [ ] ILR target date auto-calculates as visa start date + 5 years
 - [ ] Bulk trip entry allows adding 0 or more trips in sequence
@@ -405,7 +407,8 @@ All trip detail views must include the following note (in small text, always vis
 
 **Acceptance criteria:**
 - [ ] Reports are generated as downloadable PDFs
-- [ ] PDFs include the StayRight logo, user name, visa route, and qualifying period dates in a header
+- [ ] Before generating, check `profiles.last_name`. If absent: show an inline prompt — "What name should appear on this document?" with a pre-filled editable first name field and a required last name field, and the note "This will be saved to your profile." On confirm, save both fields to the profile and proceed to generate. If `last_name` is already set, skip the prompt and generate immediately. See DECISION-033.
+- [ ] PDFs include the StayRight logo, user's full name (`first_name last_name`), visa route, and qualifying period dates in a header
 - [ ] ILR Absence Table lists all trips in chronological order with all required columns
 - [ ] ILR Absence Table shows a summary row at the bottom: "Total absence days: X"
 - [ ] Rolling Window History calculates the window count at the 1st of each month
@@ -429,7 +432,7 @@ All trip detail views must include the following note (in small text, always vis
 
 **Sections:**
 
-1. **Visa Profile** — displays and allows editing of: name, visa route, visa start date, qualifying period, ILR target date (auto-calculated). ILR Mode toggle (renders as disabled/greyed in v1 — clicking it shows a "Coming soon" tooltip since citizenship mode is out of scope).
+1. **Visa Profile** — displays and allows editing of: **First name** (required), **Last name** (optional — helper text: "Used in PDF exports"), visa route, visa start date, qualifying period, ILR target date (auto-calculated). ILR Mode toggle (renders as disabled/greyed in v1 — clicking it shows a "Coming soon" tooltip since citizenship mode is out of scope). See DECISION-033 for name field rationale.
 2. **Notifications** — toggle on/off for each alert type: warn at 120 days, warn at 150 days, log return reminder, ILR reminder 90 days before, renewal reminder.
 3. **Account** — email address (editable), password change, delete account.
 4. **Subscription** — displays current plan (Free, Pro Monthly, Pro Annual, or Pro Lifetime), price, renewal date (or "Lifetime — no renewal" for lifetime users), and "Manage subscription" button (links to Stripe Customer Portal). For lifetime users, "Manage subscription" is hidden.
@@ -447,6 +450,7 @@ The help centre is a static set of FAQ pages hosted at `/help` within the app. C
 
 **Acceptance criteria:**
 - [ ] All visa profile fields are editable
+- [ ] First name is required; last name is optional with helper text "Used in PDF exports"
 - [ ] Changing the visa start date triggers recalculation of all rolling windows and the ILR target date
 - [ ] Notification toggles persist and control email delivery
 - [ ] Email address change requires re-verification
