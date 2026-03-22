@@ -8,7 +8,6 @@ import {
   getCurrentRollingWindow,
   getQualifyingPeriod,
   calculateTripAbsenceDays,
-  getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
 import type { Metadata } from 'next'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
@@ -54,18 +53,20 @@ export default async function DashboardPage() {
     ? getQualifyingPeriod(visaStartDate, today)
     : null
 
-  // Recent trips (last 3, with absence days computed)
-  const recentTrips = trips.slice(0, 3).map((trip) => ({
-    ...trip,
-    absenceDays:
-      trip.return_date
-        ? calculateTripAbsenceDays({
-            destination: trip.destination,
-            departure_date: trip.departure_date,
-            return_date: trip.return_date,
-          })
-        : null,
-  }))
+  // Trip summary for right column
+  const tripCount = trips.length
+  const totalDaysAbroad = trips
+    .filter((t) => t.return_date !== null)
+    .reduce(
+      (sum, t) =>
+        sum +
+        calculateTripAbsenceDays({
+          destination: t.destination,
+          departure_date: t.departure_date,
+          return_date: t.return_date as string,
+        }),
+      0
+    )
 
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
   const firstName = profile.full_name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'there'
@@ -114,7 +115,7 @@ export default async function DashboardPage() {
 
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column — quota ring + qualifying period + recent trips */}
+        {/* Left column — quota ring + qualifying period */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quota ring card */}
           <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-8">
@@ -162,36 +163,9 @@ export default async function DashboardPage() {
               </div>
             </div>
           )}
-
-          {/* Recent trips */}
-          <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-[#191C1D]">
-                Recent trips
-              </h2>
-              <Link
-                href="/trips"
-                className="text-xs text-[#006948] hover:underline"
-              >
-                View all →
-              </Link>
-            </div>
-
-            {recentTrips.length === 0 ? (
-              <p className="text-sm text-[#3D4A42] py-4 text-center">
-                No trips logged yet.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {recentTrips.map((trip) => (
-                  <TripRow key={trip.id} trip={trip} />
-                ))}
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* Right column — actions + ILR timeline */}
+        {/* Right column — actions + ILR timeline + trip summary */}
         <div className="space-y-6">
           {/* CTAs */}
           <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 space-y-3">
@@ -243,6 +217,24 @@ export default async function DashboardPage() {
               </div>
             </div>
           )}
+
+          {/* Trip summary — compact record count */}
+          {tripCount > 0 && (
+            <div className="bg-[#F3F4F5] rounded-2xl px-5 py-4">
+              <p className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
+                {tripCount} trip{tripCount !== 1 ? 's' : ''} logged
+                {totalDaysAbroad > 0 && (
+                  <> · {totalDaysAbroad} day{totalDaysAbroad !== 1 ? 's' : ''} abroad recorded</>
+                )}
+              </p>
+              <Link
+                href="/trips"
+                className="text-sm text-[#006948] hover:underline font-[family-name:var(--font-inter)]"
+              >
+                View all trips →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -288,58 +280,6 @@ function AlertCard({
     >
       <span className="text-lg shrink-0">{config.icon}</span>
       <p className={`text-sm font-medium ${config.text}`}>{config.message}</p>
-    </div>
-  )
-}
-
-function TripRow({
-  trip,
-}: {
-  trip: {
-    id: string
-    destination: string
-    departure_date: string
-    return_date: string | null
-    absenceDays: number | null
-  }
-}) {
-  const status =
-    trip.absenceDays !== null ? getRiskStatus(trip.absenceDays) : null
-  const statusColour = status
-    ? { SAFE: 'text-[#006948]', WARNING: 'text-[#D97706]', DANGER: 'text-[#BA1A1A]', BREACH: 'text-[#8E0009]' }[status]
-    : 'text-[#3D4A42]'
-
-  function fmt(d: string) {
-    return new Date(d).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    })
-  }
-
-  return (
-    <div className="flex items-center justify-between py-2 border-b border-[#191C1D]/5 last:border-0">
-      <div className="min-w-0">
-        <p className="text-sm font-medium text-[#191C1D] truncate">
-          {trip.destination}
-        </p>
-        <p className="text-xs text-[#3D4A42]">
-          {fmt(trip.departure_date)} →{' '}
-          {trip.return_date ? fmt(trip.return_date) : 'ongoing'}
-        </p>
-      </div>
-      <div className="text-right shrink-0 ml-4">
-        {trip.absenceDays !== null ? (
-          <>
-            <p className={`text-sm font-semibold ${statusColour}`}>
-              {trip.absenceDays}d
-            </p>
-            <p className="text-xs text-[#3D4A42]">absence</p>
-          </>
-        ) : (
-          <p className="text-xs text-[#D97706]">abroad</p>
-        )}
-      </div>
     </div>
   )
 }
