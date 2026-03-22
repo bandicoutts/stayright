@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
@@ -48,6 +49,8 @@ export async function addTripAction(
     .single()
 
   if (error) return { error: error.message }
+  revalidatePath('/dashboard')
+  revalidatePath('/trips')
   return { trip: savedTrip }
 }
 
@@ -80,6 +83,8 @@ export async function updateTripAction(
 
   if (error) return { error: error.message }
   if (!updatedTrip) return { error: 'Trip not found' }
+  revalidatePath('/dashboard')
+  revalidatePath('/trips')
   return { trip: updatedTrip }
 }
 
@@ -103,6 +108,8 @@ export async function deleteTripAction(
     .eq('user_id', user.id) // safety: only delete own rows
 
   if (error) return { error: error.message }
+  revalidatePath('/dashboard')
+  revalidatePath('/trips')
   return { success: true }
 }
 
