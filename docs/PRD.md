@@ -932,6 +932,7 @@ All previously open questions are now resolved. No outstanding questions block t
 | ~~8~~ | ~~Departure day counting~~ | **Resolved.** Follows official Home Office guidance — departure and return days count as presence. Formula: `absence_days = (return_date - departure_date) - 1`. See Section 4c. |
 | ~~9~~ | ~~Export my data format~~ | **Resolved.** Immediate JSON download. See Section 4h. |
 | ~~10~~ | ~~Copyright year~~ | **Resolved.** Dynamic, not hardcoded. |
+| 11 | first_name collection in onboarding | **Open.** DECISION-033 specifies that first_name is collected at the onboarding visa setup step, but `VisaForm.tsx` does not currently include a first_name input. The DB column exists and is NOT NULL, but is only populated via Settings after onboarding. Until this is built, users who sign up via email (not OAuth) will have an empty first_name until they visit Settings. **Flag before next build session.** |
 
 ---
 

@@ -839,6 +839,32 @@ Onboarding is the highest-anxiety moment in the product. The user has just signe
 
 ---
 
+### [DECISION-034] Shared utility modules for RISK_CONFIG and date formatting
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Refactor agent
+
+**Decision:**
+Two shared utility modules were extracted during the March 2026 code review:
+
+1. `src/lib/riskConfig.ts` — exports a single `RISK_CONFIG` constant (label, bg, text per risk status). Previously defined verbatim in both `TripFlowClient.tsx` and `TripsClient.tsx`.
+
+2. `src/lib/utils/dateFormatters.ts` — exports `formatDate(iso: string)` and `formatDateRange(dep, ret)`. Previously, `formatDateRange` was defined identically in both trip client components; `formatDate` existed under different names (`formatDate`, `formatShort`, `fmt`) in four separate files.
+
+**Reasoning:**
+Duplicated constants and helper functions are a maintenance risk — a future change to risk colour tokens or date format would require finding and updating every definition site. Centralising them means a single edit propagates everywhere.
+
+**Alternatives considered:**
+- Leave in place — rejected. Two identical 20-line functions with zero divergence have no reason to be separate definitions.
+- Co-locate with absenceEngine.ts — rejected. Formatting concerns belong in separate modules; the engine is pure business logic with no UI/locale dependencies.
+
+**Consequences:**
+Any future change to risk badge colours or date display format should be made in `riskConfig.ts` or `dateFormatters.ts` respectively — not in individual component files.
+
+**Related:** DECISION-018 (absence engine as pure functions)
+
+---
+
 Copy this template when adding a new decision:
 
 ### [DECISION-XXX] Short title
@@ -885,3 +911,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.5 | Added DECISION-031 — trip drawer paywall behaviour (skip drawer, fire PaywallModal on TripsClient) |
 | 2026-03-22 | 2.6 | Added DECISION-032 — remove Recent Trips card from dashboard (status-only view) |
 | 2026-03-22 | 2.7 | Added DECISION-033 — split name into first_name + last_name; defer last name to settings and PDF generation |
+| 2026-03-22 | 2.8 | Added DECISION-034 — shared RISK_CONFIG and date formatting utilities extracted from component files |
