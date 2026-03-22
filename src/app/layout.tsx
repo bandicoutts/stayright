@@ -3,6 +3,7 @@ import { Manrope, Inter } from 'next/font/google';
 import './globals.css';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
+import CookieBanner from '@/components/marketing/CookieBanner';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -48,6 +49,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full">
         <PostHogProvider>{children}</PostHogProvider>
+        <CookieBanner />
         <ServiceWorkerRegistration />
       </body>
     </html>
