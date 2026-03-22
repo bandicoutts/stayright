@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Sidebar } from '@/components/app/Sidebar'
 import { PostHogIdentify } from '@/components/app/PostHogIdentify'
+import { LoginTracker } from '@/components/app/LoginTracker'
+import { ReturnVisitTracker } from '@/components/ReturnVisitTracker'
 import type { ReactNode } from 'react'
 
 export default async function MainLayout({ children }: { children: ReactNode }) {
@@ -27,6 +29,8 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
   return (
     <div className="flex min-h-screen bg-[#F8F9FA]">
       <PostHogIdentify userId={user.id} />
+      <LoginTracker />
+      <ReturnVisitTracker />
       <Sidebar userEmail={user.email} userInitial={initial} />
       <div className="flex-1 min-w-0">
         {isPaymentFailed && (

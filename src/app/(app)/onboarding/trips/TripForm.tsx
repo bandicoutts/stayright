@@ -117,7 +117,9 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
 
   async function handleComplete() {
     setCompleting(true)
-    track('onboarding_completed')
+    if (trips.length > 0) {
+      track('onboarding_trips_added', { count: trips.length })
+    }
     await completeOnboardingAction()
   }
 

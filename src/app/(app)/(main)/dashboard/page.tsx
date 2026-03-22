@@ -5,10 +5,12 @@ import { createClient } from '@/lib/supabase/server'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
 import { DashboardDrawerWrapper } from '@/components/app/dashboard/DashboardDrawerWrapper'
+import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytics'
 import {
   getCurrentRollingWindow,
   getQualifyingPeriod,
   calculateTripAbsenceDays,
+  getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
 import type { Metadata } from 'next'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
@@ -81,8 +83,37 @@ export default async function DashboardPage() {
 
   const isPro = subscription?.plan !== 'free' && subscription?.plan != null
 
+  // Derived values for PostHog user properties
+  const ilrEligibilityDate = visaStartDate
+    ? (() => {
+        const d = new Date(visaStartDate)
+        d.setFullYear(d.getFullYear() + 5)
+        return d.toISOString().split('T')[0]
+      })()
+    : null
+  const daysUntilIlr = ilrEligibilityDate
+    ? Math.ceil(
+        (new Date(ilrEligibilityDate).getTime() - today.getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : null
+  const complianceStatus = getRiskStatus(rollingWindow.days)
+
   return (
     <div className="p-6 md:p-8 max-w-6xl">
+      {/* dashboard_viewed event + user property sync */}
+      <Suspense fallback={null}>
+        <DashboardAnalytics
+          visaRoute={profile.visa_route ?? null}
+          ilrEligibilityDate={ilrEligibilityDate}
+          daysUntilIlr={daysUntilIlr}
+          isPro={isPro}
+          tripCount={tripCount}
+          rollingWindowDays={rollingWindow.days}
+          complianceStatus={complianceStatus}
+        />
+      </Suspense>
+
       {/* Track upgrade_completed when redirected back from Stripe Checkout */}
       <Suspense fallback={null}>
         <UpgradeTracker planType={subscription?.plan ?? 'unknown'} />

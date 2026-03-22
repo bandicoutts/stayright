@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import { ShieldCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { SignupTracker } from '@/components/app/onboarding/SignupTracker'
+import { OnboardingStartedTracker } from '@/components/app/onboarding/OnboardingStartedTracker'
 import { SkipButton } from '@/components/app/onboarding/SkipButton'
 import type { Metadata } from 'next'
 
@@ -34,6 +35,11 @@ export default async function OnboardingWelcomePage({
 
   return (
     <div className="w-full max-w-md">
+      {/* onboarding_started — fires every time this page is visited during onboarding */}
+      <Suspense fallback={null}>
+        <OnboardingStartedTracker />
+      </Suspense>
+
       {/* Fire signup_completed for new users arriving from the auth callback */}
       {isNewSignup && (
         <Suspense fallback={null}>

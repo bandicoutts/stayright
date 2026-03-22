@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { track } from '@/lib/posthog'
 
 type Tab = 'signup' | 'login'
 
@@ -35,6 +36,10 @@ export function LoginForm({ initialError }: Props) {
   async function handleGoogleAuth() {
     setLoading(true)
     setError(null)
+    // Fire signup_started or login depending on which tab is active.
+    // For Google we can't distinguish new vs returning until the callback,
+    // so we fire based on the current tab context.
+    track(tab === 'signup' ? 'signup_started' : 'login')
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -62,6 +67,7 @@ export function LoginForm({ initialError }: Props) {
         setError('Password must be at least 8 characters.')
         return
       }
+      track('signup_started')
       setLoading(true)
       const supabase = createClient()
       const { data, error } = await supabase.auth.signUp({
@@ -75,10 +81,11 @@ export function LoginForm({ initialError }: Props) {
         setError(error.message)
         setLoading(false)
       } else if (data.session) {
-        // Email confirmation disabled in Supabase — go straight to onboarding
-        router.push('/onboarding')
+        // Email confirmation disabled — go straight to onboarding.
+        // Tag the URL so SignupTracker can fire signup_completed(method:'email').
+        router.push('/onboarding?signup=1&method=email')
       } else {
-        // Email confirmation required
+        // Email confirmation required — goes through /auth/callback which tags signup=1
         router.push('/auth/verify-email')
       }
     } else {
@@ -93,6 +100,7 @@ export function LoginForm({ initialError }: Props) {
         )
         setLoading(false)
       } else {
+        track('login')
         router.push('/dashboard')
         router.refresh()
       }

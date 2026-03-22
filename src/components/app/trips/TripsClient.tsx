@@ -12,6 +12,7 @@ import type { TripInput } from '@/lib/calculations/absenceEngine'
 import { deleteTripAction } from '@/app/(app)/(main)/trips/actions'
 import { PaywallModal } from './PaywallModal'
 import { TripDrawer } from './TripDrawer'
+import { track } from '@/lib/posthog'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -125,6 +126,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       setDeleting(false)
       return
     }
+    track('trip_deleted')
     setDeleteTarget(null)
     if (selectedId === id) setSelectedId(null)
     router.refresh()

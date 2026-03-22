@@ -50,9 +50,15 @@ export async function GET(request: NextRequest) {
                 text: tmpl.text,
               })
 
-              // Tag the redirect with signup=1 so the onboarding page can fire
-              // the signup_completed analytics event client-side (PRD §4n).
-              return NextResponse.redirect(`${origin}${next}?signup=1`)
+              // Tag the redirect so SignupTracker fires signup_completed with
+              // the correct method. provider is 'google' for OAuth, 'email' otherwise.
+              const provider = user.app_metadata?.provider === 'google' ? 'google' : 'email'
+              return NextResponse.redirect(`${origin}${next}?signup=1&method=${provider}`)
+            }
+
+            // Existing user logging in via OAuth — tag so LoginTracker fires login event
+            if (user.app_metadata?.provider === 'google') {
+              return NextResponse.redirect(`${origin}${next}?login=1`)
             }
           }
         } catch (emailErr) {

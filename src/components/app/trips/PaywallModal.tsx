@@ -47,10 +47,10 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
     }
   }, [open, inline])
 
-  // Fire paywall_shown when the modal becomes visible (PRD §4n)
+  // Fire paywall_shown when the modal becomes visible
   useEffect(() => {
     if (open || inline) {
-      track('paywall_shown', { trigger_reason: triggerReason })
+      track('paywall_shown', { trigger: triggerReason })
     }
   }, [open, inline, triggerReason])
 
@@ -58,7 +58,10 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
   useEffect(() => {
     if (!open || inline) return
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        track('paywall_dismissed')
+        onClose()
+      }
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
@@ -68,9 +71,13 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
 
   const currentPlan = PLANS.find((p) => p.id === selectedPlan)!
 
+  function handleDismiss() {
+    track('paywall_dismissed')
+    onClose()
+  }
+
   async function handleUpgrade() {
-    // Fire upgrade_started before redirecting to Stripe (PRD §4n)
-    track('upgrade_started', { plan_type: selectedPlan })
+    track('upgrade_clicked', { plan: selectedPlan })
 
     setLoading(true)
     setError(null)
@@ -108,7 +115,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
         {!inline && (
           <button
             ref={closeRef}
-            onClick={onClose}
+            onClick={handleDismiss}
             aria-label="Close"
             className="text-[#3D4A42] hover:text-[#191C1D] transition-colors cursor-pointer -mt-1 -mr-1 p-1 rounded-lg hover:bg-[#F8F9FA]"
           >
@@ -199,7 +206,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       {!inline && (
         <div className="mt-4 text-center">
           <button
-            onClick={onClose}
+            onClick={handleDismiss}
             className="text-sm text-[#3D4A42] hover:text-[#191C1D] transition-colors cursor-pointer"
           >
             Not now
@@ -224,7 +231,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       role="dialog"
       aria-modal="true"
       aria-labelledby="paywall-title"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => { if (e.target === e.currentTarget) handleDismiss() }}
     >
       {content}
     </div>

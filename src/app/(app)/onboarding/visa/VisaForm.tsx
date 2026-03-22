@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { saveVisaProfileAction } from '../actions'
+import { track } from '@/lib/posthog'
 
 const VISA_ROUTES = [
   'Skilled Worker',
@@ -56,6 +57,7 @@ export function VisaForm({ defaultRoute, defaultStartDate }: Props) {
     try {
       const formData = new FormData(e.currentTarget)
       await saveVisaProfileAction(formData)
+      track('onboarding_visa_setup_completed')
     } catch {
       setError('Something went wrong. Please try again.')
       setPending(false)

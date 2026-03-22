@@ -219,10 +219,10 @@ export function TripFlowClient({
 
   const isCrownDep = destination.trim().length > 0 && isCrownDependency(destination)
 
-  // Fire what_if_used once when the plan mode component mounts (PRD §4n)
+  // Fire trip_plan_opened once when the plan mode component mounts
   useEffect(() => {
     if (mode === 'plan') {
-      track('what_if_used')
+      track('trip_plan_opened')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -349,13 +349,26 @@ export function TripFlowClient({
       return
     }
 
-    // Fire analytics events for new trips only (not edits) — PRD §4n
+    if (mode === 'edit') {
+      track('trip_edited')
+    } else if (mode === 'plan') {
+      // trip_plan_completed: include the calculated impact for this specific trip
+      track('trip_plan_completed', {
+        days: calcResult?.tripDays ?? 0,
+        verdict: calcResult?.result.status ?? 'SAFE',
+      })
+      track('trip_logged')
+    } else {
+      // log mode
+      track('trip_logged')
+    }
+
+    // trip_count_milestone for counts 1, 3, 10
     if (mode !== 'edit') {
-      const newTripNumber = tripCount + 1
-      if (tripCount === 0) {
-        track('first_trip_logged')
+      const newCount = tripCount + 1
+      if (newCount === 1 || newCount === 3 || newCount === 10) {
+        track('trip_count_milestone', { count: newCount })
       }
-      track('trip_logged', { trip_number: newTripNumber })
     }
 
     // Bust the client-side router cache so the dashboard quota ring
@@ -367,6 +380,7 @@ export function TripFlowClient({
   }
 
   function handleJustChecking() {
+    track('trip_plan_just_checking')
     router.push(redirectTo)
   }
 

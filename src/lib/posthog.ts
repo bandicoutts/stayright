@@ -29,25 +29,70 @@ export function initPostHog(): void {
   initialized = true
 }
 
+// ---------------------------------------------------------------------------
+// Event types
+// ---------------------------------------------------------------------------
+
+export type AnalyticsEvent =
+  // ── Authentication ────────────────────────────────────────────────────────
+  | 'signup_started'
+  | 'signup_completed'   // method: 'google' | 'email'
+  | 'login'
+
+  // ── Onboarding ────────────────────────────────────────────────────────────
+  | 'onboarding_started'
+  | 'onboarding_visa_setup_completed'
+  | 'onboarding_trips_added'   // count: n
+  | 'onboarding_skipped'
+
+  // ── Core product ──────────────────────────────────────────────────────────
+  | 'trip_plan_opened'
+  | 'trip_plan_completed'      // days: n, verdict: 'SAFE'|'WARNING'|'DANGER'|'BREACH'
+  | 'trip_plan_just_checking'
+  | 'trip_logged'
+  | 'trip_edited'
+  | 'trip_deleted'
+  | 'dashboard_viewed'
+  | 'reports_viewed'
+
+  // ── Paywall ───────────────────────────────────────────────────────────────
+  | 'paywall_shown'      // trigger: 'trip_limit'|'pdf_export'|'alerts'
+  | 'paywall_dismissed'
+  | 'upgrade_clicked'    // plan: 'monthly'|'annual'|'lifetime'
+  | 'upgrade_completed'
+
+  // ── Retention ─────────────────────────────────────────────────────────────
+  | 'return_visit'            // days_since_last: n
+  | 'trip_count_milestone'    // count: 1|3|10
+
+  // ── Other ─────────────────────────────────────────────────────────────────
+  | 'pdf_generated'
+  | 'account_deleted'
+
+// ---------------------------------------------------------------------------
+// User property types
+// ---------------------------------------------------------------------------
+
+export interface UserProperties {
+  visa_route?: string
+  qualifying_period?: string   // ILR eligibility date (YYYY-MM-DD)
+  days_until_ilr?: number
+  is_pro?: boolean
+  trip_count?: number
+  current_rolling_window_days?: number
+  compliance_status?: 'SAFE' | 'WARNING' | 'DANGER' | 'BREACH'
+}
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
 /**
- * Type-safe event capture. No-ops if PostHog is not yet initialised
- * (i.e. user has not accepted analytics cookies).
- *
- * Events mirror the spec in PRD §4n exactly.
+ * Type-safe event capture. No-ops silently if PostHog is not yet initialised
+ * (user has not accepted analytics cookies, or key is missing).
  */
 export function track(
-  event:
-    | 'signup_completed'
-    | 'onboarding_completed'
-    | 'onboarding_skipped'
-    | 'first_trip_logged'
-    | 'trip_logged'
-    | 'what_if_used'
-    | 'paywall_shown'
-    | 'upgrade_started'
-    | 'upgrade_completed'
-    | 'pdf_generated'
-    | 'account_deleted',
+  event: AnalyticsEvent,
   properties?: Record<string, string | number | boolean>
 ): void {
   if (typeof window === 'undefined') return
@@ -57,13 +102,22 @@ export function track(
 
 /**
  * Associates subsequent events with the authenticated user.
- * Call after login / on initial authenticated page load.
  * Only the user ID (UUID) is sent — no name or email.
  */
 export function identifyUser(userId: string): void {
   if (typeof window === 'undefined') return
   if (!initialized) return
   posthog.identify(userId)
+}
+
+/**
+ * Sets person properties on the identified user.
+ * Call after identifyUser() has run, e.g. from DashboardAnalytics.
+ */
+export function setUserProperties(props: UserProperties): void {
+  if (typeof window === 'undefined') return
+  if (!initialized) return
+  posthog.setPersonProperties(props)
 }
 
 export function optOutCapturing(): void {
