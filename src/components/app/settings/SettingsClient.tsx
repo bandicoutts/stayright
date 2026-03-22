@@ -17,9 +17,24 @@ import type { Profile, Subscription } from '@/types/database'
 // Types
 // ---------------------------------------------------------------------------
 
+type SettingsProfile = Pick<
+  Profile,
+  | 'first_name'
+  | 'last_name'
+  | 'visa_route'
+  | 'visa_start_date'
+  | 'notifications_120_day'
+  | 'notifications_150_day'
+  | 'notifications_return_reminder'
+  | 'notifications_ilr_reminder'
+  | 'notifications_monthly'
+>
+
+type SettingsSubscription = Pick<Subscription, 'plan' | 'current_period_end'>
+
 interface SettingsClientProps {
-  profile: Profile
-  subscription: Subscription | null
+  profile: SettingsProfile
+  subscription: SettingsSubscription | null
   userEmail: string
 }
 

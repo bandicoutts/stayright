@@ -14,7 +14,7 @@ export default async function SettingsPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*')
+    .select('first_name, last_name, visa_route, visa_start_date, onboarding_completed, notifications_120_day, notifications_150_day, notifications_return_reminder, notifications_ilr_reminder, notifications_monthly')
     .eq('id', user.id)
     .single()
 
@@ -22,7 +22,7 @@ export default async function SettingsPage() {
 
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('*')
+    .select('plan, current_period_end')
     .eq('user_id', user.id)
     .single()
 
