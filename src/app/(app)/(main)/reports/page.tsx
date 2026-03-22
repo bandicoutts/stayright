@@ -14,7 +14,7 @@ export default async function ReportsPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('onboarding_completed, full_name, visa_route, visa_start_date')
+    .select('onboarding_completed, first_name, last_name, visa_route, visa_start_date')
     .eq('id', user.id)
     .single()
 
@@ -37,7 +37,8 @@ export default async function ReportsPage() {
   return (
     <ReportsClient
       profile={{
-        fullName: profile.full_name,
+        firstName: profile.first_name,
+        lastName: profile.last_name,
         visaRoute: profile.visa_route,
         visaStartDate: profile.visa_start_date,
       }}

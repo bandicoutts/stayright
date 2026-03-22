@@ -8,7 +8,8 @@ import { createAdminClient } from '@/lib/supabase/admin'
 // ---------------------------------------------------------------------------
 
 export async function updateProfileAction(data: {
-  full_name: string
+  first_name: string
+  last_name?: string
   visa_route: string
   visa_start_date: string
 }): Promise<{ success: true } | { error: string }> {
@@ -21,7 +22,8 @@ export async function updateProfileAction(data: {
   const { error } = await supabase
     .from('profiles')
     .update({
-      full_name: data.full_name.trim() || null,
+      first_name: data.first_name.trim() || '',
+      last_name: data.last_name?.trim() || null,
       visa_route: data.visa_route,
       visa_start_date: data.visa_start_date,
     })
@@ -118,7 +120,7 @@ export async function exportDataAction(): Promise<
   const [{ data: profile }, { data: trips }] = await Promise.all([
     supabase
       .from('profiles')
-      .select('full_name, visa_route, visa_start_date, created_at')
+      .select('first_name, last_name, visa_route, visa_start_date, created_at')
       .eq('id', user.id)
       .single(),
     supabase

@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   // Fetch all Pro users whose profiles have notification settings
   const { data: profiles, error: profilesError } = await supabase
     .from('profiles')
-    .select('id, full_name, visa_start_date, notifications_120_day, notifications_150_day, notifications_ilr_reminder, notifications_return_reminder, notified_120_day_at, notified_150_day_at')
+    .select('id, first_name, last_name, visa_start_date, notifications_120_day, notifications_150_day, notifications_ilr_reminder, notifications_return_reminder, notified_120_day_at, notified_150_day_at')
 
   if (profilesError || !profiles) {
     console.error('[cron/daily] failed to fetch profiles:', profilesError)
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
     if (isPro && profile.notifications_120_day) {
       if (daysUsed >= 120 && !profile.notified_120_day_at) {
         // Send notification and mark as sent
-        const tmpl = threshold120Email({ name: profile.full_name, daysUsed })
+        const tmpl = threshold120Email({ name: profile.first_name || null, daysUsed })
         const { error } = await resend.emails.send({
           from: EMAIL_FROM,
           to: email,
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
     // -----------------------------------------------------------------------
     if (isPro && profile.notifications_150_day) {
       if (daysUsed >= 150 && !profile.notified_150_day_at) {
-        const tmpl = threshold150Email({ name: profile.full_name, daysUsed })
+        const tmpl = threshold150Email({ name: profile.first_name || null, daysUsed })
         const { error } = await resend.emails.send({
           from: EMAIL_FROM,
           to: email,
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
         )
         if (daysUntilIlr === 90) {
           const tmpl = ilrReminderEmail({
-            name: profile.full_name,
+            name: profile.first_name || null,
             ilrDate: ilrDateStr,
             daysUsed,
           })
@@ -189,7 +189,7 @@ export async function GET(request: NextRequest) {
 
       for (const trip of ongoingTrips) {
         const tmpl = returnReminderEmail({
-          name: profile.full_name,
+          name: profile.first_name || null,
           destination: trip.destination,
           departureDate: trip.departure_date,
         })

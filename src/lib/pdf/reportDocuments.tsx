@@ -21,7 +21,8 @@ import type { TripInput } from '@/lib/calculations/absenceEngine'
 // ---------------------------------------------------------------------------
 
 export interface ReportProfile {
-  fullName: string | null
+  firstName: string
+  lastName: string | null
   visaRoute: string
   visaStartDate: string | null
 }
@@ -253,7 +254,9 @@ function PageHeader({ title, profile, generatedOn }: {
       <View style={s.metaRow}>
         <View style={s.metaGroup}>
           <Text style={s.metaLabel}>Name</Text>
-          <Text style={s.metaValue}>{profile.fullName ?? 'Not set'}</Text>
+          <Text style={s.metaValue}>
+            {[profile.firstName, profile.lastName].filter(Boolean).join(' ') || 'Not set'}
+          </Text>
         </View>
         <View style={s.metaGroup}>
           <Text style={s.metaLabel}>Visa Route</Text>

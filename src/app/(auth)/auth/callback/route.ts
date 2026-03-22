@@ -37,11 +37,11 @@ export async function GET(request: NextRequest) {
               const adminSupabase = createAdminClient()
               const { data: profile } = await adminSupabase
                 .from('profiles')
-                .select('full_name')
+                .select('first_name')
                 .eq('id', user.id)
                 .single()
 
-              const tmpl = welcomeEmail({ name: profile?.full_name ?? null })
+              const tmpl = welcomeEmail({ name: profile?.first_name || null })
               await resend.emails.send({
                 from: EMAIL_FROM,
                 to: user.email,

@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   // Fetch Pro users with monthly notifications enabled
   const { data: profiles, error } = await supabase
     .from('profiles')
-    .select('id, full_name, visa_start_date, notifications_monthly, notified_monthly_summary_at')
+    .select('id, first_name, visa_start_date, notifications_monthly, notified_monthly_summary_at')
     .eq('notifications_monthly', true)
 
   if (error || !profiles) {
@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
     }
 
     const tmpl = monthlySummaryEmail({
-      name: profile.full_name,
+      name: profile.first_name || null,
       month: prevMonthLabel,   // summary is for the month just ended
       daysUsed,
       riskStatus: rollingWindow.status,

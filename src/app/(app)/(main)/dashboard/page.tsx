@@ -25,7 +25,7 @@ export default async function DashboardPage() {
   // Load profile
   const { data: profile } = await supabase
     .from('profiles')
-    .select('onboarding_completed, visa_route, visa_start_date, full_name')
+    .select('onboarding_completed, visa_route, visa_start_date, first_name')
     .eq('id', user.id)
     .single()
 
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
     )
 
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
-  const firstName = profile.full_name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'there'
+  const firstName = profile.first_name || user.email?.split('@')[0] || 'there'
 
   // Needed for upgrade_completed analytics event + drawer paywall check
   const { data: subscription } = await supabase

@@ -169,7 +169,8 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
   const router = useRouter()
 
   // ---- Visa profile state ----
-  const [fullName, setFullName] = useState(profile.full_name ?? '')
+  const [firstName, setFirstName] = useState(profile.first_name ?? '')
+  const [lastName, setLastName] = useState(profile.last_name ?? '')
   const [visaRoute, setVisaRoute] = useState(profile.visa_route)
   const [visaStart, setVisaStart] = useState(profile.visa_start_date ?? '')
   const [profileSaving, setProfileSaving] = useState(false)
@@ -220,13 +221,17 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
   // ---------------------------------------------------------------------------
 
   async function handleSaveProfile() {
+    if (!firstName.trim()) {
+      setProfileStatus({ type: 'error', msg: 'First name is required.' })
+      return
+    }
     if (!visaStart) {
       setProfileStatus({ type: 'error', msg: 'Visa start date is required.' })
       return
     }
     setProfileSaving(true)
     setProfileStatus(null)
-    const result = await updateProfileAction({ full_name: fullName, visa_route: visaRoute, visa_start_date: visaStart })
+    const result = await updateProfileAction({ first_name: firstName, last_name: lastName, visa_route: visaRoute, visa_start_date: visaStart })
     setProfileSaving(false)
     if ('error' in result) {
       setProfileStatus({ type: 'error', msg: result.error })
@@ -339,9 +344,16 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       <SectionHeading>Visa Profile</SectionHeading>
       <Card>
         <div className="grid grid-cols-1 gap-4">
-          <div>
-            <FieldLabel>Full name</FieldLabel>
-            <TextInput value={fullName} onChange={setFullName} placeholder="Your full name" />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <FieldLabel>First name *</FieldLabel>
+              <TextInput value={firstName} onChange={setFirstName} placeholder="First name" />
+            </div>
+            <div>
+              <FieldLabel>Last name</FieldLabel>
+              <TextInput value={lastName} onChange={setLastName} placeholder="Last name" />
+              <p className="mt-1 text-xs text-[#3D4A42]">Used in PDF exports</p>
+            </div>
           </div>
           <div>
             <FieldLabel>Visa route</FieldLabel>

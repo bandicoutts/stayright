@@ -22,7 +22,8 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
-          full_name: string | null
+          first_name: string
+          last_name: string | null
           id: string
           notifications_120_day: boolean
           notifications_150_day: boolean
@@ -39,7 +40,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          full_name?: string | null
+          first_name?: string
+          last_name?: string | null
           id: string
           notifications_120_day?: boolean
           notifications_150_day?: boolean
@@ -56,7 +58,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          full_name?: string | null
+          first_name?: string
+          last_name?: string | null
           id?: string
           notifications_120_day?: boolean
           notifications_150_day?: boolean
