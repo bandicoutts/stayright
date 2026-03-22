@@ -12,6 +12,7 @@ import {
 import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
 import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/actions'
 import { DestinationAutocomplete } from './DestinationAutocomplete'
+import { DateRangePicker } from './DateRangePicker'
 import { track } from '@/lib/posthog'
 
 // ---------------------------------------------------------------------------
@@ -51,10 +52,6 @@ const RISK_CONFIG = {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function todayISO() {
-  return new Date().toISOString().split('T')[0]
-}
 
 function formatDateRange(dep: string, ret: string | null): string {
   if (!ret) return 'Currently abroad'
@@ -328,19 +325,6 @@ export function TripFlowClient({
     setStep(3)
   }
 
-  function handleLeavingToday() {
-    setDepartureDate(todayISO())
-  }
-
-  function handleLogReturnLater() {
-    setReturnDateKnown(false)
-    setReturnDate('')
-  }
-
-  function handleEnterReturnDate() {
-    setReturnDateKnown(true)
-  }
-
   async function handleSave() {
     setSaving(true)
     setError(null)
@@ -479,67 +463,17 @@ export function TripFlowClient({
               </div>
             )}
 
-            {/* Departure date */}
+            {/* Date range calendar */}
             <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="departure_date" className="text-sm font-medium text-[#191C1D]">
-                  Departed UK
-                </label>
-                <button
-                  type="button"
-                  onClick={handleLeavingToday}
-                  className="text-xs text-[#006948] hover:underline cursor-pointer"
-                >
-                  I'm leaving today
-                </button>
-              </div>
-              <input
-                id="departure_date"
-                type="date"
-                value={departureDate}
-                onChange={(e) => setDepartureDate(e.target.value)}
-                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              <DateRangePicker
+                departureDate={departureDate}
+                returnDate={returnDate}
+                returnDateKnown={returnDateKnown}
+                onDepartureChange={setDepartureDate}
+                onReturnChange={setReturnDate}
+                onReturnDateKnownChange={setReturnDateKnown}
               />
             </div>
-
-            {/* Return date */}
-            {returnDateKnown ? (
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-1.5">
-                  <label htmlFor="return_date" className="text-sm font-medium text-[#191C1D]">
-                    Returned to UK
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleLogReturnLater}
-                    className="text-xs text-[#006948] hover:underline cursor-pointer"
-                  >
-                    I'll log my return later
-                  </button>
-                </div>
-                <input
-                  id="return_date"
-                  type="date"
-                  value={returnDate}
-                  min={departureDate || undefined}
-                  onChange={(e) => setReturnDate(e.target.value)}
-                  className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
-                />
-              </div>
-            ) : (
-              <div className="mb-4 px-4 py-3 bg-[#D97706]/8 border border-[#D97706]/20 rounded-xl flex items-center justify-between">
-                <p className="text-sm text-[#191C1D]">
-                  Trip will be saved as <span className="font-semibold">Currently abroad</span>
-                </p>
-                <button
-                  type="button"
-                  onClick={handleEnterReturnDate}
-                  className="text-xs text-[#006948] hover:underline cursor-pointer shrink-0 ml-3"
-                >
-                  Enter date
-                </button>
-              </div>
-            )}
 
             {/* Live calculation panel */}
             {isCrownDep && departureDate && (
