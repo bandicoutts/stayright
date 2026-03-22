@@ -56,11 +56,18 @@ export async function GET(request: NextRequest) {
 
   const proUserIds = new Set((subscriptions ?? []).map((s) => s.user_id))
 
-  // Fetch user emails
-  const { data: authUsers } = await supabase.auth.admin.listUsers({ perPage: 1000 })
-  const emailMap = new Map(
-    (authUsers?.users ?? []).map((u) => [u.id, u.email ?? ''])
-  )
+  // Fetch user emails — paginate to handle >1000 users
+  const allAuthUsers: { id: string; email?: string }[] = []
+  let page = 1
+  const perPage = 1000
+  while (true) {
+    const { data } = await supabase.auth.admin.listUsers({ page, perPage })
+    if (!data?.users?.length) break
+    allAuthUsers.push(...data.users)
+    if (data.users.length < perPage) break
+    page++
+  }
+  const emailMap = new Map(allAuthUsers.map((u) => [u.id, u.email ?? '']))
 
   let sent = 0
   let skipped = 0

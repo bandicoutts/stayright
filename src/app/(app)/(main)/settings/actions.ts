@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { stripe } from '@/lib/stripe'
 
 // ---------------------------------------------------------------------------
 // Update visa profile (name, visa route, visa start date)
@@ -141,9 +142,12 @@ export async function exportDataAction(): Promise<
 
 // ---------------------------------------------------------------------------
 // Delete account
-// Deletes trips + profile, then deletes auth user via admin client.
+// Deletes trips + profile + subscriptions, then deletes Stripe customer
+// (GDPR right to erasure), then deletes auth user via admin client.
+// ON DELETE CASCADE on auth.users is the safety net for any rows that
+// survive the explicit deletes.
 // Note: hard delete in v1. Soft-delete with 30-day retention (per PRD §4h)
-// requires a scheduled cleanup job — deferred post-launch.
+// requires a scheduled cleanup job — deferred post-launch (DECISION-026).
 // ---------------------------------------------------------------------------
 
 export async function deleteAccountAction(): Promise<
@@ -155,12 +159,30 @@ export async function deleteAccountAction(): Promise<
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  // Delete user data (RLS allows own-row deletes)
+  // 1. Fetch stripe_customer_id before deleting the subscription row
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('stripe_customer_id')
+    .eq('user_id', user.id)
+    .single()
+
+  // 2. Delete user data (RLS DELETE policies allow own-row deletes)
   await supabase.from('trips').delete().eq('user_id', user.id)
   await supabase.from('subscriptions').delete().eq('user_id', user.id)
   await supabase.from('profiles').delete().eq('id', user.id)
 
-  // Delete auth user via admin client (requires service role key)
+  // 3. Delete Stripe customer — GDPR right to erasure requires removing
+  //    all personal data including billing records held by Stripe.
+  if (subscription?.stripe_customer_id) {
+    try {
+      await stripe.customers.del(subscription.stripe_customer_id)
+    } catch (stripeErr) {
+      // Log but don't block — customer may already be deleted in Stripe
+      console.error('[delete-account] Stripe customer deletion failed:', stripeErr)
+    }
+  }
+
+  // 4. Delete auth user — cascades to any remaining DB rows via ON DELETE CASCADE
   const admin = createAdminClient()
   const { error } = await admin.auth.admin.deleteUser(user.id)
   if (error) return { error: error.message }

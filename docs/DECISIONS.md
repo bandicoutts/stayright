@@ -865,6 +865,115 @@ Any future change to risk badge colours or date display format should be made in
 
 ---
 
+### [DECISION-035] HTTP security headers via next.config.ts
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Security audit
+
+**Decision:**
+HTTP security response headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Content-Security-Policy`) are set globally via the `headers()` function in `next.config.ts`. The CSP uses `unsafe-inline` and `unsafe-eval` for the `script-src` directive to accommodate Next.js runtime script injection.
+
+**Reasoning:**
+Without these headers, the app was vulnerable to clickjacking (no `frame-ancestors` / `X-Frame-Options`) and had no CSP to reduce XSS blast radius. `unsafe-inline` is required by the Next.js App Router — the framework injects inline scripts for hydration. A nonce-based CSP that eliminates `unsafe-inline` is architecturally possible with Next.js `generateNonce()` but requires significant plumbing; deferred to post-launch hardening.
+
+**Alternatives considered:**
+- Nonce-based CSP — stronger, eliminates `unsafe-inline`; deferred post-launch (L3)
+- Vercel headers via `vercel.json` — equivalent, but `next.config.ts` keeps security config co-located with the app
+
+**Consequences:**
+All responses from the app include the security headers. The `frame-ancestors 'none'` CSP directive and `X-Frame-Options: DENY` header together prevent clickjacking on all clients. The CSP `connect-src` list must be kept up to date if new third-party API connections are added. Post-launch: replace `unsafe-inline`/`unsafe-eval` with per-request nonces.
+
+**Related:** PRD §4 (security requirements); OWASP A05 Security Misconfiguration
+
+---
+
+### [DECISION-036] Auth callback `next` parameter validated against open redirect
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Security audit
+
+**Decision:**
+The `next` query parameter in `src/app/(auth)/auth/callback/route.ts` is passed through a `safeNext()` helper that rejects any value that does not start with `/` or that starts with `//` (protocol-relative URL). Invalid values fall back to `/dashboard`.
+
+**Reasoning:**
+Without validation, an attacker could craft a URL like `/auth/callback?code=<code>&next=//evil.com` — after URL decode, `${origin}//evil.com` could be mishandled by some HTTP clients as a redirect to an external host. The fix is minimal: a two-line guard that enforces same-origin relative paths only.
+
+**Alternatives considered:**
+- Allowlist of known safe paths — more restrictive but requires maintenance as new routes are added; the starts-with-`/` guard is sufficient for the threat model
+
+**Consequences:**
+Any `next` value that is not a valid relative path silently redirects to `/dashboard`. This is the correct secure default — the user lands in the app rather than being bounced out.
+
+**Related:** OWASP A01 Broken Access Control; `src/app/(auth)/auth/callback/route.ts`
+
+---
+
+### [DECISION-037] RLS DELETE policies added for profiles and subscriptions
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Security audit
+
+**Decision:**
+New RLS policies `profiles: owner delete` and `subscriptions: owner delete` were added via migration `20260322000004_add_owner_delete_policies.sql`. These allow authenticated users to delete their own rows using the anon-key client (i.e., from Server Actions).
+
+**Reasoning:**
+`deleteAccountAction()` called `supabase.from('profiles').delete()` and `supabase.from('subscriptions').delete()` using the regular (RLS-respecting) client. Without DELETE policies, both calls silently returned success with 0 rows affected — the data was only ultimately removed by `ON DELETE CASCADE` when the auth user was deleted. This masked the silent failure and created confusion about what was actually being deleted and when. Explicit policies make the code work as written.
+
+**Alternatives considered:**
+- Use admin client for all deletes — would bypass RLS entirely; this is a wider attack surface than needed, since users should be able to delete their own data
+- Rely solely on ON DELETE CASCADE — works, but the explicit deletes in the action are misleading dead code; this option was rejected because it degrades code clarity
+
+**Consequences:**
+Users can now delete their own profile and subscription rows via the anon-key client. The `ON DELETE CASCADE` constraint remains as a safety net.
+
+**Related:** DECISION-013 (database schema); DECISION-026 (hard delete v1); `supabase/migrations/20260322000004_add_owner_delete_policies.sql`
+
+---
+
+### [DECISION-038] Stripe customer deleted on account deletion (GDPR right to erasure)
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Security audit
+
+**Decision:**
+`deleteAccountAction()` now fetches `stripe_customer_id` from the subscriptions table before deleting the DB row, then calls `stripe.customers.del()` to remove the Stripe customer object. Stripe deletion is wrapped in try/catch — failure is logged but does not block the auth user deletion.
+
+**Reasoning:**
+UK/EU GDPR right to erasure (Article 17) requires that all personal data be deleted on account deletion, including data held by third-party processors. Stripe customer objects contain billing name, email, payment method metadata, and invoice history — all personal data. The previous implementation deleted the DB subscription row (losing the `stripe_customer_id` reference) without ever calling Stripe's delete API, leaving PII in Stripe indefinitely.
+
+**Alternatives considered:**
+- Store stripe_customer_id in a separate table that survives the subscription row delete — unnecessarily complex; fetching before deletion is simpler and correct
+- Block account deletion if Stripe deletion fails — too disruptive for users; the Stripe object is ancillary to the core deletion; log and continue is the right tradeoff
+
+**Consequences:**
+Stripe customer records are now deleted as part of account deletion. Note that Stripe retains anonymised financial records for legal/tax compliance per their own data retention policies — this is permitted under GDPR legitimate interests for tax/legal obligations. The app's obligation is to delete personally identifiable data, which this change fulfils.
+
+**Related:** PRD §4h (account deletion); DECISION-026 (hard delete v1); GDPR Article 17; `src/app/(app)/(main)/settings/actions.ts`
+
+---
+
+### [DECISION-039] Password reset does not invalidate other sessions in v1
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Security audit
+
+**Decision:**
+In v1, `supabase.auth.updateUser({ password })` is called from the client (new-password page) and does not invalidate other active sessions for the same user. This is a known limitation documented here rather than fixed pre-launch.
+
+**Reasoning:**
+Invalidating all other sessions after a password change requires calling `supabase.auth.admin.signOut(userId, 'others')` server-side via the admin client. Implementing this correctly requires a new server action invoked after the client-side password update completes — adding auth complexity close to launch. The practical risk is low for v1: the app processes immigration data but not payment card data; session tokens expire on their own; and most users are solo accounts with no concurrent sessions.
+
+**Alternatives considered:**
+- Implement session invalidation pre-launch — the correct long-term approach; deferred to v1.1
+- Force a full sign-out and re-sign-in after password change — simpler than admin signOut but poor UX
+
+**Consequences:**
+A session that was active at the time of a password reset will remain valid until natural expiry. Post-launch: implement admin `signOut(userId, 'others')` server action called from the new-password success handler.
+
+**Related:** OWASP A07 Identification and Authentication Failures; `src/app/(auth)/auth/new-password/page.tsx`
+
+---
+
 Copy this template when adding a new decision:
 
 ### [DECISION-XXX] Short title
@@ -912,3 +1021,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.6 | Added DECISION-032 — remove Recent Trips card from dashboard (status-only view) |
 | 2026-03-22 | 2.7 | Added DECISION-033 — split name into first_name + last_name; defer last name to settings and PDF generation |
 | 2026-03-22 | 2.8 | Added DECISION-034 — shared RISK_CONFIG and date formatting utilities extracted from component files |
+| 2026-03-22 | 2.9 | Security audit: DECISION-035 HTTP security headers; DECISION-036 auth callback open-redirect guard; DECISION-037 RLS DELETE policies; DECISION-038 Stripe GDPR erasure on account deletion; DECISION-039 password reset session invalidation deferred to v1.1 |
