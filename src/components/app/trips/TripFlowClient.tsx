@@ -11,6 +11,7 @@ import {
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
 import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/actions'
+import { DestinationAutocomplete } from './DestinationAutocomplete'
 import { track } from '@/lib/posthog'
 
 // ---------------------------------------------------------------------------
@@ -430,14 +431,11 @@ export function TripFlowClient({
               <label htmlFor="destination" className="block text-sm font-medium text-[#191C1D] mb-1.5">
                 Destination
               </label>
-              <input
+              <DestinationAutocomplete
                 id="destination"
-                type="text"
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="e.g. Portugal, Dubai, Multi-destination"
+                onChange={setDestination}
                 autoFocus
-                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
               />
             </div>
 
