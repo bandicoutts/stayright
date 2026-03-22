@@ -698,6 +698,42 @@ Five new env vars required: `RESEND_API_KEY`, `CRON_SECRET`. Domain `stayright.c
 
 ## Template for new entries
 
+### [DECISION-029] PostHog analytics: client-only SDK, consent-gated init, typed wrapper
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Use `posthog-js` (v1.x, Cloud EU) for product analytics, initialised client-side only when the user has accepted analytics cookies (`cookie_consent === 'accepted'`). A module-level `initialized` flag prevents double-init and gates all `track()` / `identifyUser()` calls. Events fire from client components only — no server-side `posthog-node` usage. PostHog identifies users by their Supabase UUID only (no name, email, or IP). All 11 events from PRD §4n are instrumented.
+
+**Reasoning:**
+- `posthog-js` is purely client-side — no serverless bundle concerns and no additional server infrastructure.
+- The `initialized` guard keeps analytics silent until consent is explicitly given, satisfying PRD §4m (cookie consent) and GDPR.
+- Cloud EU region (`eu.i.posthog.com`) means all data stays within the EU.
+- Typed `track()` union enforces the exact event names from PRD §4n at compile time.
+
+**Architecture decisions within this scope:**
+- `PostHogProvider` wraps the root layout and listens for a `cookie-consent` custom window event dispatched by `CookieBanner` (native `storage` events don't fire in the same tab).
+- `PostHogIdentify` renders in the app `(main)` layout, called once per authenticated session.
+- `SignupTracker` fires `signup_completed` from the onboarding welcome page when `?signup=1` is present (set by auth callback for new users).
+- `SkipButton` replaces the server action form to fire `onboarding_skipped` before calling `skipOnboardingAction()`.
+- `UpgradeTracker` fires `upgrade_completed` on dashboard load when `?upgraded=1` is present (set by Stripe checkout success_url).
+- `what_if_used` fires once on `TripFlowClient` mount when `mode === 'plan'`.
+- `paywall_shown` includes a `trigger_reason` property; all PaywallModal callers pass a reason (`trip_limit`, `plan_mode_gate`, `log_mode_gate`, `pdf_export`).
+
+**Alternatives considered:**
+- Plausible — simpler but event tracking requires a custom server-side setup; PostHog has better funnel analytics for the signup/upgrade funnel.
+- `posthog-node` for server-side events — rejected to keep the implementation simple (all events are user-initiated UI actions, not background jobs).
+
+**Consequences:**
+- PostHog project must be created at posthog.com (Cloud EU region). API key must be set as `NEXT_PUBLIC_POSTHOG_KEY` in Vercel environment variables.
+- Basic dashboard to be created in PostHog showing: signup funnel, paywall conversion rate, PDF generation count (acceptance criterion in PRD §4n).
+- If consent is later withdrawn (settings page), `optOutCapturing()` must be called.
+
+**Related:** PRD §4m (cookie consent), PRD §4n (analytics), DECISION-027 (Stripe)
+
+---
+
 Copy this template when adding a new decision:
 
 ### [DECISION-XXX] Short title
@@ -739,3 +775,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 2.0 | Added DECISION-024 — recent exports deferred; DECISION-025 — notes→Reason for Travel; DECISION-026 — hard delete in v1 |
 | 2026-03-21 | 2.1 | Added DECISION-027 — Stripe integration pattern (API routes, client redirect, webhook raw body) |
 | 2026-03-21 | 2.2 | Updated DECISION-027 — production URL is stayright.vercel.app; Added DECISION-028 — Resend email notifications, Vercel Cron Jobs |
+| 2026-03-22 | 2.3 | Added DECISION-029 — PostHog analytics (consent-gated, typed wrapper, 11 events from PRD §4n) |

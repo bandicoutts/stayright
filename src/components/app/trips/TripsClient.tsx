@@ -286,6 +286,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       <PaywallModal
         open={showPaywall}
         onClose={() => setShowPaywall(false)}
+        triggerReason="trip_limit"
       />
     </div>
   )

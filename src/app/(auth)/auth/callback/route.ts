@@ -49,6 +49,10 @@ export async function GET(request: NextRequest) {
                 html: tmpl.html,
                 text: tmpl.text,
               })
+
+              // Tag the redirect with signup=1 so the onboarding page can fire
+              // the signup_completed analytics event client-side (PRD §4n).
+              return NextResponse.redirect(`${origin}${next}?signup=1`)
             }
           }
         } catch (emailErr) {

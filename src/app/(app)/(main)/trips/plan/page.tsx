@@ -56,7 +56,7 @@ export default async function TripPlanPage() {
             You've reached the Free tier limit of 3 trips.
           </p>
         </div>
-        <PaywallModal open inline onClose={() => {}} />
+        <PaywallModal open inline onClose={() => {}} triggerReason="plan_mode_gate" />
       </div>
     )
   }

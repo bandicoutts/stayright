@@ -1,13 +1,19 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { ShieldCheck } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
-import { skipOnboardingAction } from './actions'
+import { SignupTracker } from '@/components/app/onboarding/SignupTracker'
+import { SkipButton } from '@/components/app/onboarding/SkipButton'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Welcome' }
 
-export default async function OnboardingWelcomePage() {
+export default async function OnboardingWelcomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ signup?: string }>
+}) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -23,8 +29,18 @@ export default async function OnboardingWelcomePage() {
   // Already onboarded — don't show this again
   if (profile?.onboarding_completed) redirect('/dashboard')
 
+  const params = await searchParams
+  const isNewSignup = params.signup === '1'
+
   return (
     <div className="w-full max-w-md">
+      {/* Fire signup_completed for new users arriving from the auth callback */}
+      {isNewSignup && (
+        <Suspense fallback={null}>
+          <SignupTracker />
+        </Suspense>
+      )}
+
       {/* Progress dots */}
       <div className="flex justify-center gap-2 mb-8">
         <div className="h-2 w-8 rounded-full bg-[#006948]" />
@@ -52,14 +68,7 @@ export default async function OnboardingWelcomePage() {
           Let&apos;s go →
         </Link>
 
-        <form action={skipOnboardingAction}>
-          <button
-            type="submit"
-            className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors cursor-pointer"
-          >
-            Skip setup
-          </button>
-        </form>
+        <SkipButton />
       </div>
     </div>
   )

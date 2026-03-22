@@ -10,6 +10,7 @@ import {
   exportDataAction,
   deleteAccountAction,
 } from '@/app/(app)/(main)/settings/actions'
+import { track } from '@/lib/posthog'
 import type { Profile, Subscription } from '@/types/database'
 
 // ---------------------------------------------------------------------------
@@ -317,6 +318,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       setDeleteError(result.error)
       return
     }
+    track('account_deleted')
     // Redirect to login — account is gone
     router.push('/login')
   }

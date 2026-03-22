@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Sidebar } from '@/components/app/Sidebar'
+import { PostHogIdentify } from '@/components/app/PostHogIdentify'
 import type { ReactNode } from 'react'
 
 export default async function MainLayout({ children }: { children: ReactNode }) {
@@ -25,6 +26,7 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
 
   return (
     <div className="flex min-h-screen bg-[#F8F9FA]">
+      <PostHogIdentify userId={user.id} />
       <Sidebar userEmail={user.email} userInitial={initial} />
       <div className="flex-1 min-w-0">
         {isPaymentFailed && (

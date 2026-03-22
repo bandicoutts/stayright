@@ -56,7 +56,7 @@ export default async function TripLogPage() {
             You've reached the Free tier limit of 3 trips.
           </p>
         </div>
-        <PaywallModal open inline onClose={() => {}} />
+        <PaywallModal open inline onClose={() => {}} triggerReason="log_mode_gate" />
       </div>
     )
   }

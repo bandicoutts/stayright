@@ -1,12 +1,15 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { track } from '@/lib/posthog'
 
 interface Props {
   open: boolean
   onClose: () => void
   /** When true, renders as a full-width card (no overlay) for page-level paywall gates */
   inline?: boolean
+  /** Reason the paywall was triggered — sent with paywall_shown event (PRD §4n) */
+  triggerReason?: string
 }
 
 const PLANS = [
@@ -31,7 +34,7 @@ const PLAN_API_MAP: Record<PlanId, string> = {
   lifetime: 'pro_lifetime',
 }
 
-export function PaywallModal({ open, onClose, inline = false }: Props) {
+export function PaywallModal({ open, onClose, inline = false, triggerReason = 'unknown' }: Props) {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('monthly')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,6 +46,13 @@ export function PaywallModal({ open, onClose, inline = false }: Props) {
       closeRef.current?.focus()
     }
   }, [open, inline])
+
+  // Fire paywall_shown when the modal becomes visible (PRD §4n)
+  useEffect(() => {
+    if (open || inline) {
+      track('paywall_shown', { trigger_reason: triggerReason })
+    }
+  }, [open, inline, triggerReason])
 
   // Keyboard close
   useEffect(() => {
@@ -59,6 +69,9 @@ export function PaywallModal({ open, onClose, inline = false }: Props) {
   const currentPlan = PLANS.find((p) => p.id === selectedPlan)!
 
   async function handleUpgrade() {
+    // Fire upgrade_started before redirecting to Stripe (PRD §4n)
+    track('upgrade_started', { plan_type: selectedPlan })
+
     setLoading(true)
     setError(null)
     try {

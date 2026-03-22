@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Manrope, Inter } from 'next/font/google';
 import './globals.css';
+import { PostHogProvider } from '@/components/PostHogProvider';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -31,7 +32,9 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <PostHogProvider>{children}</PostHogProvider>
+      </body>
     </html>
   );
 }

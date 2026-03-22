@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Plus, Trash2 } from 'lucide-react'
 import { saveTripAction, deleteTripAction, completeOnboardingAction } from '../actions'
+import { track } from '@/lib/posthog'
 
 type TripRow = {
   id: string
@@ -91,6 +92,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
 
   async function handleComplete() {
     setCompleting(true)
+    track('onboarding_completed')
     await completeOnboardingAction()
   }
 

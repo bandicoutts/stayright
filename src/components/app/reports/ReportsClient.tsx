@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { PaywallModal } from '@/components/app/trips/PaywallModal'
+import { track } from '@/lib/posthog'
 import type { ReportProfile, ReportTrip } from '@/lib/pdf/reportDocuments'
 
 // ---------------------------------------------------------------------------
@@ -133,6 +134,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
       const blob = await pdf(element).toBlob()
       const card = REPORT_CARDS.find((c) => c.id === type)!
       triggerDownload(blob, card.filename(formatDateForFilename(today)))
+      track('pdf_generated', { report_type: type })
     } catch (err) {
       console.error('PDF generation error:', err)
       setError('Failed to generate PDF. Please try again.')
@@ -268,7 +270,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
         )}
       </div>
 
-      <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} />
+      <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} triggerReason="pdf_export" />
     </>
   )
 }

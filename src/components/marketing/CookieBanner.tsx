@@ -15,11 +15,14 @@ export default function CookieBanner() {
 
   function accept() {
     localStorage.setItem('cookie_consent', 'accepted');
+    // Notify PostHogProvider in this tab (native storage events only fire in other tabs)
+    window.dispatchEvent(new CustomEvent('cookie-consent', { detail: 'accepted' }));
     setVisible(false);
   }
 
   function necessary() {
     localStorage.setItem('cookie_consent', 'necessary');
+    window.dispatchEvent(new CustomEvent('cookie-consent', { detail: 'necessary' }));
     setVisible(false);
   }
 

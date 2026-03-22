@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   isCrownDependency,
@@ -10,6 +10,7 @@ import {
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
 import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/actions'
+import { track } from '@/lib/posthog'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -185,7 +186,7 @@ export function TripFlowClient({
   existingTrips,
   visaStartDate,
   isPro: _isPro,
-  tripCount: _tripCount,
+  tripCount,
   initialTrip,
 }: TripFlowClientProps) {
   const router = useRouter()
@@ -215,6 +216,14 @@ export function TripFlowClient({
   const [error, setError] = useState<string | null>(null)
 
   const isCrownDep = destination.trim().length > 0 && isCrownDependency(destination)
+
+  // Fire what_if_used once when the plan mode component mounts (PRD §4n)
+  useEffect(() => {
+    if (mode === 'plan') {
+      track('what_if_used')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // ---------------------------------------------------------------------------
   // Live calculation (Step 2)
@@ -336,6 +345,15 @@ export function TripFlowClient({
       setError(result.error)
       setSaving(false)
       return
+    }
+
+    // Fire analytics events for new trips only (not edits) — PRD §4n
+    if (mode !== 'edit') {
+      const newTripNumber = tripCount + 1
+      if (tripCount === 0) {
+        track('first_trip_logged')
+      }
+      track('trip_logged', { trip_number: newTripNumber })
     }
 
     router.push('/trips')

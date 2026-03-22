@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { QuotaRing } from '@/components/app/QuotaRing'
+import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
 import {
   getCurrentRollingWindow,
   getQualifyingPeriod,
@@ -68,8 +70,20 @@ export default async function DashboardPage() {
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
   const firstName = profile.full_name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'there'
 
+  // Needed for upgrade_completed analytics event
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('plan')
+    .eq('user_id', user.id)
+    .single()
+
   return (
     <div className="p-6 md:p-8 max-w-6xl">
+      {/* Track upgrade_completed when redirected back from Stripe Checkout */}
+      <Suspense fallback={null}>
+        <UpgradeTracker planType={subscription?.plan ?? 'unknown'} />
+      </Suspense>
+
       {/* Page header */}
       <div className="mb-8">
         <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D]">
