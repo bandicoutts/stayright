@@ -1,10 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Plus, Trash2 } from 'lucide-react'
 import { saveTripAction, deleteTripAction, completeOnboardingAction } from '../actions'
 import { track } from '@/lib/posthog'
+import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
+import { DestinationAutocomplete } from '@/components/app/trips/DestinationAutocomplete'
+import { DateRangePicker } from '@/components/app/trips/DateRangePicker'
 
 type TripRow = {
   id: string
@@ -25,20 +28,39 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
   const [destination, setDestination] = useState('')
   const [departureDate, setDepartureDate] = useState('')
   const [returnDate, setReturnDate] = useState('')
+  // Onboarding always requires a return date — returnDateKnown is always true
+  // and "Log return later" is hidden in DateRangePicker via hideReturnLater.
+  const [returnDateKnown] = useState(true)
 
   const [addingTrip, setAddingTrip] = useState(false)
   const [completing, setCompleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const today = new Date().toISOString().split('T')[0]
-
   function formatDate(dateStr: string) {
-    return new Date(dateStr).toLocaleDateString('en-GB', {
+    return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
+      timeZone: 'UTC',
     })
   }
+
+  // Live overlap detection against already-added trips
+  const overlapWarning = useMemo(() => {
+    if (!departureDate || !returnDate) return false
+    return hasOverlappingTrip(
+      trips.map((t) => ({
+        id: t.id,
+        destination: t.destination,
+        departure_date: t.departure_date,
+        return_date: t.return_date,
+      })),
+      departureDate,
+      returnDate
+    )
+  }, [trips, departureDate, returnDate])
+
+  const isPreVisa = !!departureDate && departureDate < visaStartDate
 
   async function handleAddTrip(e: React.FormEvent) {
     e.preventDefault()
@@ -52,8 +74,12 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
       setError('Please enter both departure and return dates.')
       return
     }
-    if (departureDate >= returnDate) {
+    if (returnDate <= departureDate) {
       setError('Return date must be after departure date.')
+      return
+    }
+    if (overlapWarning) {
+      setError('These dates overlap with a trip you have already added. Check the dates and try again.')
       return
     }
 
@@ -86,7 +112,6 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
     const result = await deleteTripAction(id)
     if ('error' in result) {
       setError(result.error)
-      // Re-fetch would be needed to restore — for now show the error
     }
   }
 
@@ -95,8 +120,6 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
     track('onboarding_completed')
     await completeOnboardingAction()
   }
-
-  const isPreVisa = departureDate && departureDate < visaStartDate
 
   return (
     <div className="w-full max-w-lg">
@@ -143,9 +166,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
                     </p>
                     <p className="text-xs text-[#3D4A42]">
                       {formatDate(trip.departure_date)} →{' '}
-                      {trip.return_date
-                        ? formatDate(trip.return_date)
-                        : 'ongoing'}
+                      {trip.return_date ? formatDate(trip.return_date) : 'ongoing'}
                     </p>
                   </div>
                   <button
@@ -165,6 +186,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
         {/* Add trip form */}
         {showForm ? (
           <form onSubmit={handleAddTrip} className="space-y-4 mb-5">
+            {/* Destination with autocomplete */}
             <div>
               <label
                 htmlFor="destination"
@@ -172,54 +194,39 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
               >
                 Destination
               </label>
-              <input
+              <DestinationAutocomplete
                 id="destination"
-                type="text"
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="e.g. Portugal, USA, Multi-destination"
-                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+                onChange={setDestination}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label
-                  htmlFor="departure_date"
-                  className="block text-sm font-medium text-[#191C1D] mb-1.5"
-                >
-                  Departed UK
-                </label>
-                <input
-                  id="departure_date"
-                  type="date"
-                  value={departureDate}
-                  max={today}
-                  onChange={(e) => setDepartureDate(e.target.value)}
-                  className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="return_date"
-                  className="block text-sm font-medium text-[#191C1D] mb-1.5"
-                >
-                  Returned to UK
-                </label>
-                <input
-                  id="return_date"
-                  type="date"
-                  value={returnDate}
-                  max={today}
-                  min={departureDate || undefined}
-                  onChange={(e) => setReturnDate(e.target.value)}
-                  className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
-                />
-              </div>
-            </div>
+            {/* Date range calendar */}
+            <DateRangePicker
+              departureDate={departureDate}
+              returnDate={returnDate}
+              returnDateKnown={returnDateKnown}
+              onDepartureChange={setDepartureDate}
+              onReturnChange={setReturnDate}
+              onReturnDateKnownChange={() => {
+                // Return date is always required during onboarding
+              }}
+              hideReturnLater
+            />
 
-            {/* Pre-visa trip warning */}
-            {isPreVisa && (
+            {/* Overlap warning */}
+            {overlapWarning && (
+              <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+                <span className="shrink-0 text-base leading-5">⚠️</span>
+                <p className="text-sm text-[#D97706]">
+                  These dates overlap with a trip you&apos;ve already added.
+                  Check the dates and try again.
+                </p>
+              </div>
+            )}
+
+            {/* Pre-visa trip note */}
+            {isPreVisa && !overlapWarning && (
               <p className="text-xs text-[#D97706] bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
                 This trip predates your visa start date. It will be stored but
                 won&apos;t count toward your 180-day window.

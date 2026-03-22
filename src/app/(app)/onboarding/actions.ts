@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
 
 // ─── Skip entire onboarding flow ────────────────────────────────────────────
 
@@ -59,6 +60,27 @@ export async function saveTripAction(data: {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
+
+  // Server-side overlap guard (client already warns, but defence in depth)
+  const { data: existingTrips } = await supabase
+    .from('trips')
+    .select('id, destination, departure_date, return_date')
+    .eq('user_id', user.id)
+
+  if (
+    hasOverlappingTrip(
+      (existingTrips ?? []).map((t) => ({
+        id: t.id,
+        destination: t.destination,
+        departure_date: t.departure_date,
+        return_date: t.return_date,
+      })),
+      data.departure_date,
+      data.return_date
+    )
+  ) {
+    return { error: 'These dates overlap with an existing trip. Check the dates and try again.' }
+  }
 
   const { data: savedTrip, error } = await supabase
     .from('trips')

@@ -358,6 +358,11 @@ export function TripFlowClient({
       track('trip_logged', { trip_number: newTripNumber })
     }
 
+    // Bust the client-side router cache so the dashboard quota ring
+    // reflects the new trip immediately when navigated to.
+    // revalidatePath (in the server action) handles the server cache;
+    // router.refresh() handles the client prefetch cache.
+    router.refresh()
     router.push(redirectTo)
   }
 

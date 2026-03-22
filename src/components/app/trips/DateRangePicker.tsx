@@ -23,6 +23,9 @@ export interface DateRangePickerProps {
   onDepartureChange: (v: string) => void
   onReturnChange: (v: string) => void
   onReturnDateKnownChange: (v: boolean) => void
+  /** When true, hides the "I'll log my return later" quick action.
+   *  Use in contexts where a return date is always required (e.g. onboarding). */
+  hideReturnLater?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -68,6 +71,7 @@ export function DateRangePicker({
   onDepartureChange,
   onReturnChange,
   onReturnDateKnownChange,
+  hideReturnLater = false,
 }: DateRangePickerProps) {
   // Initialise view to the departure month (edit mode) or current month
   const [viewYear, setViewYear] = useState(() => {
@@ -376,8 +380,8 @@ export function DateRangePicker({
           </button>
         )}
 
-        {/* "Log return later" — shown while picking return */}
-        {picking === 'return' && returnDateKnown && !returnDate && (
+        {/* "Log return later" — shown while picking return (hidden when return date is required) */}
+        {!hideReturnLater && picking === 'return' && returnDateKnown && !returnDate && (
           <button
             type="button"
             onClick={handleCurrentlyAbroad}
