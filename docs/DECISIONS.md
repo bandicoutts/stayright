@@ -766,6 +766,28 @@ Use `posthog-js` (v1.x, Cloud EU) for product analytics, initialised client-side
 
 ---
 
+### [DECISION-031] Trip drawer: paywall behaviour — skip drawer, fire PaywallModal on TripsClient
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+When a free user at the 3-trip limit triggers the trip drawer (via "Plan a Trip", "Log a Past Trip", or any edit entry point), the drawer does **not** open. Instead, `setShowPaywall(true)` is called directly on `TripsClient`, firing the existing `PaywallModal` overlay. The drawer never renders paywall content. `PaywallModal` is unchanged.
+
+**Reasoning:**
+The drawer is a trip entry/edit form. Showing a paywall inside it would create a confusing experience — the user expects a form and gets a sales screen. The PaywallModal already handles this case cleanly as a standalone overlay. Keeping the two concerns separate also means zero changes to `PaywallModal` or its callers.
+
+**Implementation rule:**
+In `TripsClient`, before opening the drawer, check `!isPro && tripCount >= 3`. If true: `setShowPaywall(true)`, return early. Do not set drawer open state.
+
+**Alternatives considered:**
+- Render paywall inside the drawer — rejected. Confusing UX; the drawer is a form container, not a sales screen.
+- Show inline paywall on the standalone plan/log pages as before — moot once those pages are replaced by the drawer.
+
+**Related:** DECISION-020 (superseded by DECISION-031 drawer build), DECISION-021 (PaywallModal)
+
+---
+
 Copy this template when adding a new decision:
 
 ### [DECISION-XXX] Short title
@@ -809,3 +831,4 @@ Copy this template when adding a new decision:
 | 2026-03-21 | 2.2 | Updated DECISION-027 — production URL is stayright.vercel.app; Added DECISION-028 — Resend email notifications, Vercel Cron Jobs |
 | 2026-03-22 | 2.3 | Added DECISION-029 — PostHog analytics (consent-gated, typed wrapper, 11 events from PRD §4n) |
 | 2026-03-22 | 2.4 | Added DECISION-030 — PWA manifest + service worker; push notifications deferred to v2 |
+| 2026-03-22 | 2.5 | Added DECISION-031 — trip drawer paywall behaviour (skip drawer, fire PaywallModal on TripsClient) |
