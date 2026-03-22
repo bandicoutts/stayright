@@ -14,6 +14,7 @@ import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/action
 import { DestinationAutocomplete } from './DestinationAutocomplete'
 import { DateRangePicker } from './DateRangePicker'
 import { track } from '@/lib/posthog'
+import { RISK_CONFIG } from '@/lib/riskConfig'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -36,17 +37,6 @@ interface TripFlowClientProps {
   initialTrip?: InitialTrip
   /** Where to navigate after a successful save or "Just checking". Defaults to '/trips'. */
   redirectTo?: string
-}
-
-// ---------------------------------------------------------------------------
-// Risk config (WCAG: colour + text label — colour alone fails WCAG)
-// ---------------------------------------------------------------------------
-
-const RISK_CONFIG = {
-  SAFE:    { bg: 'bg-[#006948]/10',  text: 'text-[#006948]',  label: 'Safe'    },
-  WARNING: { bg: 'bg-[#D97706]/10',  text: 'text-[#D97706]',  label: 'Warning' },
-  DANGER:  { bg: 'bg-[#BA1A1A]/10',  text: 'text-[#BA1A1A]',  label: 'Danger'  },
-  BREACH:  { bg: 'bg-[#8E0009]/10',  text: 'text-[#8E0009]',  label: 'Breach'  },
 }
 
 // ---------------------------------------------------------------------------

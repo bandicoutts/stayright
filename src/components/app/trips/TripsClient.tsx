@@ -13,6 +13,7 @@ import { deleteTripAction } from '@/app/(app)/(main)/trips/actions'
 import { PaywallModal } from './PaywallModal'
 import { TripDrawer } from './TripDrawer'
 import { track } from '@/lib/posthog'
+import { RISK_CONFIG } from '@/lib/riskConfig'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -30,17 +31,6 @@ interface TripsClientProps {
   trips: TripRow[]
   visaStartDate?: string
   isPro: boolean
-}
-
-// ---------------------------------------------------------------------------
-// Risk config (WCAG: colour + text label)
-// ---------------------------------------------------------------------------
-
-const RISK_CONFIG = {
-  SAFE:    { bg: 'bg-[#006948]/10',  text: 'text-[#006948]',  label: 'Safe'    },
-  WARNING: { bg: 'bg-[#D97706]/10',  text: 'text-[#D97706]',  label: 'Warning' },
-  DANGER:  { bg: 'bg-[#BA1A1A]/10',  text: 'text-[#BA1A1A]',  label: 'Danger'  },
-  BREACH:  { bg: 'bg-[#8E0009]/10',  text: 'text-[#8E0009]',  label: 'Breach'  },
 }
 
 // ---------------------------------------------------------------------------
@@ -333,8 +323,6 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
 
 const DISCLAIMER = 'Time in Crown Dependencies (Jersey, Guernsey, Isle of Man) does not count as absence. Time in British Overseas Territories (Gibraltar, Bermuda etc.) does count as absence. If you are unsure, consult an immigration adviser.'
 
-const RISK_CONFIG_PANEL = RISK_CONFIG
-
 function SidePanel({
   trip,
   contribution,
@@ -354,7 +342,7 @@ function SidePanel({
   const status = trip.return_date && !isCrownDep
     ? getRiskStatus(contribution.absenceDays)
     : isCrownDep ? 'SAFE' as const : null
-  const cfg = status ? RISK_CONFIG_PANEL[status] : null
+  const cfg = status ? RISK_CONFIG[status] : null
 
   function fmt(d: string) {
     return new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', {
