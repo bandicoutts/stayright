@@ -26,6 +26,8 @@ interface TripDrawerProps {
   tripCount: number
   // Edit mode only — pre-fills the form
   initialTrip?: TripRow
+  /** Where TripFlowClient navigates after save / "Just checking". Defaults to '/trips'. */
+  redirectTo?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -41,6 +43,7 @@ export function TripDrawer({
   isPro,
   tripCount,
   initialTrip,
+  redirectTo,
 }: TripDrawerProps) {
   const [showConfirm, setShowConfirm] = useState(false)
   // Edit mode: form is pre-filled so treat as dirty from the start.
@@ -197,7 +200,7 @@ export function TripDrawer({
           </button>
         </div>
 
-        {/* Trip form — TripFlowClient is unchanged */}
+        {/* Trip form */}
         <TripFlowClient
           mode={mode}
           existingTrips={existingTrips}
@@ -205,6 +208,7 @@ export function TripDrawer({
           isPro={isPro}
           tripCount={tripCount}
           initialTrip={initialTrip}
+          redirectTo={redirectTo}
         />
       </div>
 

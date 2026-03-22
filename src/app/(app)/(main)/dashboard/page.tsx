@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
+import { DashboardDrawerWrapper } from '@/components/app/dashboard/DashboardDrawerWrapper'
 import {
   getCurrentRollingWindow,
   getQualifyingPeriod,
@@ -71,18 +72,30 @@ export default async function DashboardPage() {
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
   const firstName = profile.full_name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'there'
 
-  // Needed for upgrade_completed analytics event
+  // Needed for upgrade_completed analytics event + drawer paywall check
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('plan')
     .eq('user_id', user.id)
     .single()
 
+  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+
   return (
     <div className="p-6 md:p-8 max-w-6xl">
       {/* Track upgrade_completed when redirected back from Stripe Checkout */}
       <Suspense fallback={null}>
         <UpgradeTracker planType={subscription?.plan ?? 'unknown'} />
+      </Suspense>
+
+      {/* Trip drawer — opens on the dashboard via ?drawer=plan|log */}
+      <Suspense fallback={null}>
+        <DashboardDrawerWrapper
+          trips={trips}
+          visaStartDate={visaStartDate}
+          isPro={isPro}
+          tripCount={tripCount}
+        />
       </Suspense>
 
       {/* Page header */}
@@ -170,7 +183,7 @@ export default async function DashboardPage() {
           {/* CTAs */}
           <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 space-y-3">
             <Link
-              href="/trips?drawer=plan"
+              href="?drawer=plan"
               className="flex items-center justify-between w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               <span>Plan a trip</span>
@@ -180,7 +193,7 @@ export default async function DashboardPage() {
               See the impact before you book
             </p>
             <Link
-              href="/trips?drawer=log"
+              href="?drawer=log"
               className="flex items-center justify-between w-full border border-[#191C1D]/15 text-[#191C1D] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#F8F9FA] transition-colors"
             >
               <span>Log a past trip</span>

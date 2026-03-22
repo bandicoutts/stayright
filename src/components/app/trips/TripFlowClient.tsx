@@ -32,6 +32,8 @@ interface TripFlowClientProps {
   isPro: boolean
   tripCount: number
   initialTrip?: InitialTrip
+  /** Where to navigate after a successful save or "Just checking". Defaults to '/trips'. */
+  redirectTo?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -189,6 +191,7 @@ export function TripFlowClient({
   isPro: _isPro,
   tripCount,
   initialTrip,
+  redirectTo = '/trips',
 }: TripFlowClientProps) {
   const router = useRouter()
 
@@ -370,11 +373,11 @@ export function TripFlowClient({
       track('trip_logged', { trip_number: newTripNumber })
     }
 
-    router.push('/trips')
+    router.push(redirectTo)
   }
 
   function handleJustChecking() {
-    router.push('/trips')
+    router.push(redirectTo)
   }
 
   // ---------------------------------------------------------------------------
