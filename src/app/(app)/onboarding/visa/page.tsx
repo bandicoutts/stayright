@@ -14,7 +14,7 @@ export default async function OnboardingVisaPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('onboarding_completed, visa_route, visa_start_date')
+    .select('onboarding_completed, visa_route, visa_start_date, first_name')
     .eq('id', user.id)
     .single()
 
@@ -22,6 +22,7 @@ export default async function OnboardingVisaPage() {
 
   return (
     <VisaForm
+      defaultFirstName={profile?.first_name ?? ''}
       defaultRoute={profile?.visa_route ?? 'Skilled Worker'}
       defaultStartDate={profile?.visa_start_date ?? ''}
     />

@@ -30,14 +30,16 @@ export async function saveVisaProfileAction(formData: FormData) {
   } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const first_name = (formData.get('first_name') as string)?.trim()
   const visa_route = (formData.get('visa_route') as string) ?? 'Skilled Worker'
   const visa_start_date = formData.get('visa_start_date') as string
 
+  if (!first_name) throw new Error('First name is required.')
   if (!visa_start_date) throw new Error('Visa start date is required.')
 
   const { error } = await supabase
     .from('profiles')
-    .update({ visa_route, visa_start_date })
+    .update({ first_name, visa_route, visa_start_date })
     .eq('id', user.id)
 
   if (error) throw new Error(error.message)

@@ -15,11 +15,13 @@ const VISA_ROUTES = [
 ]
 
 interface Props {
+  defaultFirstName: string
   defaultRoute: string
   defaultStartDate: string
 }
 
-export function VisaForm({ defaultRoute, defaultStartDate }: Props) {
+export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: Props) {
+  const [firstName, setFirstName] = useState(defaultFirstName)
   const [visaRoute, setVisaRoute] = useState(defaultRoute)
   const [startDate, setStartDate] = useState(defaultStartDate)
   const [error, setError] = useState<string | null>(null)
@@ -44,6 +46,10 @@ export function VisaForm({ defaultRoute, defaultStartDate }: Props) {
     e.preventDefault()
     setError(null)
 
+    if (!firstName.trim()) {
+      setError('Please enter your first name.')
+      return
+    }
     if (!startDate) {
       setError('Please enter your visa start date.')
       return
@@ -91,6 +97,27 @@ export function VisaForm({ defaultRoute, defaultStartDate }: Props) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* First name */}
+          <div>
+            <label
+              htmlFor="first_name"
+              className="block text-sm font-medium text-[#191C1D] mb-1.5"
+            >
+              First name
+            </label>
+            <input
+              id="first_name"
+              name="first_name"
+              type="text"
+              required
+              autoComplete="given-name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="e.g. Priya"
+              className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+            />
+          </div>
+
           {/* Visa route */}
           <div>
             <label

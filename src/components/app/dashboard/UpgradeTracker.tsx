@@ -16,7 +16,7 @@ export function UpgradeTracker({ planType }: { planType?: string }) {
 
   useEffect(() => {
     if (searchParams.get('upgraded') === '1') {
-      track('upgrade_completed', { plan_type: planType ?? 'unknown' })
+      track('upgrade_completed', { plan: planType ?? 'unknown' })
       // Remove the query param without a page reload
       const url = new URL(window.location.href)
       url.searchParams.delete('upgraded')
