@@ -592,10 +592,10 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
         </p>
         <div className="flex items-center gap-4">
           <a
-            href="mailto:help@stayright.co.uk"
+            href="mailto:help@stayright.app"
             className="text-sm text-[#006948] font-medium underline"
           >
-            help@stayright.co.uk
+            help@stayright.app
           </a>
           <a
             href="/help"

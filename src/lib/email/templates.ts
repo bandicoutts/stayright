@@ -105,7 +105,7 @@ export function welcomeEmail(params: { name: string | null }): {
           ${ctaButton('Set up your profile →', `${APP_URL}/onboarding`)}
         </p>
         <p style="margin:0;font-size:13px;color:#6B7280;text-align:center;">
-          Questions? Email us at <a href="mailto:help@stayright.co.uk" style="color:${PRIMARY};">help@stayright.co.uk</a>
+          Questions? Email us at <a href="mailto:help@stayright.app" style="color:${PRIMARY};">help@stayright.app</a>
         </p>
       </td>
     </tr>`)
@@ -116,7 +116,7 @@ Thanks for joining. Your first step is to complete your profile: add your visa s
 
 Set up your profile: ${APP_URL}/onboarding
 
-Questions? help@stayright.co.uk
+Questions? help@stayright.app
 
 Not legal advice. Always verify with UKVI.`
 
