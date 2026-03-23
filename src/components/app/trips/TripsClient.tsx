@@ -173,62 +173,76 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm overflow-hidden">
-              {trips.map((trip, i) => {
-                const absenceDays = trip.return_date
-                  ? calculateTripAbsenceDays({
-                      destination: trip.destination,
-                      departure_date: trip.departure_date,
-                      return_date: trip.return_date,
-                    })
-                  : null
-                const status = absenceDays !== null ? getRiskStatus(absenceDays) : null
-                const cfg = status ? RISK_CONFIG[status] : null
-                const isSelected = selectedId === trip.id
-                const isOptimisticDeleted = optimisticDeleteId === trip.id
-                const isCrownDep = isCrownDependency(trip.destination)
+            <div className="bg-white rounded-[1.5rem] p-4 sm:p-6 shadow-[0px_8px_32px_rgba(0,33,20,0.04)] ring-1 ring-[#191C1D]/5">
+              <div className="flex flex-col gap-3">
+                {trips.map((trip, i) => {
+                  const absenceDays = trip.return_date
+                    ? calculateTripAbsenceDays({
+                        destination: trip.destination,
+                        departure_date: trip.departure_date,
+                        return_date: trip.return_date,
+                      })
+                    : null
+                  const status = absenceDays !== null ? getRiskStatus(absenceDays) : null
+                  const cfg = status ? RISK_CONFIG[status] : null
+                  const isSelected = selectedId === trip.id
+                  const isOptimisticDeleted = optimisticDeleteId === trip.id
+                  const isCrownDep = isCrownDependency(trip.destination)
 
-                return (
-                  <button
-                    key={trip.id}
-                    type="button"
-                    onClick={() => setSelectedId(isSelected ? null : trip.id)}
-                    className={`w-full text-left px-5 py-4 flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer ${
-                      i < trips.length - 1 ? 'border-b border-[#191C1D]/5' : ''
-                    } ${isSelected ? 'bg-[#006948]/5' : 'hover:bg-[#F8F9FA]'} ${
-                      isOptimisticDeleted 
-                        ? 'opacity-0 translate-x-[10%]' 
-                        : 'animate-in fade-in slide-in-from-bottom-2 fill-mode-both'
-                    }`}
-                    style={!isOptimisticDeleted ? { animationDelay: `${i * 40}ms` } : undefined}
-                  >
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-[#191C1D] truncate">{trip.destination}</p>
-                      <p className="text-xs text-[#3D4A42] mt-0.5">
-                        {formatDateRange(trip.departure_date, trip.return_date)}
-                      </p>
-                    </div>
-                    <div className="shrink-0 flex items-center gap-3">
-                      {trip.return_date === null ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#D97706]/10 text-[#D97706]">
-                          Abroad
-                        </span>
-                      ) : isCrownDep ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#006948]/10 text-[#006948]">
-                          0 days
-                        </span>
-                      ) : cfg ? (
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
-                          {absenceDays}d · {cfg.label}
-                        </span>
-                      ) : null}
-                      <svg className={`w-4 h-4 text-[#3D4A42] transition-transform ${isSelected ? 'rotate-180' : ''}`} viewBox="0 0 16 16" fill="none">
-                        <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                  </button>
-                )
-              })}
+                  // Attempt flag separation
+                  const firstSpace = trip.destination.indexOf(' ')
+                  const firstWord = firstSpace !== -1 ? trip.destination.slice(0, firstSpace) : trip.destination
+                  const restWord = firstSpace !== -1 ? trip.destination.slice(firstSpace + 1) : ''
+                  const isProbableFlag = firstWord.length > 0 && !/[a-zA-Z]/.test(firstWord)
+                  const flag = isProbableFlag ? firstWord : null
+                  const destText = isProbableFlag ? restWord : trip.destination
+
+                  return (
+                    <button
+                      key={trip.id}
+                      type="button"
+                      onClick={() => setSelectedId(isSelected ? null : trip.id)}
+                      className={`w-full text-left p-4 sm:px-5 sm:py-4 rounded-xl flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer ${
+                        isSelected ? 'bg-[#9ff4ca]/30 ring-1 ring-[#006948]/20 shadow-sm' : 'bg-[#F8F9FA] hover:bg-white hover:shadow-md ring-1 ring-transparent hover:ring-[#191C1D]/5'
+                      } ${
+                        isOptimisticDeleted 
+                          ? 'opacity-0 translate-x-[10%]' 
+                          : 'animate-in fade-in slide-in-from-bottom-2 fill-mode-both'
+                      }`}
+                      style={!isOptimisticDeleted ? { animationDelay: `${i * 40}ms` } : undefined}
+                    >
+                      <div className="flex items-center gap-4 min-w-0">
+                        {flag && <span className="text-[1.35rem] leading-none" aria-hidden="true">{flag}</span>}
+                        <div className="flex flex-col min-w-0">
+                          <p className="text-[15px] font-semibold text-[#191C1D] truncate">{destText}</p>
+                          <p className="text-xs text-[#3D4A42] mt-0.5">
+                            {formatDateRange(trip.departure_date, trip.return_date)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-3">
+                        {trip.return_date === null ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase bg-[#ffdcbb] text-[#2c1600]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#D97706] animate-pulse"></span>
+                            Abroad
+                          </span>
+                        ) : isCrownDep ? (
+                          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase bg-[#9ff4ca] text-[#002114]">
+                            0 days
+                          </span>
+                        ) : cfg ? (
+                          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase transition-colors ${cfg.bg} ${cfg.text}`}>
+                            {absenceDays}d &middot; {cfg.label}
+                          </span>
+                        ) : null}
+                        <svg className={`w-4 h-4 text-[#3D4A42] transition-transform ${isSelected ? 'rotate-180' : ''}`} viewBox="0 0 16 16" fill="none">
+                          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           )}
         </div>
@@ -335,13 +349,22 @@ function SidePanel({
     : isCrownDep ? 'SAFE' as const : null
   const cfg = status ? RISK_CONFIG[status] : null
 
+  // Attempt flag separation
+  const firstSpace = trip.destination.indexOf(' ')
+  const firstWord = firstSpace !== -1 ? trip.destination.slice(0, firstSpace) : trip.destination
+  const restWord = firstSpace !== -1 ? trip.destination.slice(firstSpace + 1) : ''
+  const isProbableFlag = firstWord.length > 0 && !/[a-zA-Z]/.test(firstWord)
+  const flag = isProbableFlag ? firstWord : null
+  const destText = isProbableFlag ? restWord : trip.destination
+
   return (
     <div className="w-full md:w-80 shrink-0">
       <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-5">
         {/* Panel header */}
         <div className="flex items-start justify-between mb-4">
-          <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base text-[#191C1D] leading-snug pr-2">
-            {trip.destination}
+          <h2 className="font-[family-name:var(--font-manrope)] font-bold text-[1.15rem] tracking-[-0.01em] text-[#191C1D] leading-snug pr-2 flex items-center gap-2.5">
+            {flag && <span className="text-[1.5rem] leading-none" aria-hidden="true">{flag}</span>}
+            <span>{destText}</span>
           </h2>
           <button
             type="button"
@@ -384,7 +407,7 @@ function SidePanel({
               <>
                 <span className="text-sm font-semibold text-[#191C1D]">{contribution.absenceDays} days</span>
                 {cfg && (
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
+                  <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${cfg.bg} ${cfg.text}`}>
                     {cfg.label}
                   </span>
                 )}
