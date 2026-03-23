@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StayRight — 01 Precision Serif</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--g:#006948;--gd:#004F35;--ink:#1A1A1A;--ink2:#4A4A4A;--rule:#E2E2E2;--bg:#FAF9F7;--sf:#FFF;
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid var(--rule);background:var(--bg)}
+.ni{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:68px}
+.logo{display:flex;align-items:center;gap:.75rem}
+.lm{width:32px;height:32px;border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--g)}
+.lt{font-family:var(--serif);font-weight:700;font-size:1.2rem;color:var(--ink);letter-spacing:-.02em}
+.nl{display:flex;gap:2.5rem}
+.nl a{font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);transition:color .2s}
+.nl a:hover{color:var(--g)}
+.nc{display:flex;align-items:center;gap:1.5rem}
+.nc a:first-child{font-size:.875rem;color:var(--ink2)}
+.btn{padding:.6rem 1.5rem;background:var(--g);color:#fff;font-size:.875rem;font-weight:600;border:1.5px solid var(--g);display:inline-flex;align-items:center;transition:all .2s}
+.btn:hover{background:var(--gd);transform:translateY(-1px)}
+.hero{padding:140px 2rem 100px;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.eye{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g)}
+.eye::before{content:'';width:24px;height:1px;background:var(--g)}
+h1{font-family:var(--serif);font-size:clamp(2.8rem,5vw,4.5rem);line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin-bottom:1.5rem;font-weight:400}
+h1 em{font-style:italic;font-weight:700;color:var(--g)}
+.sub{font-size:1.05rem;line-height:1.7;color:var(--ink2);max-width:440px;margin-bottom:2.5rem;font-weight:300}
+.ctar{display:flex;align-items:center;gap:2rem}
+.ghost{font-size:.875rem;color:var(--g);border-bottom:1px solid transparent;transition:border-color .2s;padding-bottom:1px}
+.ghost:hover{border-color:var(--g)}
+.tline{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--rule);display:flex;gap:2rem;flex-wrap:wrap}
+.ti{font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);font-weight:500}
+.qcard{background:var(--sf);border:1px solid var(--rule);padding:2.5rem;position:relative}
+.qcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--g)}
+.clbl{font-family:var(--mono);font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center}
+.ssafe{font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g);border:1px solid var(--g);padding:.25rem .75rem}
+.rnum{font-family:var(--serif);font-weight:900;font-size:3.25rem;line-height:1;color:var(--ink);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.dest{font-size:.9375rem;font-weight:500;color:var(--ink)}
+.dates{font-family:var(--mono);font-size:.6875rem;color:var(--ink2);margin-top:.125rem}
+.days{font-family:var(--mono);font-size:.8125rem;font-weight:500;color:var(--ink)}
+.sax{background:var(--sf);padding:6rem 2rem;border-top:1px solid var(--rule)}
+.si{max-width:1280px;margin:0 auto}
+.sh{margin-bottom:4rem}
+.sl{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:1.5rem}
+h2{font-family:var(--serif);font-size:clamp(2rem,3.5vw,3rem);line-height:1.1;letter-spacing:-.02em;font-weight:400}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--rule);border:1px solid var(--rule)}
+.bc{padding:2.5rem;background:var(--bg);display:flex;flex-direction:column;gap:.875rem}
+.bc.lg{grid-column:span 2;grid-row:span 2;background:var(--ink);color:#fff}
+.bn{font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;color:var(--ink2)}
+.bc.lg .bn{color:rgba(255,255,255,.35)}
+.bt{font-family:var(--serif);font-weight:700;font-size:1.25rem;line-height:1.2;color:var(--ink)}
+.bc.lg .bt{font-size:2rem;color:#fff}
+.bd{font-size:.9375rem;color:var(--ink2);line-height:1.6}
+.bc.lg .bd{color:rgba(255,255,255,.65)}
+.wim{margin-top:auto;padding:1.25rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.wr{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0}
+.wr+.wr{border-top:1px solid rgba(255,255,255,.08)}
+.wl{font-size:.8rem;color:rgba(255,255,255,.6)}
+.wv{font-family:var(--mono);font-size:.875rem;color:#fff;font-weight:500}
+.wb{font-family:var(--mono);font-size:.625rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g);border:1px solid var(--g);padding:.2rem .5rem}
+.pri{padding:6rem 2rem;border-top:1px solid var(--rule)}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--rule);border:1px solid var(--rule);margin-top:3rem}
+.pc{padding:2.5rem;background:var(--bg)}
+.pc.ft{background:var(--ink);color:#fff;position:relative}
+.pbg{position:absolute;top:-12px;left:2.5rem;font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;background:var(--g);color:#fff;padding:.35rem .875rem}
+.pn{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem;color:var(--ink2)}
+.pc.ft .pn{color:rgba(255,255,255,.4)}
+.pnum{font-family:var(--serif);font-weight:900;font-size:4rem;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.pc.ft .pnum{color:#fff}
+.pper{font-size:.875rem;color:var(--ink2);margin-left:.25rem;font-weight:300}
+.pc.ft .pper{color:rgba(255,255,255,.4)}
+.fl{list-style:none;margin:2rem 0;display:flex;flex-direction:column;gap:.875rem}
+.fl li{font-size:.9375rem;display:flex;gap:.75rem;align-items:flex-start}
+.fl li::before{content:'→';color:var(--g);font-size:.875rem;flex-shrink:0;margin-top:1px}
+.fl li.no{opacity:.35}.fl li.no::before{content:'—'}
+.pc.ft .fl li::before{color:#9ff4ca}
+.pcta{display:block;text-align:center;padding:.875rem 2rem;font-size:.875rem;font-weight:600;margin-top:1rem;transition:all .2s}
+.pcta.out{border:1.5px solid var(--rule);color:var(--ink)}.pcta.out:hover{border-color:var(--ink)}
+.pcta.sol{background:var(--g);color:#fff;border:1.5px solid var(--g)}.pcta.sol:hover{background:var(--gd);transform:translateY(-1px)}
+.trs{padding:5rem 2rem;border-top:1px solid var(--rule)}
+.tq{font-family:var(--serif);font-style:italic;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.3;color:var(--ink);max-width:700px;margin-bottom:3rem}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.tbl{padding-top:1.25rem;border-top:2px solid var(--rule)}
+.tbl.ac{border-top-color:var(--g)}
+.tblbl{font-family:var(--mono);font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:.5rem}
+.tblt{font-size:.9375rem;color:var(--ink2);line-height:1.5}
+footer{border-top:1px solid var(--rule);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1280px;margin:0 auto}
+.fc{font-family:var(--mono);font-size:.75rem;color:var(--ink2)}
+.fl2{display:flex;gap:1.5rem}
+.fl2 a{font-size:.8125rem;color:var(--ink2)}
+@media(prefers-reduced-motion:no-preference){
+.rp{stroke-dashoffset:452.39;animation:rf 1.2s cubic-bezier(.25,.46,.45,.94) .3s forwards}
+@keyframes rf{to{stroke-dashoffset:347.3}}
+.hl{animation:fu .7s ease both}.hr{animation:fu .7s ease .18s both}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+}
+@media(max-width:768px){
+.hero{grid-template-columns:1fr;gap:2.5rem;padding:110px 1.25rem 4rem}
+.nl,.nc{display:none}
+.bento{grid-template-columns:1fr}.bc.lg{grid-column:span 1;grid-row:span 1}
+.pg{grid-template-columns:1fr}.tgrid{grid-template-columns:1fr}
+footer{flex-direction:column;gap:1rem;text-align:center}
+}
+</style></head><body>
+<nav><div class="ni">
+  <a href="/" class="logo"><div class="lm">SR</div><span class="lt">StayRight</span></a>
+  <div class="nl"><a href="#features">Features</a><a href="#pricing">Pricing</a></div>
+  <div class="nc"><a href="/login">Login</a><a href="/signup" class="btn">Start Free Tracker</a></div>
+</div></nav>
+<section style="background:var(--bg)"><div class="hero">
+  <div class="hl">
+    <div class="eye">UK Immigration Compliance</div>
+    <h1>Know exactly<br>where you <em>stand.</em></h1>
+    <p class="sub">Master the 180-day absence rule with precision. Automatically track your travel and secure your residency status without the paperwork headache.</p>
+    <div class="ctar"><a href="/signup" class="btn">Start Free Tracker</a><a href="#features" class="ghost">See how it works →</a></div>
+    <div class="tline"><span class="ti">Built by a Skilled Worker visa holder</span><span class="ti">GDPR Compliant</span></div>
+  </div>
+  <div class="hr">
+    <div class="qcard">
+      <div class="clbl"><span>Current Status</span><span class="ssafe">Safe</span></div>
+      
+<div style="display:flex;justify-content:center;margin:0 0 2rem">
+  <div style="position:relative;width:180px;height:180px">
+    <svg style="transform:rotate(-90deg)" width="180" height="180" viewBox="0 0 180 180" aria-label="42 of 180 days used">
+      <circle cx="90" cy="90" r="72" fill="none" stroke="#EEECEA" stroke-width="12"/>
+      <circle cx="90" cy="90" r="72" fill="none" stroke="#006948" stroke-width="12" stroke-linecap="round"
+        stroke-dasharray="452.39" stroke-dashoffset="452.39" class="rp"/>
+    </svg>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <span class="rnum" style="color:#1A1A1A">42</span>
+      <span style="font-size:.75rem;color:#4A4A4A;margin-top:.25rem;font-family:var(--mono)">/ 180 days</span>
+    </div>
+  </div>
+</div>
+      <div style="border-top:1px solid var(--rule);padding-top:1.25rem">
+        
+<div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--rule)">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span style="font-size:1.375rem">🇵🇹</span>
+    <div>
+      <div class="dest">Lisbon, Portugal</div>
+      <div class="dates">12 Oct &ndash; 19 Oct</div>
+    </div>
+  </div>
+  <span class="days">7 days</span>
+</div>
+        
+<div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid transparent">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span style="font-size:1.375rem">🇺🇸</span>
+    <div>
+      <div class="dest">New York, USA</div>
+      <div class="dates">04 Nov &ndash; 16 Nov</div>
+    </div>
+  </div>
+  <span class="days">12 days</span>
+</div>
+      </div>
+    </div>
+  </div>
+</div></section>
+<section class="sax" id="features"><div class="si">
+  <div class="sh"><div class="sl">The Features</div><h2>Compliance, <em style="font-style:italic;color:var(--g)">simplified.</em></h2></div>
+  <div class="bento">
+    <div class="bc"><div class="bn">01</div><div class="bt">Rolling 12-month tracker</div><p class="bd">Visual calendar and running total against the 180-day ILR limit.</p></div>
+    <div class="bc"><div class="bn">02</div><div class="bt">Trip logging</div><p class="bd">Log departures and returns in seconds from any device.</p></div>
+    <div class="bc"><div class="bn">03</div><div class="bt">Instant risk status</div><p class="bd">Green / amber / red compliance indicator at a glance.</p></div>
+    <div class="bc lg"><div class="bn">04</div><div class="bt">What-if simulator</div><p class="bd">Plan any trip and instantly see its impact on your rolling window before you book.</p>
+      <div class="wim"><div class="wr"><span class="wl">🇪🇸 Madrid, Spain &middot; 4&ndash;11 Nov</span><span class="wv">+7 days</span></div>
+        <div class="wr"><span class="wl">Projected window</span><div style="display:flex;align-items:center;gap:.75rem"><span class="wv">174 / 180</span><span class="wb">Safe</span></div></div></div></div>
+    <div class="bc"><div class="bn">05</div><div class="bt">Smart alerts</div><p class="bd">Email reminders before you approach your limit.</p></div>
+    <div class="bc"><div class="bn">06</div><div class="bt">Export ready</div><p class="bd">Generate absence tables for your ILR or SET(O) application.</p></div>
+  </div>
+</div></section>
+<section class="pri" id="pricing"><div style="max-width:900px;margin:0 auto">
+  <div class="sh"><div class="sl">Pricing</div><h2>Simple, transparent pricing.</h2></div>
+  <div class="pg">
+    <div class="pc"><div class="pn">Free</div><div style="display:flex;align-items:baseline"><span class="pnum">£0</span><span class="pper">/ forever</span></div>
+      <ul class="fl"><li>Up to 3 trips logged</li><li>Basic rolling window tracker</li><li class="no">Risk alerts</li></ul>
+      <a href="/signup" class="pcta out">Get Started</a></div>
+    <div class="pc ft"><div class="pbg">Most Popular</div><div class="pn">Pro</div>
+      <div style="display:flex;align-items:baseline"><span class="pnum">£2.99</span><span class="pper">/ month</span></div>
+      <ul class="fl"><li>Unlimited trip logging</li><li>What-if planning simulator</li><li>Smart risk &amp; breach alerts</li><li>Audit-ready PDF exports</li></ul>
+      <a href="/signup" class="pcta sol">Start Free Tracker</a></div>
+  </div>
+  <p style="text-align:center;margin-top:2rem;font-family:var(--mono);font-size:.75rem;color:var(--ink2)">Prefer to pay once? <a href="/signup?plan=lifetime" style="color:var(--g)">Lifetime Pro for £49.99 →</a></p>
+</div></section>
+<section class="trs"><div style="max-width:1280px;margin:0 auto">
+  <p class="tq">&ldquo;Built by someone who&apos;s lived this &mdash; not a SaaS factory.&rdquo;</p>
+  <div class="tgrid">
+    <div class="tbl ac"><div class="tblbl">Origin</div><p class="tblt">Built by a Skilled Worker visa holder who needed this tool and couldn&apos;t find it.</p></div>
+    <div class="tbl"><div class="tblbl">Privacy</div><p class="tblt">GDPR compliant. Data stored in UK sovereign infrastructure.</p></div>
+    <div class="tbl"><div class="tblbl">Disclaimer</div><p class="tblt">Not legal advice. Always verify with UKVI directly.</p></div>
+  </div>
+</div></section>
+<footer><span class="fc">&copy; 2026 StayRight</span><div class="fl2"><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div></footer>
+</body></html>

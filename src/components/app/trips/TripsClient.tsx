@@ -9,9 +9,9 @@ import {
   getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
-import { deleteTripAction } from '@/app/(app)/(main)/trips/actions'
+import { deleteTripAction } from '@/app/(app)/(main)/dashboard/actions'
 import { PaywallModal } from './PaywallModal'
-import { TripDrawer } from './TripDrawer'
+import { TripModal } from './TripModal'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
 import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
@@ -59,9 +59,9 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   const selectedTrip = trips.find((t) => t.id === selectedId) ?? null
 
   // ---------------------------------------------------------------------------
-  // Drawer state — driven by ?drawer=plan|log|edit&tripId=xxx URL params
+  // Modal state — driven by ?modal=plan|log|edit&tripId=xxx URL params
   // ---------------------------------------------------------------------------
-  const rawDrawerMode = searchParams.get('drawer')
+  const rawDrawerMode = searchParams.get('modal')
   const drawerMode =
     rawDrawerMode === 'plan' || rawDrawerMode === 'log' || rawDrawerMode === 'edit'
       ? rawDrawerMode
@@ -79,7 +79,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       setShowPaywall(true)
       return
     }
-    router.push(`/trips?drawer=${mode}`)
+    router.push(`?modal=${mode}`)
   }
 
   function handleAddTrip() {
@@ -134,13 +134,13 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="p-6 md:p-8 max-w-6xl">
+    <div>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D]">
-            Trips
-          </h1>
+          <h2 className="font-[family-name:var(--font-manrope)] font-bold text-[1.15rem] tracking-[-0.01em] text-[#191C1D]">
+            Trip Log
+          </h2>
           <p className="text-sm text-[#3D4A42] mt-0.5">Your complete absence record</p>
         </div>
         <button
@@ -264,7 +264,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
             trip={selectedTrip}
             contribution={getPanelContribution(selectedTrip)}
             visaStartDate={visaStartDate}
-            onEdit={() => router.push(`/trips?drawer=edit&tripId=${selectedTrip.id}`)}
+            onEdit={() => router.push(`?modal=edit&tripId=${selectedTrip.id}`)}
             onDelete={() => setDeleteTarget(selectedTrip.id)}
             onClose={() => setSelectedId(null)}
           />
@@ -318,11 +318,11 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
         triggerReason="trip_limit"
       />
 
-      {/* Trip drawer — plan / log / edit modes */}
-      <TripDrawer
+      {/* Trip modal — plan / log / edit modes */}
+      <TripModal
         open={drawerOpen}
         mode={drawerMode ?? 'log'}
-        onClose={() => router.push('/trips')}
+        onClose={() => router.push('/dashboard')}
         existingTrips={trips.map(toTripInput)}
         visaStartDate={visaStartDate}
         isPro={isPro}

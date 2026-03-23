@@ -5,8 +5,9 @@ import { createClient } from '@/lib/supabase/server'
 import { isPlanPro } from '@/lib/subscriptionUtils'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
-import { DashboardDrawerWrapper } from '@/components/app/dashboard/DashboardDrawerWrapper'
+import { DashboardModalWrapper } from '@/components/app/dashboard/DashboardModalWrapper'
 import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytics'
+import { TripsClient } from '@/components/app/trips/TripsClient'
 import {
   getCurrentRollingWindow,
   getQualifyingPeriod,
@@ -41,7 +42,7 @@ export default async function DashboardPage() {
   ] = await Promise.all([
     supabase
       .from('trips')
-      .select('id, destination, departure_date, return_date')
+      .select('id, destination, departure_date, return_date, notes')
       .eq('user_id', user.id)
       .order('departure_date', { ascending: false }),
     supabase
@@ -124,9 +125,9 @@ export default async function DashboardPage() {
         <UpgradeTracker planType={subscription?.plan ?? 'unknown'} />
       </Suspense>
 
-      {/* Trip drawer — opens on the dashboard via ?drawer=plan|log */}
+      {/* Trip modal — opens on the dashboard via ?modal=plan|log */}
       <Suspense fallback={null}>
-        <DashboardDrawerWrapper
+        <DashboardModalWrapper
           trips={trips}
           visaStartDate={visaStartDate}
           isPro={isPro}
@@ -219,7 +220,7 @@ export default async function DashboardPage() {
           {/* CTAs */}
           <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 space-y-3">
             <Link
-              href="?drawer=plan"
+              href="?modal=plan"
               className="flex items-center justify-between w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               <span>Plan a trip</span>
@@ -229,7 +230,7 @@ export default async function DashboardPage() {
               See the impact before you book
             </p>
             <Link
-              href="?drawer=log"
+              href="?modal=log"
               className="flex items-center justify-between w-full border border-[#191C1D]/15 text-[#191C1D] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#F8F9FA] transition-colors"
             >
               <span>Log a past trip</span>
@@ -267,24 +268,16 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          {/* Trip summary — compact record count */}
-          {tripCount > 0 && (
-            <div className="bg-[#F3F4F5] rounded-2xl px-5 py-4">
-              <p className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                {tripCount} trip{tripCount !== 1 ? 's' : ''} logged
-                {totalDaysAbroad > 0 && (
-                  <> · {totalDaysAbroad} day{totalDaysAbroad !== 1 ? 's' : ''} abroad recorded</>
-                )}
-              </p>
-              <Link
-                href="/trips"
-                className="text-sm text-[#006948] hover:underline font-[family-name:var(--font-inter)]"
-              >
-                View all trips →
-              </Link>
-            </div>
-          )}
         </div>
+      </div>
+
+      {/* Full Trip Log */}
+      <div className="mt-8">
+        <TripsClient 
+          trips={rawTrips ?? []}
+          visaStartDate={visaStartDate}
+          isPro={isPro}
+        />
       </div>
     </div>
   )

@@ -16,7 +16,7 @@ interface TripRow {
   notes: string | null
 }
 
-interface TripDrawerProps {
+interface TripModalProps {
   open: boolean
   mode: 'plan' | 'log' | 'edit'
   onClose: () => void
@@ -34,7 +34,7 @@ interface TripDrawerProps {
 // Component
 // ---------------------------------------------------------------------------
 
-export function TripDrawer({
+export function TripModal({
   open,
   mode,
   onClose,
@@ -44,7 +44,7 @@ export function TripDrawer({
   tripCount,
   initialTrip,
   redirectTo,
-}: TripDrawerProps) {
+}: TripModalProps) {
   const [showConfirm, setShowConfirm] = useState(false)
   // Edit mode: form is pre-filled so treat as dirty from the start.
   // Plan/log: becomes dirty on first input change (caught via onChangeCapture).
@@ -169,8 +169,8 @@ export function TripDrawer({
         className={`
           fixed z-50 bg-white shadow-2xl outline-none overflow-y-auto
           bottom-0 left-0 right-0 rounded-t-2xl max-h-[92dvh]
-          md:top-0 md:left-auto md:w-[480px] md:rounded-none md:rounded-l-2xl md:max-h-none
-          animate-drawer-mobile md:animate-drawer-desktop motion-reduce:animate-none
+          md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[480px] md:rounded-2xl md:max-h-[85vh]
+          animate-drawer-mobile md:animate-in md:fade-in-0 md:zoom-in-95 md:slide-in-from-bottom-[5%] md:duration-500 md:ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:animate-none
         `}
         // Mark form as dirty on any input change so the user gets the
         // "Discard changes?" dialog if they try to close

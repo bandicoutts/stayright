@@ -10,7 +10,7 @@ import {
   hasOverlappingTrip,
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
-import { addTripAction, updateTripAction } from '@/app/(app)/(main)/trips/actions'
+import { addTripAction, updateTripAction } from '@/app/(app)/(main)/dashboard/actions'
 import { DestinationAutocomplete } from './DestinationAutocomplete'
 import { DateRangePicker } from './DateRangePicker'
 import { track } from '@/lib/posthog'

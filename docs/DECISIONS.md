@@ -55,6 +55,7 @@ Scan this table to find relevant decisions. Read the full entry only if the summ
 | DECISION-041 | Webhook idempotency and rate limiting deferred to v1.1 | M-3 and L-1 security gaps acknowledged; mitigated but not fully closed | Decided |
 | DECISION-042 | Ongoing trips counted with provisional return; Crown Dependency exact matching | Trips with no `return_date` use today as provisional end; Crown Dependency list is exact-match only | Decided |
 | DECISION-043 | WCAG 2.2 AA Accessibility Compliance Architecture | Enforces contrast ratios, global focus states, reduced-motion queries, focus-trapping, and axe-core E2E tests | Decided |
+| DECISION-046 | Dashboard & Trips Consolidation | Converge dashboard and trips views into a single workspace; convert drawer to modal | Decided |
 
 ---
 
@@ -1281,3 +1282,26 @@ Future data fetching in Server Components should use parallel `Promise.all` wher
 | 2026-03-23 | 3.1 | Absence engine audit: DECISION-042 — fix ongoing-trip count (BUG-1) and Crown Dependency exact matching (BUG-2); create absenceEngine.test.ts (40 tests) |
 | 2026-03-23 | 3.2 | Core Web Vitals optimizations: DECISION-044 added for PostHog consent logic, parallel data fetching, and input debouncing |
 | 2026-03-24 | 3.3 | Visual Refinement Project: DECISION-045 added to document the architectural rules for the "Editorial Concierge" aesthetic refactor |
+| 2026-03-24 | 3.4 | UX Refinement: DECISION-046 added to document the consolidation of Dashboard and Trips screens and Modal conversion |
+
+---
+
+### [DECISION-046] Dashboard & Trips Consolidation
+**Date:** 2026-03-24
+**Status:** Decided
+**Decided by:** UX Consultant
+
+**Decision:**
+The standalone `/trips` page has been removed. The full Trip Log is now rendered at the bottom of the `/dashboard` page. Additionally, the side-sliding Trip Drawer has been converted into a centered `TripModal`.
+
+**Reasoning:**
+Separating the trip log from the dashboard's Quota Ring created unnecessary friction for the core usecase: "Can I take this trip safely?". Users couldn't see the immediate impact of adding or editing a trip on the Quota Ring without navigating back and forth. Furthermore, a side-sliding drawer felt heavy and "SaaS-like", whereas a centered, glassmorphic modal feels like a lightweight calculation tool that fits the "Editorial Concierge" aesthetic perfectly.
+
+**Alternatives considered:**
+- Keeping the Trips page and adding a miniature Quota Ring to it — rejected as duplicating the primary dashboard UI unnecessarily.
+- Using a side-drawer instead of a modal — rejected, the drawer animation and layout felt distinctly B2B/utilitarian compared to a focused, centered modal.
+
+**Consequences:**
+The `src/app/(app)/(main)/trips/page.tsx` route is deleted. The navigation sidebar no longer links to `/trips`. `DashboardDrawerWrapper` is renamed to `DashboardModalWrapper` and triggers a centered `TripModal`.
+
+**Related:** PRD Section 4d, 4f; `docs/DESIGN.md`
