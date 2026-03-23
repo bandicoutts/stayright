@@ -66,10 +66,13 @@ export default defineConfig({
     },
   ],
 
-  // Optionally start the dev server for local runs
-  // webServer: {
-  //   command: 'npm run dev',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  // Start the dev server for local runs; in CI use NEXT_PUBLIC_APP_URL pointing at Vercel
+  webServer: !process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_APP_URL === 'http://localhost:3000'
+    ? {
+        command: 'npm run dev',
+        url: 'http://localhost:3000',
+        reuseExistingServer: true,
+        timeout: 120_000,
+      }
+    : undefined,
 })

@@ -8,15 +8,12 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Onboarding', () => {
-  test('onboarding starts after first login (not completed)', async ({ page }) => {
-    // If the test user has onboarding_completed = false, they should arrive here
-    // This test verifies the flow exists; set up a fresh test user for full coverage
+  test('completed-onboarding user is redirected from /onboarding to /dashboard', async ({ page }) => {
+    // The test user has onboarding_completed = true.
+    // Visiting /onboarding should redirect immediately to /dashboard.
     await page.goto('/onboarding')
-    await expect(page).toHaveURL(/\/onboarding/)
-    // Welcome or visa step should be visible
-    await expect(
-      page.getByText(/welcome|let's set up|visa/i).first()
-    ).toBeVisible()
+    await page.waitForURL(/\/dashboard/, { timeout: 10_000 })
+    await expect(page).toHaveURL(/\/dashboard/)
   })
 
   test('skip setup bypasses onboarding and lands on dashboard', async ({ page }) => {

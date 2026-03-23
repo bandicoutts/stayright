@@ -14,11 +14,8 @@ test.describe('Dashboard', () => {
   })
 
   test('dashboard loads and shows quota ring', async ({ page }) => {
-    // Quota ring should be present with a number
-    const ring = page.locator('[data-testid="quota-ring"]')
-      .or(page.getByText(/\/ 180 days/i).locator('..'))
-      .or(page.locator('svg circle').first())
-    await expect(ring).toBeVisible({ timeout: 10_000 })
+    // Quota ring: the "X / 180 days" text is the most reliable identifier
+    await expect(page.getByText(/\/ 180 days/i).first()).toBeVisible({ timeout: 10_000 })
   })
 
   test('quota ring shows correct days count — a number between 0 and 999', async ({ page }) => {
@@ -45,8 +42,8 @@ test.describe('Dashboard', () => {
       .or(page.getByRole('button', { name: /plan a trip/i }))
     await expect(planBtn).toBeVisible()
     await planBtn.click()
-    // Should navigate to trips/plan
-    await expect(page).toHaveURL(/\/trips\/plan|\/trips/)
+    // Opens either /trips/plan route or a drawer (dashboard?drawer=plan)
+    await expect(page).toHaveURL(/\/trips\/plan|\/trips|drawer=plan/, { timeout: 5_000 })
   })
 
   test('Log a Past Trip button is visible', async ({ page }) => {

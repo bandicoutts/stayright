@@ -12,15 +12,20 @@ import { test, expect } from '@playwright/test'
 // Auth tests don't use stored session — fresh context for each
 test.use({ storageState: { cookies: [], origins: [] } })
 
+// Suppress the cookie consent banner so it never intercepts clicks in auth tests
+async function suppressCookieBanner(page: import('@playwright/test').Page) {
+  await page.addInitScript(() => {
+    localStorage.setItem('cookie_consent', 'accepted')
+  })
+}
+
 // Helpers
 async function fillLoginForm(page: import('@playwright/test').Page) {
+  await suppressCookieBanner(page)
   await page.goto('/login')
-  // Click Sign in tab (in case Create account is shown first)
-  const signInTab = page.getByRole('tab', { name: /sign in/i })
-    .or(page.getByRole('button', { name: /sign in/i }).filter({ has: page.locator('[role="tab"]') }))
-  if (await signInTab.isVisible({ timeout: 1000 }).catch(() => false)) {
-    await signInTab.click()
-  }
+  // The form defaults to "Create account" tab — switch to Sign in.
+  // On signup tab the submit reads "Create account", so "Sign in" uniquely targets the tab.
+  await page.getByRole('button', { name: 'Sign in' }).click()
   await page.getByLabel(/email address/i).fill(process.env.TEST_USER_EMAIL!)
   await page.getByLabel(/^password$/i).fill(process.env.TEST_USER_PASSWORD!)
 }
@@ -28,14 +33,14 @@ async function fillLoginForm(page: import('@playwright/test').Page) {
 test.describe('Auth flows', () => {
   test('user can log in with email + password', async ({ page }) => {
     await fillLoginForm(page)
-    await page.getByRole('button', { name: /^sign in$/i }).click()
+    await page.locator('button[type="submit"]').click()
     await page.waitForURL('**/dashboard', { timeout: 15_000 })
     await expect(page).toHaveURL(/\/dashboard/)
   })
 
   test('logout clears session and redirects to /login', async ({ page }) => {
     await fillLoginForm(page)
-    await page.getByRole('button', { name: /^sign in$/i }).click()
+    await page.locator('button[type="submit"]').click()
     await page.waitForURL('**/dashboard', { timeout: 15_000 })
 
     // Find and click logout
@@ -72,17 +77,12 @@ test.describe('Auth flows', () => {
   })
 
   test('signup form is on /login — Create account tab', async ({ page }) => {
+    await suppressCookieBanner(page)
     await page.goto('/login')
-
-    // Click the "Create account" tab
-    const createTab = page.getByRole('tab', { name: /create account/i })
-      .or(page.getByText(/create account/i).first())
-    if (await createTab.isVisible({ timeout: 3_000 })) {
-      await createTab.click()
-    }
-
+    // Default tab is "Create account" — no click needed
     await expect(page.getByLabel(/email address/i)).toBeVisible()
-    await expect(page.getByRole('button', { name: /create account/i })).toBeVisible()
+    // Use type="submit" to avoid strict-mode violation (tab button also reads "Create account")
+    await expect(page.locator('button[type="submit"]')).toBeVisible()
   })
 
   test('user can request password reset — form accessible', async ({ page }) => {
@@ -98,11 +98,13 @@ test.describe('Auth flows', () => {
 
   test('logged-in user visiting /login is redirected to /dashboard', async ({ page }) => {
     await fillLoginForm(page)
-    await page.getByRole('button', { name: /^sign in$/i }).click()
+    await page.locator('button[type="submit"]').click()
     await page.waitForURL('**/dashboard', { timeout: 15_000 })
 
+    // Proxy redirects logged-in users from /login → /dashboard (307).
+    // page.goto follows the redirect chain and resolves once the final page loads.
+    // Checking page.url() after goto is the correct way — no extra waitForURL needed.
     await page.goto('/login')
-    await page.waitForURL(/\/dashboard/, { timeout: 5_000 })
-    await expect(page).toHaveURL(/\/dashboard/)
+    expect(page.url()).toMatch(/\/dashboard/)
   })
 })

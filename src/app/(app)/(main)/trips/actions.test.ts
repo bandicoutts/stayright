@@ -37,6 +37,7 @@ import {
   addTripAction,
   updateTripAction,
   deleteTripAction,
+  redirectToTrips,
 } from './actions'
 
 // ---------------------------------------------------------------------------
@@ -381,5 +382,38 @@ describe('deleteTripAction', () => {
     expect(firstEqMock).toHaveBeenCalledWith('id', 'some-trip-id')
     // The second .eq() call should include the user_id
     expect(eqMock).toHaveBeenCalledWith('user_id', 'user-A')
+  })
+})
+
+// ===========================================================================
+// updateTripAction — overlap check branch (lines 137–148)
+// ===========================================================================
+
+describe('updateTripAction — overlap branch', () => {
+  it('rejects when updated dates overlap with another existing trip', async () => {
+    mockGetUser.mockResolvedValue(authedUser())
+
+    // Existing trip overlaps with the new dates (departure Jun 1 – return Jun 10)
+    const existingTrips = [
+      { id: 't1', destination: 'Spain', departure_date: '2025-05-25', return_date: '2025-06-15', notes: null },
+    ]
+    const tripsQuery = buildQueryChain('eq', { data: existingTrips, error: null })
+    mockFrom.mockReturnValueOnce(tripsQuery)
+
+    // updating a different trip (id trip-2) with dates that overlap t1
+    const result = await updateTripAction('trip-2', validTripData) // departs Jun 1, inside t1
+    expect(result).toEqual(expect.objectContaining({ error: expect.stringContaining('overlap') }))
+  })
+})
+
+// ===========================================================================
+// redirectToTrips
+// ===========================================================================
+
+describe('redirectToTrips', () => {
+  it('calls redirect("/trips")', async () => {
+    const { redirect } = await import('next/navigation')
+    await redirectToTrips()
+    expect(redirect).toHaveBeenCalledWith('/trips')
   })
 })
