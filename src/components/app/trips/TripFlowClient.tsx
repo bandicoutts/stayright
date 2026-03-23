@@ -37,7 +37,7 @@ interface TripFlowClientProps {
   isPro: boolean
   tripCount: number
   initialTrip?: InitialTrip
-  /** Where to navigate after a successful save or "Just checking". Defaults to '/trips'. */
+  /** Where to navigate after a successful save or "Just checking". Defaults to '/dashboard'. */
   redirectTo?: string
 }
 
@@ -150,7 +150,7 @@ export function TripFlowClient({
   isPro: _isPro,
   tripCount,
   initialTrip,
-  redirectTo = '/trips',
+  redirectTo = '/dashboard',
 }: TripFlowClientProps) {
   const router = useRouter()
 

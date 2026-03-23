@@ -99,7 +99,6 @@ export async function addTripAction(
 
   if (error) return { error: error.message }
   revalidatePath('/dashboard')
-  revalidatePath('/trips')
   return { trip: savedTrip }
 }
 
@@ -164,7 +163,6 @@ export async function updateTripAction(
   if (error) return { error: error.message }
   if (!updatedTrip) return { error: 'Trip not found' }
   revalidatePath('/dashboard')
-  revalidatePath('/trips')
   return { trip: updatedTrip }
 }
 
@@ -189,7 +187,6 @@ export async function deleteTripAction(
 
   if (error) return { error: error.message }
   revalidatePath('/dashboard')
-  revalidatePath('/trips')
   return { success: true }
 }
 
@@ -197,6 +194,6 @@ export async function deleteTripAction(
 // Redirect helpers (used by plan/log/edit pages after save)
 // ---------------------------------------------------------------------------
 
-export async function redirectToTrips() {
-  redirect('/trips')
+export async function redirectToDashboard() {
+  redirect('/dashboard')
 }
