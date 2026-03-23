@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   isCrownDependency,
@@ -66,16 +66,27 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
     rawDrawerMode === 'plan' || rawDrawerMode === 'log' || rawDrawerMode === 'edit'
       ? rawDrawerMode
       : null
+
+  const atLimit = !isPro && trips.length >= 3
+
+  useEffect(() => {
+    if ((drawerMode === 'plan' || drawerMode === 'log') && atLimit) {
+      setShowPaywall(true)
+      router.replace('/dashboard')
+    }
+  }, [drawerMode, atLimit, router])
+
   const drawerTripId = searchParams.get('tripId')
   const drawerInitialTrip = drawerTripId
     ? (trips.find((t) => t.id === drawerTripId) ?? undefined)
     : undefined
-  // Only open if mode is valid; edit mode also requires the trip to exist
-  const drawerOpen = drawerMode !== null && (drawerMode !== 'edit' || drawerInitialTrip !== undefined)
+  // Only open if mode is valid; edit mode also requires the trip to exist,
+  // and plan/log modes require the user is not at the limit.
+  const drawerOpen = drawerMode !== null && (drawerMode === 'edit' ? drawerInitialTrip !== undefined : !atLimit)
 
   function openDrawer(mode: 'plan' | 'log') {
     // All saved trips count toward the Free tier limit (including null return_date)
-    if (!isPro && trips.length >= 3) {
+    if (atLimit) {
       setShowPaywall(true)
       return
     }

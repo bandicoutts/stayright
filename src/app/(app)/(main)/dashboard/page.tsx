@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase/server'
 import { isPlanPro } from '@/lib/subscriptionUtils'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
-import { DashboardModalWrapper } from '@/components/app/dashboard/DashboardModalWrapper'
 import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytics'
 import { TripsClient } from '@/components/app/trips/TripsClient'
 import {
@@ -123,16 +122,6 @@ export default async function DashboardPage() {
       {/* Track upgrade_completed when redirected back from Stripe Checkout */}
       <Suspense fallback={null}>
         <UpgradeTracker planType={subscription?.plan ?? 'unknown'} />
-      </Suspense>
-
-      {/* Trip modal — opens on the dashboard via ?modal=plan|log */}
-      <Suspense fallback={null}>
-        <DashboardModalWrapper
-          trips={trips}
-          visaStartDate={visaStartDate}
-          isPro={isPro}
-          tripCount={tripCount}
-        />
       </Suspense>
 
       {/* Page header */}
