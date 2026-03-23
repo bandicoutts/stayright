@@ -54,6 +54,7 @@ Scan this table to find relevant decisions. Read the full entry only if the summ
 | DECISION-040 | Server-side paywall enforcement + `isPlanPro` utility | `isPlanPro(plan, status)` in `src/lib/subscriptionUtils.ts`; checks both plan AND status | Decided |
 | DECISION-041 | Webhook idempotency and rate limiting deferred to v1.1 | M-3 and L-1 security gaps acknowledged; mitigated but not fully closed | Decided |
 | DECISION-042 | Ongoing trips counted with provisional return; Crown Dependency exact matching | Trips with no `return_date` use today as provisional end; Crown Dependency list is exact-match only | Decided |
+| DECISION-043 | WCAG 2.2 AA Accessibility Compliance Architecture | Enforces contrast ratios, global focus states, reduced-motion queries, focus-trapping, and axe-core E2E tests | Decided |
 
 ---
 
@@ -788,6 +789,33 @@ The root cause of C-1/C-2 was the classic vibe-coding split: UI guards one thing
 3. M-3 (webhook replay) and L-1 (rate limiting) are logged as known gaps and must be addressed in v1.1.
 
 **Related:** PRD Section 4j, 4o; `src/lib/subscriptionUtils.ts`; `src/lib/tripValidation.ts`; `src/__tests__/subscriptionUtils.test.ts`; `src/__tests__/tripValidation.test.ts`
+
+---
+
+### [DECISION-043] WCAG 2.2 AA Accessibility Compliance Architecture
+**Date:** 2026-03-23
+**Status:** Decided
+**Decided by:** Accessibility Engineer 
+
+**Decision:**
+The application strictly targets WCAG 2.2 Level AA compliance. 
+- Global animations and transitions respect `prefers-reduced-motion: reduce`.
+- Global interactive elements (`<button>`, `<a>`, `<input>`) have high-visibility `:focus-visible` outlines. 
+- Form validation errors use `role="alert"` and `aria-live="assertive"`.
+- Modals and drawers implement focus trapping.
+- Contrast on all text elements including status chips enforces a strict 4.5:1 ratio for normal text.
+
+**Reasoning:**
+The StayRight user base includes non-native English speakers, screen-reader users, and keyboard-only navigators in high-stress situations (visa compliance). Accessible inclusive design is non-negotiable. 
+
+**Alternatives considered:**
+- Best-effort accessibility fixes — rejected. Compliance must be comprehensive (WCAG 2.2 AA).
+- Disabling outline styles globally — rejected. Focus visibility is a core AA requirement.
+
+**Consequences:**
+Future UI components must pass `@axe-core/playwright` automated tests added to the E2E suite. Manual checks must verify focus management and screen reader behavior for any new interactive component. Color palettes must maintain >=4.5:1 text contrast ratios.
+
+**Related:** PRD.md Section 4; globals.css; tests/e2e/dashboards.spec.ts
 
 ---
 
