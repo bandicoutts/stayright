@@ -764,6 +764,48 @@ These gaps remain open until v1.1. They do not block the current launch.
 
 ---
 
+### [DECISION-042] Absence engine: ongoing trips counted with provisional return; Crown Dependency exact matching
+**Date:** 2026-03-23
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (mathematical audit)
+
+**Context:**
+A domain-specific audit of `absenceEngine.ts` against all 17 Home Office compliance test cases
+identified two correctness bugs:
+
+**BUG-1 — Ongoing trips yielded 0 absence days.** `getCurrentRollingWindow` skipped trips with
+`return_date = null`. A user currently abroad saw no absence counted, potentially giving false
+comfort that they were within their 180-day limit.
+
+**BUG-2 — "New Jersey" matched as Crown Dependency.** `isCrownDependency` used substring
+matching (`lower.includes('jersey')`), so any destination containing the word "jersey" — including
+"New Jersey, USA" — was treated as UK presence and counted as 0 absence days.
+
+**Decision:**
+
+*BUG-1 fix:* In `getCurrentRollingWindow`, ongoing trips (null return) are given a provisional
+return date of `today` (the window end) before passing to `tripDaysInWindow`. This ensures a
+user who is currently abroad sees their accumulated absence days in the rolling window. The
+`getPeakRollingWindow` function continues to skip ongoing trips — peak is a historical metric
+over completed windows.
+
+*BUG-2 fix:* `isCrownDependency` now uses exact matching: the full destination string OR its
+last comma-separated component must equal one of the three canonical names ("jersey",
+"guernsey", "isle of man"). "St Helier, Jersey" ✅. "New Jersey" ❌.
+
+**Consequences:**
+- Dashboard quota ring now reflects absence for users currently abroad.
+- No false Crown Dependency matches for US state/city names.
+- Test case TC4 in the audit spec had an incorrect expected value (87); correct value is 88.
+  March has 31 days; with return on March 31, 30 March days count as absence, not 29.
+- A full unit test suite (`absenceEngine.test.ts`, 40 tests) was created covering all 17 audit
+  cases plus regression tests for both bugs.
+
+**Related:** DECISION-002, DECISION-011, DECISION-018; `src/lib/calculations/absenceEngine.ts`;
+`src/lib/calculations/absenceEngine.test.ts`
+
+---
+
 ## Template for new entries
 
 ### [DECISION-030] PWA: manifest + offline service worker; push notifications deferred to v2
@@ -1091,3 +1133,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.8 | Added DECISION-034 — shared RISK_CONFIG and date formatting utilities extracted from component files |
 | 2026-03-22 | 2.9 | Security audit: DECISION-035 HTTP security headers; DECISION-036 auth callback open-redirect guard; DECISION-037 RLS DELETE policies; DECISION-038 Stripe GDPR erasure on account deletion; DECISION-039 password reset session invalidation deferred to v1.1 |
 | 2026-03-22 | 3.0 | Pentest fixes: DECISION-040 — server-side paywall quota (C-1/C-2), isPlanPro utility (H-1), trip input validation (M-1/M-2); DECISION-041 — known gaps M-3/L-1 deferred to v1.1 |
+| 2026-03-23 | 3.1 | Absence engine audit: DECISION-042 — fix ongoing-trip count (BUG-1) and Crown Dependency exact matching (BUG-2); create absenceEngine.test.ts (40 tests) |

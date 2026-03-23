@@ -44,17 +44,31 @@ export interface QualifyingPeriodResult {
 // Constants
 // ---------------------------------------------------------------------------
 
-const CROWN_DEPENDENCIES = ['jersey', 'guernsey', 'isle of man']
+// Exact canonical names for Crown Dependencies (presence counts as UK presence).
+// Matching is: full-string OR last comma-separated component — prevents false positives
+// like "New Jersey" or "Jersey City" matching "jersey".
+const CROWN_DEPENDENCIES_EXACT = ['jersey', 'guernsey', 'isle of man']
 const MAX_ABSENCE_DAYS = 180
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Returns true if the destination is a Crown Dependency (0 absence days). */
+/**
+ * Returns true if the destination is a Crown Dependency (0 absence days).
+ *
+ * Matching rules:
+ * - Full-string match: "Jersey" ✅
+ * - Last comma-separated component: "St Helier, Jersey" ✅
+ * - Substring NOT matched: "New Jersey" ❌, "Jersey City" ❌
+ */
 export function isCrownDependency(destination: string): boolean {
-  const lower = destination.toLowerCase()
-  return CROWN_DEPENDENCIES.some((cd) => lower.includes(cd))
+  const lower = destination.toLowerCase().trim()
+  return CROWN_DEPENDENCIES_EXACT.some((cd) => {
+    if (lower === cd) return true
+    const lastPart = lower.split(',').at(-1)?.trim() ?? ''
+    return lastPart === cd
+  })
 }
 
 /**
@@ -114,7 +128,9 @@ function tripDaysInWindow(
  * Returns the total absence days in the rolling 12-month window ending on `today`.
  *
  * Trips before visaStartDate are excluded (stored but not counted — PRD 4c).
- * Ongoing trips (return_date = null) are excluded from the count.
+ * Ongoing trips (return_date = null) are counted using `today` as a provisional
+ * return date — the user is currently abroad, so their absence is real and must
+ * be shown on the dashboard (DECISION-002).
  */
 export function getCurrentRollingWindow(
   trips: TripInput[],
@@ -125,11 +141,15 @@ export function getCurrentRollingWindow(
   const windowStart = new Date(windowEnd)
   windowStart.setFullYear(windowStart.getFullYear() - 1)
 
+  // For ongoing trips, substitute windowEnd (today) as provisional return so
+  // the days already spent abroad are counted in the current rolling window.
+  const provisionalReturn = formatDate(windowEnd)
+
   let days = 0
   for (const trip of trips) {
-    if (!trip.return_date) continue
     if (visaStartDate && trip.departure_date < visaStartDate) continue
-    days += tripDaysInWindow(trip, windowStart, windowEnd)
+    const effectiveTrip = trip.return_date ? trip : { ...trip, return_date: provisionalReturn }
+    days += tripDaysInWindow(effectiveTrip, windowStart, windowEnd)
   }
 
   return {
@@ -294,4 +314,12 @@ function addDays(date: Date, n: number): Date {
   const d = new Date(date)
   d.setUTCDate(d.getUTCDate() + n)
   return d
+}
+
+/** Formats a UTC-midnight Date as YYYY-MM-DD. */
+function formatDate(date: Date): string {
+  const y = date.getUTCFullYear()
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const d = String(date.getUTCDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
