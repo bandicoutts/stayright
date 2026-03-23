@@ -1210,6 +1210,49 @@ Future data fetching in Server Components should use parallel `Promise.all` wher
 
 ---
 
+### [DECISION-045] Visual Refinement: "Editorial Concierge" Aesthetic
+**Date:** 2026-03-24
+**Status:** Decided
+**Decided by:** Lead Visual Designer
+
+**Decision:**
+The application UI has been deeply refactored away from a generic "SaaS template" look to a high-end "Editorial Concierge" aesthetic tracking to monotonic standards (e.g. Monzo, Linear, Wise). This involves:
+1. **Typography**: Heavy contrast between precise Manrope display headers and readable Inter body text. Antialiased typography and manual letter-spacing scaling (`tracking-[-0.03em]`).
+2. **Asymmetry & Layouts**: Landing page features use an asymmetric Bento Grid instead of uniform 3-columns. The Hero section uses variable width columns and dynamic height balancing.
+3. **Tonal Layering & Materials**: Rigid borders have been eliminated across the sidebar and trip cards. Distinctions are made using `surface_container` level backgrounds (e.g., `#F8F9FA` canvas with `#FFFFFF` cards and `shadow-[0px_8px_32px_rgba(0,33,20,0.04)]` elevations).
+4. **Micro-interactions**: Global `ease-[cubic-bezier(0.34,1.56,0.64,1)]` bouncy spring transitions and `active:scale-[0.98]` applied to all buttons, links, and drawers, respecting reduced-motion.
+
+**Reasoning:**
+StayRight manages high-stakes visa compliance; the UI must elicit absolute trust, permanence, and sophistication. A generic dashboard aesthetic signals cheapness, while an editorial aesthetic signals authority and care.
+
+**Alternatives considered:**
+- Strict standard implementation of Tailwind UI — Rejected due to the core brand requirement of establishing immense trust through bespoke layout and high-fidelity micro-interactions.
+
+**Consequences:**
+Future UI elements must refrain from using default 1px `#E2E8F0` borders and generic grays. They should instead use `#191C1D`/5 opacity rings and lush `#006948`/x tonal scales. Animations MUST respect spring dynamics defined in `globals.css`.
+
+**Related:** `docs/DESIGN.md`, `src/app/globals.css`
+
+**Decision:**
+To meet Core Web Vitals targets for mobile users on slow 4G connections, we:
+1. Load PostHog analytics strictly after user consent (`localStorage.getItem('cookie_consent') === 'accepted'`), avoiding unused JS execution.
+2. Implemented parallel data fetching (`Promise.all`) for Dashboard (`profile`, `trips`, `subscription`) to reduce TTFB and LCP.
+3. Added a `useDebounce` hook to date inputs in `TripForm` and `TripFlowClient` to prevent expensive `calculateWhatIf` and `hasOverlappingTrip` executions on every keystroke, improving INP.
+
+**Reasoning:**
+Analytics scripts block the main thread and degrade INP/LCP; delaying them until consent solves both compliance and performance. Sequential Data fetching unnecessarily blocks rendering, parallelizing it optimizes FCP and LCP. Validating and checking overlaps synchronously on every character input causes micro-stutters; debouncing by 400-500ms keeps the UI responsive.
+
+**Alternatives considered:**
+- Server-side data prefetching — Not always possible for authenticated dynamic data per user without Vercel KV/Redis caching. Parallel component fetching is the Next.js App Router standard.
+- Removing overlap warnings — Rejected. The UX value of live warnings is high, debouncing delivers the performance without sacrificing the feature.
+
+**Consequences:**
+Future data fetching in Server Components should use parallel `Promise.all` where queries do not depend on each other. Any intensive live calculations in Client Components based on user input must be wrapped in `useDebounce`. Third-party scripts must check consent before `import()`.
+
+**Related:** PRD Section 6 (Performance)
+
+---
+
 ## Revision History
 
 | Date | Version | What changed |
@@ -1237,3 +1280,4 @@ Future data fetching in Server Components should use parallel `Promise.all` wher
 | 2026-03-22 | 3.0 | Pentest fixes: DECISION-040 — server-side paywall quota (C-1/C-2), isPlanPro utility (H-1), trip input validation (M-1/M-2); DECISION-041 — known gaps M-3/L-1 deferred to v1.1 |
 | 2026-03-23 | 3.1 | Absence engine audit: DECISION-042 — fix ongoing-trip count (BUG-1) and Crown Dependency exact matching (BUG-2); create absenceEngine.test.ts (40 tests) |
 | 2026-03-23 | 3.2 | Core Web Vitals optimizations: DECISION-044 added for PostHog consent logic, parallel data fetching, and input debouncing |
+| 2026-03-24 | 3.3 | Visual Refinement Project: DECISION-045 added to document the architectural rules for the "Editorial Concierge" aesthetic refactor |
