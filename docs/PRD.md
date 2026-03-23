@@ -7,6 +7,26 @@
 
 ---
 
+## Feature Status
+
+Find your feature here, then jump directly to that section. Do not read the full PRD.
+
+| Feature | Status | PRD Section |
+|---|---|---|
+| Landing page | Complete | 4k |
+| Auth (email + Google OAuth, password reset) | Complete | 4a |
+| Onboarding (3-step flow) | Partial — first_name not collected in VisaForm (Q11) | 4b |
+| 180-day absence engine | Complete | 4c |
+| Dashboard (quota ring, period bar, ILR timeline) | Complete | 4d |
+| What-if simulator (plan a trip) | Complete | 4e |
+| Trip log (log, edit, delete) | Complete | 4f |
+| Reports + PDF export | Partial — export history list deferred (DECISION-024) | 4g |
+| Settings (visa profile, notifications, account deletion) | Partial — last_name deferred (DECISION-033) | 4h |
+| Email notifications (Resend + Vercel Cron) | Partial — routes built, not yet deployed end-to-end | 4i |
+| Payments / Stripe (Checkout, Portal, Webhook) | Partial — webhook idempotency deferred (DECISION-041) | 4j |
+
+---
+
 ## 1. Product Overview
 
 ### 1.1 What StayRight Is
@@ -914,11 +934,16 @@ There is **no Calendar** nav item in v1.
 
 ## 8. Open Questions
 
-### Can Resolve During Build
+### Active
+
+| # | Question | Status |
+|---|---|---|
+| 11 | first_name collection in onboarding | **Open.** DECISION-033 specifies that first_name is collected at the onboarding visa setup step, but `VisaForm.tsx` does not currently include a first_name input. The DB column exists and is NOT NULL, but is only populated via Settings after onboarding. Until this is built, users who sign up via email (not OAuth) will have an empty first_name until they visit Settings. **Flag before next build session.** |
+
+<details>
+<summary>Resolved questions (10)</summary>
 
 All previously open questions are now resolved. No outstanding questions block the v1 build.
-
-### Resolved
 
 | # | Question | Resolution |
 |---|---|---|
@@ -932,7 +957,8 @@ All previously open questions are now resolved. No outstanding questions block t
 | ~~8~~ | ~~Departure day counting~~ | **Resolved.** Follows official Home Office guidance — departure and return days count as presence. Formula: `absence_days = (return_date - departure_date) - 1`. See Section 4c. |
 | ~~9~~ | ~~Export my data format~~ | **Resolved.** Immediate JSON download. See Section 4h. |
 | ~~10~~ | ~~Copyright year~~ | **Resolved.** Dynamic, not hardcoded. |
-| 11 | first_name collection in onboarding | **Open.** DECISION-033 specifies that first_name is collected at the onboarding visa setup step, but `VisaForm.tsx` does not currently include a first_name input. The DB column exists and is NOT NULL, but is only populated via Settings after onboarding. Until this is built, users who sign up via email (not OAuth) will have an empty first_name until they visit Settings. **Flag before next build session.** |
+
+</details>
 
 ---
 
