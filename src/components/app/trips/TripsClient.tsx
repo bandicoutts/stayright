@@ -160,15 +160,26 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
         {/* Trip list */}
         <div className={`flex-1 min-w-0 ${selectedTrip ? 'hidden md:block' : ''}`}>
           {trips.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-12 text-center">
-              <p className="text-sm text-[#3D4A42]">
-                Your trip history is empty. Add a trip to start tracking your absences.
+            <div className="bg-white rounded-[1.5rem] shadow-[0px_8px_32px_rgba(0,33,20,0.04)] ring-1 ring-[#191C1D]/5 p-16 md:p-24 flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 rounded-[1.25rem] bg-[#006948]/5 flex items-center justify-center mb-6">
+                <svg className="w-8 h-8 text-[#004f35] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D] mb-3 leading-tight tracking-tight">
+                No trips tracked yet.
+              </h3>
+              <p className="text-[15px] text-[#3D4A42] max-w-sm mx-auto mb-8 leading-relaxed font-[family-name:var(--font-inter)]">
+                Begin adding your travel history to see your rolling 180-day compliance window instantly calculate.
               </p>
               <button
                 type="button"
                 onClick={handleAddTrip}
-                className="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-br from-[#004F35] to-[#006948] hover:opacity-90 transition-opacity shadow-[0px_8px_24px_rgba(0,105,72,0.2)] hover:-translate-y-[1px] cursor-pointer"
               >
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
                 Add your first trip
               </button>
             </div>

@@ -30,13 +30,13 @@ export default function Pricing() {
           </span>
           <button
             onClick={() => setAnnual(!annual)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${annual ? 'bg-[#006948]' : 'bg-[#5A6B62]'}`}
+            className={`relative inline-flex h-7 w-[3.25rem] items-center rounded-full transition-colors duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${annual ? 'bg-[#006948]' : 'bg-[#e2e5e3] hover:bg-[#d0d5d2]'}`}
             role="switch"
             aria-checked={annual}
             aria-labelledby="monthly-label annual-label"
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${annual ? 'translate-x-6' : 'translate-x-1'}`}
+              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${annual ? 'translate-x-[1.6rem]' : 'translate-x-1'}`}
             />
           </button>
           <span
@@ -55,17 +55,17 @@ export default function Pricing() {
         {/* Cards */}
         <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
           {/* Free card */}
-          <div role="region" aria-labelledby="free-plan-title" className="bg-white rounded-xl p-6 shadow-[0px_2px_12px_rgba(25,28,29,0.04)] flex flex-col gap-5">
+          <div role="region" aria-labelledby="free-plan-title" className="bg-[#F3F4F5] rounded-[2rem] p-8 md:p-10 flex flex-col gap-6 ring-1 ring-[#191C1D]/5">
             <div>
-              <h3 id="free-plan-title" className="font-[family-name:var(--font-manrope)] font-bold text-xl text-[#191C1D]">
+              <h3 id="free-plan-title" className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D]">
                 Free
               </h3>
-              <div className="mt-2 flex items-baseline gap-1">
-                <span className="font-[family-name:var(--font-manrope)] font-extrabold text-4xl text-[#191C1D]">
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="font-[family-name:var(--font-manrope)] font-extrabold text-5xl md:text-[3.5rem] tracking-[-0.03em] text-[#191C1D]">
                   £0
                 </span>
-                <span className="font-[family-name:var(--font-inter)] text-sm text-[#3D4A42]">
-                  /forever
+                <span className="font-[family-name:var(--font-inter)] text-sm font-semibold tracking-wide text-[#3D4A42]">
+                  / forever
                 </span>
               </div>
             </div>
@@ -100,24 +100,24 @@ export default function Pricing() {
           </div>
 
           {/* Pro card */}
-          <div role="region" aria-labelledby="pro-plan-title" className="bg-white rounded-xl p-6 shadow-[0px_8px_32px_rgba(0,105,72,0.16)] ring-2 ring-[#006948] flex flex-col gap-5 relative">
+          <div role="region" aria-labelledby="pro-plan-title" className="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0px_24px_64px_rgba(0,33,20,0.08)] ring-2 ring-[#006948] flex flex-col gap-6 relative">
             {/* Most Popular badge */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white bg-[#006948]">
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase text-white bg-gradient-to-r from-[#006948] to-[#00855D] shadow-sm">
                 Most Popular
               </span>
             </div>
 
             <div>
-              <h3 id="pro-plan-title" className="font-[family-name:var(--font-manrope)] font-bold text-xl text-[#191C1D]">
+              <h3 id="pro-plan-title" className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D]">
                 Pro
               </h3>
-              <div className="mt-2 flex items-baseline gap-1">
-                <span className="font-[family-name:var(--font-manrope)] font-extrabold text-4xl text-[#191C1D]">
+              <div className="mt-4 flex items-baseline gap-1 transition-all duration-300">
+                <span className="font-[family-name:var(--font-manrope)] font-extrabold text-5xl md:text-[3.5rem] tracking-[-0.03em] text-[#191C1D]">
                   {annual ? '£24.99' : '£2.99'}
                 </span>
-                <span className="font-[family-name:var(--font-inter)] text-sm text-[#3D4A42]">
-                  {annual ? '/year' : '/month'}
+                <span className="font-[family-name:var(--font-inter)] text-sm font-semibold tracking-wide text-[#3D4A42]">
+                  {annual ? '/ year' : '/ month'}
                 </span>
               </div>
             </div>
