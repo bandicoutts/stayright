@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy — StayRight',
@@ -7,37 +6,36 @@ export const metadata: Metadata = {
 
 export default function CookiePolicyPage() {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pt-24 pb-16 px-6">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-3xl text-[#191C1D] tracking-[-0.02em] mb-4">
-          Cookie Policy
-        </h1>
-        <p className="font-[family-name:var(--font-inter)] text-base text-[#3D4A42] mb-6 leading-relaxed">
-          StayRight uses cookies to keep you logged in and to understand how the
-          product is used. We do not use advertising cookies or sell your data.
-        </p>
-        <h2 className="font-[family-name:var(--font-manrope)] font-bold text-xl text-[#191C1D] mb-3">
-          Strictly Necessary Cookies
-        </h2>
-        <p className="font-[family-name:var(--font-inter)] text-sm text-[#3D4A42] mb-6 leading-relaxed">
-          These cookies are required for StayRight to function. They include
-          session cookies that keep you logged in. You cannot opt out of these.
-        </p>
-        <h2 className="font-[family-name:var(--font-manrope)] font-bold text-xl text-[#191C1D] mb-3">
-          Analytics Cookies (Optional)
-        </h2>
-        <p className="font-[family-name:var(--font-inter)] text-sm text-[#3D4A42] mb-6 leading-relaxed">
-          If you accept all cookies, we use privacy-friendly analytics (PostHog,
-          EU region) to understand how the product is used. No personal data is
-          stored in analytics.
-        </p>
-        <Link
-          href="/"
-          className="text-sm text-[#006948] font-medium hover:underline font-[family-name:var(--font-inter)]"
-        >
-          ← Back to StayRight
-        </Link>
+    <main className="min-h-screen bg-[#191C1D] pt-24 pb-16">
+      <div className="max-w-3xl mx-auto px-6 text-white/80 font-[family-name:var(--font-inter)] leading-relaxed">
+        <h1 className="text-3xl font-bold text-white mb-2 font-[family-name:var(--font-manrope)]">Cookie Policy</h1>
+        <p className="mb-8 text-sm text-white/60">Last Updated: [Date]</p>
+
+        <p className="mb-6">This Cookie Policy explains how StayRight uses cookies and similar technologies when you visit our website. Our aim is to ensure our platform functions securely and smoothly.</p>
+
+        <h2 className="text-xl font-semibold text-white mt-10 mb-4 font-[family-name:var(--font-manrope)]">1. What Are Cookies?</h2>
+        <p className="mb-6">Cookies are small text files stored on your browser or device by websites you visit. They are widely used to make websites work, or work more efficiently, and to provide information to the owners of the site.</p>
+
+        <h2 className="text-xl font-semibold text-white mt-10 mb-4 font-[family-name:var(--font-manrope)]">2. How We Use Cookies</h2>
+
+        <h3 className="text-lg font-semibold text-white mt-8 mb-3 font-[family-name:var(--font-manrope)]">2.1 Essential Cookies (Strictly Necessary)</h3>
+        <p className="mb-4">These cookies are required for the operation of StayRight. Without them, you would not be able to log in or use the core application. <strong>Under UK law, we do not require your consent to set these cookies.</strong></p>
+        <ul className="list-disc pl-5 mb-6 space-y-2">
+          <li><strong>Supabase Authentication Cookies:</strong> Used to manage your session securely when you log into the platform. (They ensure you remain logged in as you navigate the app).</li>
+          <li><strong>Cookie Preference:</strong> <code>cookie_consent</code> – Used purely to remember whether you have accepted or declined non-essential cookies.</li>
+        </ul>
+
+        <h3 className="text-lg font-semibold text-white mt-8 mb-3 font-[family-name:var(--font-manrope)]">2.2 Analytics Cookies</h3>
+        <p className="mb-4"><em>(Note: At this stage, StayRight has not implemented a broader tracking system. This section will be updated when analytics tools are added.)</em></p>
+        <p className="mb-6">In the future, we may deploy analytics cookies to understand how our site is used (e.g., measuring which features are most popular). <strong>We will always ask for your explicit consent before enabling these.</strong></p>
+
+        <h3 className="text-lg font-semibold text-white mt-8 mb-3 font-[family-name:var(--font-manrope)]">2.3 Third-Party Cookies</h3>
+        <p className="mb-6">When you purchase a Pro subscription, payments are processed by <strong>Stripe</strong>. Stripe may set cookies on your device to facilitate a secure transaction and to detect fraud. These are managed securely by Stripe according to their own privacy policies. For more details, visit: <a href="https://stripe.com/cookies-policy/legal" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Stripe Cookie Policy</a></p>
+
+        <h2 className="text-xl font-semibold text-white mt-10 mb-4 font-[family-name:var(--font-manrope)]">3. How to Manage Your Cookies</h2>
+        <p className="mb-4">Most modern web browsers allow you to control cookies through their settings. You can choose to block or delete cookies entirely. However, if you disable strictly necessary cookies, StayRight’s authentication system will not work, and you will not be able to log in.</p>
+        <p className="mb-6">If you have any questions about our use of cookies, please contact us at [Contact Email].</p>
       </div>
-    </div>
+    </main>
   );
 }

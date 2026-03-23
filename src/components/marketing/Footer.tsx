@@ -12,7 +12,7 @@ const columns = [
   {
     heading: 'Legal',
     links: [
-      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Terms of Service', href: '/terms' },
       { label: 'Cookie Policy', href: '/cookie-policy' },
     ],
