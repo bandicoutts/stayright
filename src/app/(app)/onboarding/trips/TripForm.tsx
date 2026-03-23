@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Plus, Trash2 } from 'lucide-react'
 import { saveTripAction, deleteTripAction, completeOnboardingAction } from '../actions'
+import { useDebounce } from '@/hooks/useDebounce'
 import { track } from '@/lib/posthog'
 import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
 import { DestinationAutocomplete } from '@/components/app/trips/DestinationAutocomplete'
@@ -37,9 +38,12 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
   const [completing, setCompleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const debouncedDeparture = useDebounce(departureDate, 400)
+  const debouncedReturn = useDebounce(returnDate, 400)
+
   // Live overlap detection against already-added trips
   const overlapWarning = useMemo(() => {
-    if (!departureDate || !returnDate) return false
+    if (!debouncedDeparture || !debouncedReturn) return false
     return hasOverlappingTrip(
       trips.map((t) => ({
         id: t.id,
@@ -47,10 +51,10 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
         departure_date: t.departure_date,
         return_date: t.return_date,
       })),
-      departureDate,
-      returnDate
+      debouncedDeparture,
+      debouncedReturn
     )
-  }, [trips, departureDate, returnDate])
+  }, [trips, debouncedDeparture, debouncedReturn])
 
   const isPreVisa = !!departureDate && departureDate < visaStartDate
 

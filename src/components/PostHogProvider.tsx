@@ -21,14 +21,16 @@ function PostHogPageView() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // Dynamically import to avoid SSR issues
-    import('posthog-js').then(({ default: posthog }) => {
-      if (posthog.__loaded) {
-        posthog.capture('$pageview', {
-          $current_url: window.location.href,
-        })
-      }
-    })
+    // Only load the analytics script if consent is granted
+    if (typeof window !== 'undefined' && localStorage.getItem('cookie_consent') === 'accepted') {
+      import('posthog-js').then(({ default: posthog }) => {
+        if (posthog.__loaded) {
+          posthog.capture('$pageview', {
+            $current_url: window.location.href,
+          })
+        }
+      })
+    }
   }, [pathname, searchParams])
 
   return null

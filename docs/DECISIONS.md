@@ -1185,6 +1185,29 @@ Copy this template when adding a new decision:
 **Related:**
 [Links to PRD sections, other decisions, open questions]
 
+### [DECISION-044] Core Web Vitals Optimization Architecture
+**Date:** 2026-03-23
+**Status:** Decided
+**Decided by:** Performance Engineer
+
+**Decision:**
+To meet Core Web Vitals targets for mobile users on slow 4G connections, we:
+1. Load PostHog analytics strictly after user consent (`localStorage.getItem('cookie_consent') === 'accepted'`), avoiding unused JS execution.
+2. Implemented parallel data fetching (`Promise.all`) for Dashboard (`profile`, `trips`, `subscription`) to reduce TTFB and LCP.
+3. Added a `useDebounce` hook to date inputs in `TripForm` and `TripFlowClient` to prevent expensive `calculateWhatIf` and `hasOverlappingTrip` executions on every keystroke, improving INP.
+
+**Reasoning:**
+Analytics scripts block the main thread and degrade INP/LCP; delaying them until consent solves both compliance and performance. Sequential Data fetching unnecessarily blocks rendering, parallelizing it optimizes FCP and LCP. Validating and checking overlaps synchronously on every character input causes micro-stutters; debouncing by 400-500ms keeps the UI responsive.
+
+**Alternatives considered:**
+- Server-side data prefetching — Not always possible for authenticated dynamic data per user without Vercel KV/Redis caching. Parallel component fetching is the Next.js App Router standard.
+- Removing overlap warnings — Rejected. The UX value of live warnings is high, debouncing delivers the performance without sacrificing the feature.
+
+**Consequences:**
+Future data fetching in Server Components should use parallel `Promise.all` where queries do not depend on each other. Any intensive live calculations in Client Components based on user input must be wrapped in `useDebounce`. Third-party scripts must check consent before `import()`.
+
+**Related:** PRD Section 6 (Performance)
+
 ---
 
 ## Revision History
@@ -1213,3 +1236,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.9 | Security audit: DECISION-035 HTTP security headers; DECISION-036 auth callback open-redirect guard; DECISION-037 RLS DELETE policies; DECISION-038 Stripe GDPR erasure on account deletion; DECISION-039 password reset session invalidation deferred to v1.1 |
 | 2026-03-22 | 3.0 | Pentest fixes: DECISION-040 — server-side paywall quota (C-1/C-2), isPlanPro utility (H-1), trip input validation (M-1/M-2); DECISION-041 — known gaps M-3/L-1 deferred to v1.1 |
 | 2026-03-23 | 3.1 | Absence engine audit: DECISION-042 — fix ongoing-trip count (BUG-1) and Crown Dependency exact matching (BUG-2); create absenceEngine.test.ts (40 tests) |
+| 2026-03-23 | 3.2 | Core Web Vitals optimizations: DECISION-044 added for PostHog consent logic, parallel data fetching, and input debouncing |

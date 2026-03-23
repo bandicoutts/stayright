@@ -34,12 +34,22 @@ export default async function DashboardPage() {
 
   if (!profile?.onboarding_completed) redirect('/onboarding')
 
-  // Load all trips
-  const { data: rawTrips } = await supabase
-    .from('trips')
-    .select('id, destination, departure_date, return_date')
-    .eq('user_id', user.id)
-    .order('departure_date', { ascending: false })
+  // Load trips and subscription in parallel (since both depend only on user.id)
+  const [
+    { data: rawTrips },
+    { data: subscription }
+  ] = await Promise.all([
+    supabase
+      .from('trips')
+      .select('id, destination, departure_date, return_date')
+      .eq('user_id', user.id)
+      .order('departure_date', { ascending: false }),
+    supabase
+      .from('subscriptions')
+      .select('plan, status')
+      .eq('user_id', user.id)
+      .single()
+  ])
 
   const trips: TripInput[] = (rawTrips ?? []).map((t) => ({
     id: t.id,
@@ -75,14 +85,7 @@ export default async function DashboardPage() {
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
   const firstName = profile.first_name || user.email?.split('@')[0] || 'there'
 
-  // Needed for upgrade_completed analytics event + drawer paywall check
-  // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('plan, status')
-    .eq('user_id', user.id)
-    .single()
-
+  // Subscription is already fetched via Promise.all earlier
   const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
   // Derived values for PostHog user properties

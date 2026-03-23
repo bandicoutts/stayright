@@ -16,6 +16,7 @@ import { DateRangePicker } from './DateRangePicker'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
 import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
+import { useDebounce } from '@/hooks/useDebounce'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -187,13 +188,16 @@ export function TripFlowClient({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const debouncedDeparture = useDebounce(departureDate, 400)
+  const debouncedReturn = useDebounce(returnDate, 400)
+
   // ---------------------------------------------------------------------------
   // Live calculation (Step 2)
   // ---------------------------------------------------------------------------
 
   const calcResult = useMemo<{ result: RollingWindowResult; tripDays: number; windowEnd: Date } | null>(() => {
-    if (!departureDate || !returnDate || !returnDateKnown) return null
-    if (returnDate <= departureDate) return null
+    if (!debouncedDeparture || !debouncedReturn || !returnDateKnown) return null
+    if (debouncedReturn <= debouncedDeparture) return null
 
     if (isCrownDep) {
       return {
@@ -201,39 +205,39 @@ export function TripFlowClient({
           days: 0,
           status: 'SAFE',
           windowStart: new Date(),
-          windowEnd: new Date(returnDate + 'T00:00:00Z'),
+          windowEnd: new Date(debouncedReturn + 'T00:00:00Z'),
         },
         tripDays: 0,
-        windowEnd: new Date(returnDate + 'T00:00:00Z'),
+        windowEnd: new Date(debouncedReturn + 'T00:00:00Z'),
       }
     }
 
     // Use return_date as `today` so future trips project the rolling window correctly
     // (DECISION-022)
-    const projectedToday = new Date(returnDate + 'T00:00:00Z')
+    const projectedToday = new Date(debouncedReturn + 'T00:00:00Z')
     const result = calculateWhatIf(
       baseTrips,
-      { destination, departure_date: departureDate, return_date: returnDate },
+      { destination, departure_date: debouncedDeparture, return_date: debouncedReturn },
       projectedToday,
       visaStartDate
     )
 
     const tripDays = calculateTripAbsenceDays({
       destination,
-      departure_date: departureDate,
-      return_date: returnDate,
+      departure_date: debouncedDeparture,
+      return_date: debouncedReturn,
     })
 
     return { result, tripDays, windowEnd: result.windowEnd }
-  }, [departureDate, returnDate, returnDateKnown, destination, isCrownDep, baseTrips, visaStartDate])
+  }, [debouncedDeparture, debouncedReturn, returnDateKnown, destination, isCrownDep, baseTrips, visaStartDate])
 
   // Overlap detection — live check against baseTrips while the user fills in dates
   // baseTrips already excludes the trip being edited in edit mode (see above)
   const overlapWarning = useMemo(() => {
-    if (!departureDate) return false
-    const retDate = returnDateKnown && returnDate ? returnDate : null
-    return hasOverlappingTrip(baseTrips, departureDate, retDate)
-  }, [departureDate, returnDate, returnDateKnown, baseTrips])
+    if (!debouncedDeparture) return false
+    const retDate = returnDateKnown && debouncedReturn ? debouncedReturn : null
+    return hasOverlappingTrip(baseTrips, debouncedDeparture, retDate)
+  }, [debouncedDeparture, debouncedReturn, returnDateKnown, baseTrips])
 
   // Risk status for confirm step summary
   const confirmRisk = useMemo(() => {
