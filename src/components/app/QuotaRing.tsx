@@ -3,22 +3,24 @@
 import { useEffect, useState } from 'react'
 import type { RiskStatus } from '@/lib/calculations/absenceEngine'
 
-const RADIUS = 80
-const STROKE = 10
+const RADIUS = 90
+const STROKE = 14
+const SIZE = (RADIUS + STROKE) * 2
+const CENTER = SIZE / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-const STATUS_COLOURS: Record<RiskStatus, string> = {
-  SAFE: '#006948',
-  WARNING: '#D97706',
-  DANGER: '#BA1A1A',
-  BREACH: '#8E0009',
+const GRADIENTS: Record<RiskStatus, { start: string; end: string }> = {
+  SAFE: { start: '#006948', end: '#00855D' },
+  WARNING: { start: '#B46000', end: '#D97706' },
+  DANGER: { start: '#8E0009', end: '#BA1A1A' },
+  BREACH: { start: '#680005', end: '#8E0009' },
 }
 
-const STATUS_BG: Record<RiskStatus, string> = {
-  SAFE: 'bg-[#006948]/10 text-[#006948]',
-  WARNING: 'bg-amber-100 text-[#D97706]',
-  DANGER: 'bg-red-100 text-[#BA1A1A]',
-  BREACH: 'bg-red-200 text-[#8E0009]',
+const STATUS_CHIPS: Record<RiskStatus, string> = {
+  SAFE: 'bg-[#9ff4ca] text-[#002114]',
+  WARNING: 'bg-[#ffdcbb] text-[#2c1600]',
+  DANGER: 'bg-[#ffdad6] text-[#410002]',
+  BREACH: 'bg-[#ffdad6] text-[#410002]',
 }
 
 interface Props {
@@ -38,77 +40,79 @@ export function QuotaRing({ days, status }: Props) {
   const fill = Math.min(days / 180, 1)
   const targetOffset = CIRCUMFERENCE * (1 - fill)
   const dashOffset = animated ? targetOffset : CIRCUMFERENCE
-  const strokeColour = STATUS_COLOURS[status]
+  const gradient = GRADIENTS[status]
   const remaining = Math.max(0, 180 - days)
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="relative w-48 h-48">
-        {/* SVG ring — rotated so progress starts at 12 o'clock */}
+    <div className="flex flex-col items-center gap-6">
+      <div className="relative" style={{ width: SIZE, height: SIZE }}>
+        {/* SVG ring */}
         <svg
-          viewBox="0 0 180 180"
-          className="w-full h-full -rotate-90"
+          width={SIZE}
+          height={SIZE}
+          viewBox={`0 0 ${SIZE} ${SIZE}`}
           role="img"
           aria-label={`${days} of 180 absence days used. Status: ${status}.`}
         >
+          <defs>
+            <linearGradient id={`ringGrad-${status}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={gradient.start} />
+              <stop offset="100%" stopColor={gradient.end} />
+            </linearGradient>
+          </defs>
           {/* Track */}
           <circle
-            cx="90"
-            cy="90"
+            cx={CENTER}
+            cy={CENTER}
             r={RADIUS}
             fill="none"
-            stroke="#191C1D"
-            strokeOpacity="0.08"
+            stroke="#F3F4F5"
             strokeWidth={STROKE}
           />
           {/* Progress */}
           <circle
-            cx="90"
-            cy="90"
+            cx={CENTER}
+            cy={CENTER}
             r={RADIUS}
             fill="none"
-            stroke={strokeColour}
+            stroke={`url(#ringGrad-${status})`}
             strokeWidth={STROKE}
             strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={dashOffset}
-            style={{
-              transition: animated
-                ? 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                : 'none',
-            }}
+            strokeDashoffset={CIRCUMFERENCE}
+            transform={`rotate(-90 ${CENTER} ${CENTER})`}
+            className="transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+            style={{ strokeDashoffset: dashOffset }}
           />
         </svg>
 
-        {/* Centre text — absolute over the SVG */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
+        {/* Centre text */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
           <span
-            className="font-[family-name:var(--font-manrope)] font-extrabold text-4xl leading-none text-[#191C1D]"
+            className="font-[family-name:var(--font-manrope)] font-bold text-[4rem] leading-none tracking-[-0.04em] text-[#191C1D]"
             aria-hidden="true"
           >
             {days}
           </span>
-          <span className="text-xs text-[#3D4A42]">/ 180 days</span>
+          <span className="font-[family-name:var(--font-inter)] text-sm font-medium text-[#3D4A42] mt-1">
+            / 180 days
+          </span>
         </div>
       </div>
 
-      {/* Status badge */}
-      <div
-        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${STATUS_BG[status]}`}
-        aria-hidden="true"
-      >
-        <span
-          className="w-1.5 h-1.5 rounded-full"
-          style={{ backgroundColor: strokeColour }}
+      <div className="flex flex-col items-center gap-3 mt-2">
+        {/* Status badge */}
+        <div
+          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${STATUS_CHIPS[status]}`}
           aria-hidden="true"
-        />
-        {status}
-      </div>
+        >
+          {status}
+        </div>
 
-      <p className="text-sm text-[#3D4A42]">
-        <span className="font-semibold text-[#191C1D]">{remaining} days</span>{' '}
-        remaining in current window
-      </p>
+        <p className="text-[15px] font-[family-name:var(--font-inter)] text-[#3D4A42]">
+          <span className="font-semibold text-[#191C1D]">{remaining} days</span> remaining in current window
+        </p>
+      </div>
     </div>
   )
 }
