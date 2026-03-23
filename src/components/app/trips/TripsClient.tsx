@@ -54,6 +54,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [showPaywall, setShowPaywall] = useState(false)
+  const [optimisticDeleteId, setOptimisticDeleteId] = useState<string | null>(null)
 
   const selectedTrip = trips.find((t) => t.id === selectedId) ?? null
 
@@ -96,9 +97,15 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
     }
     track('trip_deleted')
     setDeleteTarget(null)
+    setOptimisticDeleteId(id)
     if (selectedId === id) setSelectedId(null)
-    router.refresh()
-    setDeleting(false)
+    
+    // Allow exit animation to play before reflow
+    setTimeout(() => {
+      router.refresh()
+      setDeleting(false)
+      setOptimisticDeleteId(null)
+    }, 300)
   }
 
   // Side panel rolling window contribution: rolling window as of departure date
@@ -178,6 +185,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                 const status = absenceDays !== null ? getRiskStatus(absenceDays) : null
                 const cfg = status ? RISK_CONFIG[status] : null
                 const isSelected = selectedId === trip.id
+                const isOptimisticDeleted = optimisticDeleteId === trip.id
                 const isCrownDep = isCrownDependency(trip.destination)
 
                 return (
@@ -185,9 +193,14 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                     key={trip.id}
                     type="button"
                     onClick={() => setSelectedId(isSelected ? null : trip.id)}
-                    className={`w-full text-left px-5 py-4 flex items-center justify-between gap-4 transition-colors cursor-pointer ${
+                    className={`w-full text-left px-5 py-4 flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer ${
                       i < trips.length - 1 ? 'border-b border-[#191C1D]/5' : ''
-                    } ${isSelected ? 'bg-[#006948]/5' : 'hover:bg-[#F8F9FA]'}`}
+                    } ${isSelected ? 'bg-[#006948]/5' : 'hover:bg-[#F8F9FA]'} ${
+                      isOptimisticDeleted 
+                        ? 'opacity-0 translate-x-[10%]' 
+                        : 'animate-in fade-in slide-in-from-bottom-2 fill-mode-both'
+                    }`}
+                    style={!isOptimisticDeleted ? { animationDelay: `${i * 40}ms` } : undefined}
                   >
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-[#191C1D] truncate">{trip.destination}</p>

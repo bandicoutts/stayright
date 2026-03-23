@@ -41,10 +41,44 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @layer base {
-  :focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
+  /* Smooth input focus glow */
+  input, select, textarea {
+    @apply transition-all duration-300 ease-out;
   }
+  input:focus, select:focus, textarea:focus {
+    @apply outline-none border-[var(--color-primary)] border-opacity-50 blur-0;
+    box-shadow: 0 0 0 3px rgba(0, 105, 72, 0.15);
+  }
+
+  /* Global primary button lifts */
+  button[class*="px-"]:not([class*="opacity-50"]), a[class*="px-"][class*="rounded"] {
+    @apply transition-all duration-200 ease-out;
+  }
+  button[class*="px-"]:not([class*="opacity-50"]):hover, a[class*="px-"][class*="rounded"]:hover {
+    transform: translateY(-1px);
+  }
+  button[class*="px-"]:not([class*="opacity-50"]):active, a[class*="px-"][class*="rounded"]:active {
+    transform: scale(0.98) translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-drawer-mobile {
+    animation: drawerMobile 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.05) forwards;
+  }
+  .animate-drawer-desktop {
+    animation: drawerDesktop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.05) forwards;
+  }
+}
+
+@keyframes drawerMobile {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes drawerDesktop {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -55,5 +89,6 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transform: none !important;
   }
 }

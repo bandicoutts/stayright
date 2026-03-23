@@ -170,6 +170,7 @@ export function TripDrawer({
           fixed z-50 bg-white shadow-2xl outline-none overflow-y-auto
           bottom-0 left-0 right-0 rounded-t-2xl max-h-[92dvh]
           md:top-0 md:left-auto md:w-[480px] md:rounded-none md:rounded-l-2xl md:max-h-none
+          animate-drawer-mobile md:animate-drawer-desktop motion-reduce:animate-none
         `}
         // Mark form as dirty on any input change so the user gets the
         // "Discard changes?" dialog if they try to close
