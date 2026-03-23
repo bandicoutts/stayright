@@ -72,10 +72,12 @@ export default function Features() {
             return (
               <div
                 key={feature.title}
+                role="region"
+                aria-labelledby={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
                 className="bg-white rounded-xl p-6 shadow-[0px_2px_12px_rgba(25,28,29,0.04)] flex flex-col gap-3"
               >
                 <Icon className="w-6 h-6 text-[#006948]" strokeWidth={1.5} />
-                <h3 className="font-[family-name:var(--font-manrope)] font-bold text-[1rem] text-[#191C1D] leading-snug">
+                <h3 id={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`} className="font-[family-name:var(--font-manrope)] font-bold text-[1rem] text-[#191C1D] leading-snug">
                   {feature.title}
                 </h3>
                 <p className="font-[family-name:var(--font-inter)] text-sm text-[#3D4A42] leading-relaxed">

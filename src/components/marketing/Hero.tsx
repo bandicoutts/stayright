@@ -22,7 +22,7 @@ function QuotaRingMockup() {
       {/* Ring */}
       <div className="flex flex-col items-center gap-3 mb-5">
         <div className="relative">
-          <svg width="140" height="140" viewBox="0 0 140 140">
+          <svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label="Quota ring mockup displaying 42 out of 180 days used.">
             {/* Track */}
             <circle
               cx="70"
@@ -65,7 +65,7 @@ function QuotaRingMockup() {
       <div className="space-y-2 border-t border-[#F3F4F5] pt-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-[#191C1D] font-[family-name:var(--font-inter)]">
-            🇵🇹 Lisbon, Portugal
+            <span role="img" aria-label="Portugal flag">🇵🇹</span> Lisbon, Portugal
           </span>
           <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
             7 days
@@ -73,7 +73,7 @@ function QuotaRingMockup() {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-[#191C1D] font-[family-name:var(--font-inter)]">
-            🇺🇸 New York, USA
+            <span role="img" aria-label="USA flag">🇺🇸</span> New York, USA
           </span>
           <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
             12 days

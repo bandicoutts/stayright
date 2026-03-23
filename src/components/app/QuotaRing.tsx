@@ -48,7 +48,8 @@ export function QuotaRing({ days, status }: Props) {
         <svg
           viewBox="0 0 180 180"
           className="w-full h-full -rotate-90"
-          aria-hidden="true"
+          role="img"
+          aria-label={`${days} of 180 absence days used. Status: ${status}.`}
         >
           {/* Track */}
           <circle
@@ -83,7 +84,7 @@ export function QuotaRing({ days, status }: Props) {
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
           <span
             className="font-[family-name:var(--font-manrope)] font-extrabold text-4xl leading-none text-[#191C1D]"
-            aria-label={`${days} days used`}
+            aria-hidden="true"
           >
             {days}
           </span>
@@ -94,8 +95,7 @@ export function QuotaRing({ days, status }: Props) {
       {/* Status badge */}
       <div
         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${STATUS_BG[status]}`}
-        role="status"
-        aria-label={`Compliance status: ${status}`}
+        aria-hidden="true"
       >
         <span
           className="w-1.5 h-1.5 rounded-full"

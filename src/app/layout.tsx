@@ -41,13 +41,19 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-GB"
       className={`${manrope.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
         <meta name="theme-color" content="#006948" />
       </head>
       <body className="min-h-full">
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-white focus:text-[#006948] focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[#006948]"
+        >
+          Skip to main content
+        </a>
         <PostHogProvider>{children}</PostHogProvider>
         <CookieBanner />
         <ServiceWorkerRegistration />

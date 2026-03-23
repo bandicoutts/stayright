@@ -183,7 +183,7 @@ export default async function DashboardPage() {
                   {qualifying.percentage}%
                 </span>
               </div>
-              <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100}>
                 <div
                   className="h-full bg-[#006948] rounded-full transition-all duration-700"
                   style={{ width: `${qualifying.percentage}%` }}

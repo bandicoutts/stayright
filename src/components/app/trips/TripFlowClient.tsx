@@ -82,7 +82,7 @@ function CalcPanel({
   const barPct = Math.min(100, (result.days / 180) * 100)
 
   return (
-    <div className="mt-4 p-4 bg-[#F8F9FA] rounded-xl space-y-3">
+    <div aria-live="polite" className="mt-4 p-4 bg-[#F8F9FA] rounded-xl space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm text-[#3D4A42]">This trip</span>
         <span className="text-sm font-semibold text-[#191C1D]">{tripDays} {tripDays === 1 ? 'day' : 'days'}</span>
@@ -98,7 +98,7 @@ function CalcPanel({
           <span>{result.days} / 180 days used</span>
           <span>Rolling window to {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</span>
         </div>
-        <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden" role="progressbar" aria-valuenow={result.days} aria-valuemin={0} aria-valuemax={180}>
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               result.status === 'SAFE' ? 'bg-[#006948]' :
@@ -118,7 +118,7 @@ function CalcPanel({
           <span className="text-xs text-[#3D4A42]">Safe to travel</span>
         )}
         {result.status === 'WARNING' && (
-          <span className="text-xs text-[#D97706]">Approaching the limit — plan carefully</span>
+          <span className="text-xs text-[#92400E]">Approaching the limit — plan carefully</span>
         )}
         {result.status === 'DANGER' && (
           <span className="text-xs text-[#BA1A1A]">Very close to the 180-day limit</span>
@@ -483,7 +483,7 @@ export function TripFlowClient({
             {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
               <div className="mt-4 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
                 <span className="shrink-0 text-base">⚠️</span>
-                <p className="text-sm text-[#D97706]">
+                <p className="text-sm text-[#92400E]">
                   These dates overlap with an existing trip. Adjust the dates or check
                   your trip history before continuing.
                 </p>
@@ -540,7 +540,7 @@ export function TripFlowClient({
                   </span>
                 )}
                 {!returnDateKnown && (
-                  <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#D97706]/10 text-[#D97706]">
+                  <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#D97706]/10 text-[#92400E]">
                     Currently abroad
                   </span>
                 )}
@@ -568,7 +568,7 @@ export function TripFlowClient({
                   <span className="text-[#3D4A42]">Days used (after this trip)</span>
                   <span className="font-semibold text-[#191C1D]">{calcResult.result.days} / 180</span>
                 </div>
-                <div className="w-full h-1.5 bg-[#191C1D]/8 rounded-full overflow-hidden mt-2">
+                <div className="w-full h-1.5 bg-[#191C1D]/8 rounded-full overflow-hidden mt-2" role="progressbar" aria-valuenow={calcResult.result.days} aria-valuemin={0} aria-valuemax={180}>
                   <div
                     className={`h-full rounded-full ${
                       calcResult.result.status === 'SAFE' ? 'bg-[#006948]' :

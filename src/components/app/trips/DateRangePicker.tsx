@@ -367,6 +367,8 @@ export function DateRangePicker({
             type="button"
             onClick={handleTodayShortcut}
             className="text-sm text-[#006948] font-medium hover:underline cursor-pointer"
+            role="switch"
+            aria-checked="false"
           >
             I'm leaving today
           </button>

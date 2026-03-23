@@ -91,7 +91,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
         </p>
 
         {error && (
-          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+          <div role="alert" aria-live="assertive" className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
             {error}
           </div>
         )}
@@ -110,6 +110,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
               name="first_name"
               type="text"
               required
+              aria-required="true"
               autoComplete="given-name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
@@ -133,11 +134,13 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
               onChange={(e) => setVisaRoute(e.target.value)}
               className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
             >
-              {VISA_ROUTES.map((route) => (
-                <option key={route} value={route}>
-                  {route}
-                </option>
-              ))}
+              <optgroup label="Available Routes">
+                {VISA_ROUTES.map((route) => (
+                  <option key={route} value={route}>
+                    {route}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
 
@@ -154,6 +157,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
               name="visa_start_date"
               type="date"
               required
+              aria-required="true"
               max={today}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}

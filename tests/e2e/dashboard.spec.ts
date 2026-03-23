@@ -6,6 +6,7 @@
  */
 
 import { test, expect } from '@playwright/test'
+import AxeBuilder from '@axe-core/playwright'
 
 test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,6 +17,13 @@ test.describe('Dashboard', () => {
   test('dashboard loads and shows quota ring', async ({ page }) => {
     // Quota ring: the "X / 180 days" text is the most reliable identifier
     await expect(page.getByText(/\/ 180 days/i).first()).toBeVisible({ timeout: 10_000 })
+  })
+
+  test('should not have any automatically detectable accessibility issues', async ({ page }) => {
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+      .analyze()
+    expect(accessibilityScanResults.violations).toEqual([])
   })
 
   test('quota ring shows correct days count — a number between 0 and 999', async ({ page }) => {

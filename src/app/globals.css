@@ -13,7 +13,7 @@
   --color-surface: #FFFFFF;
   --color-surface-low: #F3F4F5;
   --color-text-primary: #191C1D;
-  --color-text-secondary: #3D4A42;
+  --color-text-secondary: #2B352F;
   --color-status-amber: #D97706;
   --color-status-red: #BA1A1A;
 
@@ -30,4 +30,22 @@ body {
   background: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

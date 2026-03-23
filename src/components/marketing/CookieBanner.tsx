@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie_consent');
@@ -12,6 +13,33 @@ export default function CookieBanner() {
       setVisible(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    const focusables = dialogRef.current?.querySelectorAll(
+      'a[href], button:not([disabled])'
+    ) as NodeListOf<HTMLElement>;
+    
+    if (!focusables?.length) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    first.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [visible]);
 
   function accept() {
     localStorage.setItem('cookie_consent', 'accepted');
@@ -30,6 +58,7 @@ export default function CookieBanner() {
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-label="Cookie consent"
       className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0px_-4px_24px_rgba(25,28,29,0.08)] px-6 py-4"
