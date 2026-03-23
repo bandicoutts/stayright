@@ -3,6 +3,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
+import { validateTripFields } from '@/lib/tripValidation'
+import { isPlanPro, FREE_TRIP_LIMIT } from '@/lib/subscriptionUtils'
 
 // ─── Skip entire onboarding flow ────────────────────────────────────────────
 
@@ -63,11 +65,34 @@ export async function saveTripAction(data: {
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  // Server-side overlap guard (client already warns, but defence in depth)
+  // M-1, M-2: validate field lengths and date formats server-side
+  const validationError = validateTripFields({
+    destination: data.destination,
+    departure_date: data.departure_date,
+    return_date: data.return_date,
+  })
+  if (validationError) return { error: validationError }
+
+  // Fetch existing trips once — used for quota check and overlap check
   const { data: existingTrips } = await supabase
     .from('trips')
     .select('id, destination, departure_date, return_date')
     .eq('user_id', user.id)
+
+  // C-2: Enforce Free tier quota during onboarding — same gate as main addTripAction
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('plan, status')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!isPlanPro(subscription?.plan, subscription?.status)) {
+    if ((existingTrips ?? []).length >= FREE_TRIP_LIMIT) {
+      return {
+        error: `Free plan is limited to ${FREE_TRIP_LIMIT} trips. Upgrade to Pro to add unlimited trips.`,
+      }
+    }
+  }
 
   if (
     hasOverlappingTrip(

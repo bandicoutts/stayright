@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
 import { DashboardDrawerWrapper } from '@/components/app/dashboard/DashboardDrawerWrapper'
@@ -75,13 +76,14 @@ export default async function DashboardPage() {
   const firstName = profile.first_name || user.email?.split('@')[0] || 'there'
 
   // Needed for upgrade_completed analytics event + drawer paywall check
+  // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('plan')
+    .select('plan, status')
     .eq('user_id', user.id)
     .single()
 
-  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+  const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
   // Derived values for PostHog user properties
   const ilrEligibilityDate = visaStartDate

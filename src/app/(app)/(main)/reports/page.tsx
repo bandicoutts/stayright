@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ReportsClient } from '@/components/app/reports/ReportsClient'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Reports — StayRight' }
@@ -26,13 +27,14 @@ export default async function ReportsPage() {
     .eq('user_id', user.id)
     .order('departure_date', { ascending: true })
 
+  // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('plan')
+    .select('plan, status')
     .eq('user_id', user.id)
     .single()
 
-  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+  const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
   return (
     <ReportsClient

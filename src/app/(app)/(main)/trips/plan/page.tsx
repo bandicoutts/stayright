@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { TripFlowClient } from '@/components/app/trips/TripFlowClient'
 import { PaywallModal } from '@/components/app/trips/PaywallModal'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
 import type { Metadata } from 'next'
 
@@ -35,13 +36,14 @@ export default async function TripPlanPage() {
     return_date: t.return_date,
   }))
 
+  // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('plan')
+    .select('plan, status')
     .eq('user_id', user.id)
     .single()
 
-  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+  const isPro = isPlanPro(subscription?.plan, subscription?.status)
   const tripCount = trips.length
 
   // Free users at limit see the paywall inline (no form)

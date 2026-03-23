@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { hasOverlappingTrip } from '@/lib/calculations/absenceEngine'
+import { validateTripFields } from '@/lib/tripValidation'
+import { isPlanPro, FREE_TRIP_LIMIT } from '@/lib/subscriptionUtils'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -37,12 +39,37 @@ export async function addTripAction(
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  // Overlap check — fetch existing trips and verify no date range collision
+  // M-1, M-2: validate field lengths and date formats server-side
+  const validationError = validateTripFields({
+    destination: data.destination,
+    departure_date: data.departure_date,
+    return_date: data.return_date ?? null,
+    notes: data.notes,
+  })
+  if (validationError) return { error: validationError }
+
+  // Fetch existing trips once — used for both quota check and overlap check
   const { data: existingTrips } = await supabase
     .from('trips')
     .select('id, destination, departure_date, return_date')
     .eq('user_id', user.id)
 
+  // C-1: Enforce Free tier quota server-side — UI paywall is UX only
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('plan, status')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!isPlanPro(subscription?.plan, subscription?.status)) {
+    if ((existingTrips ?? []).length >= FREE_TRIP_LIMIT) {
+      return {
+        error: `Free plan is limited to ${FREE_TRIP_LIMIT} trips. Upgrade to Pro to add unlimited trips.`,
+      }
+    }
+  }
+
+  // Overlap check
   if (
     hasOverlappingTrip(
       (existingTrips ?? []).map((t) => ({
@@ -62,7 +89,7 @@ export async function addTripAction(
     .from('trips')
     .insert({
       user_id: user.id,
-      destination: data.destination,
+      destination: data.destination.trim(),
       departure_date: data.departure_date,
       return_date: data.return_date ?? null,
       notes: data.notes ?? null,
@@ -90,6 +117,15 @@ export async function updateTripAction(
   } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
+  // M-1, M-2: validate field lengths and date formats server-side
+  const validationError = validateTripFields({
+    destination: data.destination,
+    departure_date: data.departure_date,
+    return_date: data.return_date ?? null,
+    notes: data.notes,
+  })
+  if (validationError) return { error: validationError }
+
   // Overlap check — exclude the trip being edited (id) from the comparison
   const { data: existingTrips } = await supabase
     .from('trips')
@@ -115,7 +151,7 @@ export async function updateTripAction(
   const { data: updatedTrip, error } = await supabase
     .from('trips')
     .update({
-      destination: data.destination,
+      destination: data.destination.trim(),
       departure_date: data.departure_date,
       return_date: data.return_date ?? null,
       notes: data.notes ?? null,

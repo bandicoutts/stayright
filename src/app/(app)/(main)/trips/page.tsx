@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { TripsClient } from '@/components/app/trips/TripsClient'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Trips — StayRight' }
@@ -37,14 +38,14 @@ export default async function TripsPage() {
     notes: t.notes,
   }))
 
-  // Subscription plan (default to free if no row)
+  // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('plan')
+    .select('plan, status')
     .eq('user_id', user.id)
     .single()
 
-  const isPro = subscription?.plan !== 'free' && subscription?.plan != null
+  const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
   return (
     <Suspense fallback={null}>

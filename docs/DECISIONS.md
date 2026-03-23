@@ -696,6 +696,74 @@ Five new env vars required: `RESEND_API_KEY`, `CRON_SECRET`. Domain `stayright.c
 
 ---
 
+### [DECISION-040] Security: server-side paywall enforcement, isPlanPro utility, trip input validation
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** Grey-hat pentest (2026-03-22) + Claude (agent)
+
+**Decision:**
+Following a penetration test that identified 2 Critical, 1 High, and 2 Medium findings, the following security fixes were implemented as a single coherent change:
+
+**C-1 / C-2 — Free tier quota enforced in every trip write Server Action:**
+`addTripAction` (main), `saveTripAction` (onboarding) now fetch the user's subscription plan and status and count existing trips before performing any DB insert. If the user is Free-tier (or past_due/unpaid) and already has ≥ 3 trips, the action returns `{ error: '...' }` without touching the database. The `PaywallModal` in the UI remains as UX only. The invariant is: no trip insert can bypass the quota gate, regardless of how the Server Action is called.
+
+**H-1 — Past_due/unpaid subscriptions lose Pro access:**
+A new shared utility `isPlanPro(plan, status)` in `src/lib/subscriptionUtils.ts` is the single source of truth for Pro access checks. It returns `false` when `status` is `past_due` or `unpaid`. All seven locations that previously computed `isPro` from `plan` alone were updated to use `isPlanPro()`. These are: `trips/page.tsx`, `reports/page.tsx`, `dashboard/page.tsx`, `trips/plan/page.tsx`, `trips/log/page.tsx`, `trips/[id]/edit/page.tsx`, and `api/cron/daily/route.ts`.
+
+**M-1 / M-2 — Server-side input validation on all trip write actions:**
+A new utility `validateTripFields()` in `src/lib/tripValidation.ts` validates destination length (≤ 200 chars), notes length (≤ 1000 chars), and date format (strict YYYY-MM-DD regex — rejects Postgres fuzzy formats like `'epoch'`, `'tomorrow'`, `'Jan 1 2025'`). Called at the top of `addTripAction`, `updateTripAction`, and `saveTripAction` (onboarding) before any other logic.
+
+**M-3 — Webhook replay (documented, deferred):**
+`handlePaymentFailed` uses a plain `.update()` which is not idempotent under replay. Fixing this requires a `processed_webhook_events` table. Logged as a known gap; low exploitability (requires Stripe dashboard access or captured webhook secret). Deferred to v1.1.
+
+**L-1 — Rate limiting (documented, deferred):**
+No rate limiting middleware exists. PRD §4o specifies limits but none are implemented. Deferred to v1.1. Supabase Auth has its own rate limits on auth endpoints; the main risk is the Stripe checkout endpoint being hammered. Not exploitable for data access.
+
+**Regression tests:**
+`src/__tests__/subscriptionUtils.test.ts` (12 tests) — covers `isPlanPro()` for all plan/status combinations including C-1/C-2/H-1 scenarios.
+`src/__tests__/tripValidation.test.ts` (18 tests) — covers `validateTripFields()` for all M-1/M-2 scenarios including Postgres fuzzy dates.
+Test runner: vitest (`npm test`). Config: `vitest.config.mts`.
+
+**Reasoning:**
+The root cause of C-1/C-2 was the classic vibe-coding split: UI guards one thing, the Server Action guards another, and the two don't cover the same surface. The fix ensures the Server Action is the authoritative boundary. The root cause of H-1 was `isPro` being computed from `plan` alone; adding `status` to the check closes the payment-failure window. The `isPlanPro()` utility prevents future divergence by making the check a single importable function rather than an inline expression that can be written differently in each file.
+
+**Alternatives considered:**
+- DB-level trigger to enforce quota — would work but harder to surface as user-friendly error messages; also doesn't handle the subscription status check for the paywall.
+- Middleware-level plan check — the paywall is not a route-level gate (Pro users and Free users share the same routes); it's a feature-level gate that must be evaluated per-operation.
+
+**Consequences:**
+1. `src/lib/subscriptionUtils.ts` and `src/lib/tripValidation.ts` are the mandatory entry points for all Pro access checks and trip field validation respectively. Any new Server Action that writes trips or gates features MUST import and use these.
+2. All subscription DB selects must include `status` (not just `plan`) everywhere `isPlanPro()` is called.
+3. M-3 (webhook replay) and L-1 (rate limiting) are logged as known gaps and must be addressed in v1.1.
+
+**Related:** PRD Section 4j, 4o; `src/lib/subscriptionUtils.ts`; `src/lib/tripValidation.ts`; `src/__tests__/subscriptionUtils.test.ts`; `src/__tests__/tripValidation.test.ts`
+
+---
+
+### [DECISION-041] Known security gaps deferred to v1.1: webhook idempotency (M-3) and rate limiting (L-1)
+**Date:** 2026-03-22
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder) + Claude (agent)
+
+**Decision:**
+Two findings from the 2026-03-22 pentest are logged as known gaps and deferred to v1.1:
+
+**M-3 — Webhook replay idempotency:**
+`handlePaymentFailed` in `src/app/api/stripe/webhook/route.ts` performs an unconditional `.update({ status: 'past_due' })`. If the same `invoice.payment_failed` event is replayed after the user has resolved payment and the status has recovered to `active`, it would re-mark the subscription `past_due`. Exploitability is low — requires Stripe dashboard access or a captured webhook secret. Fix requires a `processed_webhook_events` table (`event_id text primary key, processed_at timestamptz`) and an idempotency check before each handler runs.
+
+**L-1 — Rate limiting:**
+No rate limiting exists on any endpoint. PRD §4o specifies 5/15min per IP on auth, 60/min per user on calculations, 10/hr per user on PDF generation. Supabase Auth has its own auth rate limits. The main gap is the Stripe checkout endpoint and scripted trip creation. Fix requires `@upstash/ratelimit` or Vercel edge rate limiting.
+
+**Reasoning:**
+Both are low-to-medium exploitability with no user data at risk. Both require meaningful infrastructure additions that are out of scope for the current sprint. Documenting them here ensures they are not forgotten and prevents future contributors from treating the current state as intentional.
+
+**Consequences:**
+These gaps remain open until v1.1. They do not block the current launch.
+
+**Related:** DECISION-040; PRD Section 4j, 4o; `src/app/api/stripe/webhook/route.ts`
+
+---
+
 ## Template for new entries
 
 ### [DECISION-030] PWA: manifest + offline service worker; push notifications deferred to v2
@@ -1022,3 +1090,4 @@ Copy this template when adding a new decision:
 | 2026-03-22 | 2.7 | Added DECISION-033 — split name into first_name + last_name; defer last name to settings and PDF generation |
 | 2026-03-22 | 2.8 | Added DECISION-034 — shared RISK_CONFIG and date formatting utilities extracted from component files |
 | 2026-03-22 | 2.9 | Security audit: DECISION-035 HTTP security headers; DECISION-036 auth callback open-redirect guard; DECISION-037 RLS DELETE policies; DECISION-038 Stripe GDPR erasure on account deletion; DECISION-039 password reset session invalidation deferred to v1.1 |
+| 2026-03-22 | 3.0 | Pentest fixes: DECISION-040 — server-side paywall quota (C-1/C-2), isPlanPro utility (H-1), trip input validation (M-1/M-2); DECISION-041 — known gaps M-3/L-1 deferred to v1.1 |

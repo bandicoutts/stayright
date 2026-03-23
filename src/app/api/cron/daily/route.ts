@@ -9,6 +9,7 @@ import {
 } from '@/lib/email/templates'
 import { getCurrentRollingWindow, getQualifyingPeriod } from '@/lib/calculations/absenceEngine'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 
 // ---------------------------------------------------------------------------
 // Vercel Cron: runs daily at 08:00 UTC
@@ -36,14 +37,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch profiles' }, { status: 500 })
   }
 
-  // Fetch only Pro subscriptions
+  // Fetch only active Pro subscriptions — past_due/unpaid users lose Pro features (H-1)
   const { data: subscriptions } = await supabase
     .from('subscriptions')
     .select('user_id, plan, status')
     .in('plan', ['pro_monthly', 'pro_annual', 'pro_lifetime'])
-    .in('status', ['active', 'past_due'])
 
-  const proUserIds = new Set((subscriptions ?? []).map((s) => s.user_id))
+  const proUserIds = new Set(
+    (subscriptions ?? [])
+      .filter((s) => isPlanPro(s.plan, s.status))
+      .map((s) => s.user_id)
+  )
 
   // Fetch all users' emails via auth.admin — paginate to handle >1000 users
   const allAuthUsers: { id: string; email?: string }[] = []
