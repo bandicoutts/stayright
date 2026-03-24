@@ -81,7 +81,13 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
+      - name: Create Test User
+        env:
+          TEST_USER_EMAIL: test@example.com
+          TEST_USER_PASSWORD: password123
+        run: npm run test:create-user
+
+      - name: Run Playwright Tests
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ steps.supabase_keys.outputs.url }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ steps.supabase_keys.outputs.anon_key }}
