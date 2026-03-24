@@ -29,7 +29,7 @@ test.describe('Onboarding', () => {
 
   test('visa start date is required — form shows validation error if omitted', async ({ page }) => {
     await page.goto('/onboarding/visa')
-    const continueBtn = page.getByRole('button', { name: /continue|next|save/i })
+    const continueBtn = page.getByRole('button', { name: /^(continue|next|save)$/i })
     if (await continueBtn.isVisible()) {
       await continueBtn.click()
 

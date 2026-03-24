@@ -50,14 +50,17 @@ test.describe('Dashboard', () => {
       .or(page.getByRole('button', { name: /plan a trip/i }))
     await expect(planBtn).toBeVisible()
     await planBtn.click()
-    // Opens either /trips/plan route or a drawer (dashboard?drawer=plan)
-    await expect(page).toHaveURL(/\/trips\/plan|\/trips|drawer=plan/, { timeout: 5_000 })
+    // Should open the modal (URL contains ?modal=plan)
+    await expect(page).toHaveURL(/modal=plan/, { timeout: 5_000 })
   })
 
   test('Log a Past Trip button is visible', async ({ page }) => {
     const logBtn = page.getByRole('link', { name: /log a past trip/i })
       .or(page.getByRole('button', { name: /log a past trip/i }))
     await expect(logBtn).toBeVisible()
+    await logBtn.click()
+    // Should open the modal (URL contains ?modal=log)
+    await expect(page).toHaveURL(/modal=log/, { timeout: 5_000 })
   })
 
   test('compliance disclaimer is always visible', async ({ page }) => {

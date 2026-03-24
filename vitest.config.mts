@@ -40,7 +40,7 @@ export default defineConfig({
         // Threshold covers the security-critical trips server actions (RLS, quota enforcement).
         // settings/actions.ts and onboarding/actions.ts are not yet covered by unit tests.
         // branches: 75 (not 80) because null-coalescing operators have one un-exercised path.
-        'src/app/(app)/(main)/trips/actions.ts': {
+        'src/app/(app)/(main)/dashboard/actions.ts': {
           branches: 75,
           functions: 80,
           lines: 80,

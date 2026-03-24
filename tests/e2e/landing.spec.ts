@@ -50,7 +50,7 @@ test.describe('Landing page', () => {
 
   test('Login nav link is present and points to /login', async ({ page }) => {
     // The nav shows "Login" (not "Log in")
-    const loginLink = page.getByRole('link', { name: /^login$/i })
+    const loginLink = page.getByRole('link', { name: /^sign in$/i })
       .or(page.getByRole('link', { name: /log in/i }))
     await expect(loginLink.first()).toBeVisible()
     await expect(loginLink.first()).toHaveAttribute('href', /\/login/)

@@ -35,21 +35,6 @@ jobs:
     name: Playwright E2E Tests
     runs-on: ubuntu-latest
     needs: unit-tests
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-      STRIPE_PRICE_MONTHLY: ${{ secrets.STRIPE_PRICE_MONTHLY }}
-      STRIPE_PRICE_ANNUAL: ${{ secrets.STRIPE_PRICE_ANNUAL }}
-      STRIPE_PRICE_LIFETIME: ${{ secrets.STRIPE_PRICE_LIFETIME }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      CRON_SECRET: ${{ secrets.CRON_SECRET }}
-      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
-      TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -60,10 +45,35 @@ jobs:
 
       - run: npm ci
 
+      - name: Start local Supabase
+        run: npx supabase start
+
+      - name: Get local Supabase keys
+        id: supabase_keys
+        run: |
+          STATUS=$(npx supabase status -o json)
+          echo "url=$(echo $STATUS | jq -r '.api_url')" >> $GITHUB_OUTPUT
+          echo "anon_key=$(echo $STATUS | jq -r '.anon_key')" >> $GITHUB_OUTPUT
+          echo "service_role_key=$(echo $STATUS | jq -r '.service_role_key')" >> $GITHUB_OUTPUT
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ steps.supabase_keys.outputs.url }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ steps.supabase_keys.outputs.anon_key }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ steps.supabase_keys.outputs.service_role_key }}
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'sk_test_ci_dummy' }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'whsec_ci_dummy' }}
+          STRIPE_PRICE_MONTHLY: ${{ secrets.STRIPE_PRICE_MONTHLY || 'price_ci_monthly' }}
+          STRIPE_PRICE_ANNUAL: ${{ secrets.STRIPE_PRICE_ANNUAL || 'price_ci_annual' }}
+          STRIPE_PRICE_LIFETIME: ${{ secrets.STRIPE_PRICE_LIFETIME || 'price_ci_lifetime' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 're_ci_dummy' }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET || 'cron_ci_dummy' }}
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL || 'testuser@example.com' }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD || 'TestPassword123!' }}
         run: npx playwright test
 
       - name: Upload Playwright report

@@ -8,6 +8,10 @@
  */
 
 import { test, expect } from '@playwright/test'
+import dotenv from 'dotenv'
+import path from 'path'
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') })
 
 // Auth tests don't use stored session — fresh context for each
 test.use({ storageState: { cookies: [], origins: [] } })
@@ -23,9 +27,9 @@ async function suppressCookieBanner(page: import('@playwright/test').Page) {
 async function fillLoginForm(page: import('@playwright/test').Page) {
   await suppressCookieBanner(page)
   await page.goto('/login')
-  // The form defaults to "Create account" tab — switch to Sign in.
-  // On signup tab the submit reads "Create account", so "Sign in" uniquely targets the tab.
-  await page.getByRole('button', { name: 'Sign in' }).click()
+  // Switch to "Sign in" tab. We use [type="button"] to distinguish the tab switcher 
+  // from the [type="submit"] button which also says "Sign in".
+  await page.locator('button[type="button"]:has-text("Sign in")').click()
   await page.getByLabel(/email address/i).fill(process.env.TEST_USER_EMAIL!)
   await page.getByLabel(/^password$/i).fill(process.env.TEST_USER_PASSWORD!)
 }
@@ -58,10 +62,14 @@ test.describe('Auth flows', () => {
     await expect(page).toHaveURL(/\/login/)
   })
 
-  test('/trips redirects to /login when not authenticated', async ({ page }) => {
+  test('/trips redirects to /dashboard when authenticated', async ({ page }) => {
+    await fillLoginForm(page)
+    await page.locator('button[type="submit"]').click()
+    await page.waitForURL('**/dashboard', { timeout: 15_000 })
+
     await page.goto('/trips')
-    await page.waitForURL(/\/login/, { timeout: 10_000 })
-    await expect(page).toHaveURL(/\/login/)
+    // Should follow legacy redirect to /dashboard
+    await expect(page).toHaveURL(/\/dashboard/)
   })
 
   test('/reports redirects to /login when not authenticated', async ({ page }) => {

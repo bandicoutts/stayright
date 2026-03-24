@@ -43,9 +43,9 @@ test.describe('Paywall', () => {
     }
   })
 
-  test('Free user can access trips page and see 3 trips', async ({ page }) => {
-    await page.goto('/trips')
-    await expect(page).toHaveURL(/\/trips/)
+  test('Free user can access dashboard and see trips', async ({ page }) => {
+    await page.goto('/dashboard')
+    await expect(page).toHaveURL(/\/dashboard/)
     await expect(page.locator('body')).toBeVisible()
   })
 

@@ -7,20 +7,25 @@
  *   TEST_USER_PASSWORD — their password
  */
 import { test as setup, expect } from '@playwright/test'
+import dotenv from 'dotenv'
 import path from 'path'
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') })
 
 const authFile = path.join(__dirname, '.auth/user.json')
 
 setup('authenticate test user', async ({ page }) => {
   await page.goto('/login')
 
-  // The form defaults to "Create account" tab. On signup tab the submit button
-  // reads "Create account", so "Sign in" uniquely targets the tab switcher button.
-  await page.getByRole('button', { name: 'Sign in' }).click()
+  const tabBtn = page.locator('button[type="button"]:has-text("Sign in")')
+  await tabBtn.click()
 
-  await page.getByLabel(/email address/i).fill(process.env.TEST_USER_EMAIL!)
-  await page.getByLabel(/^password$/i).fill(process.env.TEST_USER_PASSWORD!)
-  // Use type="submit" to avoid ambiguity — both tab and submit read "Sign in" on login tab
+  const email = process.env.TEST_USER_EMAIL!
+  const pass = process.env.TEST_USER_PASSWORD!
+  await page.getByLabel(/email address/i).fill(email)
+  await page.getByLabel(/^password$/i).fill(pass)
+
+  // Use type="submit" to avoid ambiguity once we have switched to the Sign in tab
   await page.locator('button[type="submit"]').click()
 
   // Wait for redirect to dashboard (successful auth)
