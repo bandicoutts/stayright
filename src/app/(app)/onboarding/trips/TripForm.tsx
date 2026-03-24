@@ -173,7 +173,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
                     className="text-[#3D4A42] hover:text-[#BA1A1A] transition-colors shrink-0 cursor-pointer"
                     aria-label={`Remove ${trip.destination}`}
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash className="w-4 h-4" />
                   </button>
                 </div>
               ))}
