@@ -57,16 +57,21 @@ jobs:
             if curl -s -f "http://127.0.0.1:54321/auth/v1/health" > /dev/null; then
               echo "Supabase API is UP"
               
-              STATUS_JSON=$(npx supabase status -o json 2>/dev/null)
-              ANON=$(echo "$STATUS_JSON" | jq -r '.anon_key // empty')
-              SERVICE=$(echo "$STATUS_JSON" | jq -r '.service_role_key // empty')
+              # Capture both stdout and stderr; the CLI may mix them
+              STATUS_JSON=$(npx supabase status -o json 2>&1)
+              echo "=== supabase status fields: $(echo "$STATUS_JSON" | jq 'keys // []' 2>/dev/null || echo 'parse failed') ==="
+
+              # Support Supabase CLI v2 (publishable_key/secret_key) and v1 (anon_key/service_role_key)
+              ANON=$(echo "$STATUS_JSON" | jq -r '.publishable_key // .anon_key // empty')
+              SERVICE=$(echo "$STATUS_JSON" | jq -r '.secret_key // .service_role_key // empty')
 
               if [[ -z "$ANON" || -z "$SERVICE" ]]; then
-                echo "❌ Failed to extract Supabase keys. Raw JSON output:"
-                echo "$STATUS_JSON"
+                echo "❌ Failed to extract Supabase keys"
+                echo "Raw output: $STATUS_JSON"
                 npx supabase status
                 exit 1
               fi
+              echo "✓ Keys extracted (anon: ${#ANON} chars, service: ${#SERVICE} chars)"
 
               # CREATE ENV FILE DIRECTLY - This is the most robust way to pass vars to Next.js Client Components in CI
               echo "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> .env.local
