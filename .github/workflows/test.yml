@@ -51,19 +51,23 @@ jobs:
       - name: Get local Supabase status
         id: supabase_keys
         run: |
-          # The local Supabase CLI defaults are highly predictable.
-          # We'll use the CLI to verify they are up, but we'll hardcode the URL to 127.0.0.1
-          # to avoid any localhost IPv6 issues in the browser.
-          
           echo "Waiting for Supabase API to respond..."
           for i in {1..60}; do
             if curl -s -f "http://127.0.0.1:54321/auth/v1/health" > /dev/null; then
               echo "Supabase API is UP"
               
-              # Grab the keys from the CLI just to be sure we have the right ones
               STATUS_JSON=$(npx supabase status -o json)
               ANON=$(echo $STATUS_JSON | jq -r '.anon_key')
               SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key')
+              
+              # CREATE ENV FILE DIRECTLY - This is the most robust way to pass vars to Next.js Client Components in CI
+              echo "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> .env.local
+              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON" >> .env.local
+              echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE" >> .env.local
+              echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+              
+              echo "Generated .env.local for CI:"
+              cat .env.local | sed 's/KEY=.*/KEY=***'/g
               
               echo "url=http://127.0.0.1:54321" >> $GITHUB_OUTPUT
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
