@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Shield } from 'lucide-react'
+import { Shield } from '@phosphor-icons/react'
 import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
 
@@ -18,7 +18,7 @@ export default function OnboardingLayout({ children }: { children: ReactNode }) 
           href="/"
           className="inline-flex items-center gap-2 text-[#191C1D] hover:text-[#006948] transition-colors"
         >
-          <Shield className="w-5 h-5 text-[#006948]" strokeWidth={2} />
+          <Shield className="w-5 h-5 text-[#006948]" weight="regular" />
           <span className="font-[family-name:var(--font-manrope)] font-bold text-base tracking-tight">
             StayRight
           </span>

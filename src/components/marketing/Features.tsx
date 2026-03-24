@@ -1,11 +1,11 @@
 import {
   Calendar,
-  PlaneTakeoff,
+  AirplaneTilt,
   ShieldCheck,
   Calculator,
   Bell,
-  FileDown,
-} from 'lucide-react';
+  FileArrowDown,
+} from '@phosphor-icons/react';
 
 const features = [
   {
@@ -15,7 +15,7 @@ const features = [
       'Visual calendar and running total against the 180-day ILR limit. Never lose track of your window.',
   },
   {
-    icon: PlaneTakeoff,
+    icon: AirplaneTilt,
     title: 'Trip logging',
     description:
       'Log departures and returns in seconds from any device. Precise tracking for every border crossing.',
@@ -33,7 +33,7 @@ const features = [
       "Email reminders before you approach your limit. We watch the clock so you don't have to.",
   },
   {
-    icon: FileDown,
+    icon: FileArrowDown,
     title: 'Export ready',
     description:
       'Generate absence tables formatted for your ILR or SET(O) application. One-click documentation.',
@@ -120,8 +120,8 @@ export default function Features() {
             >
               <Calculator
                 className="w-[18px] h-[18px]"
-                style={{ stroke: '#00A874' }}
-                strokeWidth={1.5}
+                style={{ color: '#00A874' }}
+                weight="light"
               />
             </div>
 
@@ -223,8 +223,8 @@ export default function Features() {
                 >
                   <Icon
                     className="w-[18px] h-[18px]"
-                    style={{ stroke: '#006948' }}
-                    strokeWidth={1.5}
+                    style={{ color: '#006948' }}
+                    weight="light"
                   />
                 </div>
                 <h3

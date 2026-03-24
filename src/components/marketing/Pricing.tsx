@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Check, X } from 'lucide-react';
+import { Check, X } from '@phosphor-icons/react';
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false);
@@ -150,8 +150,8 @@ export default function Pricing() {
               ].map(({ text, included }) => (
                 <li key={text} className="flex items-start gap-[10px]" style={{ opacity: included ? 1 : 0.4 }}>
                   {included
-                    ? <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: 'var(--color-green)' }} strokeWidth={2} />
-                    : <X className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: 'var(--color-text-primary)' }} strokeWidth={2} />
+                    ? <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-green)' }} weight="bold" />
+                    : <X className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-text-primary)' }} weight="bold" />
                   }
                   <span
                     className="font-[family-name:var(--font-inter)] leading-[1.4]"
@@ -240,7 +240,7 @@ export default function Pricing() {
                 'Audit-ready PDF exports',
               ].map((text) => (
                 <li key={text} className="flex items-start gap-[10px]">
-                <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: 'white' }} strokeWidth={2} />
+                <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'white' }} weight="bold" />
                   <span
                     className="font-[family-name:var(--font-inter)] leading-[1.4]"
                     style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.90)' }}

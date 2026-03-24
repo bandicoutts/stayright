@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Twitter, Linkedin } from 'lucide-react';
+import { TwitterLogo, LinkedinLogo } from '@phosphor-icons/react';
 
 const columns = [
   {
@@ -116,7 +116,7 @@ export default function Footer() {
               className="transition-colors duration-150"
               style={{ color: 'var(--color-text-faint)' }}
             >
-              <Twitter className="w-4 h-4" />
+              <TwitterLogo className="w-4 h-4" />
             </a>
             <a
               href="https://linkedin.com"
@@ -126,7 +126,7 @@ export default function Footer() {
               className="transition-colors duration-150"
               style={{ color: 'var(--color-text-faint)' }}
             >
-              <Linkedin className="w-4 h-4" />
+              <LinkedinLogo className="w-4 h-4" />
             </a>
           </div>
         </div>

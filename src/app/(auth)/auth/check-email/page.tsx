@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Mail } from 'lucide-react'
+import { Envelope } from '@phosphor-icons/react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export default function CheckEmailPage() {
     <div className="w-full max-w-md">
       <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8 text-center">
         <div className="w-14 h-14 bg-[#006948]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <Mail className="w-7 h-7 text-[#006948]" />
+          <Envelope className="w-7 h-7 text-[#006948]" />
         </div>
 
         <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">

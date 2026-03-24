@@ -51,25 +51,47 @@ jobs:
       - name: Get local Supabase status
         id: supabase_keys
         run: |
-          # Wait up to 60s for services to be ready
-          for i in {1..60}; do
-            STATUS=$(npx supabase status -o json)
-            # Debug: print the status (scrubbing secrets just in case)
-            echo "Attempt $i: $STATUS" | sed 's/:".*"/:"***"/g' 
+          # Wait up to 90s for services to be ready
+          for i in {1..45}; do
+            STATUS_JSON=$(npx supabase status -o json || echo "{}")
+            STATUS_TEXT=$(npx supabase status || echo "")
             
-            URL=$(echo $STATUS | jq -r '.api_url // empty')
+            # Debug: print both
+            echo "--- Attempt $i ---"
+            echo "JSON: $STATUS_JSON" | sed 's/:".*"/:"***"/g'
+            echo "TEXT: $STATUS_TEXT" | sed 's/Key: .*/Key: ***/g'
+            
+            # Try JSON first
+            URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
+            
+            # Fallback to Text if JSON failed
+            if [ -z "$URL" ] || [ "$URL" == "null" ]; then
+              URL=$(echo "$STATUS_TEXT" | grep "API URL" | awk '{print $NF}' || echo "")
+            fi
+            
             if [ ! -z "$URL" ] && [ "$URL" != "null" ]; then
               echo "url=$URL" >> $GITHUB_OUTPUT
-              echo "anon_key=$(echo $STATUS | jq -r '.anon_key')" >> $GITHUB_OUTPUT
-              echo "service_role_key=$(echo $STATUS | jq -r '.service_role_key')" >> $GITHUB_OUTPUT
+              
+              # Extract keys similarly
+              ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty')
+              if [ -z "$ANON" ] || [ "$ANON" == "null" ]; then
+                ANON=$(echo "$STATUS_TEXT" | grep "anon key" | awk '{print $NF}' || echo "")
+              fi
+              echo "anon_key=$ANON" >> $GITHUB_OUTPUT
+              
+              SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty')
+              if [ -z "$SERVICE" ] || [ "$SERVICE" == "null" ]; then
+                SERVICE=$(echo "$STATUS_TEXT" | grep "service_role key" | awk '{print $NF}' || echo "")
+              fi
+              echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
+              
               echo "Supabase ready at $URL"
               exit 0
             fi
             echo "Waiting for Supabase... ($i)"
             sleep 2
           done
-          echo "Supabase timed out. Current status:"
-          npx supabase status
+          echo "Supabase timed out."
           exit 1
 
       - name: Install Playwright browsers

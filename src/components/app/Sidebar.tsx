@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, FileText, Settings, LogOut } from 'lucide-react'
+import { SquaresFour, FileText, Gear, SignOut } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: SquaresFour },
   { href: '/reports',   label: 'Reports',   icon: FileText },
-  { href: '/settings',  label: 'Settings',  icon: Settings },
+  { href: '/settings',  label: 'Settings',  icon: Gear },
 ]
 
 interface Props {
@@ -62,7 +62,7 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
                 : { color: 'var(--color-text-muted)' }
               }
             >
-              <Icon className="w-4 h-4 shrink-0" strokeWidth={active ? 2.5 : 2} />
+              <Icon className="w-4 h-4 shrink-0" weight={active ? 'bold' : 'regular'} />
               {label}
             </Link>
           )
@@ -112,7 +112,7 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
           className="w-full flex items-center gap-3 px-4 py-3 rounded-[8px] text-[14px] font-medium transition-colors cursor-pointer"
           style={{ color: 'var(--color-text-faint)' }}
         >
-          <LogOut className="w-4 h-4 shrink-0" strokeWidth={2} />
+          <SignOut className="w-4 h-4 shrink-0" weight="regular" />
           Sign out
         </button>
       </div>

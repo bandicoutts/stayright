@@ -15,10 +15,10 @@
     "gen:types": "supabase gen types typescript --project-id rzulxdaiqdqsmckanebd > src/types/database.ts"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@react-pdf/renderer": "^4.3.2",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.99.3",
-    "lucide-react": "^0.577.0",
     "next": "16.2.1",
     "posthog-js": "^1.363.1",
     "react": "19.2.4",

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { List, X } from '@phosphor-icons/react';
 
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -112,7 +112,7 @@ export default function Nav() {
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
         >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {mobileOpen ? <X className="w-5 h-5" /> : <List className="w-5 h-5" />}
         </button>
       </div>
 

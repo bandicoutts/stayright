@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash } from '@phosphor-icons/react'
 import { saveTripAction, deleteTripAction, completeOnboardingAction } from '../actions'
 import { useDebounce } from '@/hooks/useDebounce'
 import { track } from '@/lib/posthog'
