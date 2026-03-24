@@ -93,6 +93,9 @@ export function LoginForm({ initialError }: Props) {
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) {
+        if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview' || process.env.NODE_ENV === 'development') {
+          console.error('Login Error:', error.message)
+        }
         setError(
           error.message === 'Invalid login credentials'
             ? 'Incorrect email or password.'

@@ -30,7 +30,12 @@ export async function proxy(request: NextRequest) {
   // Refresh the session — do not remove this call.
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser()
+
+  if (process.env.CI) {
+    console.log(`[Middleware] Path: ${request.nextUrl.pathname}, User ID: ${user?.id || 'none'}, Error: ${userError?.message || 'none'}`)
+  }
 
   const { pathname } = request.nextUrl
 

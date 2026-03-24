@@ -43,12 +43,13 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Start local Supabase
-        run: npx supabase start --ignore-health-check
+      - name: Start Supabase
+        run: npx supabase start
 
-      - name: Get local Supabase status
+      - name: Extract Supabase Keys and Generate .env.local
         id: supabase_keys
         run: |
           echo "Waiting for Supabase API to respond..."
@@ -82,17 +83,10 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Create Test User
-        env:
-          TEST_USER_EMAIL: test@example.com
-          TEST_USER_PASSWORD: password123
         run: npm run test:create-user
 
       - name: Run Playwright Tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ steps.supabase_keys.outputs.url }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ steps.supabase_keys.outputs.anon_key }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ steps.supabase_keys.outputs.service_role_key }}
-          NEXT_PUBLIC_APP_URL: http://localhost:3000
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'sk_test_ci_dummy' }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'whsec_ci_dummy' }}
           STRIPE_PRICE_MONTHLY: ${{ secrets.STRIPE_PRICE_MONTHLY || 'price_ci_monthly' }}
