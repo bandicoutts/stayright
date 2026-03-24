@@ -51,49 +51,29 @@ jobs:
       - name: Get local Supabase status
         id: supabase_keys
         run: |
-          echo "Waiting 10s for services to stabilize..."
-          sleep 10
-          docker ps
+          # The local Supabase CLI defaults are highly predictable.
+          # We'll use the CLI to verify they are up, but we'll hardcode the URL to 127.0.0.1
+          # to avoid any localhost IPv6 issues in the browser.
           
-          # Wait up to 120s for services to be ready
-          for i in {1..40}; do
-            STATUS_ENV=$(npx supabase status -o env || echo "")
-            STATUS_JSON=$(npx supabase status -o json || echo "{}")
-            STATUS_TEXT=$(npx supabase status || echo "")
-            
-            echo "--- Attempt $i ---"
-            
-            URL=$(echo "$STATUS_ENV" | grep "API_URL" | sed 's/.*=//' | xargs || echo "")
-            if [ -z "$URL" ]; then
-              URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
-            fi
-            
-            if [ ! -z "$URL" ] && [ "$URL" != "null" ]; then
-              # Perform a real health check on the API Gateway
-              if curl -s -f "$URL/auth/v1/health" > /dev/null; then
-                ANON=$(echo "$STATUS_ENV" | grep "ANON_KEY" | sed 's/.*=//' | xargs || echo "")
-                if [ -z "$ANON" ]; then ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty'); fi
-                
-                SERVICE=$(echo "$STATUS_ENV" | grep "SERVICE_ROLE_KEY" | sed 's/.*=//' | xargs || echo "")
-                if [ -z "$SERVICE" ]; then SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty'); fi
-                
-              # Force localhost instead of 127.0.0.1 to avoid browser/CORS issues in CI
-              URL_FINAL=${URL/127.0.0.1/localhost}
+          echo "Waiting for Supabase API to respond..."
+          for i in {1..60}; do
+            if curl -s -f "http://127.0.0.1:54321/auth/v1/health" > /dev/null; then
+              echo "Supabase API is UP"
               
-              echo "url=$URL_FINAL" >> $GITHUB_OUTPUT
+              # Grab the keys from the CLI just to be sure we have the right ones
+              STATUS_JSON=$(npx supabase status -o json)
+              ANON=$(echo $STATUS_JSON | jq -r '.anon_key')
+              SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key')
+              
+              echo "url=http://127.0.0.1:54321" >> $GITHUB_OUTPUT
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
               echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
-              echo "Supabase fully ready and responding at $URL_FINAL"
               exit 0
-              else
-                echo "Supabase CLI says running, but $URL/auth/v1/health is not responding yet..."
-              fi
             fi
-            
-            echo "Waiting for Supabase... ($i)"
-            sleep 3
+            echo "Waiting... ($i)"
+            sleep 2
           done
-          echo "Supabase timed out. Final debug:"
+          echo "Supabase timed out."
           npx supabase status --debug
           exit 1
 
