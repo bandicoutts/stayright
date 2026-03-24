@@ -108,6 +108,17 @@ jobs:
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD || 'TestPassword123!' }}
         run: npm run test:create-user
 
+      - name: Build Next.js app
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'sk_test_ci_dummy' }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET || 'whsec_ci_dummy' }}
+          STRIPE_PRICE_MONTHLY: ${{ secrets.STRIPE_PRICE_MONTHLY || 'price_ci_monthly' }}
+          STRIPE_PRICE_ANNUAL: ${{ secrets.STRIPE_PRICE_ANNUAL || 'price_ci_annual' }}
+          STRIPE_PRICE_LIFETIME: ${{ secrets.STRIPE_PRICE_LIFETIME || 'price_ci_lifetime' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 're_ci_dummy' }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET || 'cron_ci_dummy' }}
+        run: npm run build
+
       - name: Run Playwright Tests
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'sk_test_ci_dummy' }}

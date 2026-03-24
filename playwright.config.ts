@@ -74,10 +74,12 @@ export default defineConfig({
     },
   ],
 
-  // Start the dev server for local runs; in CI use NEXT_PUBLIC_APP_URL pointing at Vercel
+  // Start the app server for local runs; in CI use NEXT_PUBLIC_APP_URL pointing at Vercel.
+  // CI uses `next start` (pre-built) so server action IDs are stable across the full test run.
+  // Local dev uses `next dev` for fast iteration.
   webServer: !process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_APP_URL === 'http://localhost:3000'
     ? {
-        command: 'npm run dev',
+        command: process.env.CI ? 'npm run start' : 'npm run dev',
         url: 'http://localhost:3000',
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
