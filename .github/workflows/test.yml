@@ -46,7 +46,7 @@ jobs:
       - run: npm ci
 
       - name: Start local Supabase
-        run: npx supabase start
+        run: npx supabase start --no-health-check
 
       - name: Get local Supabase status
         id: supabase_keys
@@ -57,38 +57,38 @@ jobs:
             STATUS_TEXT=$(npx supabase status || echo "")
             
             echo "--- Attempt $i ---"
-            # Try to extract URL from JSON first
-            URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
             
-            # If JSON fails, try more aggressive TEXT parsing (strip colors, handle case)
+            # 1. Try JSON (api_url, anon_key, service_role_key)
+            URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
+            ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty')
+            SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty')
+            
+            # 2. Try greedy TEXT parsing if JSON failed
+            CLEAN_TEXT=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g')
             if [ -z "$URL" ] || [ "$URL" == "null" ]; then
-              URL=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g' | grep -i "API URL" | sed 's/.*: //' | xargs || echo "")
+              URL=$(echo "$CLEAN_TEXT" | grep -i "API URL" | head -1 | sed 's/.*: //' | xargs || echo "")
+            fi
+            if [ -z "$ANON" ] || [ "$ANON" == "null" ]; then
+              ANON=$(echo "$CLEAN_TEXT" | grep -i "anon key" | head -1 | sed 's/.*: //' | xargs || echo "")
+            fi
+            if [ -z "$SERVICE" ] || [ "$SERVICE" == "null" ]; then
+              SERVICE=$(echo "$CLEAN_TEXT" | grep -i "service_role key" | head -1 | sed 's/.*: //' | xargs || echo "")
             fi
             
-            if [ ! -z "$URL" ] && [ "$URL" != "null" ]; then
+            # 3. Check if we have what we need
+            if [ ! -z "$URL" ] && [ "$URL" != "null" ] && [ ! -z "$ANON" ]; then
               echo "url=$URL" >> $GITHUB_OUTPUT
-              
-              # Extract keys with similar resilience
-              ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty')
-              if [ -z "$ANON" ] || [ "$ANON" == "null" ]; then
-                ANON=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g' | grep -i "anon key" | sed 's/.*: //' | xargs || echo "")
-              fi
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
-              
-              SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty')
-              if [ -z "$SERVICE" ] || [ "$SERVICE" == "null" ]; then
-                SERVICE=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g' | grep -i "service_role key" | sed 's/.*: //' | xargs || echo "")
-              fi
               echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
-              
               echo "Supabase ready at $URL"
               exit 0
             fi
+            
             echo "Waiting for Supabase... ($i)"
             sleep 2
           done
-          echo "Supabase timed out."
-          npx supabase status
+          echo "Supabase timed out. Debugging status:"
+          npx supabase status --debug
           exit 1
 
       - name: Install Playwright browsers
