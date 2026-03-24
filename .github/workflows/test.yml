@@ -57,18 +57,24 @@ jobs:
             if curl -s -f "http://127.0.0.1:54321/auth/v1/health" > /dev/null; then
               echo "Supabase API is UP"
               
-              # Capture both stdout and stderr; the CLI may mix them
-              STATUS_JSON=$(npx supabase status -o json 2>&1)
-              echo "=== supabase status fields: $(echo "$STATUS_JSON" | jq 'keys // []' 2>/dev/null || echo 'parse failed') ==="
+              STATUS_TEXT=$(npx supabase status 2>&1)
 
-              # Support Supabase CLI v2 (publishable_key/secret_key) and v1 (anon_key/service_role_key)
-              ANON=$(echo "$STATUS_JSON" | jq -r '.publishable_key // .anon_key // empty')
-              SERVICE=$(echo "$STATUS_JSON" | jq -r '.secret_key // .service_role_key // empty')
+              # CLI v2: keys are sb_publishable_* / sb_secret_*
+              ANON=$(echo "$STATUS_TEXT" | grep -oP 'sb_publishable_\S+' | head -1)
+              SERVICE=$(echo "$STATUS_TEXT" | grep -oP 'sb_secret_\S+' | head -1)
+
+              # CLI v1 fallback: keys are JWTs starting with eyJ
+              if [[ -z "$ANON" ]]; then
+                ANON=$(echo "$STATUS_TEXT" | grep -oP '(?<=anon key: )eyJ\S+' | head -1)
+              fi
+              if [[ -z "$SERVICE" ]]; then
+                SERVICE=$(echo "$STATUS_TEXT" | grep -oP '(?<=service_role key: )eyJ\S+' | head -1)
+              fi
 
               if [[ -z "$ANON" || -z "$SERVICE" ]]; then
                 echo "❌ Failed to extract Supabase keys"
-                echo "Raw output: $STATUS_JSON"
-                npx supabase status
+                echo "Status output:"
+                echo "$STATUS_TEXT"
                 exit 1
               fi
               echo "✓ Keys extracted (anon: ${#ANON} chars, service: ${#SERVICE} chars)"
