@@ -36,10 +36,10 @@ export default defineConfig({
     : [['html', { outputFolder: 'playwright-report' }]],
 
   use: {
-    baseURL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-    trace: 'on-first-retry',
+    baseURL: process.env.NEXT_PUBLIC_APP_URL,    /* Base browse settings for all projects */
+    trace: 'retain-on-failure',
+    video: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
   },
 
   projects: [
