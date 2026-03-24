@@ -80,7 +80,9 @@ async function goToStep2(page: Page, destination: string) {
 
 test.describe('Calculation regression — live CalcPanel at /trips/plan', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/trips/plan')
+    // /trips/plan does not exist as a route — the plan wizard opens as a modal
+    // at /dashboard?modal=plan (read client-side via useSearchParams in TripsClient).
+    await page.goto('/dashboard?modal=plan')
     await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
   })
 
