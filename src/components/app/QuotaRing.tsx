@@ -66,7 +66,7 @@ export function QuotaRing({ days, status }: Props) {
             cy={CENTER}
             r={RADIUS}
             fill="none"
-            stroke="#F3F4F5"
+            stroke="rgba(201,168,76,0.12)"
             strokeWidth={STROKE}
           />
           {/* Progress */}

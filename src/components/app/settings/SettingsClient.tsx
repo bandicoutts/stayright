@@ -52,7 +52,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-[#E8EAE8] p-5 mb-4">
+    <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] p-5 mb-4">
       {children}
     </div>
   )
@@ -86,7 +86,7 @@ function TextInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}
-      className="block w-full px-3 py-2 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[#006948]/30 disabled:bg-[#F3F4F5] disabled:text-[#3D4A42]"
+      className="block w-full px-3 py-2 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)] disabled:bg-[#F3F4F5] disabled:text-[#3D4A42]"
     />
   )
 }
@@ -112,8 +112,8 @@ function Toggle({
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative flex-shrink-0 w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#006948]/30 ${
-          checked ? 'bg-[#006948]' : 'bg-[#C8CECC]'
+        className={`relative flex-shrink-0 w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)] ${
+          checked ? 'bg-[#C9A84C]' : 'bg-[#C8CECC]'
         }`}
       >
         <span
@@ -139,7 +139,8 @@ function SaveButton({
     <button
       onClick={onClick}
       disabled={saving}
-      className="px-4 py-2 bg-[#006948] text-white text-sm font-semibold rounded-xl hover:bg-[#00855D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="px-4 py-2 text-[#1A1B19] text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+      style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
     >
       {saving ? 'Saving…' : children}
     </button>
@@ -150,7 +151,7 @@ function StatusMessage({ type, message }: { type: 'success' | 'error'; message: 
   return (
     <p
       className={`text-sm mt-2 ${
-        type === 'success' ? 'text-[#006948]' : 'text-[#BA1A1A]'
+        type === 'success' ? 'text-[#A88730]' : 'text-[#BA1A1A]'
       }`}
     >
       {message}
@@ -375,7 +376,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
             <select
               value={visaRoute}
               onChange={(e) => setVisaRoute(e.target.value)}
-              className="block w-full px-3 py-2 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[#006948]/30"
+              className="block w-full px-3 py-2 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)]"
             >
               <option value="Skilled Worker">Skilled Worker</option>
               <option value="Health and Care Worker">Health and Care Worker</option>
@@ -537,7 +538,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
               </p>
             )}
             {subscription?.plan === 'pro_lifetime' && (
-              <p className="text-xs text-[#006948] mt-1 font-medium">Lifetime — no renewal</p>
+              <p className="text-xs text-[#A88730] mt-1 font-medium">Lifetime — no renewal</p>
             )}
           </div>
           {subscription?.plan && subscription.plan !== 'free' && subscription.plan !== 'pro_lifetime' && (
@@ -560,7 +561,8 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
                 }
               }}
               disabled={portalLoading}
-              className="px-4 py-2 bg-[#006948] text-white text-sm font-semibold rounded-xl hover:bg-[#00855D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-[#1A1B19] text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+      style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
             >
               {portalLoading ? 'Opening…' : 'Manage subscription'}
             </button>
@@ -570,7 +572,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
         {(!subscription?.plan || subscription.plan === 'free') && (
           <p className="mt-3 text-xs text-[#3D4A42]">
             Upgrade to Pro for unlimited trips, PDF exports, and email alerts.{' '}
-            <a href="/trips" className="text-[#006948] underline font-medium">
+            <a href="/trips" className="text-[#A88730] underline font-medium">
               View Pro plans
             </a>
           </p>
@@ -583,10 +585,10 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       <SectionHeading>Data &amp; Privacy</SectionHeading>
       <Card>
         <div className="flex items-center gap-3 mb-4">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#006948]/10 text-[#006948] text-xs font-semibold rounded-full">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[rgba(201,168,76,0.10)] text-[#A88730] text-xs font-semibold rounded-full">
             GDPR compliant
           </span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#006948]/10 text-[#006948] text-xs font-semibold rounded-full">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[rgba(201,168,76,0.10)] text-[#A88730] text-xs font-semibold rounded-full">
             Data stored in EU
           </span>
         </div>
@@ -602,7 +604,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
           </button>
           <a
             href="/privacy-policy"
-            className="text-sm text-[#006948] underline"
+            className="text-sm text-[#A88730] underline"
           >
             Privacy policy
           </a>
@@ -620,13 +622,13 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
         <div className="flex items-center gap-4">
           <a
             href="mailto:help@stayright.app"
-            className="text-sm text-[#006948] font-medium underline"
+            className="text-sm text-[#A88730] font-medium underline"
           >
             help@stayright.app
           </a>
           <a
             href="/help"
-            className="text-sm text-[#006948] font-medium underline"
+            className="text-sm text-[#A88730] font-medium underline"
           >
             Visit Help Centre
           </a>

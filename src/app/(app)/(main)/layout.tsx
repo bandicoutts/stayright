@@ -27,7 +27,7 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
     (subscription?.status === 'past_due' || subscription?.status === 'unpaid')
 
   return (
-    <div className="flex min-h-screen bg-[#F8F9FA]">
+    <div className="flex min-h-screen bg-[#FAF8F2]">
       <PostHogIdentify userId={user.id} />
       <LoginTracker />
       <ReturnVisitTracker />

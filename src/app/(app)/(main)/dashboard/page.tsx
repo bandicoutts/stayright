@@ -157,7 +157,7 @@ export default async function DashboardPage() {
         {/* Left column — quota ring + qualifying period */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quota ring card */}
-          <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-8">
             <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
             <p className="mt-5 text-xs text-center text-[#3D4A42] max-w-sm mx-auto leading-relaxed">
               Calculations follow official Home Office guidance. Always verify
@@ -167,19 +167,19 @@ export default async function DashboardPage() {
 
           {/* Qualifying period */}
           {qualifying && (
-            <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6">
+            <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-6">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-semibold text-[#191C1D]">
                   Qualifying period
                 </h2>
-                <span className="text-sm font-semibold text-[#006948]">
+                <span className="text-sm font-semibold text-[#A88730]">
                   {qualifying.percentage}%
                 </span>
               </div>
-              <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100}>
+              <div className="w-full h-2 bg-[rgba(201,168,76,0.12)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100}>
                 <div
-                  className="h-full bg-[#006948] rounded-full transition-all duration-700"
-                  style={{ width: `${qualifying.percentage}%` }}
+                  className="h-full rounded-full transition-all duration-700"
+                  style={{ width: `${qualifying.percentage}%`, background: 'linear-gradient(90deg, #C9A84C, #E8C87A)' }}
                 />
               </div>
               <div className="flex justify-between mt-2 text-xs text-[#3D4A42]">
@@ -207,10 +207,11 @@ export default async function DashboardPage() {
         {/* Right column — actions + ILR timeline + trip summary */}
         <div className="space-y-6">
           {/* CTAs */}
-          <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 space-y-3">
+          <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-6 space-y-3">
             <Link
               href="?modal=plan"
-              className="flex items-center justify-between w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="flex items-center justify-between w-full rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity text-[#1A1B19]"
+              style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
             >
               <span>Plan a trip</span>
               <span>→</span>
@@ -220,7 +221,7 @@ export default async function DashboardPage() {
             </p>
             <Link
               href="?modal=log"
-              className="flex items-center justify-between w-full border border-[#191C1D]/15 text-[#191C1D] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#F8F9FA] transition-colors"
+              className="flex items-center justify-between w-full border border-[rgba(201,168,76,0.25)] text-[#191C1D] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#FAF8F2] transition-colors"
             >
               <span>Log a past trip</span>
               <span className="text-[#3D4A42]">→</span>
@@ -232,7 +233,7 @@ export default async function DashboardPage() {
 
           {/* ILR eligibility timeline */}
           {qualifying && (
-            <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6">
+            <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-6">
               <h2 className="text-sm font-semibold text-[#191C1D] mb-4">
                 ILR timeline
               </h2>
@@ -242,7 +243,7 @@ export default async function DashboardPage() {
                   date={qualifying.visaStartDate}
                   done
                 />
-                <div className="ml-3 w-px h-4 bg-[#006948]/30" />
+                <div className="ml-3 w-px h-4 bg-[#C9A84C]/30" />
                 <TimelineItem
                   label={`${qualifying.percentage}% complete`}
                   date={today}
@@ -331,11 +332,12 @@ function TimelineItem({
       <div
         className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
           done
-            ? 'bg-[#006948] text-white'
+            ? 'text-[#1A1B19]'
             : active
-            ? 'bg-[#006948]/20 border-2 border-[#006948]'
-            : 'bg-[#F8F9FA] border-2 border-[#191C1D]/15'
+            ? 'border-2 border-[#C9A84C] bg-[rgba(201,168,76,0.12)]'
+            : 'bg-[#FAF8F2] border-2 border-[rgba(201,168,76,0.25)]'
         }`}
+        style={done ? { background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' } : undefined}
       >
         {done && (
           <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">

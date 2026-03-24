@@ -130,8 +130,8 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       <ul className="space-y-2 mb-6">
         {BENEFITS.map((benefit) => (
           <li key={benefit} className="flex items-center gap-3 text-sm text-[#191C1D]">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[#006948]/10 flex items-center justify-center">
-              <svg className="w-3 h-3 text-[#006948]" viewBox="0 0 12 12" fill="none">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[rgba(201,168,76,0.12)] flex items-center justify-center">
+              <svg className="w-3 h-3 text-[#A88730]" viewBox="0 0 12 12" fill="none">
                 <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
@@ -149,8 +149,8 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
               key={plan.id}
               className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
                 isSelected
-                  ? 'border-[#006948] bg-[#006948]/5'
-                  : 'border-[#191C1D]/12 hover:border-[#191C1D]/25'
+                  ? 'border-[#C9A84C] bg-[rgba(201,168,76,0.07)]'
+                  : 'border-[#191C1D]/12 hover:border-[rgba(201,168,76,0.35)]'
               }`}
             >
               <input
@@ -163,10 +163,10 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
               />
               <div className="flex items-center gap-3">
                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  isSelected ? 'border-[#006948]' : 'border-[#191C1D]/30'
+                  isSelected ? 'border-[#C9A84C]' : 'border-[#191C1D]/30'
                 }`}>
                   {isSelected && (
-                    <div className="w-2 h-2 rounded-full bg-[#006948]" />
+                    <div className="w-2 h-2 rounded-full bg-[#C9A84C]" />
                   )}
                 </div>
                 <span className="text-sm font-medium text-[#191C1D]">{plan.label}</span>
@@ -174,7 +174,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                     plan.badge === 'Save 30%'
                       ? 'bg-[#D97706]/10 text-[#D97706]'
-                      : 'bg-[#006948]/10 text-[#006948]'
+                      : 'bg-[rgba(201,168,76,0.10)] text-[#A88730]'
                   }`}>
                     {plan.badge}
                   </span>
@@ -193,7 +193,8 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       <button
         onClick={handleUpgrade}
         disabled={loading}
-        className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-[#1A1B19]"
+        style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
       >
         {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
       </button>

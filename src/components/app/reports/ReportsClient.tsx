@@ -159,7 +159,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
         <p className="text-sm text-[#3D4A42] mb-8">
           Generate PDF documents suitable for inclusion in an ILR application.
           {!isPro && (
-            <span className="ml-1 text-[#006948] font-medium">
+            <span className="ml-1 text-[#A88730] font-medium">
               Pro plan required —{' '}
               <button
                 className="underline"
@@ -190,7 +190,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
           {REPORT_CARDS.map((card) => (
             <div
               key={card.id}
-              className="bg-white rounded-2xl border border-[#E8EAE8] p-5"
+              className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] p-5"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
@@ -199,7 +199,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
                       {card.title}
                     </h2>
                     {!isPro && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#006948]/10 text-[#006948] text-[10px] font-semibold rounded-full uppercase tracking-wide">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[rgba(201,168,76,0.10)] text-[#A88730] text-[10px] font-semibold rounded-full uppercase tracking-wide">
                         Pro
                       </span>
                     )}
@@ -216,7 +216,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
                           value={customStart}
                           max={customEnd || today}
                           onChange={(e) => setCustomStart(e.target.value)}
-                          className="block px-3 py-1.5 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[#006948]/30"
+                          className="block px-3 py-1.5 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)]"
                         />
                       </div>
                       <div>
@@ -227,7 +227,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
                           min={customStart}
                           max={today}
                           onChange={(e) => setCustomEnd(e.target.value)}
-                          className="block px-3 py-1.5 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[#006948]/30"
+                          className="block px-3 py-1.5 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)]"
                         />
                       </div>
                     </div>
@@ -239,9 +239,10 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
                   disabled={generating === card.id}
                   className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                     isPro
-                      ? 'bg-[#006948] text-white hover:bg-[#00855D] disabled:opacity-50 disabled:cursor-not-allowed'
-                      : 'bg-[#006948]/10 text-[#006948] hover:bg-[#006948]/20'
+                      ? 'text-[#1A1B19] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                      : 'bg-[rgba(201,168,76,0.10)] text-[#A88730] hover:bg-[rgba(201,168,76,0.18)]'
                   }`}
+                  style={isPro ? { background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' } : undefined}
                 >
                   {generating === card.id ? (
                     <span className="flex items-center gap-2">
@@ -267,7 +268,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
           <p className="mt-6 text-xs text-[#3D4A42]">
             PDF exports are available on the Pro plan.{' '}
             <button
-              className="text-[#006948] underline font-medium"
+              className="text-[#A88730] underline font-medium"
               onClick={() => setShowPaywall(true)}
             >
               View Pro plans
