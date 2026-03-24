@@ -1,20 +1,12 @@
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
 import path from 'path'
-import fs from 'fs'
 
-const envPath = path.resolve(__dirname, '.env.local')
-const envExists = fs.existsSync(envPath)
-dotenv.config({ path: envPath })
-
-console.log('--- Playwright Config Startup ---')
-console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL || 'UNDEFINED')
-console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'DEFINED' : 'UNDEFINED')
-console.log('.env.local exists:', envExists)
-if (envExists) {
-  console.log('WARNING: .env.local might be overriding CI environment variables!')
-}
-console.log('---')
+/**
+ * Read environment variables from file.
+ * https://github.com/motdotla/dotenv
+ */
+dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 
 /**
  * StayRight — Playwright Configuration

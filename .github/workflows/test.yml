@@ -66,9 +66,6 @@ jobs:
               echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE" >> .env.local
               echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
               
-              echo "Generated .env.local for CI:"
-              cat .env.local | sed 's/KEY=.*/KEY=***'/g
-              
               echo "url=http://127.0.0.1:54321" >> $GITHUB_OUTPUT
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
               echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
