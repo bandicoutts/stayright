@@ -101,14 +101,14 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
   }
 
   const content = (
-    <div className="relative bg-white rounded-2xl shadow-xl border border-[#191C1D]/8 p-8 w-full max-w-md mx-auto">
+    <div className="relative bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-8 w-full max-w-md mx-auto">
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D]">
+          <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)]">
             Unlock Pro
           </h2>
-          <p className="text-sm text-[#3D4A42] mt-0.5">
+          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
             Keep tracking without limits
           </p>
         </div>
@@ -117,7 +117,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
             ref={closeRef}
             onClick={handleDismiss}
             aria-label="Close"
-            className="text-[#3D4A42] hover:text-[#191C1D] transition-colors cursor-pointer -mt-1 -mr-1 p-1 rounded-lg hover:bg-[#F8F9FA]"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer -mt-1 -mr-1 p-1 rounded-lg hover:bg-[var(--color-bg-tinted)]"
           >
             <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
               <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -129,9 +129,9 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       {/* Benefit list */}
       <ul className="space-y-2 mb-6">
         {BENEFITS.map((benefit) => (
-          <li key={benefit} className="flex items-center gap-3 text-sm text-[#191C1D]">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[rgba(201,168,76,0.12)] flex items-center justify-center">
-              <svg className="w-3 h-3 text-[#A88730]" viewBox="0 0 12 12" fill="none">
+          <li key={benefit} className="flex items-center gap-3 text-sm text-[var(--color-text-primary)]">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--color-green-pale)] flex items-center justify-center">
+              <svg className="w-3 h-3 text-[var(--color-green)]" viewBox="0 0 12 12" fill="none">
                 <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
@@ -149,8 +149,8 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
               key={plan.id}
               className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
                 isSelected
-                  ? 'border-[#C9A84C] bg-[rgba(201,168,76,0.07)]'
-                  : 'border-[#191C1D]/12 hover:border-[rgba(201,168,76,0.35)]'
+                  ? 'border-[var(--color-green)] bg-[var(--color-green-pale)]/20'
+                  : 'border-[var(--color-border)] hover:border-[var(--color-green)]/35'
               }`}
             >
               <input
@@ -163,26 +163,26 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
               />
               <div className="flex items-center gap-3">
                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  isSelected ? 'border-[#C9A84C]' : 'border-[#191C1D]/30'
+                  isSelected ? 'border-[var(--color-green)]' : 'border-[var(--color-border-strong)]'
                 }`}>
                   {isSelected && (
-                    <div className="w-2 h-2 rounded-full bg-[#C9A84C]" />
+                    <div className="w-2 h-2 rounded-full bg-[var(--color-green)]" />
                   )}
                 </div>
-                <span className="text-sm font-medium text-[#191C1D]">{plan.label}</span>
+                <span className="text-sm font-medium text-[var(--color-text-primary)]">{plan.label}</span>
                 {plan.badge && (
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                     plan.badge === 'Save 30%'
-                      ? 'bg-[#D97706]/10 text-[#D97706]'
-                      : 'bg-[rgba(201,168,76,0.10)] text-[#A88730]'
+                      ? 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]'
+                      : 'bg-[var(--color-green-pale)] text-[var(--color-green)]'
                   }`}>
                     {plan.badge}
                   </span>
                 )}
               </div>
-              <span className="text-sm font-semibold text-[#191C1D]">
+              <span className="text-sm font-semibold text-[var(--color-text-primary)]">
                 {plan.price}
-                <span className="text-xs font-normal text-[#3D4A42]">{plan.period}</span>
+                <span className="text-xs font-normal text-[var(--color-text-muted)]">{plan.period}</span>
               </span>
             </label>
           )
@@ -193,14 +193,14 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       <button
         onClick={handleUpgrade}
         disabled={loading}
-        className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-[#1A1B19]"
-        style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
+        className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-white"
+        style={{ background: 'var(--gradient-green)' }}
       >
         {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
       </button>
 
       {error && (
-        <p className="mt-2 text-xs text-center text-[#BA1A1A]">{error}</p>
+        <p className="mt-2 text-xs text-center text-[var(--color-danger-text)]">{error}</p>
       )}
 
       {/* Dismiss */}
@@ -208,7 +208,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
         <div className="mt-4 text-center">
           <button
             onClick={handleDismiss}
-            className="text-sm text-[#3D4A42] hover:text-[#191C1D] transition-colors cursor-pointer"
+            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
           >
             Not now
           </button>

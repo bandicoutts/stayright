@@ -10,17 +10,17 @@ const CENTER = SIZE / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 const GRADIENTS: Record<RiskStatus, { start: string; end: string }> = {
-  SAFE: { start: '#006948', end: '#00855D' },
-  WARNING: { start: '#B46000', end: '#D97706' },
-  DANGER: { start: '#8E0009', end: '#BA1A1A' },
+  SAFE: { start: 'var(--color-green)', end: 'var(--color-green-light)' },
+  WARNING: { start: 'var(--color-status-amber)', end: '#D97706' },
+  DANGER: { start: '#8E0009', end: 'var(--color-status-red)' },
   BREACH: { start: '#680005', end: '#8E0009' },
 }
 
 const STATUS_CHIPS: Record<RiskStatus, string> = {
-  SAFE: 'bg-[#9ff4ca] text-[#002114]',
-  WARNING: 'bg-[#ffdcbb] text-[#2c1600]',
-  DANGER: 'bg-[#ffdad6] text-[#410002]',
-  BREACH: 'bg-[#ffdad6] text-[#410002]',
+  SAFE: 'bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]',
+  WARNING: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]',
+  DANGER: 'bg-[var(--color-danger-bg)] text-[var(--color-danger-text)]',
+  BREACH: 'bg-[var(--color-danger-bg)] text-[var(--color-danger-text)]',
 }
 
 interface Props {
@@ -66,7 +66,7 @@ export function QuotaRing({ days, status }: Props) {
             cy={CENTER}
             r={RADIUS}
             fill="none"
-            stroke="rgba(201,168,76,0.12)"
+            stroke="var(--color-border)"
             strokeWidth={STROKE}
           />
           {/* Progress */}
@@ -89,12 +89,12 @@ export function QuotaRing({ days, status }: Props) {
         {/* Centre text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
           <span
-            className="font-[family-name:var(--font-manrope)] font-bold text-[4rem] leading-none tracking-[-0.04em] text-[#191C1D]"
+            className="font-[family-name:var(--font-manrope)] font-bold text-[4rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]"
             aria-hidden="true"
           >
             {days}
           </span>
-          <span className="font-[family-name:var(--font-inter)] text-sm font-medium text-[#3D4A42] mt-1">
+          <span className="font-[family-name:var(--font-inter)] text-sm font-medium text-[var(--color-text-muted)] mt-1">
             / 180 days
           </span>
         </div>
@@ -109,8 +109,8 @@ export function QuotaRing({ days, status }: Props) {
           {status}
         </div>
 
-        <p className="text-[15px] font-[family-name:var(--font-inter)] text-[#3D4A42]">
-          <span className="font-semibold text-[#191C1D]">{remaining} days</span> remaining in current window
+        <p className="text-[15px] font-[family-name:var(--font-inter)] text-[var(--color-text-muted)]">
+          <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in current window
         </p>
       </div>
     </div>

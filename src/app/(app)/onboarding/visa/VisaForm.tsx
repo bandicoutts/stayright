@@ -74,8 +74,8 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
     <div className="w-full max-w-md">
       {/* Progress dots */}
       <div className="flex justify-center gap-2 mb-8">
-        <div className="h-2 w-8 rounded-full bg-[#006948]" />
-        <div className="h-2 w-8 rounded-full bg-[#006948]" />
+        <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
+        <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
         <div className="h-2 w-2 rounded-full bg-[#191C1D]/15" />
       </div>
 

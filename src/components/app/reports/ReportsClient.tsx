@@ -153,13 +153,13 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
     <>
       <div className="p-6 md:p-8 max-w-4xl">
         {/* Page header */}
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-1">
+        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
           Reports &amp; Exports
         </h1>
-        <p className="text-sm text-[#3D4A42] mb-8">
+        <p className="text-sm text-[var(--color-text-muted)] mb-8">
           Generate PDF documents suitable for inclusion in an ILR application.
           {!isPro && (
-            <span className="ml-1 text-[#A88730] font-medium">
+            <span className="ml-1 text-[var(--color-green-light)] font-medium">
               Pro plan required —{' '}
               <button
                 className="underline"
@@ -173,14 +173,14 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
         </p>
 
         {error && (
-          <div className="mb-6 px-4 py-3 bg-[#BA1A1A]/10 text-[#BA1A1A] text-sm rounded-xl">
+          <div className="mb-6 px-4 py-3 bg-[var(--color-danger-bg)] text-[var(--color-danger-text)] text-sm rounded-xl">
             {error}
           </div>
         )}
 
         {/* Empty state */}
         {!hasTrips && (
-          <div className="mb-8 px-5 py-4 bg-[#F3F4F5] rounded-xl text-sm text-[#3D4A42]">
+          <div className="mb-8 px-5 py-4 bg-[var(--color-bg-tinted)] rounded-xl text-sm text-[var(--color-text-muted)]">
             No absence data to report yet. Log your trips first, then come back to generate your ILR absence table.
           </div>
         )}
@@ -190,44 +190,44 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
           {REPORT_CARDS.map((card) => (
             <div
               key={card.id}
-              className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] p-5"
+              className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-5"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base text-[#191C1D]">
+                    <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base text-[var(--color-text-primary)]">
                       {card.title}
                     </h2>
                     {!isPro && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[rgba(201,168,76,0.10)] text-[#A88730] text-[10px] font-semibold rounded-full uppercase tracking-wide">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--color-green-pale)] text-[var(--color-green)] text-[10px] font-semibold rounded-full uppercase tracking-wide">
                         Pro
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-[#3D4A42] leading-relaxed">{card.description}</p>
+                  <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">{card.description}</p>
 
                   {/* Custom date range inputs */}
                   {card.requiresDates && (
                     <div className="flex items-center gap-3 mt-3">
                       <div>
-                        <label className="block text-xs text-[#3D4A42] mb-1 font-medium">From</label>
+                        <label className="block text-xs text-[var(--color-text-muted)] mb-1 font-medium">From</label>
                         <input
                           type="date"
                           value={customStart}
                           max={customEnd || today}
                           onChange={(e) => setCustomStart(e.target.value)}
-                          className="block px-3 py-1.5 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)]"
+                          className="block px-3 py-1.5 text-sm border border-[var(--color-border)] rounded-xl text-[var(--color-text-primary)] bg-[var(--color-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-[#3D4A42] mb-1 font-medium">To</label>
+                        <label className="block text-xs text-[var(--color-text-muted)] mb-1 font-medium">To</label>
                         <input
                           type="date"
                           value={customEnd}
                           min={customStart}
                           max={today}
                           onChange={(e) => setCustomEnd(e.target.value)}
-                          className="block px-3 py-1.5 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)]"
+                          className="block px-3 py-1.5 text-sm border border-[var(--color-border)] rounded-xl text-[var(--color-text-primary)] bg-[var(--color-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30"
                         />
                       </div>
                     </div>
@@ -239,10 +239,10 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
                   disabled={generating === card.id}
                   className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                     isPro
-                      ? 'text-[#1A1B19] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
-                      : 'bg-[rgba(201,168,76,0.10)] text-[#A88730] hover:bg-[rgba(201,168,76,0.18)]'
+                      ? 'text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                      : 'bg-[var(--color-green-pale)] text-[var(--color-green)] hover:bg-[var(--color-border-strong)]'
                   }`}
-                  style={isPro ? { background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' } : undefined}
+                  style={isPro ? { background: 'var(--gradient-green)' } : undefined}
                 >
                   {generating === card.id ? (
                     <span className="flex items-center gap-2">
@@ -265,10 +265,10 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
 
         {/* Pro note */}
         {!isPro && (
-          <p className="mt-6 text-xs text-[#3D4A42]">
+          <p className="mt-6 text-xs text-[var(--color-text-muted)]">
             PDF exports are available on the Pro plan.{' '}
             <button
-              className="text-[#A88730] underline font-medium"
+              className="text-[var(--color-green-light)] underline font-medium"
               onClick={() => setShowPaywall(true)}
             >
               View Pro plans

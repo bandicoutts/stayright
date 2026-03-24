@@ -27,14 +27,14 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
     (subscription?.status === 'past_due' || subscription?.status === 'unpaid')
 
   return (
-    <div className="flex min-h-screen bg-[#FAF8F2]">
+    <div className="flex min-h-screen bg-[var(--color-bg)]">
       <PostHogIdentify userId={user.id} />
       <LoginTracker />
       <ReturnVisitTracker />
       <Sidebar userEmail={user.email} userInitial={initial} />
       <div className="flex-1 min-w-0">
         {isPaymentFailed && (
-          <div className="bg-[#BA1A1A] text-white text-sm font-medium px-4 py-2.5 text-center">
+          <div className="bg-[var(--color-status-red)] text-white text-sm font-medium px-4 py-2.5 text-center">
             Your payment failed. Please{' '}
             <a href="/settings" className="underline font-semibold">
               update your payment method

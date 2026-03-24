@@ -14,25 +14,17 @@ Covers: sidebar, dashboard components, Quota Ring, trip cards, modal patterns, r
 
 ---
 
-## Shared Rules
-
-These rules apply to both surfaces. If there is any conflict between these rules and either design file, these shared rules take precedence.
-
-- Primary green: #006948 everywhere. No exceptions.
-- Primary gradient: #006948 → #00855D at 135deg
-- Background: #F8F9FA
-- Surface: #FFFFFF
-- Surface container low: #F3F4F5
-- Text primary: #191C1D (never pure #000000)
-- Text secondary: #3D4A42
-- Corner radius: 0.75rem throughout
-- No hard borders — tonal lift only, no 1px solid borders for sectioning
-- No pure black (#000000) anywhere in the UI
-- Typography: Manrope for headlines, Inter for body text
-- Status colours (compliance indicators only, never decorative):
-  Amber: #D97706 — warning state (120–159 days)
-  Red: #BA1A1A — danger state (160+ days)
-  Green: #006948 — safe state (under 120 days)
+- **Design Source of Truth:** `src/styles/tokens.css` is the authoritative source for all colors, spacing, and shadows.
+- **Primary Accent:** Green (`var(--color-green)`) — `#006948` (Light) / `#00855D` (Dark).
+- **Surfaces:** Dark Luxury palette (OLED-black / Obsidian tinted greens).
+- **Text:** High-contrast semantic mapping (`var(--color-text-primary)`).
+- **Corner Radius:** 0.75rem / 12px throughout for a premium, rounded aesthetic.
+- **Borders:** Tonal lifts only via `var(--color-border)`. No harsh 1px solid black borders.
+- **Typography:** Manrope for headlines, Inter for body text.
+- **Compliance Indicators:**
+  - Amber: `#D97706` — warning state (120–159 days).
+  - Red: `#BA1A1A` — danger state (160+ days).
+  - Green: `#006948` — safe state (under 120 days).
 
 ---
 
@@ -41,9 +33,9 @@ These rules apply to both surfaces. If there is any conflict between these rules
 When there is a conflict between documents, this order applies:
 
 1. PRD.md — overrides everything on scope and feature decisions
-2. Shared Rules above — overrides both design files on tokens
-3. dashboard.DESIGN.md — overrides landing.DESIGN.md on component rules where both files conflict
-4. landing.DESIGN.md — landing page specific rules
+2. tokens.css — authoritative source for all visual tokens and theme variables
+3. dashboard.DESIGN.md — component UX rules for the authenticated app
+4. landing.DESIGN.md — component UX rules for the marketing pages
 5. Wireframes — visual reference only, overridden by all of the above
 
 ---
@@ -52,4 +44,5 @@ When there is a conflict between documents, this order applies:
 
 | Date | Version | What changed |
 |------|---------|--------------|
-| 2026-03-21 | 1.0 | Initial design system created from two Stitch exports |
+| 2026-03-21 | 1.0 | Initial design system created |
+| 2026-03-24 | 1.1 | Visual migration to Dark Luxury; semantic token implementation |

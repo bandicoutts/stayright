@@ -196,7 +196,7 @@ export function DateRangePicker({
         {/* Range background band — sits behind the circle */}
         {(isInRange || isRangeStart || isRangeEnd) && (
           <div
-            className={`absolute inset-y-0 bg-[#006948]/10 ${
+            className={`absolute inset-y-0 bg-[var(--color-green-pale)] ${
               isRangeStart ? 'left-1/2 right-0' :
               isRangeEnd   ? 'left-0 right-1/2' :
               'left-0 right-0'
@@ -218,10 +218,10 @@ export function DateRangePicker({
             relative z-10 mx-auto flex w-9 h-9 items-center justify-center
             rounded-full text-sm transition-colors cursor-pointer
             ${isSelected
-              ? 'bg-[#006948] text-white font-semibold'
+              ? 'bg-[var(--color-green)] text-white font-semibold'
               : isHoverEnd
-              ? 'bg-[#006948]/20 text-[#006948] font-medium'
-              : 'hover:bg-white hover:shadow-sm text-[#191C1D]'
+              ? 'bg-[var(--color-green-pale)] text-[var(--color-green)] font-medium'
+              : 'hover:bg-[var(--color-surface-warm)] hover:shadow-sm text-[var(--color-text-primary)]'
             }
           `}
         >
@@ -230,7 +230,7 @@ export function DateRangePicker({
 
         {/* Today dot — shown only when the day is not selected */}
         {isToday && !isSelected && (
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#006948]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--color-green)]" />
         )}
       </div>
     )
@@ -266,13 +266,13 @@ export function DateRangePicker({
           onClick={handleResetDeparture}
           className={`text-left px-3 py-2.5 rounded-xl border transition-all cursor-pointer ${
             picking === 'departure'
-              ? 'border-[#006948] ring-2 ring-[#006948]/20 bg-[#006948]/4'
-              : 'border-[#191C1D]/15 hover:border-[#191C1D]/30'
+              ? 'border-[var(--color-green)] ring-2 ring-[var(--color-green)]/20 bg-[var(--color-green-pale)]/30'
+              : 'border-[var(--color-border)] hover:border-[var(--color-green)]/30'
           }`}
         >
-          <p className="text-xs text-[#3D4A42] mb-0.5 font-medium">Departed UK</p>
+          <p className="text-xs text-[var(--color-text-muted)] mb-0.5 font-medium">Departed UK</p>
           <p className={`text-sm font-semibold leading-snug ${
-            departureDate ? 'text-[#191C1D]' : 'text-[#3D4A42]/40'
+            departureDate ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-faint)]'
           }`}>
             {departureDate ? formatDate(departureDate) : '—'}
           </p>
@@ -285,19 +285,19 @@ export function DateRangePicker({
           disabled={!departureDate}
           className={`text-left px-3 py-2.5 rounded-xl border transition-all ${
             !departureDate
-              ? 'border-[#191C1D]/8 opacity-40 cursor-not-allowed'
+              ? 'border-[var(--color-border)] opacity-40 cursor-not-allowed'
               : picking === 'return' && returnDateKnown
-              ? 'border-[#006948] ring-2 ring-[#006948]/20 bg-[#006948]/4 cursor-pointer'
-              : 'border-[#191C1D]/15 hover:border-[#191C1D]/30 cursor-pointer'
+              ? 'border-[var(--color-green)] ring-2 ring-[var(--color-green)]/20 bg-[var(--color-green-pale)]/30 cursor-pointer'
+              : 'border-[var(--color-border)] hover:border-[var(--color-green)]/30 cursor-pointer'
           }`}
         >
-          <p className="text-xs text-[#3D4A42] mb-0.5 font-medium">Returned to UK</p>
+          <p className="text-xs text-[var(--color-text-muted)] mb-0.5 font-medium">Returned to UK</p>
           <p className={`text-sm font-semibold leading-snug ${
             !returnDateKnown
-              ? 'text-[#D97706]'
+              ? 'text-[var(--color-warning-text)]'
               : returnDate
-              ? 'text-[#191C1D]'
-              : 'text-[#3D4A42]/40'
+              ? 'text-[var(--color-text-primary)]'
+              : 'text-[var(--color-text-faint)]'
           }`}>
             {!returnDateKnown
               ? 'Currently abroad'
@@ -309,9 +309,9 @@ export function DateRangePicker({
       </div>
 
       {/* ── Calendar ────────────────────────────────────────────────── */}
-      <div className="bg-[#F3F4F5] rounded-xl p-3">
+      <div className="bg-[var(--color-bg-tinted)] rounded-xl p-3 border border-[var(--color-border)]/50">
         {/* Instruction prompt */}
-        <p className="text-xs text-center text-[#3D4A42] mb-3 font-medium">{prompt}</p>
+        <p className="text-xs text-center text-[var(--color-text-muted)] mb-3 font-medium">{prompt}</p>
 
         {/* Month navigation */}
         <div className="flex items-center justify-between mb-2 px-1">
@@ -319,20 +319,20 @@ export function DateRangePicker({
             type="button"
             onClick={prevMonth}
             aria-label="Previous month"
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white text-[#3D4A42] hover:text-[#191C1D] transition-colors cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)]"
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
               <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <p className="text-sm font-semibold text-[#191C1D] select-none">
+          <p className="text-sm font-semibold text-[var(--color-text-primary)] select-none">
             {MONTH_NAMES[viewMonth]} {viewYear}
           </p>
           <button
             type="button"
             onClick={nextMonth}
             aria-label="Next month"
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white text-[#3D4A42] hover:text-[#191C1D] transition-colors cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)]"
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
               <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -345,7 +345,7 @@ export function DateRangePicker({
           {WEEKDAYS.map((d) => (
             <div
               key={d}
-              className="text-center text-xs font-medium text-[#3D4A42] select-none py-0.5"
+              className="text-center text-xs font-medium text-[var(--color-text-faint)] select-none py-0.5"
             >
               {d}
             </div>
@@ -366,7 +366,7 @@ export function DateRangePicker({
           <button
             type="button"
             onClick={handleTodayShortcut}
-            className="text-sm text-[#006948] font-medium hover:underline cursor-pointer"
+            className="text-sm text-[var(--color-green-light)] font-medium hover:underline cursor-pointer"
             role="switch"
             aria-checked="false"
           >
@@ -379,7 +379,7 @@ export function DateRangePicker({
           <button
             type="button"
             onClick={handleCurrentlyAbroad}
-            className="text-sm text-[#3D4A42] hover:text-[#191C1D] hover:underline cursor-pointer"
+            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:underline cursor-pointer"
           >
             I'll log my return later →
           </button>
@@ -390,7 +390,7 @@ export function DateRangePicker({
           <button
             type="button"
             onClick={handleResetReturn}
-            className="text-sm text-[#006948] font-medium hover:underline cursor-pointer"
+            className="text-sm text-[var(--color-green-light)] font-medium hover:underline cursor-pointer"
           >
             Enter return date
           </button>

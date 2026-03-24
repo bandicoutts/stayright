@@ -20,7 +20,7 @@ function QuotaRingMockup() {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, var(--color-border) 0%, transparent 65%)',
           filter: 'blur(40px)',
         }}
         aria-hidden="true"
@@ -30,18 +30,18 @@ function QuotaRingMockup() {
       <div
         className="relative z-10 w-full overflow-hidden"
         style={{
-          background: '#FFFFFF',
-          border: '1px solid rgba(201,168,76,0.35)',
+          background: 'var(--color-surface)',
+          border: '1px solid var(--color-border-strong)',
           borderRadius: 16,
           maxWidth: 360,
           boxShadow:
-            '0 2px 8px rgba(26,27,25,0.04), 0 16px 48px rgba(201,168,76,0.08), 0 1px 0 rgba(255,255,255,0.90) inset',
+            '0 2px 8px rgba(13,27,16,0.04), 0 16px 48px rgba(0,105,72,0.08), 0 1px 0 rgba(255,255,255,0.90) inset',
         }}
       >
         {/* Gold top hairline */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
-          style={{ background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)' }}
+          style={{ background: 'linear-gradient(90deg, transparent, var(--color-green), transparent)' }}
           aria-hidden="true"
         />
 
@@ -49,21 +49,21 @@ function QuotaRingMockup() {
         <div
           className="flex items-center justify-between px-[22px] py-4"
           style={{
-            borderBottom: '1px solid rgba(201,168,76,0.20)',
-            background: 'rgba(201,168,76,0.04)',
+            borderBottom: '1px solid var(--color-border)',
+            background: 'var(--color-green-pale)/30',
           }}
         >
           <span
             className="font-[family-name:var(--font-inter)] text-[10px] font-semibold tracking-[0.12em] uppercase"
-            style={{ color: '#A0A298' }}
+            style={{ color: 'var(--color-text-faint)' }}
           >
             Days Abroad
           </span>
           <span
             className="font-[family-name:var(--font-inter)] text-[10px] font-bold tracking-[0.08em] uppercase px-[10px] py-1 rounded-full"
             style={{
-              background: '#9FF4CA',
-              color: '#002114',
+              background: 'var(--color-safe-bg)',
+              color: 'var(--color-safe-text)',
             }}
           >
             ✓ Safe
@@ -83,8 +83,8 @@ function QuotaRingMockup() {
             >
               <defs>
                 <linearGradient id="heroRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#C9A84C" />
-                  <stop offset="100%" stopColor="#E8C87A" />
+                  <stop offset="0%" stopColor="var(--color-green)" />
+                  <stop offset="100%" stopColor="var(--color-green-light)" />
                 </linearGradient>
                 <filter id="heroArcGlow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="3" result="blur" />
@@ -100,7 +100,7 @@ function QuotaRingMockup() {
                 cy={center}
                 r={radius}
                 fill="none"
-                stroke="rgba(201,168,76,0.10)"
+                stroke="rgba(0,105,72,0.12)"
                 strokeWidth={strokeWidth}
               />
               {/* Progress arc */}
@@ -123,13 +123,13 @@ function QuotaRingMockup() {
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span
                 className="font-[family-name:var(--font-manrope)] font-black leading-none tracking-[-0.04em]"
-                style={{ fontSize: '3.5rem', color: '#1A1B19', fontVariantNumeric: 'tabular-nums' }}
+                style={{ fontSize: '3.5rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 42
               </span>
               <span
                 className="font-[family-name:var(--font-inter)] font-medium mt-1"
-                style={{ fontSize: '0.75rem', color: '#A0A298' }}
+                style={{ fontSize: '0.75rem', color: 'var(--color-text-faint)' }}
               >
                 of 180 days
               </span>
@@ -142,8 +142,8 @@ function QuotaRingMockup() {
             <div
               className="flex items-center justify-between px-[14px] py-[10px] rounded-[8px] transition-colors duration-150"
               style={{
-                background: '#F5F0E6',
-                border: '1px solid rgba(201,168,76,0.20)',
+                background: 'var(--color-bg-tinted)',
+                border: '1px solid var(--color-border)',
               }}
             >
               <div className="flex items-center gap-[10px]">
@@ -151,13 +151,13 @@ function QuotaRingMockup() {
                 <div className="flex flex-col">
                   <span
                     className="font-[family-name:var(--font-inter)] font-medium"
-                    style={{ fontSize: '0.8125rem', color: '#1A1B19' }}
+                    style={{ fontSize: '0.8125rem', color: 'var(--color-text-primary)' }}
                   >
                     Portugal
                   </span>
                   <span
                     className="font-[family-name:var(--font-inter)] mt-0.5"
-                    style={{ fontSize: '0.6875rem', color: '#A0A298' }}
+                    style={{ fontSize: '0.6875rem', color: 'var(--color-text-faint)' }}
                   >
                     Jan 8–22, 2025
                   </span>
@@ -167,8 +167,8 @@ function QuotaRingMockup() {
                 className="font-[family-name:var(--font-manrope)] font-bold px-[10px] py-1 rounded-[6px]"
                 style={{
                   fontSize: '0.875rem',
-                  color: '#A88730',
-                  background: '#FEF3CC',
+                  color: 'var(--color-status-amber)',
+                  background: 'rgba(217, 119, 6, 0.12)',
                   fontVariantNumeric: 'tabular-nums',
                 }}
               >
@@ -180,8 +180,8 @@ function QuotaRingMockup() {
             <div
               className="flex items-center justify-between px-[14px] py-[10px] rounded-[8px] transition-colors duration-150"
               style={{
-                background: '#F5F0E6',
-                border: '1px solid rgba(201,168,76,0.20)',
+                background: 'var(--color-bg-tinted)',
+                border: '1px solid var(--color-border)',
               }}
             >
               <div className="flex items-center gap-[10px]">
@@ -189,13 +189,13 @@ function QuotaRingMockup() {
                 <div className="flex flex-col">
                   <span
                     className="font-[family-name:var(--font-inter)] font-medium"
-                    style={{ fontSize: '0.8125rem', color: '#1A1B19' }}
+                    style={{ fontSize: '0.8125rem', color: 'var(--color-text-primary)' }}
                   >
                     United States
                   </span>
                   <span
                     className="font-[family-name:var(--font-inter)] mt-0.5"
-                    style={{ fontSize: '0.6875rem', color: '#A0A298' }}
+                    style={{ fontSize: '0.6875rem', color: 'var(--color-text-faint)' }}
                   >
                     Oct 3–17, 2024
                   </span>
@@ -205,8 +205,8 @@ function QuotaRingMockup() {
                 className="font-[family-name:var(--font-manrope)] font-bold px-[10px] py-1 rounded-[6px]"
                 style={{
                   fontSize: '0.875rem',
-                  color: '#A88730',
-                  background: '#FEF3CC',
+                  color: 'var(--color-green)',
+                  background: 'var(--color-green-pale)',
                   fontVariantNumeric: 'tabular-nums',
                 }}
               >
@@ -220,7 +220,7 @@ function QuotaRingMockup() {
             <Link
               href="/signup"
               className="font-[family-name:var(--font-inter)] no-underline transition-colors duration-150"
-              style={{ fontSize: '0.8125rem', color: '#C9A84C' }}
+              style={{ fontSize: '0.8125rem', color: 'var(--color-green)' }}
             >
               Add a trip →
             </Link>
@@ -235,7 +235,7 @@ export default function Hero() {
   return (
     <section
       className="pt-[120px] pb-[90px] px-6 md:px-14 overflow-hidden"
-      style={{ background: '#FAF8F2' }}
+      style={{ background: 'var(--color-bg)' }}
     >
       <div className="max-w-[1320px] mx-auto grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-20 items-center">
 
@@ -245,11 +245,11 @@ export default function Hero() {
           {/* Eyebrow */}
           <div
             className="flex items-center gap-3 mb-7 animate-fade-up animate-fade-up-1"
-            style={{ color: '#A88730' }}
+            style={{ color: 'var(--color-green)' }}
           >
             <span
               className="block shrink-0"
-              style={{ width: 28, height: 1, background: '#C9A84C' }}
+              style={{ width: 28, height: 1, background: 'var(--color-green)' }}
               aria-hidden="true"
             />
             <span
@@ -263,7 +263,7 @@ export default function Hero() {
           {/* Headline */}
           <h1
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
-            style={{ fontSize: 'clamp(3rem, 5.5vw, 5.5rem)', color: '#1A1B19' }}
+            style={{ fontSize: 'clamp(3rem, 5.5vw, 5.5rem)', color: 'var(--color-text-primary)' }}
           >
             Know exactly where you{' '}
             <em
@@ -272,7 +272,7 @@ export default function Hero() {
                 fontStyle: 'italic',
                 fontWeight: 300,
                 fontSize: '105%',
-                background: 'linear-gradient(135deg, #A88730 0%, #E8C87A 100%)',
+                background: 'var(--gradient-green-text)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -285,7 +285,7 @@ export default function Hero() {
           {/* Subheadline */}
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.72] mb-11 max-w-[440px] animate-fade-up animate-fade-up-3"
-            style={{ fontSize: '1.0625rem', color: '#2C2E2A' }}
+            style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             Master the 180-day absence rule with precision. Automatically track
             your travel and secure your residency status without the paperwork
@@ -296,10 +296,10 @@ export default function Hero() {
           <div className="flex flex-wrap items-center gap-5 mb-10 animate-fade-up animate-fade-up-4">
             <Link
               href="/signup"
-              className="inline-flex items-center px-8 py-[14px] rounded-[6px] font-[family-name:var(--font-inter)] text-[15px] font-semibold text-[#1A1B19] no-underline transition-all duration-200"
+              className="inline-flex items-center px-8 py-[14px] rounded-[6px] font-[family-name:var(--font-inter)] text-[15px] font-semibold text-white no-underline transition-all duration-200"
               style={{
-                background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)',
-                boxShadow: '0 4px 20px rgba(201,168,76,0.25)',
+                background: 'var(--color-green)',
+                boxShadow: 'var(--shadow-button)',
               }}
             >
               Start Free Tracker
@@ -308,8 +308,8 @@ export default function Hero() {
               href="#features"
               className="inline-flex items-center font-[family-name:var(--font-inter)] text-[15px] font-normal no-underline transition-all duration-150"
               style={{
-                color: '#6B6D66',
-                borderBottom: '1px solid rgba(26,27,25,0.20)',
+                color: 'var(--color-text-muted)',
+                borderBottom: '1px solid var(--color-border-strong)',
                 paddingBottom: 2,
                 gap: 6,
               }}
@@ -330,9 +330,9 @@ export default function Hero() {
                 className="font-[family-name:var(--font-inter)] tracking-[0.02em]"
                 style={{
                   fontSize: '0.75rem',
-                  color: '#A0A298',
-                  background: '#FFFDF7',
-                  border: '1px solid rgba(201,168,76,0.20)',
+                  color: 'var(--color-text-faint)',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
                   padding: '5px 12px',
                   borderRadius: 4,
                 }}

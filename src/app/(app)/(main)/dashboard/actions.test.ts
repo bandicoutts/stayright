@@ -37,7 +37,7 @@ import {
   addTripAction,
   updateTripAction,
   deleteTripAction,
-  redirectToTrips,
+  redirectToDashboard,
 } from './actions'
 
 // ---------------------------------------------------------------------------
@@ -407,13 +407,13 @@ describe('updateTripAction — overlap branch', () => {
 })
 
 // ===========================================================================
-// redirectToTrips
+// redirectToDashboard
 // ===========================================================================
 
-describe('redirectToTrips', () => {
-  it('calls redirect("/trips")', async () => {
+describe('redirectToDashboard', () => {
+  it('calls redirect("/dashboard")', async () => {
     const { redirect } = await import('next/navigation')
-    await redirectToTrips()
-    expect(redirect).toHaveBeenCalledWith('/trips')
+    await redirectToDashboard()
+    expect(redirect).toHaveBeenCalledWith('/dashboard')
   })
 })

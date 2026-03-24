@@ -12,11 +12,11 @@ Instead of boxes-on-boxes, we use a "layered paper" philosophy. The layout shoul
 The palette is rooted in a deep, "British Racing Green" (`primary: #004f35`), conveying stability and government-level trust, contrasted against a crisp, airy background.
 
 ### Tonal Surface Hierarchy
-We strictly prohibit 1px solid borders for sectioning. Boundaries are defined solely through background color shifts or subtle tonal transitions.
-- **Base Layer:** `background (#f8f9fa)` — The infinite canvas.
-- **Sectioning:** Use `surface_container_low (#f3f4f5)` for large logical blocks (e.g., a sidebar or a background for a list).
-- **Interactive Elements:** Use `surface_container_lowest (#ffffff)` for cards and inputs to make them "pop" against the darker background.
-- **Nesting Rule:** To create depth, always move one step up or down the scale. A `surface_container_highest` card should never sit on a `surface_bright` background; it needs the intermediate `surface_container` to feel intentional.
+We strictly prohibit 1px solid borders for sectioning. Boundaries are defined solely through background color shifts or semantic tonal transitions.
+- **Base Layer:** `var(--color-bg)` — The "Obsidian" canvas.
+- **Sectioning:** Use `var(--color-surface)` for large logical blocks (e.g., a sidebar or a background for a list).
+- **Interactive Elements:** Use `var(--color-surface-dark)` for OLED-black backgrounds or `var(--color-border)` for tonal lifts.
+- **Nesting Rule:** High-end depth is achieved by moving one step across the semantic scale (`bg` → `surface` → `surface-dark`).
 
 ### The "No-Line" & Glass Rule
 - **No Hard Borders:** Never use `#000000` or high-contrast outlines.

@@ -13,23 +13,21 @@ The system rejects the rigid, "boxed-in" feeling of traditional grids. Instead, 
 
 Our palette is anchored by deep botanical greens and soft, architectural neutrals.
 
-### Color Palette (Material Design Convention)
-*   **Primary:** `#004f35` (Commanding and deep)
-*   **Primary Container:** `#006948` (Brand-rich surfaces)
-*   **Secondary (Amber):** `#904d00` (Warmth/Alert)
-*   **Tertiary (Red):** `#8e0009` (Urgency)
-*   **Background:** `#f8f9fa` (The canvas)
-*   **Surface Container Low:** `#f3f4f5` (Sectioning)
-*   **Surface Container Lowest:** `#ffffff` (Floating cards)
+### Color Palette (Semantic Tokens)
+*   **Primary Accent:** `var(--color-green)` (Vibrant, high-contrast)
+*   **Primary Light:** `var(--color-green-light)` (Interactive states)
+*   **Background:** `var(--color-bg)` (The "Obsidian" canvas)
+*   **Surface:** `var(--color-surface)` (Raised cards/sections)
+*   **Surface Dark:** `var(--color-surface-dark)` (OLED-black backgrounds)
 
 ### The "No-Line" Rule
 **Explicit Instruction:** Do not use 1px solid borders to define sections or containers. 
-Boundaries must be created through **Tonal Layering**. Use the subtle shift from `background` (#f8f9fa) to `surface_container_low` (#f3f4f5) to define large content areas. Elements that need to stand out (like action cards) should use `surface_container_lowest` (#ffffff).
+Boundaries must be created through **Tonal Layering**. Use the subtle shift from `background` to `surface` to define large content areas. Elements that need to stand out (like action cards) should use `surface-light` or appropriate token hierarchy.
 
 ### Signature Textures & Glassmorphism
 To avoid a "flat" digital look:
-*   **Glassmorphism:** For floating modals or navigation overlays, use `surface_container_lowest` at 80% opacity with a `24px` backdrop blur.
-*   **Signature Gradients:** For primary CTAs and hero states, apply a subtle linear gradient from `primary` (#004f35) to `primary_container` (#006948) at a 145-degree angle. This adds "soul" and depth that a flat hex code cannot achieve.
+*   **Glassmorphism:** For floating modals or navigation overlays, use `var(--color-surface)` at 80% opacity with a `24px` backdrop blur.
+*   **Signature Gradients:** For primary CTAs and hero states, apply `var(--gradient-green)`.
 
 ---
 

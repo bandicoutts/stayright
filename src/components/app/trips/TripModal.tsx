@@ -167,7 +167,7 @@ export function TripModal({
         aria-label={drawerLabel}
         tabIndex={-1}
         className={`
-          fixed z-50 bg-white shadow-2xl outline-none overflow-y-auto
+          fixed z-50 bg-[var(--color-surface)] shadow-2xl outline-none overflow-y-auto
           bottom-0 left-0 right-0 rounded-t-2xl max-h-[92dvh]
           md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[480px] md:rounded-2xl md:max-h-[85vh]
           animate-drawer-mobile md:animate-in md:fade-in-0 md:zoom-in-95 md:slide-in-from-bottom-[5%] md:duration-500 md:ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:animate-none
@@ -178,17 +178,17 @@ export function TripModal({
       >
         {/* Mobile drag handle pill */}
         <div className="md:hidden flex justify-center pt-3 pb-0">
-          <div className="w-10 h-1 bg-[#191C1D]/20 rounded-full" />
+          <div className="w-10 h-1 bg-[var(--color-text-muted)]/20 rounded-full" />
         </div>
 
         {/* Sticky drawer header with close button */}
-        <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-[#191C1D]/5 px-5 py-4 flex items-center justify-between">
-          <p className="text-sm font-semibold text-[#191C1D]">{drawerLabel}</p>
+        <div className="sticky top-0 z-10 bg-[var(--color-surface)]/95 backdrop-blur-sm border-b border-[var(--color-border)] px-5 py-4 flex items-center justify-between">
+          <p className="text-sm font-semibold text-[var(--color-text-primary)]">{drawerLabel}</p>
           <button
             type="button"
             onClick={() => requestCloseRef.current()}
             aria-label="Close"
-            className="text-[#3D4A42] hover:text-[#191C1D] p-1.5 rounded-lg hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1.5 rounded-lg hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
           >
             <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
               <path
@@ -221,28 +221,28 @@ export function TripModal({
           aria-modal="true"
           aria-labelledby="discard-dialog-title"
         >
-          <div className="bg-white rounded-2xl shadow-xl border border-[#191C1D]/8 p-6 w-full max-w-sm">
+          <div className="bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-6 w-full max-w-sm">
             <h2
               id="discard-dialog-title"
-              className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[#191C1D] mb-2"
+              className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-text-primary)] mb-2"
             >
               Discard this trip?
             </h2>
-            <p className="text-sm text-[#3D4A42] mb-5">
+            <p className="text-sm text-[var(--color-text-muted)] mb-5">
               Any details you've entered will be lost.
             </p>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 px-4 py-3 text-sm text-[#3D4A42] border border-[#191C1D]/15 rounded-xl hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+                className="flex-1 px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
               >
                 Keep editing
               </button>
               <button
                 type="button"
                 onClick={() => { setShowConfirm(false); onClose() }}
-                className="flex-1 px-4 py-3 text-sm font-semibold text-white bg-[#191C1D] rounded-xl hover:opacity-90 transition-opacity cursor-pointer"
+                className="flex-1 px-4 py-3 text-sm font-semibold text-white bg-[var(--color-surface-dark)] border border-[var(--color-border)] rounded-xl hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
               >
                 Discard
               </button>

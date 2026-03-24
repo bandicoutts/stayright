@@ -1,33 +1,32 @@
-/* StayRight Design Tokens — Obsidian Champagne */
-/* Source of truth: .claude/skills/stayright-design-system.md */
+/* StayRight Design Tokens — Dark Luxury Green */
 
 :root {
-  /* ── Backgrounds ─────────────────────────────── */
-  --color-bg:               #FAF8F2;   /* warm ivory paper */
-  --color-bg-tinted:        #F5F0E6;   /* slightly warmer for alternate rows */
+  /* ── Light Mode — Green Tinted ─────────────────── */
+  --color-bg:               #F5FAF7;   /* very light green-tinted white */
+  --color-bg-tinted:        #F0F7F3;   /* slightly darker green tint */
 
   /* ── Surfaces ────────────────────────────────── */
   --color-surface:          #FFFFFF;
-  --color-surface-warm:     #FFFDF7;   /* warm white for cards */
-  --color-surface-dark:     #1A1B19;   /* obsidian — footer, bento hero card */
+  --color-surface-warm:     #F0F7F3;   /* green-tinted white for cards */
+  --color-surface-dark:     #080B08;   /* obsidian — footer, sidebar, dark cards */
 
   /* ── Text ────────────────────────────────────── */
-  --color-text-primary:     #1A1B19;   /* warm obsidian — not pure black */
-  --color-text-2:           #2C2E2A;
-  --color-text-3:           #3D3F3A;
-  --color-text-muted:       #6B6D66;
-  --color-text-faint:       #A0A298;
+  --color-text-primary:     #0D1B10;   /* near-black with green warmth */
+  --color-text-2:           #1A2B1D;
+  --color-text-3:           #2C3E30;
+  --color-text-muted:       #4A6654;
+  --color-text-faint:       #8AA895;
 
-  /* ── Gold accent ─────────────────────────────── */
-  --color-gold:             #C9A84C;
-  --color-gold-dark:        #A88730;
-  --color-gold-light:       #E8C87A;
-  --color-gold-pale:        #FEF3CC;   /* badge / chip backgrounds */
+  /* ── Green accent ────────────────────────────── */
+  --color-green:            #006948;
+  --color-green-dark:       #004F35;
+  --color-green-light:      #00A874;
+  --color-green-pale:       #E8F5EE;   /* badge / chip backgrounds */
 
   /* ── Borders ─────────────────────────────────── */
-  --color-border:           rgba(201, 168, 76, 0.20);
-  --color-border-strong:    rgba(201, 168, 76, 0.35);
-  --color-border-ink:       rgba(26, 27, 25, 0.10);
+  --color-border:           rgba(0, 105, 72, 0.15);
+  --color-border-strong:    rgba(0, 105, 72, 0.28);
+  --color-border-ink:       rgba(13, 27, 16, 0.10);
 
   /* ── Semantic — do not change ────────────────── */
   --color-safe-bg:          #9FF4CA;   /* SAFE badge — immigration indicator */
@@ -36,6 +35,14 @@
   /* ── Status — shared with dashboard ─────────── */
   --color-status-amber:     #D97706;
   --color-status-red:       #BA1A1A;
+  
+  --color-warning-bg:       #FFFBEB;
+  --color-warning-border:   #FEF3C7;
+  --color-warning-text:     #92400E;
+
+  --color-danger-bg:        #FEF2F2;
+  --color-danger-border:    #FEE2E2;
+  --color-danger-text:      #991B1B;
 
   /* ── Radius ──────────────────────────────────── */
   --radius-sm:              4px;
@@ -45,13 +52,44 @@
   --radius-full:            9999px;
 
   /* ── Shadows ─────────────────────────────────── */
-  --shadow-card:            0 1px 4px rgba(26, 27, 25, 0.04), 0 8px 24px rgba(201, 168, 76, 0.06);
-  --shadow-card-hover:      0 4px 16px rgba(26, 27, 25, 0.06), 0 16px 40px rgba(201, 168, 76, 0.10);
-  --shadow-ring-card:       0 2px 8px rgba(26, 27, 25, 0.04), 0 16px 48px rgba(201, 168, 76, 0.08), 0 1px 0 rgba(255, 255, 255, 0.90) inset;
-  --shadow-button:          0 4px 20px rgba(201, 168, 76, 0.25);
-  --shadow-button-hover:    0 8px 36px rgba(201, 168, 76, 0.40);
+  --shadow-card:            0 1px 4px rgba(13, 27, 16, 0.04), 0 8px 24px rgba(0, 105, 72, 0.06);
+  --shadow-card-hover:      0 4px 16px rgba(13, 27, 16, 0.06), 0 16px 40px rgba(0, 105, 72, 0.10);
+  --shadow-ring-card:       0 2px 8px rgba(13, 27, 16, 0.04), 0 16px 48px rgba(0, 105, 72, 0.08), 0 1px 0 rgba(255, 255, 255, 0.90) inset;
+  --shadow-button:          0 4px 20px rgba(0, 105, 72, 0.25);
+  --shadow-button-hover:    0 8px 36px rgba(0, 105, 72, 0.40);
 
   /* ── Gradients ───────────────────────────────── */
-  --gradient-gold:          linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%);
-  --gradient-gold-text:     linear-gradient(135deg, #A88730 0%, #E8C87A 100%);
+  --gradient-green:         linear-gradient(135deg, #00A874 0%, #006948 100%);
+  --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #00A874 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:             #080B08;   /* base bg — near-OLED */
+    --color-bg-tinted:      #0E1310;
+    
+    --color-surface:        #0E1310;   /* cards, panels */
+    --color-surface-warm:   #141A15;   /* elevated cards */
+    
+    --color-text-primary:   #E8EDE9;   /* near-white with green warmth */
+    --color-text-2:         #CFD8D0;
+    --color-text-3:         #A8B6AB;
+    --color-text-muted:     #8FA893;
+    --color-text-faint:     #4A5E4D;
+    
+    --color-border:         rgba(0, 105, 72, 0.18);
+    --color-border-strong:  rgba(0, 105, 72, 0.35);
+    
+    --shadow-card:          0 4px 24px rgba(0, 0, 0, 0.5);
+    --shadow-card-hover:    0 8px 32px rgba(0, 0, 0, 0.7);
+
+    /* Status Dark Mode */
+    --color-warning-bg:     rgba(217, 119, 6, 0.12);
+    --color-warning-border: rgba(217, 119, 6, 0.25);
+    --color-warning-text:   #FBBF24;
+
+    --color-danger-bg:      rgba(186, 26, 26, 0.15);
+    --color-danger-border:  rgba(186, 26, 26, 0.30);
+    --color-danger-text:    #F87171;
+  }
 }

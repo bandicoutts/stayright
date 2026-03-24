@@ -21,9 +21,9 @@ export default function TrustBar() {
   return (
     <div
       style={{
-        background: '#FFFFFF',
-        borderTop: '1px solid rgba(201,168,76,0.15)',
-        borderBottom: '1px solid rgba(201,168,76,0.15)',
+        background: 'var(--color-bg-tinted)',
+        borderTop: '1px solid var(--color-border)',
+        borderBottom: '1px solid var(--color-border)',
       }}
     >
       <div
@@ -37,18 +37,18 @@ export default function TrustBar() {
             role="listitem"
             className="flex flex-col gap-1 px-8 py-7"
             style={{
-              borderRight: i < trustCells.length - 1 ? '1px solid rgba(201,168,76,0.12)' : undefined,
+              borderRight: i < trustCells.length - 1 ? '1px solid var(--color-border)' : undefined,
             }}
           >
             <span
               className="font-[family-name:var(--font-manrope)] font-bold leading-tight tracking-[-0.02em]"
-              style={{ fontSize: '1.0625rem', color: '#1A1B19' }}
+              style={{ fontSize: '1.0625rem', color: 'var(--color-text-primary)' }}
             >
               {cell.value}
             </span>
             <span
               className="font-[family-name:var(--font-inter)] leading-snug"
-              style={{ fontSize: '0.8125rem', color: '#6B6D66' }}
+              style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}
             >
               {cell.label}
             </span>

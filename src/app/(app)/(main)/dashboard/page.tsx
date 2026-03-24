@@ -126,10 +126,10 @@ export default async function DashboardPage() {
 
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D]">
+        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)]">
           Good {getGreeting()}, {firstName}
         </h1>
-        <p className="text-sm text-[#3D4A42] mt-0.5">
+        <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
           {isCurrentlyAbroad
             ? 'You are currently abroad.'
             : "Here's your compliance status."}
@@ -138,9 +138,9 @@ export default async function DashboardPage() {
 
       {/* Currently abroad banner */}
       {isCurrentlyAbroad && (
-        <div className="mb-6 px-4 py-3 bg-[#D97706]/10 border border-[#D97706]/25 rounded-xl flex items-center gap-3">
+        <div className="mb-6 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-center gap-3">
           <span className="text-lg">✈️</span>
-          <p className="text-sm text-[#191C1D]">
+          <p className="text-sm text-[var(--color-text-primary)]">
             <span className="font-semibold">You're currently abroad.</span> Return
             date not yet logged — log your return when you're back in the UK.
           </p>
@@ -157,9 +157,9 @@ export default async function DashboardPage() {
         {/* Left column — quota ring + qualifying period */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quota ring card */}
-          <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-8">
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
             <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
-            <p className="mt-5 text-xs text-center text-[#3D4A42] max-w-sm mx-auto leading-relaxed">
+            <p className="mt-5 text-xs text-center text-[var(--color-text-muted)] max-w-sm mx-auto leading-relaxed">
               Calculations follow official Home Office guidance. Always verify
               with an immigration adviser if you are approaching the limit.
             </p>
@@ -167,22 +167,22 @@ export default async function DashboardPage() {
 
           {/* Qualifying period */}
           {qualifying && (
-            <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-6">
+            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-[#191C1D]">
+                <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
                   Qualifying period
                 </h2>
-                <span className="text-sm font-semibold text-[#A88730]">
+                <span className="text-sm font-semibold text-[var(--color-green)]">
                   {qualifying.percentage}%
                 </span>
               </div>
-              <div className="w-full h-2 bg-[rgba(201,168,76,0.12)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100}>
+              <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100}>
                 <div
                   className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${qualifying.percentage}%`, background: 'linear-gradient(90deg, #C9A84C, #E8C87A)' }}
+                  style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
                 />
               </div>
-              <div className="flex justify-between mt-2 text-xs text-[#3D4A42]">
+              <div className="flex justify-between mt-2 text-xs text-[var(--color-text-muted)]">
                 <span>
                   Started{' '}
                   {qualifying.visaStartDate.toLocaleDateString('en-GB', {
@@ -207,34 +207,34 @@ export default async function DashboardPage() {
         {/* Right column — actions + ILR timeline + trip summary */}
         <div className="space-y-6">
           {/* CTAs */}
-          <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-6 space-y-3">
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6 space-y-3">
             <Link
               href="?modal=plan"
-              className="flex items-center justify-between w-full rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity text-[#1A1B19]"
-              style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
+              className="flex items-center justify-between w-full rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity text-white"
+              style={{ background: 'var(--gradient-green)' }}
             >
               <span>Plan a trip</span>
               <span>→</span>
             </Link>
-            <p className="text-xs text-[#3D4A42] text-center -mt-1">
+            <p className="text-xs text-[var(--color-text-muted)] text-center -mt-1">
               See the impact before you book
             </p>
             <Link
               href="?modal=log"
-              className="flex items-center justify-between w-full border border-[rgba(201,168,76,0.25)] text-[#191C1D] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#FAF8F2] transition-colors"
+              className="flex items-center justify-between w-full border border-[var(--color-border-strong)] text-[var(--color-text-primary)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors"
             >
               <span>Log a past trip</span>
-              <span className="text-[#3D4A42]">→</span>
+              <span className="text-[var(--color-text-muted)]">→</span>
             </Link>
-            <p className="text-xs text-[#3D4A42] text-center -mt-1">
+            <p className="text-xs text-[var(--color-text-muted)] text-center -mt-1">
               Add trips you&apos;ve already taken
             </p>
           </div>
 
           {/* ILR eligibility timeline */}
           {qualifying && (
-            <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] shadow-sm p-6">
-              <h2 className="text-sm font-semibold text-[#191C1D] mb-4">
+            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
+              <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">
                 ILR timeline
               </h2>
               <div className="space-y-3">
@@ -243,13 +243,13 @@ export default async function DashboardPage() {
                   date={qualifying.visaStartDate}
                   done
                 />
-                <div className="ml-3 w-px h-4 bg-[#C9A84C]/30" />
+                <div className="ml-3 w-px h-4 bg-[var(--color-green)]/30" />
                 <TimelineItem
                   label={`${qualifying.percentage}% complete`}
                   date={today}
                   active
                 />
-                <div className="ml-3 w-px h-4 bg-[#191C1D]/10" />
+                <div className="ml-3 w-px h-4 bg-[var(--color-text-primary)]/10" />
                 <TimelineItem
                   label="ILR eligibility"
                   date={qualifying.ilrDate}
@@ -286,20 +286,20 @@ function AlertCard({
 }) {
   const config = {
     WARNING: {
-      bg: 'bg-amber-50 border-amber-200',
-      text: 'text-[#D97706]',
+      bg: 'bg-[var(--color-warning-bg)] border-[var(--color-warning-border)]',
+      text: 'text-[var(--color-warning-text)]',
       icon: '⚠️',
       message: `You have used ${days} of your 180 days in the current rolling window. You are approaching the limit.`,
     },
     DANGER: {
-      bg: 'bg-red-50 border-red-200',
-      text: 'text-[#BA1A1A]',
+      bg: 'bg-[var(--color-danger-bg)] border-[var(--color-danger-border)]',
+      text: 'text-[var(--color-danger-text)]',
       icon: '🚨',
       message: `You have used ${days} of your 180 days. You are very close to the limit. Plan carefully before any further travel.`,
     },
     BREACH: {
-      bg: 'bg-red-100 border-red-300',
-      text: 'text-[#8E0009]',
+      bg: 'bg-[var(--color-danger-bg)] border-[var(--color-danger-border)]',
+      text: 'text-[var(--color-danger-text)]',
       icon: '🚫',
       message: `You have exceeded 180 days of absence (${days} days used). Seek immigration advice immediately.`,
     },
@@ -332,19 +332,19 @@ function TimelineItem({
       <div
         className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
           done
-            ? 'text-[#1A1B19]'
+            ? 'text-white'
             : active
-            ? 'border-2 border-[#C9A84C] bg-[rgba(201,168,76,0.12)]'
-            : 'bg-[#FAF8F2] border-2 border-[rgba(201,168,76,0.25)]'
+            ? 'border-2 border-[var(--color-green)] bg-[var(--color-green-pale)]'
+            : 'bg-[var(--color-bg)] border-2 border-[var(--color-border-strong)]'
         }`}
-        style={done ? { background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' } : undefined}
+        style={done ? { background: 'var(--color-green)' } : undefined}
       >
         {done && (
           <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">
             <path
               d="M2 6l3 3 5-5"
-              stroke="white"
-              strokeWidth="1.5"
+              stroke="currentColor"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -352,8 +352,8 @@ function TimelineItem({
         )}
       </div>
       <div>
-        <p className="text-xs font-medium text-[#191C1D]">{label}</p>
-        <p className="text-xs text-[#3D4A42]">
+        <p className="text-xs font-medium text-[var(--color-text-primary)]">{label}</p>
+        <p className="text-xs text-[var(--color-text-muted)]">
           {date.toLocaleDateString('en-GB', {
             day: 'numeric',
             month: 'short',

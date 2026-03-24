@@ -192,7 +192,7 @@ export function DestinationAutocomplete({
         onKeyDown={handleKeyDown}
         placeholder="e.g. Portugal, Dubai, New York"
         autoFocus={autoFocus}
-        className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+        className="w-full border border-[var(--color-border)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30 focus:border-[var(--color-green)]/50 transition-shadow bg-[var(--color-surface)]"
       />
 
       {showDropdown && (
@@ -201,7 +201,7 @@ export function DestinationAutocomplete({
           id={listboxId}
           role="listbox"
           aria-label="Destination suggestions"
-          className="absolute z-50 left-0 right-0 top-full mt-1 bg-white border border-[#191C1D]/10 rounded-xl shadow-lg overflow-hidden max-h-60 overflow-y-auto"
+          className="absolute z-50 left-0 right-0 top-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-lg overflow-hidden max-h-60 overflow-y-auto"
         >
           {suggestions.map((suggestion, i) => (
             <li
@@ -217,8 +217,8 @@ export function DestinationAutocomplete({
               }}
               className={`px-4 py-2.5 text-sm cursor-pointer select-none transition-colors ${
                 i === activeIndex
-                  ? 'bg-[#006948]/8 text-[#006948] font-medium'
-                  : 'text-[#191C1D] hover:bg-[#F8F9FA]'
+                  ? 'bg-[var(--color-green-pale)] text-[var(--color-green)] font-medium'
+                  : 'text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)]'
               }`}
             >
               {suggestion}

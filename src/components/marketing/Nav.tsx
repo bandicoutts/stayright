@@ -54,7 +54,7 @@ export default function Nav() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[rgba(250,248,242,0.90)] backdrop-blur-[20px] border-b border-[rgba(201,168,76,0.20)]'
+          ? 'bg-[var(--color-bg-tinted)]/90 backdrop-blur-[20px] border-b border-[var(--color-border)]'
           : 'bg-transparent border-b border-transparent'
       }`}
     >
@@ -63,8 +63,9 @@ export default function Nav() {
         {/* Logo */}
         <Link
           href="/"
-          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] text-[#1A1B19] no-underline"
+          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] flex items-center gap-2 text-[var(--color-text-primary)] no-underline"
         >
+          <span className="w-5 h-5 rounded-[5px] bg-[var(--gradient-green)]" />
           Stayright
         </Link>
 
@@ -72,13 +73,13 @@ export default function Nav() {
         <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2 gap-8">
           <a
             href="#features"
-            className="text-[14px] font-normal text-[#6B6D66] hover:text-[#1A1B19] tracking-[0.01em] transition-colors duration-150 no-underline"
+            className="text-[14px] font-normal text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] tracking-[0.01em] transition-colors duration-150 no-underline"
           >
             Features
           </a>
           <a
             href="#pricing"
-            className="text-[14px] font-normal text-[#6B6D66] hover:text-[#1A1B19] tracking-[0.01em] transition-colors duration-150 no-underline"
+            className="text-[14px] font-normal text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] tracking-[0.01em] transition-colors duration-150 no-underline"
           >
             Pricing
           </a>
@@ -88,16 +89,15 @@ export default function Nav() {
         <div className="hidden md:flex items-center gap-5">
           <Link
             href="/login"
-            className="text-[14px] font-normal text-[#6B6D66] hover:text-[#1A1B19] tracking-[0.01em] transition-colors duration-150 no-underline"
+            className="text-[14px] font-normal text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] tracking-[0.01em] transition-colors duration-150 no-underline"
           >
             Sign in
           </Link>
           <Link
             href="/signup"
-            className="inline-flex items-center px-5 py-[9px] rounded-[6px] text-[13px] font-semibold text-[#1A1B19] no-underline"
+            className="inline-flex items-center px-5 py-[9px] rounded-[6px] text-[13px] font-semibold text-white no-underline bg-[var(--color-green)] hover:bg-[var(--color-green-light)] transition-all duration-200"
             style={{
-              background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)',
-              boxShadow: '0 4px 20px rgba(201,168,76,0.25)',
+              boxShadow: 'var(--shadow-button)',
             }}
           >
             Start Free Tracker
@@ -107,7 +107,7 @@ export default function Nav() {
         {/* Mobile hamburger */}
         <button
           ref={btnRef}
-          className="md:hidden p-2 -mr-2 text-[#1A1B19]"
+          className="md:hidden p-2 -mr-2 text-[var(--color-text-primary)]"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
@@ -120,20 +120,20 @@ export default function Nav() {
       {mobileOpen && (
         <div
           ref={menuRef}
-          className="md:hidden absolute w-full bg-[rgba(250,248,242,0.97)] backdrop-blur-[24px] border-t border-[rgba(201,168,76,0.15)] px-6 py-6 flex flex-col gap-6"
+          className="md:hidden absolute w-full bg-[var(--color-bg)]/98 backdrop-blur-[24px] border-t border-[var(--color-border)] px-6 py-6 flex flex-col gap-6"
         >
           <div className="flex flex-col gap-1">
             <a
               href="#features"
               onClick={() => setMobileOpen(false)}
-              className="text-[15px] font-normal text-[#6B6D66] hover:text-[#1A1B19] transition-colors py-3 border-b border-[rgba(201,168,76,0.12)] no-underline"
+              className="text-[15px] font-normal text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors py-3 border-b border-[var(--color-border)] no-underline"
             >
               Features
             </a>
             <a
               href="#pricing"
               onClick={() => setMobileOpen(false)}
-              className="text-[15px] font-normal text-[#6B6D66] hover:text-[#1A1B19] transition-colors py-3 no-underline"
+              className="text-[15px] font-normal text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors py-3 no-underline"
             >
               Pricing
             </a>
@@ -142,17 +142,16 @@ export default function Nav() {
             <Link
               href="/login"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-center px-4 py-3 rounded-[6px] text-[15px] font-normal text-[#1A1B19] bg-[rgba(201,168,76,0.08)] border border-[rgba(201,168,76,0.20)] transition-colors no-underline"
+              className="flex items-center justify-center px-4 py-3 rounded-[6px] text-[15px] font-normal text-[var(--color-text-primary)] bg-[var(--color-bg-tinted)] border border-[var(--color-border)] transition-colors no-underline"
             >
               Sign in
             </Link>
             <Link
               href="/signup"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-center px-4 py-3 rounded-[6px] text-[15px] font-semibold text-[#1A1B19] no-underline"
+              className="flex items-center justify-center px-4 py-3 rounded-[6px] text-[15px] font-semibold text-white bg-[var(--color-green)] no-underline"
               style={{
-                background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)',
-                boxShadow: '0 4px 20px rgba(201,168,76,0.25)',
+                boxShadow: 'var(--shadow-button)',
               }}
             >
               Start Free Tracker

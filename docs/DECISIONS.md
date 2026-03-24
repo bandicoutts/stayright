@@ -56,6 +56,8 @@ Scan this table to find relevant decisions. Read the full entry only if the summ
 | DECISION-042 | Ongoing trips counted with provisional return; Crown Dependency exact matching | Trips with no `return_date` use today as provisional end; Crown Dependency list is exact-match only | Decided |
 | DECISION-043 | WCAG 2.2 AA Accessibility Compliance Architecture | Enforces contrast ratios, global focus states, reduced-motion queries, focus-trapping, and axe-core E2E tests | Decided |
 | DECISION-046 | Dashboard & Trips Consolidation | Converge dashboard and trips views into a single workspace; convert drawer to modal | Decided |
+| DECISION-060 | Design System Pivot (Gold to Green) | Revert to green-tinted Dark Luxury palette for better alignment with semantic compliance colors | Decided |
+| DECISION-061 | Semantic Token Architecture | Implementation of a full suite of CSS variables in tokens.css to replace hardcoded hex values | Decided |
 
 ---
 
@@ -798,6 +800,26 @@ The root cause of C-1/C-2 was the classic vibe-coding split: UI guards one thing
 **Status:** Decided
 **Decided by:** Accessibility Engineer 
 
+[...]
+
+### [DECISION-060] Design System Pivot (Gold to Green)
+**Date:** 2026-03-24
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+Replaced the "Obsidian Champagne" (gold/warm) palette with a "Dark Luxury" (green-tinted) palette across the entire application. All hardcoded gold gradients, borders, and backgrounds were replaced with semantic CSS variables tied to the new green palette.
+
+**Reasoning:**
+While the gold palette felt premium, it created visual dissonance with immutable semantic colors (Safe/Safe+ badges are green). Using a green-tinted aesthetic allows the brand accent to feel coherent with the data-driven compliance status colors. The "Dark Luxury" variant (OLED black with #006948 accents) maintains the premium positioning while improving visual logic.
+
+**Alternatives considered:**
+- Keeping gold and changing semantic colors — rejected. Semantic colors (Green=Safe, Red=Breach) are industry standard and critical for speed-of-read in a compliance tool.
+- Blue palette — rejected. Not the brand's original identity.
+
+**Consequences:**
+`tokens.css` is the source of truth. Any new components must use the semantic variables (e.g., `var(--color-green)`) instead of hardcoded hex values to ensure consistency and light/dark mode support.
+
 **Decision:**
 The application strictly targets WCAG 2.2 Level AA compliance. 
 - Global animations and transitions respect `prefers-reduced-motion: reduce`.
@@ -1305,3 +1327,48 @@ Separating the trip log from the dashboard's Quota Ring created unnecessary fric
 The `src/app/(app)/(main)/trips/page.tsx` route is deleted. The navigation sidebar no longer links to `/trips`. `DashboardDrawerWrapper` is renamed to `DashboardModalWrapper` and triggers a centered `TripModal`.
 
 **Related:** PRD Section 4d, 4f; `docs/DESIGN.md`
+
+---
+
+### [DECISION-060] Design System Pivot (Gold to Green)
+**Date:** 2026-03-24
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+The brand accent color is reverted from the previous gold/champagne (#A88730) to the original green-tinted "Dark Luxury" palette. This change is holistic, affecting the marketing site (Hero, Nav, Pricing) and the dashboard (Sidebar, QuotaRing, Status Chips).
+
+**Reasoning:**
+The previous switch to gold created a terminal visual conflict with compliance-critical colors that could not be changed — specifically the `#9FF4CA` "SAFE" green used in status badges and the QuotaRing's green arc. Gold and green in the same proximity felt visually cluttered and mismatched. Reverting to a deep OLED-black and vibrant green palette creates a high-end, editorial look while ensuring perfect coherence with all functional compliance indicators.
+
+**Alternatives considered:**
+- Redrawing all semantic compliance colors to match the gold palette — rejected. Immigration compliance has a deeply ingrained "green = safe" mental model that is dangerous to break for purely aesthetic reasons.
+
+**Consequences:**
+The application now uses a deep-green-tinted "Obsidian" surface (#080B08) and high-contrast green accents (#006948). All components have been refactored to use this new palette, ensuring a consistent premium feel across the entire user journey.
+
+**Related:** `docs/DESIGN.md`, `tokens.css`, DECISION-061
+
+---
+
+### [DECISION-061] Semantic Token Architecture
+**Date:** 2026-03-24
+**Status:** Decided
+**Decided by:** Design Engineering
+
+**Decision:**
+The design system's source of truth is migrated to a full semantic token architecture in `src/styles/tokens.css`. Direct hardcoded hex values are deprecated across the entire component tree and replaced with semantic CSS variables (e.g., `var(--color-bg)`, `var(--color-text-primary)`, `var(--color-green)`).
+
+**Reasoning:**
+StayRight requires a high-end "Editorial Concierge" aesthetic which is notoriously difficult to maintain manually across multiple screens. Using semantic tokens allows for:
+1.  **Systemic Consistency:** Changes to the brand's primary green or surface obsidian can be made in a single file without chasing hex values.
+2.  **Robust Theme Support:** Light and dark modes are handled automatically by swapping the values of the tokens within a single `@media (prefers-color-scheme: dark)` block.
+3.  **Improved Contrast Auditing:** Semantic labels make it easier to verify that functional elements (like links or error states) have sufficient contrast against their background tokens.
+
+**Alternatives considered:**
+- Using utility-first Tailwind arbitrary values (`text-[#006948]`) — rejected. Leads to "hex drift" and makes maintaining a dual-mode high-end aesthetic extremely brittle.
+
+**Consequences:**
+Every new component must use semantic variables. The `tokens.css` file is the canonical reference for all styling. Global styles in `globals.css` are reduced to structural concerns, with all design identity residing in the tokens.
+
+**Related:** `docs/DESIGN.md`, `tokens.css`, DECISION-060

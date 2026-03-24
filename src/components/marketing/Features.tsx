@@ -45,7 +45,7 @@ export default function Features() {
     <section
       id="features"
       className="px-6 md:px-14"
-      style={{ background: '#FAF8F2', borderTop: '1px solid rgba(201,168,76,0.15)' }}
+      style={{ background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)' }}
     >
       <div className="max-w-[1320px] mx-auto py-[90px]">
 
@@ -53,11 +53,11 @@ export default function Features() {
         <div className="max-w-2xl mb-14">
           <div
             className="flex items-center gap-[10px] mb-[14px]"
-            style={{ color: '#A88730' }}
+            style={{ color: 'var(--color-green)' }}
           >
             <span
               className="block shrink-0"
-              style={{ width: 20, height: 1, background: '#C9A84C' }}
+              style={{ width: 20, height: 1, background: 'var(--color-green)' }}
               aria-hidden="true"
             />
             <span
@@ -69,7 +69,7 @@ export default function Features() {
           </div>
           <h2
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em]"
-            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: '#1A1B19' }}
+            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
             Compliance,{' '}
             <em
@@ -77,7 +77,7 @@ export default function Features() {
               style={{
                 fontStyle: 'italic',
                 fontWeight: 300,
-                background: 'linear-gradient(135deg, #A88730 0%, #E8C87A 100%)',
+                background: 'var(--gradient-green-text)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -88,7 +88,7 @@ export default function Features() {
           </h2>
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.6] mt-5 max-w-[480px]"
-            style={{ fontSize: '1.0625rem', color: '#2C2E2A' }}
+            style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             Everything you need to maintain your residency status without the
             spreadsheets or the stress.
@@ -104,23 +104,23 @@ export default function Features() {
             aria-labelledby="feature-what-if-title"
             className="md:col-span-5 md:row-span-2 flex flex-col p-10 group relative overflow-hidden"
             style={{
-              background: '#1A1B19',
+              background: 'var(--color-surface-dark)',
               border: '1px solid transparent',
               borderRadius: 12,
-              borderTopColor: '#C9A84C',
+              borderTopColor: 'var(--color-green)',
               borderTopWidth: 2,
-              boxShadow: '0 8px 32px rgba(26,27,25,0.15)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
             }}
           >
             {/* Icon */}
             <div
               className="w-9 h-9 rounded-[8px] flex items-center justify-center mb-4 shrink-0"
-              style={{ background: 'rgba(201,168,76,0.15)' }}
+              style={{ background: 'var(--color-border)' }}
               aria-hidden="true"
             >
               <Calculator
                 className="w-[18px] h-[18px]"
-                style={{ stroke: '#C9A84C' }}
+                style={{ stroke: '#00A874' }}
                 strokeWidth={1.5}
               />
             </div>
@@ -128,13 +128,13 @@ export default function Features() {
             <h3
               id="feature-what-if-title"
               className="font-[family-name:var(--font-manrope)] font-bold leading-[1.2] tracking-[-0.02em] mb-3"
-              style={{ fontSize: '1.75rem', color: '#FEF3CC' }}
+              style={{ fontSize: '1.75rem', color: 'var(--color-text-primary)' }}
             >
               What-if simulator
             </h3>
             <p
               className="font-[family-name:var(--font-inter)] leading-[1.6] mb-auto max-w-[280px]"
-              style={{ fontSize: '0.9375rem', color: 'rgba(232,213,160,0.55)' }}
+              style={{ fontSize: '0.9375rem', color: 'var(--color-text-muted)' }}
             >
               Plan any trip and instantly see its impact on your rolling window before you book.
             </p>
@@ -144,7 +144,7 @@ export default function Features() {
               <div
                 className="absolute -bottom-10 -right-2 md:-right-10 w-[110%] sm:w-[85%] md:w-[90%] lg:w-[380px] rounded-t-2xl p-6 origin-bottom-right rotate-2 transition-transform duration-500 group-hover:rotate-0"
                 style={{
-                  background: '#FFFFFF',
+                  background: 'var(--color-surface)',
                   boxShadow: '0 24px 64px rgba(0,0,0,0.30)',
                 }}
               >
@@ -158,13 +158,13 @@ export default function Features() {
                     <div>
                       <p
                         className="font-[family-name:var(--font-inter)] font-bold leading-tight"
-                        style={{ fontSize: 15, color: '#1A1B19' }}
+                        style={{ fontSize: 15, color: 'var(--color-text-primary)' }}
                       >
                         Madrid, Spain
                       </p>
                       <p
                         className="font-[family-name:var(--font-inter)] font-medium leading-tight mt-1"
-                        style={{ fontSize: 12, color: '#6B6D66' }}
+                        style={{ fontSize: 12, color: 'var(--color-text-muted)' }}
                       >
                         4 Nov &ndash; 11 Nov
                       </p>
@@ -172,7 +172,7 @@ export default function Features() {
                   </div>
                   <span
                     className="font-[family-name:var(--font-inter)] font-bold px-3 py-1.5 rounded-[6px]"
-                    style={{ background: '#F5F0E6', color: '#1A1B19', fontSize: 12 }}
+                    style={{ background: 'var(--color-bg-tinted)', color: 'var(--color-text-primary)', fontSize: 12 }}
                   >
                     +7 days
                   </span>
@@ -182,20 +182,20 @@ export default function Features() {
                 <div className="flex items-center justify-between pt-1">
                   <p
                     className="font-[family-name:var(--font-inter)] font-semibold"
-                    style={{ fontSize: 14, color: '#6B6D66' }}
+                    style={{ fontSize: 14, color: 'var(--color-text-muted)' }}
                   >
                     Projected window
                   </p>
                   <div className="flex items-center gap-3">
                     <span
                       className="font-[family-name:var(--font-inter)] font-bold"
-                      style={{ fontSize: 15, color: '#1A1B19', fontVariantNumeric: 'tabular-nums' }}
+                      style={{ fontSize: 15, color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
                     >
                       174 / 180
                     </span>
                     <span
                       className="font-[family-name:var(--font-manrope)] font-bold tracking-[0.05em] uppercase px-2.5 py-1 rounded-full"
-                      style={{ fontSize: 10, background: '#9FF4CA', color: '#002114' }}
+                      style={{ fontSize: 10, background: 'var(--color-safe-bg)', color: 'var(--color-safe-text)' }}
                     >
                       Safe
                     </span>
@@ -218,25 +218,25 @@ export default function Features() {
               >
                 <div
                   className="w-9 h-9 rounded-[8px] flex items-center justify-center mb-4 shrink-0"
-                  style={{ background: 'rgba(201,168,76,0.08)' }}
+                  style={{ background: 'rgba(0,105,72,0.08)' }}
                   aria-hidden="true"
                 >
                   <Icon
                     className="w-[18px] h-[18px]"
-                    style={{ stroke: '#C9A84C' }}
+                    style={{ stroke: '#006948' }}
                     strokeWidth={1.5}
                   />
                 </div>
                 <h3
                   id={id}
                   className="font-[family-name:var(--font-manrope)] font-semibold leading-[1.3] tracking-[-0.01em] mb-2"
-                  style={{ fontSize: '1rem', color: '#1A1B19' }}
+                  style={{ fontSize: '1rem', color: 'var(--color-text-primary)' }}
                 >
                   {feature.title}
                 </h3>
                 <p
                   className="font-[family-name:var(--font-inter)] leading-[1.6]"
-                  style={{ fontSize: '0.875rem', color: '#6B6D66' }}
+                  style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}
                 >
                   {feature.description}
                 </p>

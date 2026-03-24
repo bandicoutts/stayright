@@ -7,39 +7,39 @@
   --font-inter: var(--font-inter);
 
   /* Backgrounds */
-  --color-background:       #FAF8F2;
-  --color-bg-tinted:        #F5F0E6;
+  --color-background:       var(--color-bg);
+  --color-bg-tinted:        var(--color-bg-tinted);
 
   /* Surfaces */
-  --color-surface:          #FFFFFF;
-  --color-surface-warm:     #FFFDF7;
-  --color-surface-dark:     #1A1B19;
+  --color-surface:          var(--color-surface);
+  --color-surface-warm:     var(--color-surface-warm);
+  --color-surface-dark:     var(--color-surface-dark);
 
   /* Text */
-  --color-text-primary:     #1A1B19;
-  --color-text-2:           #2C2E2A;
-  --color-text-muted:       #6B6D66;
-  --color-text-faint:       #A0A298;
+  --color-text-primary:     var(--color-text-primary);
+  --color-text-2:           var(--color-text-2);
+  --color-text-muted:       var(--color-text-muted);
+  --color-text-faint:       var(--color-text-faint);
 
-  /* Gold */
-  --color-gold:             #C9A84C;
-  --color-gold-dark:        #A88730;
-  --color-gold-light:       #E8C87A;
-  --color-gold-pale:        #FEF3CC;
+  /* Green */
+  --color-green:            var(--color-green);
+  --color-green-dark:       var(--color-green-dark);
+  --color-green-light:      var(--color-green-light);
+  --color-green-pale:       var(--color-green-pale);
 
   /* Semantic */
-  --color-safe-bg:          #9FF4CA;
-  --color-safe-text:        #002114;
+  --color-safe-bg:          var(--color-safe-bg);
+  --color-safe-text:        var(--color-safe-text);
 
   /* Status (dashboard — do not change) */
-  --color-status-amber:     #D97706;
-  --color-status-red:       #BA1A1A;
+  --color-status-amber:     var(--color-status-amber);
+  --color-status-red:       var(--color-status-red);
 
   /* Radius */
-  --radius-sm:              4px;
-  --radius-md:              8px;
-  --radius-lg:              12px;
-  --radius-xl:              16px;
+  --radius-sm:              var(--radius-sm);
+  --radius-md:              var(--radius-md);
+  --radius-lg:              var(--radius-lg);
+  --radius-xl:              var(--radius-xl);
 }
 
 html {
@@ -67,8 +67,8 @@ h1, h2, h3, h4, h5, h6 {
   }
   input:focus, select:focus, textarea:focus {
     @apply outline-none;
-    border-color: rgba(201, 168, 76, 0.5);
-    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+    border-color: rgba(0, 105, 72, 0.5);
+    box-shadow: 0 0 0 3px rgba(0, 105, 72, 0.15);
   }
 
   /* Global button/link lift — keep for dashboard compatibility */
@@ -89,16 +89,16 @@ h1, h2, h3, h4, h5, h6 {
 @layer utilities {
   /* Bento feature card — hover handled in CSS so Features.tsx stays a server component */
   .bento-feature-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(201, 168, 76, 0.20);
-    border-radius: 12px;
-    box-shadow: 0 1px 4px rgba(26, 27, 25, 0.04);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   }
   .bento-feature-card:hover {
-    border-color: rgba(201, 168, 76, 0.40);
+    border-color: var(--color-border-strong);
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(201, 168, 76, 0.08);
+    box-shadow: var(--shadow-card-hover);
   }
 
   /* Drawer animations — used by dashboard trip drawer */

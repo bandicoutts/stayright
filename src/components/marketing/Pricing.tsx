@@ -11,7 +11,7 @@ export default function Pricing() {
     <section
       id="pricing"
       className="px-6 md:px-14"
-      style={{ background: '#FAF8F2', borderTop: '1px solid rgba(201,168,76,0.15)' }}
+      style={{ background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)' }}
     >
       <div className="max-w-[1320px] mx-auto py-[90px]">
 
@@ -19,11 +19,11 @@ export default function Pricing() {
         <div className="mb-12">
           <div
             className="flex items-center gap-[10px] mb-[14px]"
-            style={{ color: '#A88730' }}
+            style={{ color: 'var(--color-green)' }}
           >
             <span
               className="block shrink-0"
-              style={{ width: 20, height: 1, background: '#C9A84C' }}
+              style={{ width: 20, height: 1, background: 'var(--color-green)' }}
               aria-hidden="true"
             />
             <span
@@ -35,13 +35,13 @@ export default function Pricing() {
           </div>
           <h2
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em]"
-            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: '#1A1B19' }}
+            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
             Simple, transparent pricing.
           </h2>
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4 max-w-[400px]"
-            style={{ fontSize: '1.0625rem', color: '#6B6D66' }}
+            style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
           >
             Choose the plan that fits your visa journey.
           </p>
@@ -52,7 +52,7 @@ export default function Pricing() {
           <span
             id="monthly-label"
             className="font-[family-name:var(--font-inter)] font-medium"
-            style={{ fontSize: '0.875rem', color: !annual ? '#1A1B19' : '#6B6D66' }}
+            style={{ fontSize: '0.875rem', color: !annual ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}
           >
             Monthly
           </span>
@@ -61,8 +61,8 @@ export default function Pricing() {
             onClick={() => setAnnual(!annual)}
             className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
             style={{
-              background: annual ? 'rgba(201,168,76,0.20)' : 'rgba(26,27,25,0.10)',
-              border: annual ? '1px solid #C9A84C' : '1px solid rgba(201,168,76,0.20)',
+              background: annual ? 'var(--color-green-pale)' : 'var(--color-bg-tinted)',
+              border: annual ? '1px solid var(--color-green)' : '1px solid var(--color-border)',
             }}
             role="switch"
             aria-checked={annual}
@@ -71,7 +71,7 @@ export default function Pricing() {
             <span
               className="inline-block h-[18px] w-[18px] rounded-full transition-all duration-300"
               style={{
-                background: annual ? '#C9A84C' : '#A0A298',
+                background: annual ? 'var(--color-green)' : 'var(--color-text-faint)',
                 transform: annual ? 'translateX(22px)' : 'translateX(2px)',
               }}
             />
@@ -80,7 +80,7 @@ export default function Pricing() {
           <span
             id="annual-label"
             className="font-[family-name:var(--font-inter)] font-medium"
-            style={{ fontSize: '0.875rem', color: annual ? '#1A1B19' : '#6B6D66' }}
+            style={{ fontSize: '0.875rem', color: annual ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}
           >
             Annual
           </span>
@@ -90,9 +90,9 @@ export default function Pricing() {
               className="font-[family-name:var(--font-manrope)] font-semibold px-[10px] py-[3px] rounded-full"
               style={{
                 fontSize: '0.6875rem',
-                color: '#A88730',
-                background: '#FEF3CC',
-                border: '1px solid rgba(201,168,76,0.25)',
+                color: 'var(--color-green)',
+                background: 'var(--color-green-pale)',
+                border: '1px solid var(--color-border-strong)',
               }}
             >
               Save 30%
@@ -109,15 +109,15 @@ export default function Pricing() {
             aria-labelledby="free-plan-title"
             className="flex flex-col p-8 md:p-10"
             style={{
-              background: '#FFFFFF',
-              border: '1px solid rgba(201,168,76,0.20)',
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
               borderRadius: 12,
-              boxShadow: '0 1px 4px rgba(26,27,25,0.04)',
+              boxShadow: 'var(--shadow-card)',
             }}
           >
             <div
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
-              style={{ fontSize: '0.6875rem', color: '#6B6D66' }}
+              style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}
             >
               Free
             </div>
@@ -125,21 +125,21 @@ export default function Pricing() {
               <span
                 id="free-plan-title"
                 className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
-                style={{ fontSize: '2.75rem', color: '#1A1B19', fontVariantNumeric: 'tabular-nums' }}
+                style={{ fontSize: '2.75rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 £0
               </span>
             </div>
             <div
               className="font-[family-name:var(--font-inter)] mb-7"
-              style={{ fontSize: '0.8125rem', color: '#6B6D66' }}
+              style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}
             >
               Forever free
             </div>
 
             <div
               className="mb-6"
-              style={{ height: 1, background: 'rgba(201,168,76,0.15)' }}
+              style={{ height: 1, background: 'var(--color-border)' }}
             />
 
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
@@ -150,12 +150,12 @@ export default function Pricing() {
               ].map(({ text, included }) => (
                 <li key={text} className="flex items-start gap-[10px]" style={{ opacity: included ? 1 : 0.4 }}>
                   {included
-                    ? <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: '#A88730' }} strokeWidth={2} />
-                    : <X className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: '#1A1B19' }} strokeWidth={2} />
+                    ? <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: 'var(--color-green)' }} strokeWidth={2} />
+                    : <X className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: 'var(--color-text-primary)' }} strokeWidth={2} />
                   }
                   <span
                     className="font-[family-name:var(--font-inter)] leading-[1.4]"
-                    style={{ fontSize: '0.875rem', color: '#2C2E2A' }}
+                    style={{ fontSize: '0.875rem', color: 'var(--color-text-2)' }}
                   >
                     {text}
                   </span>
@@ -168,9 +168,9 @@ export default function Pricing() {
               className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-all duration-200"
               style={{
                 fontSize: '0.875rem',
-                color: '#1A1B19',
+                color: 'var(--color-text-primary)',
                 background: 'transparent',
-                border: '1px solid rgba(201,168,76,0.35)',
+                border: '1px solid var(--color-border-strong)',
               }}
             >
               Get Started
@@ -183,9 +183,9 @@ export default function Pricing() {
             aria-labelledby="pro-plan-title"
             className="flex flex-col p-8 md:p-10 relative"
             style={{
-              background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)',
+              background: 'linear-gradient(135deg, #006948 0%, #00A874 100%)',
               borderRadius: 12,
-              boxShadow: '0 16px 48px rgba(201,168,76,0.25), 0 1px 0 rgba(255,255,255,0.60) inset',
+              boxShadow: '0 16px 48px rgba(0, 105, 72, 0.25), 0 1px 0 rgba(255,255,255,0.15) inset',
               border: '1px solid transparent',
             }}
           >
@@ -195,9 +195,9 @@ export default function Pricing() {
                 className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-manrope)] font-bold tracking-[0.08em] uppercase whitespace-nowrap"
                 style={{
                   fontSize: '0.625rem',
-                  color: '#E8C87A',
-                  background: '#1A1B19',
-                  border: '1px solid rgba(201,168,76,0.20)',
+                  color: '#00A874',
+                  background: 'var(--color-surface-dark)',
+                  border: '1px solid rgba(0, 105, 72, 0.20)',
                 }}
               >
                 Most Popular
@@ -206,7 +206,7 @@ export default function Pricing() {
 
             <div
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
-              style={{ fontSize: '0.6875rem', color: 'rgba(26,27,25,0.60)' }}
+              style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.70)' }}
             >
               Pro
             </div>
@@ -215,21 +215,21 @@ export default function Pricing() {
               <span
                 id="pro-plan-title"
                 className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
-                style={{ fontSize: '2.75rem', color: '#1A1B19', fontVariantNumeric: 'tabular-nums' }}
+                style={{ fontSize: '2.75rem', color: 'white', fontVariantNumeric: 'tabular-nums' }}
               >
                 {annual ? '£24.99' : '£2.99'}
               </span>
             </div>
             <div
               className="font-[family-name:var(--font-inter)] mb-7"
-              style={{ fontSize: '0.8125rem', color: 'rgba(26,27,25,0.60)' }}
+              style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.70)' }}
             >
               {annual ? 'per year' : 'per month'}
             </div>
 
             <div
               className="mb-6"
-              style={{ height: 1, background: 'rgba(26,27,25,0.15)' }}
+              style={{ height: 1, background: 'rgba(255,255,255,0.15)' }}
             />
 
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
@@ -240,10 +240,10 @@ export default function Pricing() {
                 'Audit-ready PDF exports',
               ].map((text) => (
                 <li key={text} className="flex items-start gap-[10px]">
-                  <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: '#1A1B19' }} strokeWidth={2} />
+                <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: 'white' }} strokeWidth={2} />
                   <span
                     className="font-[family-name:var(--font-inter)] leading-[1.4]"
-                    style={{ fontSize: '0.875rem', color: 'rgba(26,27,25,0.80)' }}
+                    style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.90)' }}
                   >
                     {text}
                   </span>
@@ -256,8 +256,8 @@ export default function Pricing() {
               className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-opacity duration-200 hover:opacity-90"
               style={{
                 fontSize: '0.875rem',
-                color: '#FEF3CC',
-                background: '#1A1B19',
+                color: 'white',
+                background: 'var(--color-surface-dark)',
                 border: 'none',
               }}
             >
@@ -269,13 +269,13 @@ export default function Pricing() {
         {/* Lifetime note */}
         <p
           className="font-[family-name:var(--font-inter)] mt-6"
-          style={{ fontSize: '0.875rem', color: '#6B6D66' }}
+          style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}
         >
           Prefer to pay once?{' '}
           <Link
             href="/signup?plan=lifetime"
             className="font-medium no-underline hover:underline transition-colors"
-            style={{ color: '#A88730' }}
+            style={{ color: 'var(--color-green)' }}
           >
             Get lifetime Pro access for £49.99 →
           </Link>
@@ -284,7 +284,7 @@ export default function Pricing() {
         {/* Reassurance */}
         <p
           className="font-[family-name:var(--font-inter)] mt-3"
-          style={{ fontSize: '0.75rem', color: '#A0A298' }}
+          style={{ fontSize: '0.75rem', color: 'var(--color-text-faint)' }}
         >
           Cancel anytime. No hidden fees. Prices in GBP.
         </p>

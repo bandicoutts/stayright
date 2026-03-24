@@ -44,7 +44,7 @@ interface SettingsClientProps {
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base text-[#191C1D] mb-4">
+    <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base text-[var(--color-text-primary)] mb-4">
       {children}
     </h2>
   )
@@ -52,7 +52,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-[rgba(201,168,76,0.15)] p-5 mb-4">
+    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-5 mb-4">
       {children}
     </div>
   )
@@ -60,7 +60,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-xs font-semibold text-[#3D4A42] uppercase tracking-wide mb-1">
+    <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide mb-1">
       {children}
     </label>
   )
@@ -86,7 +86,7 @@ function TextInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}
-      className="block w-full px-3 py-2 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)] disabled:bg-[#F3F4F5] disabled:text-[#3D4A42]"
+      className="block w-full px-3 py-2 text-sm border border-[var(--color-border)] rounded-xl text-[var(--color-text-primary)] bg-[var(--color-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30 disabled:bg-[var(--color-bg-tinted)] disabled:text-[var(--color-text-muted)]"
     />
   )
 }
@@ -103,17 +103,17 @@ function Toggle({
   description?: string
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-3 border-b border-[#F3F4F5] last:border-0">
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-[var(--color-border)] last:border-0">
       <div>
-        <p className="text-sm font-medium text-[#191C1D]">{label}</p>
-        {description && <p className="text-xs text-[#3D4A42] mt-0.5">{description}</p>}
+        <p className="text-sm font-medium text-[var(--color-text-primary)]">{label}</p>
+        {description && <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{description}</p>}
       </div>
       <button
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative flex-shrink-0 w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)] ${
-          checked ? 'bg-[#C9A84C]' : 'bg-[#C8CECC]'
+        className={`relative flex-shrink-0 w-10 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30 ${
+          checked ? 'bg-[var(--color-green)]' : 'bg-[var(--color-text-faint)]'
         }`}
       >
         <span
@@ -139,8 +139,8 @@ function SaveButton({
     <button
       onClick={onClick}
       disabled={saving}
-      className="px-4 py-2 text-[#1A1B19] text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-      style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
+      className="px-4 py-2 text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+      style={{ background: 'var(--gradient-green)' }}
     >
       {saving ? 'Saving…' : children}
     </button>
@@ -151,7 +151,7 @@ function StatusMessage({ type, message }: { type: 'success' | 'error'; message: 
   return (
     <p
       className={`text-sm mt-2 ${
-        type === 'success' ? 'text-[#A88730]' : 'text-[#BA1A1A]'
+        type === 'success' ? 'text-[var(--color-green)]' : 'text-[var(--color-danger-text)]'
       }`}
     >
       {message}
@@ -350,7 +350,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
 
   return (
     <div className="p-6 md:p-8 max-w-2xl">
-      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-8">
+      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-8">
         Settings
       </h1>
 
@@ -368,7 +368,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
             <div>
               <FieldLabel>Last name</FieldLabel>
               <TextInput value={lastName} onChange={setLastName} placeholder="Last name" />
-              <p className="mt-1 text-xs text-[#3D4A42]">Used in PDF exports</p>
+              <p className="mt-1 text-xs text-[var(--color-text-muted)]">Used in PDF exports</p>
             </div>
           </div>
           <div>
@@ -376,7 +376,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
             <select
               value={visaRoute}
               onChange={(e) => setVisaRoute(e.target.value)}
-              className="block w-full px-3 py-2 text-sm border border-[#C8CECC] rounded-xl text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,168,76,0.30)]"
+              className="block w-full px-3 py-2 text-sm border border-[var(--color-border)] rounded-xl text-[var(--color-text-primary)] bg-[var(--color-surface)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30"
             >
               <option value="Skilled Worker">Skilled Worker</option>
               <option value="Health and Care Worker">Health and Care Worker</option>
@@ -390,8 +390,8 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
             <TextInput type="date" value={visaStart} onChange={setVisaStart} />
           </div>
           {ilrDate && (
-            <div className="px-3 py-2 bg-[#F3F4F5] rounded-xl text-sm text-[#3D4A42]">
-              <span className="font-semibold text-[#191C1D]">ILR target date:</span> {ilrDate}
+            <div className="px-3 py-2 bg-[var(--color-bg-tinted)] rounded-xl text-sm text-[var(--color-text-muted)]">
+              <span className="font-semibold text-[var(--color-text-primary)]">ILR target date:</span> {ilrDate}
               <span className="ml-2 text-xs">(5 years from visa start)</span>
             </div>
           )}
@@ -402,20 +402,20 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
         </div>
 
         {/* ILR Mode toggle — disabled in v1 */}
-        <div className="mt-4 pt-4 border-t border-[#F3F4F5] flex items-center justify-between">
+        <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-[#3D4A42]">Citizenship Mode (450/90 rule)</p>
-            <p className="text-xs text-[#9BA8A2] mt-0.5">Coming soon</p>
+            <p className="text-sm font-medium text-[var(--color-text-muted)]">Citizenship Mode (450/90 rule)</p>
+            <p className="text-xs text-[var(--color-text-faint)] mt-0.5">Coming soon</p>
           </div>
           <div className="relative group">
             <button
               disabled
-              className="relative flex-shrink-0 w-10 h-6 rounded-full bg-[#C8CECC] opacity-50 cursor-not-allowed"
+              className="relative flex-shrink-0 w-10 h-6 rounded-full bg-[var(--color-text-faint)]/30 opacity-50 cursor-not-allowed"
               aria-label="Citizenship mode — coming soon"
             >
               <span className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow" />
             </button>
-            <div className="absolute right-0 bottom-8 w-44 px-2 py-1 bg-[#191C1D] text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10">
+            <div className="absolute right-0 bottom-8 w-44 px-2 py-1 bg-[var(--color-surface-dark)] text-[var(--color-text-primary)] text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10 border border-[var(--color-border)] shadow-xl">
               Coming soon — citizenship mode is not available in v1.
             </div>
           </div>
@@ -469,9 +469,9 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       <SectionHeading>Account</SectionHeading>
       <Card>
         {/* Email */}
-        <div className="mb-5 pb-5 border-b border-[#F3F4F5]">
+        <div className="mb-5 pb-5 border-b border-[var(--color-border)]">
           <FieldLabel>Email address</FieldLabel>
-          <p className="text-sm text-[#3D4A42] mb-2">{userEmail}</p>
+          <p className="text-sm text-[var(--color-text-primary)] mb-2">{userEmail}</p>
           <TextInput
             type="email"
             value={newEmail}
@@ -525,10 +525,10 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold text-[#191C1D]">{planLabel(subscription?.plan)}</p>
-            <p className="text-sm text-[#3D4A42] mt-0.5">{planPrice(subscription?.plan)}</p>
+            <p className="text-sm font-semibold text-[var(--color-text-primary)]">{planLabel(subscription?.plan)}</p>
+            <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{planPrice(subscription?.plan)}</p>
             {subscription?.current_period_end && subscription.plan !== 'pro_lifetime' && (
-              <p className="text-xs text-[#3D4A42] mt-1">
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">
                 Next payment:{' '}
                 {new Date(subscription.current_period_end).toLocaleDateString('en-GB', {
                   day: 'numeric',
@@ -538,7 +538,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
               </p>
             )}
             {subscription?.plan === 'pro_lifetime' && (
-              <p className="text-xs text-[#A88730] mt-1 font-medium">Lifetime — no renewal</p>
+              <p className="text-xs text-[var(--color-green-light)] mt-1 font-medium">Lifetime — no renewal</p>
             )}
           </div>
           {subscription?.plan && subscription.plan !== 'free' && subscription.plan !== 'pro_lifetime' && (
@@ -561,18 +561,18 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
                 }
               }}
               disabled={portalLoading}
-              className="px-4 py-2 text-[#1A1B19] text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-      style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
+              className="px-4 py-2 text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: 'var(--gradient-green)' }}
             >
               {portalLoading ? 'Opening…' : 'Manage subscription'}
             </button>
           )}
-          {portalError && <p className="mt-2 text-xs text-[#BA1A1A]">{portalError}</p>}
+          {portalError && <p className="mt-2 text-xs text-[var(--color-danger-text)]">{portalError}</p>}
         </div>
         {(!subscription?.plan || subscription.plan === 'free') && (
-          <p className="mt-3 text-xs text-[#3D4A42]">
+          <p className="mt-3 text-xs text-[var(--color-text-muted)]">
             Upgrade to Pro for unlimited trips, PDF exports, and email alerts.{' '}
-            <a href="/trips" className="text-[#A88730] underline font-medium">
+            <a href="/trips" className="text-[var(--color-green-light)] underline font-medium">
               View Pro plans
             </a>
           </p>
@@ -585,26 +585,26 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       <SectionHeading>Data &amp; Privacy</SectionHeading>
       <Card>
         <div className="flex items-center gap-3 mb-4">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[rgba(201,168,76,0.10)] text-[#A88730] text-xs font-semibold rounded-full">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[var(--color-green-pale)] text-[var(--color-green-light)] text-xs font-semibold rounded-full">
             GDPR compliant
           </span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[rgba(201,168,76,0.10)] text-[#A88730] text-xs font-semibold rounded-full">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[var(--color-green-pale)] text-[var(--color-green-light)] text-xs font-semibold rounded-full">
             Data stored in EU
           </span>
         </div>
-        <p className="text-sm text-[#3D4A42] mb-4">
+        <p className="text-sm text-[var(--color-text-muted)] mb-4">
           Download a copy of all your data — profile, trips, and account information — as a JSON file.
         </p>
         <div className="flex items-center gap-3">
           <button
             onClick={handleExportData}
-            className="px-4 py-2 bg-[#F3F4F5] text-[#191C1D] text-sm font-semibold rounded-xl hover:bg-[#E8EAE8] transition-colors"
+            className="px-4 py-2 bg-[var(--color-bg-tinted)] text-[var(--color-text-primary)] text-sm font-semibold rounded-xl hover:bg-[var(--color-surface-warm)] transition-colors border border-[var(--color-border)]"
           >
             Export my data
           </button>
           <a
             href="/privacy-policy"
-            className="text-sm text-[#A88730] underline"
+            className="text-sm text-[var(--color-green-light)] underline"
           >
             Privacy policy
           </a>
@@ -616,19 +616,19 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
       {/* ------------------------------------------------------------------ */}
       <SectionHeading>Help &amp; Support</SectionHeading>
       <Card>
-        <p className="text-sm text-[#3D4A42] mb-3">
+        <p className="text-sm text-[var(--color-text-muted)] mb-3">
           For questions about your visa, absence calculations, or how to use StayRight, visit the help centre or email us directly.
         </p>
         <div className="flex items-center gap-4">
           <a
             href="mailto:help@stayright.app"
-            className="text-sm text-[#A88730] font-medium underline"
+            className="text-sm text-[var(--color-green-light)] font-medium underline"
           >
             help@stayright.app
           </a>
           <a
             href="/help"
-            className="text-sm text-[#A88730] font-medium underline"
+            className="text-sm text-[var(--color-green-light)] font-medium underline"
           >
             Visit Help Centre
           </a>
@@ -642,17 +642,17 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
         {!showDeleteConfirm ? (
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="text-sm text-[#BA1A1A] underline"
+            className="text-sm text-[var(--color-danger-text)] underline"
           >
             Delete account
           </button>
         ) : (
-          <div className="p-5 border border-[#BA1A1A]/30 bg-[#BA1A1A]/5 rounded-2xl">
-            <p className="text-sm font-semibold text-[#BA1A1A] mb-2">Delete account</p>
-            <p className="text-sm text-[#3D4A42] mb-4">
+          <div className="p-5 border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] rounded-2xl">
+            <p className="text-sm font-semibold text-[var(--color-danger-text)] mb-2">Delete account</p>
+            <p className="text-sm text-[var(--color-text-muted)] mb-4">
               This will permanently delete your profile, all trips, and your account. This action cannot be undone.
             </p>
-            <p className="text-xs text-[#3D4A42] mb-2">
+            <p className="text-xs text-[var(--color-text-muted)] mb-2">
               Type <strong>delete my account</strong> to confirm:
             </p>
             <TextInput
@@ -665,7 +665,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
               <button
                 onClick={handleDeleteAccount}
                 disabled={deleteConfirmText !== 'delete my account' || deleting}
-                className="px-4 py-2 bg-[#BA1A1A] text-white text-sm font-semibold rounded-xl hover:bg-[#8E0009] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[var(--color-danger-text)] text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {deleting ? 'Deleting…' : 'Delete my account'}
               </button>
@@ -675,7 +675,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
                   setDeleteConfirmText('')
                   setDeleteError(null)
                 }}
-                className="px-4 py-2 bg-[#F3F4F5] text-[#191C1D] text-sm font-semibold rounded-xl hover:bg-[#E8EAE8] transition-colors"
+                className="px-4 py-2 bg-[var(--color-bg-tinted)] text-[var(--color-text-primary)] text-sm font-semibold rounded-xl hover:bg-[var(--color-surface-warm)] transition-colors border border-[var(--color-border)]"
               >
                 Cancel
               </button>

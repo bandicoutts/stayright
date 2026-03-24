@@ -57,7 +57,7 @@ function StepDots({ current, total }: { current: number; total: number }) {
         <div
           key={i}
           className={`h-1.5 rounded-full transition-all ${
-            i < current ? 'w-8 bg-[#006948]' : i === current - 1 ? 'w-8 bg-[#006948]' : 'w-8 bg-[#191C1D]/15'
+            i < current ? 'w-8 bg-[var(--color-green)]' : i === current - 1 ? 'w-8 bg-[var(--color-green)]' : 'w-8 bg-[var(--color-border)]'
           }`}
         />
       ))}
@@ -83,27 +83,27 @@ function CalcPanel({
   const barPct = Math.min(100, (result.days / 180) * 100)
 
   return (
-    <div aria-live="polite" className="mt-4 p-4 bg-[#F8F9FA] rounded-xl space-y-3">
+    <div aria-live="polite" className="mt-4 p-4 bg-[var(--color-bg-tinted)] rounded-xl space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-[#3D4A42]">This trip</span>
-        <span className="text-sm font-semibold text-[#191C1D]">{tripDays} {tripDays === 1 ? 'day' : 'days'}</span>
+        <span className="text-sm text-[var(--color-text-muted)]">This trip</span>
+        <span className="text-sm font-semibold text-[var(--color-text-primary)]">{tripDays} {tripDays === 1 ? 'day' : 'days'}</span>
       </div>
       <div className="flex items-center justify-between">
-        <span className="text-sm text-[#3D4A42]">Days remaining after</span>
-        <span className="text-sm font-semibold text-[#191C1D]">{remaining} days</span>
+        <span className="text-sm text-[var(--color-text-muted)]">Days remaining after</span>
+        <span className="text-sm font-semibold text-[var(--color-text-primary)]">{remaining} days</span>
       </div>
 
       {/* Progress bar */}
       <div>
-        <div className="flex justify-between text-xs text-[#3D4A42] mb-1">
+        <div className="flex justify-between text-xs text-[var(--color-text-muted)] mb-1">
           <span>{result.days} / 180 days used</span>
           <span>Rolling window to {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</span>
         </div>
-        <div className="w-full h-2 bg-[#191C1D]/8 rounded-full overflow-hidden" role="progressbar" aria-valuenow={result.days} aria-valuemin={0} aria-valuemax={180}>
+        <div className="w-full h-2 bg-[var(--color-text-primary)]/8 rounded-full overflow-hidden" role="progressbar" aria-valuenow={result.days} aria-valuemin={0} aria-valuemax={180}>
           <div
             className={`h-full rounded-full transition-all duration-500 ${
-              result.status === 'SAFE' ? 'bg-[#006948]' :
-              result.status === 'WARNING' ? 'bg-[#D97706]' : 'bg-[#BA1A1A]'
+              result.status === 'SAFE' ? 'bg-[var(--color-green)]' :
+              result.status === 'WARNING' ? 'bg-[var(--color-status-amber)]' : 'bg-[var(--color-status-red)]'
             }`}
             style={{ width: `${barPct}%` }}
           />
@@ -116,20 +116,20 @@ function CalcPanel({
           {cfg.label}
         </span>
         {result.status === 'SAFE' && (
-          <span className="text-xs text-[#3D4A42]">Safe to travel</span>
+          <span className="text-xs text-[var(--color-text-muted)]">Safe to travel</span>
         )}
         {result.status === 'WARNING' && (
-          <span className="text-xs text-[#92400E]">Approaching the limit — plan carefully</span>
+          <span className="text-xs text-[var(--color-warning-text)]">Approaching the limit — plan carefully</span>
         )}
         {result.status === 'DANGER' && (
-          <span className="text-xs text-[#BA1A1A]">Very close to the 180-day limit</span>
+          <span className="text-xs text-[var(--color-danger-text)]">Very close to the 180-day limit</span>
         )}
       </div>
 
       {/* Breach warning */}
       {result.status === 'BREACH' && (
-        <div className="p-3 bg-[#BA1A1A]/8 border border-[#BA1A1A]/25 rounded-xl">
-          <p className="text-xs font-semibold text-[#BA1A1A]">
+        <div className="p-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl">
+          <p className="text-xs font-semibold text-[var(--color-danger-text)]">
             This trip would push you to {result.days}/180 days in the rolling window ending{' '}
             {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}. You would breach the absence limit.
           </p>
@@ -369,33 +369,33 @@ export function TripFlowClient({
   return (
     <div className="p-6 md:p-8 max-w-xl">
       <div className="mb-6">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D]">
+        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)]">
           {pageTitle}
         </h1>
-        <p className="text-sm text-[#3D4A42] mt-0.5">{pageSubtitle}</p>
+        <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{pageSubtitle}</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#191C1D]/8 shadow-sm p-6 md:p-8">
+      <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6 md:p-8">
         <StepDots current={step} total={3} />
 
         {/* ── Step 1: Destination ─────────────────────────────────────── */}
         {step === 1 && (
           <div>
-            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+            <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
               Step 1 of 3
             </p>
-            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D] mb-5">
+            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-5">
               Where are you going?
             </h2>
 
             {error && (
-              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+              <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
                 {error}
               </div>
             )}
 
             <div className="mb-4">
-              <label htmlFor="destination" className="block text-sm font-medium text-[#191C1D] mb-1.5">
+              <label htmlFor="destination" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
                 Destination
               </label>
               <DestinationAutocomplete
@@ -408,9 +408,9 @@ export function TripFlowClient({
 
             {/* Crown Dependency panel */}
             {isCrownDep && (
-              <div className="mb-4 px-4 py-3 bg-[#006948]/8 border border-[#006948]/20 rounded-xl flex items-start gap-3">
-                <span className="text-[#006948] text-sm font-semibold shrink-0">✓</span>
-                <p className="text-sm text-[#191C1D]">
+              <div className="mb-4 px-4 py-3 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl flex items-start gap-3">
+                <span className="text-[var(--color-green)] text-sm font-semibold shrink-0">✓</span>
+                <p className="text-sm text-[var(--color-text-primary)]">
                   <span className="font-semibold">Crown Dependencies count as UK presence.</span>{' '}
                   This trip will not affect your absence record.
                 </p>
@@ -420,7 +420,8 @@ export function TripFlowClient({
             <button
               type="button"
               onClick={handleStep1Next}
-              className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+              className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+              style={{ background: 'var(--gradient-green)' }}
             >
               Next →
             </button>
@@ -430,18 +431,18 @@ export function TripFlowClient({
         {/* ── Step 2: Dates ───────────────────────────────────────────── */}
         {step === 2 && (
           <div>
-            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+            <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
               Step 2 of 3
             </p>
-            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D] mb-1">
+            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-1">
               When are you travelling?
             </h2>
-            <p className="text-sm text-[#3D4A42] mb-5">
-              <span className="font-medium text-[#191C1D]">{destination}</span>
+            <p className="text-sm text-[var(--color-text-muted)] mb-5">
+              <span className="font-medium text-[var(--color-text-primary)]">{destination}</span>
             </p>
 
             {error && (
-              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+              <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
                 {error}
               </div>
             )}
@@ -460,9 +461,9 @@ export function TripFlowClient({
 
             {/* Live calculation panel */}
             {isCrownDep && departureDate && (
-              <div className="mb-4 px-4 py-3 bg-[#006948]/8 border border-[#006948]/20 rounded-xl">
-                <p className="text-sm text-[#191C1D]">
-                  <span className="font-semibold text-[#006948]">0 absence days.</span>{' '}
+              <div className="mb-4 px-4 py-3 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl">
+                <p className="text-sm text-[var(--color-text-primary)]">
+                  <span className="font-semibold text-[var(--color-green)]">0 absence days.</span>{' '}
                   Crown Dependencies count as UK presence.
                 </p>
               </div>
@@ -478,16 +479,16 @@ export function TripFlowClient({
 
             {/* Validation error for date order */}
             {returnDateKnown && returnDate && departureDate && returnDate <= departureDate && (
-              <p className="mt-3 text-sm text-[#BA1A1A]">
+              <p className="mt-3 text-sm text-[var(--color-danger-text)]">
                 Departure date must be before the return date.
               </p>
             )}
 
             {/* Overlap warning — live, shown as soon as a collision is detected */}
             {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
-              <div className="mt-4 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+              <div className="mt-4 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-start gap-3">
                 <span className="shrink-0 text-base">⚠️</span>
-                <p className="text-sm text-[#92400E]">
+                <p className="text-sm text-[var(--color-warning-text)]">
                   These dates overlap with an existing trip. Adjust the dates or check
                   your trip history before continuing.
                 </p>
@@ -498,14 +499,15 @@ export function TripFlowClient({
               <button
                 type="button"
                 onClick={() => { setStep(1); setError(null) }}
-                className="px-4 py-3 text-sm text-[#3D4A42] border border-[#191C1D]/15 rounded-xl hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+                className="px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
               >
                 ← Back
               </button>
               <button
                 type="button"
                 onClick={handleStep2Next}
-                className="flex-1 bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+                className="flex-1 text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+                style={{ background: 'var(--gradient-green)' }}
               >
                 Next →
               </button>
@@ -516,25 +518,25 @@ export function TripFlowClient({
         {/* ── Step 3: Confirm ─────────────────────────────────────────── */}
         {step === 3 && (
           <div>
-            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+            <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
               Step 3 of 3
             </p>
-            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[#191C1D] mb-5">
+            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-5">
               {mode === 'plan' ? 'Review your trip' : 'Confirm and save'}
             </h2>
 
             {error && (
-              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+              <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
                 {error}
               </div>
             )}
 
             {/* Trip summary card */}
-            <div className="bg-[#F8F9FA] rounded-xl p-4 mb-4 space-y-2">
+            <div className="bg-[var(--color-bg-tinted)] rounded-xl p-4 mb-4 space-y-2">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-[#191C1D]">{destination}</p>
-                  <p className="text-xs text-[#3D4A42] mt-0.5">
+                  <p className="text-sm font-semibold text-[var(--color-text-primary)]">{destination}</p>
+                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                     {formatDateRange(departureDate, returnDateKnown && returnDate ? returnDate : null)}
                   </p>
                 </div>
@@ -544,19 +546,19 @@ export function TripFlowClient({
                   </span>
                 )}
                 {!returnDateKnown && (
-                  <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#D97706]/10 text-[#92400E]">
+                  <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
                     Currently abroad
                   </span>
                 )}
               </div>
 
               {returnDateKnown && returnDate && !isCrownDep && (
-                <p className="text-xs text-[#3D4A42]">
+                <p className="text-xs text-[var(--color-text-muted)]">
                   {calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate })} absence {calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate }) === 1 ? 'day' : 'days'}
                 </p>
               )}
               {isCrownDep && (
-                <p className="text-xs text-[#006948] font-medium">
+                <p className="text-xs text-[var(--color-green)] font-medium">
                   Crown Dependency — 0 absence days
                 </p>
               )}
@@ -564,19 +566,19 @@ export function TripFlowClient({
 
             {/* Rolling window impact */}
             {calcResult && (
-              <div className="bg-[#F8F9FA] rounded-xl p-4 mb-4">
-                <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-wider mb-2">
+              <div className="bg-[var(--color-bg-tinted)] rounded-xl p-4 mb-4">
+                <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-wider mb-2">
                   Rolling window impact
                 </p>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#3D4A42]">Days used (after this trip)</span>
-                  <span className="font-semibold text-[#191C1D]">{calcResult.result.days} / 180</span>
+                  <span className="text-[var(--color-text-muted)]">Days used (after this trip)</span>
+                  <span className="font-semibold text-[var(--color-text-primary)]">{calcResult.result.days} / 180</span>
                 </div>
-                <div className="w-full h-1.5 bg-[#191C1D]/8 rounded-full overflow-hidden mt-2" role="progressbar" aria-valuenow={calcResult.result.days} aria-valuemin={0} aria-valuemax={180}>
+                <div className="w-full h-1.5 bg-[var(--color-text-primary)]/8 rounded-full overflow-hidden mt-2" role="progressbar" aria-valuenow={calcResult.result.days} aria-valuemin={0} aria-valuemax={180}>
                   <div
                     className={`h-full rounded-full ${
-                      calcResult.result.status === 'SAFE' ? 'bg-[#006948]' :
-                      calcResult.result.status === 'WARNING' ? 'bg-[#D97706]' : 'bg-[#BA1A1A]'
+                      calcResult.result.status === 'SAFE' ? 'bg-[var(--color-green)]' :
+                      calcResult.result.status === 'WARNING' ? 'bg-[var(--color-status-amber)]' : 'bg-[var(--color-status-red)]'
                     }`}
                     style={{ width: `${Math.min(100, (calcResult.result.days / 180) * 100)}%` }}
                   />
@@ -586,8 +588,8 @@ export function TripFlowClient({
 
             {/* Notes */}
             <div className="mb-5">
-              <label htmlFor="notes" className="block text-sm font-medium text-[#191C1D] mb-1.5">
-                Notes <span className="text-[#3D4A42] font-normal">(optional)</span>
+              <label htmlFor="notes" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
+                Notes <span className="text-[var(--color-text-muted)] font-normal">(optional)</span>
               </label>
               <textarea
                 id="notes"
@@ -595,7 +597,7 @@ export function TripFlowClient({
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g. Dubai → Bangkok → London (multi-leg)"
                 rows={2}
-                className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow resize-none"
+                className="w-full border border-[var(--color-border)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30 focus:border-[var(--color-green)]/50 transition-shadow resize-none bg-[var(--color-surface)]"
               />
             </div>
 
@@ -605,7 +607,8 @@ export function TripFlowClient({
                 type="button"
                 onClick={handleSave}
                 disabled={saving}
-                className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                style={{ background: 'var(--gradient-green)' }}
               >
                 {saving
                   ? 'Saving…'
@@ -621,7 +624,7 @@ export function TripFlowClient({
                   type="button"
                   onClick={handleJustChecking}
                   disabled={saving}
-                  className="w-full border border-[#191C1D]/15 text-[#3D4A42] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[#F8F9FA] transition-colors disabled:opacity-50 cursor-pointer"
+                  className="w-full border border-[var(--color-border)] text-[var(--color-text-muted)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   Just checking
                 </button>
@@ -632,7 +635,7 @@ export function TripFlowClient({
               <button
                 type="button"
                 onClick={() => { setStep(2); setError(null) }}
-                className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors cursor-pointer"
+                className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors cursor-pointer"
               >
                 ← Back
               </button>

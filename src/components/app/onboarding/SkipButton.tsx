@@ -19,7 +19,7 @@ export function SkipButton() {
     <button
       type="button"
       onClick={handleSkip}
-      className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors cursor-pointer"
+      className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors cursor-pointer"
     >
       Skip setup
     </button>

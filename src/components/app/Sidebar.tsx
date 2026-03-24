@@ -28,14 +28,14 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
   }
 
   return (
-    <aside className="hidden md:flex flex-col w-[240px] shrink-0 min-h-screen bg-[#1A1B19]">
+    <aside className="hidden md:flex flex-col w-[240px] shrink-0 min-h-screen bg-[var(--color-surface-dark)]">
 
       {/* Logo */}
       <div className="px-8 pt-10 pb-6">
         <Link
           href="/"
           className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] no-underline"
-          style={{ color: '#FEF3CC' }}
+          style={{ color: 'var(--color-text-primary)' }}
         >
           Stayright
         </Link>
@@ -45,7 +45,7 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
       <nav className="flex-1 px-4 py-4 space-y-1">
         <div
           className="font-[family-name:var(--font-inter)] px-4 pb-3 pt-2"
-          style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(232,213,160,0.30)' }}
+          style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--color-text-faint)' }}
         >
           Manage
         </div>
@@ -58,8 +58,8 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
               href={href}
               className="flex items-center gap-3.5 px-4 py-3 rounded-[8px] text-[15px] font-medium transition-colors no-underline"
               style={active
-                ? { background: 'rgba(201,168,76,0.14)', color: '#E8C87A' }
-                : { color: 'rgba(232,213,160,0.50)' }
+                ? { background: 'var(--color-border-strong)', color: 'var(--color-green-light)' }
+                : { color: 'var(--color-text-muted)' }
               }
             >
               <Icon className="w-4 h-4 shrink-0" strokeWidth={active ? 2.5 : 2} />
@@ -74,18 +74,18 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
         <div
           className="flex items-center gap-3.5 px-4 py-3 mb-2 rounded-[10px]"
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(201,168,76,0.12)',
+            background: 'var(--color-surface-warm)',
+            border: '1px solid var(--color-border)',
           }}
         >
           {/* Avatar */}
           <div
             className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)' }}
+            style={{ background: 'var(--color-green)' }}
           >
             <span
               className="font-[family-name:var(--font-manrope)] font-bold"
-              style={{ fontSize: '13px', color: '#1A1B19' }}
+              style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}
             >
               {userInitial}
             </span>
@@ -93,13 +93,13 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
           <div className="flex flex-col overflow-hidden">
             <span
               className="font-[family-name:var(--font-inter)] font-semibold leading-tight"
-              style={{ fontSize: '13px', color: 'rgba(232,213,160,0.80)' }}
+              style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}
             >
               Account
             </span>
             <span
               className="font-[family-name:var(--font-inter)] truncate leading-tight mt-0.5"
-              style={{ fontSize: '11px', color: 'rgba(232,213,160,0.40)' }}
+              style={{ fontSize: '11px', color: 'var(--color-text-faint)' }}
             >
               {userEmail}
             </span>
@@ -110,7 +110,7 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
           type="button"
           onClick={handleSignOut}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-[8px] text-[14px] font-medium transition-colors cursor-pointer"
-          style={{ color: 'rgba(232,213,160,0.40)' }}
+          style={{ color: 'var(--color-text-faint)' }}
         >
           <LogOut className="w-4 h-4 shrink-0" strokeWidth={2} />
           Sign out
