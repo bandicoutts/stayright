@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Shield } from '@phosphor-icons/react'
+import { Shield } from '@/components/ui/Icons'
 import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
 

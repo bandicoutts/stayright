@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { SquaresFour, FileText, Gear, SignOut } from '@phosphor-icons/react'
+import { SquaresFour, FileText, Gear, SignOut } from '@/components/ui/Icons'
 import { createClient } from '@/lib/supabase/client'
 
 const NAV_ITEMS = [

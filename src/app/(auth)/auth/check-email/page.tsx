@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Envelope } from '@phosphor-icons/react'
+import { Envelope } from '@/components/ui/Icons'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {

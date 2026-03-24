@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Envelope } from '@phosphor-icons/react'
+import { Envelope } from '@/components/ui/Icons'
 import { createClient } from '@/lib/supabase/client'
 
 export default function VerifyEmailPage() {

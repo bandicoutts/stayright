@@ -5,7 +5,7 @@ import {
   Calculator,
   Bell,
   FileArrowDown,
-} from '@phosphor-icons/react';
+} from '@/components/ui/Icons';
 
 const features = [
   {

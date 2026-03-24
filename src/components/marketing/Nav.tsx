@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { List, X } from '@phosphor-icons/react';
+import { List, X } from '@/components/ui/Icons';
 
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);

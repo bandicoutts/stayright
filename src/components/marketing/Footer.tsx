@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { TwitterLogo, LinkedinLogo } from '@phosphor-icons/react';
+import { TwitterLogo, LinkedinLogo } from '@/components/ui/Icons';
 
 const columns = [
   {

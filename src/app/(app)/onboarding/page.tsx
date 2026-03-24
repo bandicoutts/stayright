@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { ShieldCheck } from '@phosphor-icons/react'
+import { ShieldCheck } from '@/components/ui/Icons'
 import { createClient } from '@/lib/supabase/server'
 import { SignupTracker } from '@/components/app/onboarding/SignupTracker'
 import { OnboardingStartedTracker } from '@/components/app/onboarding/OnboardingStartedTracker'

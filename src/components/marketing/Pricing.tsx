@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Check, X } from '@phosphor-icons/react';
+import { Check, X } from '@/components/ui/Icons';
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false);
