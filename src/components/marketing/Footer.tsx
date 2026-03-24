@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Shield, Twitter, Linkedin } from 'lucide-react';
+import { Twitter, Linkedin } from 'lucide-react';
 
 const columns = [
   {
@@ -37,27 +37,42 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#191C1D] text-white px-6 pt-14 pb-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Top: logo + columns */}
+    <footer
+      className="px-6 md:px-14 pt-14 pb-8"
+      style={{
+        background: '#1A1B19',
+        borderTop: '1px solid rgba(201,168,76,0.15)',
+      }}
+    >
+      <div className="max-w-[1320px] mx-auto">
+
+        {/* Top: brand + link columns */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
-          {/* Brand */}
+
+          {/* Brand column */}
           <div className="lg:col-span-1 flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-white" strokeWidth={2} />
-              <span className="font-[family-name:var(--font-manrope)] font-bold text-white text-lg tracking-tight">
-                StayRight
-              </span>
-            </div>
-            <p className="text-sm text-white/60 font-[family-name:var(--font-inter)] leading-relaxed">
-              Master your UK immigration compliance with precision.
+            <Link
+              href="/"
+              className="font-[family-name:var(--font-manrope)] font-extrabold tracking-[-0.03em] no-underline"
+              style={{ fontSize: '1.125rem', color: '#FEF3CC' }}
+            >
+              Stayright
+            </Link>
+            <p
+              className="font-[family-name:var(--font-inter)] leading-relaxed"
+              style={{ fontSize: '0.875rem', color: 'rgba(232,213,160,0.40)' }}
+            >
+              Know your number. Travel freely.
             </p>
           </div>
 
-          {/* Columns */}
+          {/* Link columns */}
           {columns.map((col) => (
             <div key={col.heading} className="flex flex-col gap-3">
-              <h4 className="text-[11px] font-semibold tracking-widest uppercase text-white/40 font-[family-name:var(--font-inter)]">
+              <h4
+                className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase"
+                style={{ fontSize: '0.625rem', color: 'rgba(232,213,160,0.30)' }}
+              >
                 {col.heading}
               </h4>
               <ul className="flex flex-col gap-2">
@@ -65,7 +80,8 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/70 hover:text-white transition-colors font-[family-name:var(--font-inter)]"
+                      className="font-[family-name:var(--font-inter)] no-underline transition-colors duration-150"
+                      style={{ fontSize: '0.875rem', color: 'rgba(232,213,160,0.50)' }}
                     >
                       {link.label}
                     </Link>
@@ -76,18 +92,29 @@ export default function Footer() {
           ))}
         </div>
 
+        {/* Gold rule */}
+        <div
+          style={{ width: 40, height: 1, background: '#C9A84C', opacity: 0.5, marginBottom: 24 }}
+          aria-hidden="true"
+        />
+
         {/* Bottom bar */}
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <p className="text-xs text-white/40 font-[family-name:var(--font-inter)]">
-            © {year} StayRight UK. All rights reserved.
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <p
+            className="font-[family-name:var(--font-inter)]"
+            style={{ fontSize: '0.75rem', color: 'rgba(232,213,160,0.25)' }}
+          >
+            © {year} Stayright. Built for UK Skilled Worker visa holders.
           </p>
+
           <div className="flex items-center gap-4">
             <a
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Twitter / X"
-              className="text-white/40 hover:text-white transition-colors"
+              className="transition-colors duration-150"
+              style={{ color: 'rgba(232,213,160,0.30)' }}
             >
               <Twitter className="w-4 h-4" />
             </a>
@@ -96,12 +123,14 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="text-white/40 hover:text-white transition-colors"
+              className="transition-colors duration-150"
+              style={{ color: 'rgba(232,213,160,0.30)' }}
             >
               <Linkedin className="w-4 h-4" />
             </a>
           </div>
         </div>
+
       </div>
     </footer>
   );

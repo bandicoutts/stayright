@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stayright — Dark Luxury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080B08;
+    --surface-1: #0E1310;
+    --surface-2: #141A15;
+    --surface-3: #1A221B;
+    --green: #006948;
+    --green-mid: #00855D;
+    --green-bright: #00A874;
+    --text-primary: #E8EDE9;
+    --text-secondary: #8FA893;
+    --text-muted: #4A5E4D;
+    --border: rgba(0,105,72,0.18);
+    --border-bright: rgba(0,105,72,0.35);
+    --safe-bg: #9ff4ca;
+    --safe-text: #002114;
+    --font-head: 'Manrope', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ====== SPOTLIGHT CURSOR ====== */
+  .cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(600px circle at var(--cx, 50%) var(--cy, 50%), rgba(0,105,72,0.07) 0%, transparent 60%);
+    transition: background 0.1s;
+  }
+  .cursor-dot {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    width: 8px; height: 8px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    top: 0; left: 0;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+    box-shadow: 0 0 8px rgba(0,168,116,0.6);
+  }
+
+  /* ====== NOISE TEXTURE OVERLAY ====== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.025;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Content above noise */
+  nav, main, footer { position: relative; z-index: 1; }
+
+  /* ====== NAV ====== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,11,8,0.85);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .logo-mark {
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, var(--green), var(--green-mid));
+    border-radius: 5px;
+    display: inline-block;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--black);
+    background: var(--green-bright);
+    padding: 9px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: all 0.18s;
+    box-shadow: 0 0 0 0 rgba(0,168,116,0.4);
+  }
+  .nav-cta:hover {
+    background: var(--green-mid);
+    box-shadow: 0 0 24px rgba(0,168,116,0.3);
+    color: white;
+  }
+
+  /* ====== HERO ====== */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 48px 100px;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-bright);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--green-bright);
+    opacity: 0.6;
+  }
+
+  .hero-h1 {
+    font-family: var(--font-head);
+    font-size: clamp(3rem, 5.5vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+  .hero-h1 .accent {
+    color: var(--green-bright);
+    font-style: italic;
+    font-weight: 300;
+    display: block;
+    text-shadow: 0 0 60px rgba(0,168,116,0.35);
+  }
+
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 44px;
+    max-width: 440px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--black);
+    background: var(--green-bright);
+    padding: 14px 32px;
+    border-radius: 10px;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(0,168,116,0.25);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 8px 40px rgba(0,168,116,0.45);
+    transform: translateY(-1px);
+    color: white;
+    background: var(--green-mid);
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 2px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .btn-ghost:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+
+  .hero-trust {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .trust-tag {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ====== RING CARD ====== */
+  .ring-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  /* Glow behind card */
+  .ring-wrap::before {
+    content: '';
+    position: absolute;
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(0,105,72,0.15) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: blur(20px);
+  }
+  .ring-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow:
+      0 0 0 1px rgba(0,105,72,0.08) inset,
+      0 24px 80px rgba(0,0,0,0.5),
+      0 4px 16px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .ring-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,168,116,0.4), transparent);
+  }
+  .ring-card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,105,72,0.04);
+  }
+  .ring-card-label {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .safe-badge {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--safe-text);
+    background: var(--safe-bg);
+    padding: 4px 12px;
+    border-radius: 100px;
+    box-shadow: 0 0 16px rgba(159,244,202,0.25);
+  }
+  .ring-card-body {
+    padding: 36px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ring-svg-wrap { position: relative; display: inline-block; }
+  .ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-num {
+    font-family: var(--font-head);
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+  .ring-denom {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .ring-card-trips {
+    width: 100%;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .trip-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-radius: 10px;
+    background: var(--surface-3);
+    border: 1px solid rgba(0,105,72,0.1);
+  }
+  .trip-left { display: flex; align-items: center; gap: 10px; }
+  .trip-flag { font-size: 1.125rem; }
+  .trip-name {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .trip-dates {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+  .trip-days {
+    font-family: var(--font-head);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--green-bright);
+    background: rgba(0,105,72,0.12);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  /* ====== SECTION DIVIDER ====== */
+  .divider {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .divider-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+  }
+
+  /* ====== FEATURES ====== */
+  .features {
+    padding: 100px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-bright);
+    margin-bottom: 16px;
+  }
+  .features-h2 {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 56px;
+    line-height: 1.1;
+    max-width: 640px;
+  }
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px;
+  }
+  .bento-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .bento-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,105,72,0.25), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .bento-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
+  .bento-card:hover::before { opacity: 1; }
+  .bento-hero {
+    grid-column: 1 / 6;
+    grid-row: 1 / 3;
+    background: linear-gradient(160deg, var(--surface-3) 0%, rgba(0,105,72,0.08) 100%);
+    border-color: var(--border-bright);
+    padding: 36px;
+  }
+  .bento-hero::before { opacity: 1; background: linear-gradient(90deg, transparent, rgba(0,168,116,0.35), transparent); }
+  .bento-card:nth-child(2) { grid-column: 6 / 9; }
+  .bento-card:nth-child(3) { grid-column: 9 / 13; }
+  .bento-card:nth-child(4) { grid-column: 6 / 9; }
+  .bento-card:nth-child(5) { grid-column: 9 / 11; }
+  .bento-card:nth-child(6) { grid-column: 11 / 13; }
+
+  .bento-label {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .bento-hero .bento-label { color: rgba(0,168,116,0.55); }
+  .bento-title {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .bento-hero .bento-title { font-size: 1.5rem; color: var(--text-primary); margin-bottom: 14px; }
+  .bento-desc {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .bento-hero .bento-desc { font-size: 0.9375rem; color: var(--text-secondary); }
+
+  .mock-panel {
+    margin-top: 28px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,105,72,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .mock-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(0,105,72,0.1);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+  }
+  .mock-row:last-child { border-bottom: none; }
+  .mock-label { color: var(--text-muted); }
+  .mock-value { color: var(--text-primary); font-weight: 600; }
+  .mock-safe { color: var(--safe-bg); }
+
+  /* ====== PRICING ====== */
+  .pricing {
+    padding: 100px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .pricing-h2 {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  .pricing-sub { font-family: var(--font-body); font-size: 1rem; color: var(--text-secondary); margin-bottom: 40px; }
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .toggle-label {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+  .toggle-switch {
+    width: 44px; height: 24px;
+    background: var(--surface-3);
+    border: 1px solid var(--border-bright);
+    border-radius: 100px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--green-bright);
+    border-radius: 50%;
+    top: 3px; right: 3px;
+    box-shadow: 0 0 8px rgba(0,168,116,0.4);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .toggle-switch.monthly::after { transform: translateX(-20px); background: var(--text-muted); box-shadow: none; }
+  .save-tag {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--green-bright);
+    background: rgba(0,168,116,0.1);
+    border: 1px solid rgba(0,168,116,0.25);
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 760px;
+  }
+  .price-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px;
+  }
+  .price-card.featured {
+    border-color: var(--border-bright);
+    background: linear-gradient(160deg, var(--surface-3), rgba(0,105,72,0.08));
+    box-shadow: 0 0 0 1px rgba(0,168,116,0.12) inset, 0 24px 80px rgba(0,105,72,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .price-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,168,116,0.5), transparent);
+  }
+  .price-plan {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .price-card.featured .price-plan { color: var(--green-bright); }
+  .price-amount {
+    font-family: var(--font-head);
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+  .price-amount sup { font-size: 1.25rem; vertical-align: top; margin-top: 10px; display: inline-block; font-weight: 400; }
+  .price-per {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+  .price-features {
+    list-style: none;
+    margin-bottom: 28px;
+  }
+  .price-features li {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,105,72,0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .price-features li:last-child { border-bottom: none; }
+  .price-features li::before { content: '—'; color: var(--green-bright); font-weight: 700; flex-shrink: 0; opacity: 0.6; }
+  .btn-plan {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    padding: 13px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    background: var(--surface-3);
+    transition: all 0.18s;
+    letter-spacing: 0.01em;
+  }
+  .btn-plan:hover { border-color: var(--border-bright); color: var(--text-primary); }
+  .price-card.featured .btn-plan {
+    background: var(--green-bright);
+    border-color: transparent;
+    color: var(--black);
+    box-shadow: 0 4px 24px rgba(0,168,116,0.25);
+    font-weight: 700;
+  }
+  .price-card.featured .btn-plan:hover { box-shadow: 0 8px 40px rgba(0,168,116,0.4); background: var(--green-mid); color: white; }
+
+  /* ====== TRUST BAR ====== */
+  .trustbar {
+    padding: 80px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .trust-cell {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+  .trust-cell:hover { border-color: var(--border-bright); }
+  .trust-num {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--green-bright);
+    opacity: 0.35;
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .trust-title {
+    font-family: var(--font-head);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .trust-desc {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ====== FOOTER ====== */
+  footer {
+    padding: 56px 48px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .footer-logo {
+    font-family: var(--font-head);
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer-tagline {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--text-secondary); }
+
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; gap: 48px; }
+    .bento-hero { grid-column: 1 / -1; grid-row: auto; }
+    .bento-card:nth-child(n) { grid-column: span 4; }
+    .trustbar { grid-template-columns: 1fr 1fr; }
+    .pricing-cards { grid-template-columns: 1fr; max-width: 400px; }
+  }
+  @media (max-width: 768px) {
+    body { cursor: auto; }
+    .cursor, .cursor-dot { display: none; }
+    nav .nav-inner, .hero, .features, .pricing, .trustbar, footer { padding-left: 20px; padding-right: 20px; }
+    .nav-links { display: none; }
+    .bento-card:nth-child(n) { grid-column: 1 / -1; }
+    .trustbar { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor spotlight -->
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="logo-mark" aria-hidden="true"></span>
+      Stayright
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#">Login</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Start Free Tracker</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">UK Immigration Compliance</div>
+    <h1 class="hero-h1">Know exactly<br>where you<br><span class="accent">stand.</span></h1>
+    <p class="hero-sub">Master the 180-day absence rule with precision. Automatically track your travel and secure your residency status without the paperwork headache.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary">Start Free Tracker</a>
+      <a href="#features" class="btn-ghost">See how it works →</a>
+    </div>
+    <div class="hero-trust">
+      <span class="trust-tag">Built by a Skilled Worker visa holder</span>
+      <span class="trust-tag">GDPR compliant</span>
+    </div>
+  </div>
+  <div class="ring-wrap">
+    <div class="ring-card">
+      <div class="ring-card-header">
+        <span class="ring-card-label">Current Status</span>
+        <span class="safe-badge">SAFE</span>
+      </div>
+      <div class="ring-card-body">
+        <div class="ring-svg-wrap">
+          <svg width="212" height="212" viewBox="0 0 212 212" role="img" aria-label="42 of 180 days used">
+            <defs>
+              <linearGradient id="ringGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#006948"/>
+                <stop offset="100%" stop-color="#00A874"/>
+              </linearGradient>
+              <filter id="glow3">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <circle cx="106" cy="106" r="90" fill="none" stroke="rgba(0,105,72,0.15)" stroke-width="16"/>
+            <circle cx="106" cy="106" r="90" fill="none" stroke="url(#ringGrad3)" stroke-width="16"
+              stroke-linecap="round"
+              stroke-dasharray="565.49"
+              stroke-dashoffset="433.42"
+              transform="rotate(-90 106 106)"
+              filter="url(#glow3)"/>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-num">42</span>
+            <span class="ring-denom">/ 180 days</span>
+          </div>
+        </div>
+        <div class="ring-card-trips">
+          <div class="trip-row">
+            <div class="trip-left">
+              <span class="trip-flag">🇵🇹</span>
+              <div>
+                <div class="trip-name">Lisbon, Portugal</div>
+                <div class="trip-dates">12 Oct – 19 Oct</div>
+              </div>
+            </div>
+            <span class="trip-days">7 days</span>
+          </div>
+          <div class="trip-row">
+            <div class="trip-left">
+              <span class="trip-flag">🇺🇸</span>
+              <div>
+                <div class="trip-name">New York, USA</div>
+                <div class="trip-dates">04 Nov – 16 Nov</div>
+              </div>
+            </div>
+            <span class="trip-days">12 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="features-h2">Every tool you need.<br>Nothing you don't.</h2>
+  <div class="bento">
+    <div class="bento-card bento-hero">
+      <div class="bento-label">Hero Feature</div>
+      <div class="bento-title">What-If Trip Simulator</div>
+      <div class="bento-desc">Plan any future trip and instantly see its impact on your 180-day quota before you book. No guesswork, no surprises.</div>
+      <div class="mock-panel">
+        <div class="mock-row"><span class="mock-label">Destination</span><span class="mock-value">Barcelona, Spain</span></div>
+        <div class="mock-row"><span class="mock-label">Duration</span><span class="mock-value">10 days</span></div>
+        <div class="mock-row"><span class="mock-label">Days after trip</span><span class="mock-value">52 / 180</span></div>
+        <div class="mock-row"><span class="mock-label">Status</span><span class="mock-value mock-safe">Still SAFE ✓</span></div>
+      </div>
+    </div>
+    <div class="bento-card">
+      <div class="bento-label">01</div>
+      <div class="bento-title">Live Absence Counter</div>
+      <div class="bento-desc">Real-time rolling 180-day window updated every time you log a trip.</div>
+    </div>
+    <div class="bento-card">
+      <div class="bento-label">02</div>
+      <div class="bento-title">Automatic Risk Alerts</div>
+      <div class="bento-desc">Email notifications when your quota reaches warning and danger thresholds.</div>
+    </div>
+    <div class="bento-card">
+      <div class="bento-label">03</div>
+      <div class="bento-title">ILR Timeline</div>
+      <div class="bento-desc">See exactly how many qualifying years remain on your path to settlement.</div>
+    </div>
+    <div class="bento-card">
+      <div class="bento-label">04</div>
+      <div class="bento-title">PDF Export</div>
+      <div class="bento-desc">Audit-ready one-click export for visa applications.</div>
+    </div>
+    <div class="bento-card">
+      <div class="bento-label">05</div>
+      <div class="bento-title">Crown Dependency</div>
+      <div class="bento-desc">Guernsey, Jersey, Isle of Man — handled correctly.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="pricing-h2">Simple, honest pricing.</h2>
+  <p class="pricing-sub">Start free. No credit card required.</p>
+  <div class="toggle-row">
+    <span class="toggle-label">Monthly</span>
+    <button class="toggle-switch" onclick="this.classList.toggle('monthly')" aria-label="Toggle billing period"></button>
+    <span class="toggle-label">Annual</span>
+    <span class="save-tag">Save 30%</span>
+  </div>
+  <div class="pricing-cards">
+    <div class="price-card">
+      <div class="price-plan">Free</div>
+      <div class="price-amount">£0</div>
+      <div class="price-per">Forever free</div>
+      <ul class="price-features">
+        <li>180-day absence tracking</li>
+        <li>Up to 10 trips</li>
+        <li>Basic risk status</li>
+      </ul>
+      <a href="#" class="btn-plan">Get started free</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-plan">Pro — Most Popular</div>
+      <div class="price-amount"><sup>£</sup>2.99</div>
+      <div class="price-per">/month, billed annually</div>
+      <ul class="price-features">
+        <li>Everything in Free</li>
+        <li>Unlimited trips</li>
+        <li>What-If Simulator</li>
+        <li>ILR Timeline</li>
+        <li>Audit-Ready PDF Export</li>
+        <li>Email risk alerts</li>
+      </ul>
+      <a href="#" class="btn-plan">Start Free Tracker</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- TRUST BAR -->
+<section class="trustbar">
+  <div class="trust-cell">
+    <div class="trust-num">01</div>
+    <div class="trust-title">Built by a visa holder</div>
+    <div class="trust-desc">Made by someone navigating the same rules. Not a generic SaaS product.</div>
+  </div>
+  <div class="trust-cell">
+    <div class="trust-num">02</div>
+    <div class="trust-title">GDPR compliant</div>
+    <div class="trust-desc">Your travel data is private, encrypted, and never shared.</div>
+  </div>
+  <div class="trust-cell">
+    <div class="trust-num">03</div>
+    <div class="trust-title">UK data centres</div>
+    <div class="trust-desc">All data stored and processed in the United Kingdom.</div>
+  </div>
+  <div class="trust-cell">
+    <div class="trust-num">04</div>
+    <div class="trust-title">Not legal advice</div>
+    <div class="trust-desc">A precision tool, not a substitute for professional immigration counsel.</div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">
+        <span class="logo-mark" aria-hidden="true"></span>
+        Stayright
+      </div>
+      <div class="footer-tagline">Built for Skilled Workers, by one.</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursorDot');
+  document.addEventListener('mousemove', e => {
+    cursor.style.setProperty('--cx', e.clientX + 'px');
+    cursor.style.setProperty('--cy', e.clientY + 'px');
+    dot.style.left = e.clientX + 'px';
+    dot.style.top = e.clientY + 'px';
+  });
+</script>
+
+</body>
+</html>

@@ -6,20 +6,40 @@
   --font-manrope: var(--font-manrope);
   --font-inter: var(--font-inter);
 
-  /* Brand colors */
-  --color-primary: #006948;
-  --color-primary-end: #00855D;
-  --color-background: #F8F9FA;
-  --color-surface: #FFFFFF;
-  --color-surface-low: #F3F4F5;
-  --color-text-primary: #191C1D;
-  --color-text-secondary: #2B352F;
-  --color-status-amber: #D97706;
-  --color-status-red: #BA1A1A;
+  /* Backgrounds */
+  --color-background:       #FAF8F2;
+  --color-bg-tinted:        #F5F0E6;
+
+  /* Surfaces */
+  --color-surface:          #FFFFFF;
+  --color-surface-warm:     #FFFDF7;
+  --color-surface-dark:     #1A1B19;
+
+  /* Text */
+  --color-text-primary:     #1A1B19;
+  --color-text-2:           #2C2E2A;
+  --color-text-muted:       #6B6D66;
+  --color-text-faint:       #A0A298;
+
+  /* Gold */
+  --color-gold:             #C9A84C;
+  --color-gold-dark:        #A88730;
+  --color-gold-light:       #E8C87A;
+  --color-gold-pale:        #FEF3CC;
+
+  /* Semantic */
+  --color-safe-bg:          #9FF4CA;
+  --color-safe-text:        #002114;
+
+  /* Status (dashboard — do not change) */
+  --color-status-amber:     #D97706;
+  --color-status-red:       #BA1A1A;
 
   /* Radius */
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --radius-lg:              12px;
+  --radius-xl:              16px;
 }
 
 html {
@@ -27,7 +47,7 @@ html {
 }
 
 body {
-  background: var(--color-background);
+  background: var(--color-bg);
   color: var(--color-text-primary);
   font-family: var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -41,54 +61,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @layer base {
-  /* Smooth input focus glow */
+  /* Focus ring — gold tonal */
   input, select, textarea {
     @apply transition-all duration-300 ease-out;
   }
   input:focus, select:focus, textarea:focus {
-    @apply outline-none border-[#006948]/50 blur-none;
-    box-shadow: 0 0 0 3px rgba(0, 105, 72, 0.15);
+    @apply outline-none;
+    border-color: rgba(201, 168, 76, 0.5);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
   }
 
-  /* Global primary button lifts */
-  button[class*="px-"]:not([class*="opacity-50"]), a[class*="px-"][class*="rounded"] {
+  /* Global button/link lift — keep for dashboard compatibility */
+  button[class*="px-"]:not([class*="opacity-50"]),
+  a[class*="px-"][class*="rounded"] {
     @apply transition-all duration-200 ease-out;
   }
-  button[class*="px-"]:not([class*="opacity-50"]):hover, a[class*="px-"][class*="rounded"]:hover {
+  button[class*="px-"]:not([class*="opacity-50"]):hover,
+  a[class*="px-"][class*="rounded"]:hover {
     transform: translateY(-1px);
   }
-  button[class*="px-"]:not([class*="opacity-50"]):active, a[class*="px-"][class*="rounded"]:active {
+  button[class*="px-"]:not([class*="opacity-50"]):active,
+  a[class*="px-"][class*="rounded"]:active {
     transform: scale(0.98) translateY(0);
   }
 }
 
 @layer utilities {
+  /* Drawer animations — used by dashboard trip drawer */
   .animate-drawer-mobile {
     animation: drawerMobile 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.05) forwards;
   }
   .animate-drawer-desktop {
     animation: drawerDesktop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.05) forwards;
   }
+
+  /* Hero fade-up entrance — landing page */
+  .animate-fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-fade-up-1 { animation-delay: 0ms; }
+  .animate-fade-up-2 { animation-delay: 80ms; }
+  .animate-fade-up-3 { animation-delay: 160ms; }
+  .animate-fade-up-4 { animation-delay: 240ms; }
+  .animate-fade-up-5 { animation-delay: 320ms; }
 }
 
 @keyframes drawerMobile {
   from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  to   { transform: translateY(0); }
 }
 
 @keyframes drawerDesktop {
   from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto !important;
-  }
+  html { scroll-behavior: auto !important; }
   * {
-    animation-duration: 0.01ms !important;
+    animation-duration:       0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transform: none !important;
+    transition-duration:      0.01ms !important;
+    transform:                none !important;
   }
 }

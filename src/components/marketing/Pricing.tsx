@@ -8,150 +8,258 @@ export default function Pricing() {
   const [annual, setAnnual] = useState(false);
 
   return (
-    <section id="pricing" className="py-20 px-6 bg-[#F8F9FA]">
-      <div className="max-w-4xl mx-auto">
+    <section
+      id="pricing"
+      className="px-6 md:px-14"
+      style={{ background: '#FAF8F2', borderTop: '1px solid rgba(201,168,76,0.15)' }}
+    >
+      <div className="max-w-[1320px] mx-auto py-[90px]">
+
         {/* Section header */}
-        <div className="text-center mb-10">
-          <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-[2.25rem] leading-tight tracking-[-0.02em] text-[#191C1D]">
+        <div className="mb-12">
+          <div
+            className="flex items-center gap-[10px] mb-[14px]"
+            style={{ color: '#A88730' }}
+          >
+            <span
+              className="block shrink-0"
+              style={{ width: 20, height: 1, background: '#C9A84C' }}
+              aria-hidden="true"
+            />
+            <span
+              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
+              style={{ fontSize: '0.625rem' }}
+            >
+              Pricing
+            </span>
+          </div>
+          <h2
+            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em]"
+            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: '#1A1B19' }}
+          >
             Simple, transparent pricing.
           </h2>
-          <p className="mt-3 font-[family-name:var(--font-inter)] text-base text-[#3D4A42]">
+          <p
+            className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4 max-w-[400px]"
+            style={{ fontSize: '1.0625rem', color: '#6B6D66' }}
+          >
             Choose the plan that fits your visa journey.
           </p>
         </div>
 
         {/* Toggle */}
-        <div className="flex items-center justify-center gap-3 mb-10">
+        <div className="flex items-center gap-3 mb-12">
           <span
             id="monthly-label"
-            className={`text-sm font-medium font-[family-name:var(--font-inter)] ${!annual ? 'text-[#191C1D]' : 'text-[#3D4A42]'}`}
+            className="font-[family-name:var(--font-inter)] font-medium"
+            style={{ fontSize: '0.875rem', color: !annual ? '#1A1B19' : '#6B6D66' }}
           >
             Monthly
           </span>
+
           <button
             onClick={() => setAnnual(!annual)}
-            className={`relative inline-flex h-7 w-[3.25rem] items-center rounded-full transition-colors duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${annual ? 'bg-[#006948]' : 'bg-[#e2e5e3] hover:bg-[#d0d5d2]'}`}
+            className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
+            style={{
+              background: annual ? 'rgba(201,168,76,0.20)' : 'rgba(26,27,25,0.10)',
+              border: annual ? '1px solid #C9A84C' : '1px solid rgba(201,168,76,0.20)',
+            }}
             role="switch"
             aria-checked={annual}
             aria-labelledby="monthly-label annual-label"
           >
             <span
-              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${annual ? 'translate-x-[1.6rem]' : 'translate-x-1'}`}
+              className="inline-block h-[18px] w-[18px] rounded-full transition-all duration-300"
+              style={{
+                background: annual ? '#C9A84C' : '#A0A298',
+                transform: annual ? 'translateX(22px)' : 'translateX(2px)',
+              }}
             />
           </button>
+
           <span
             id="annual-label"
-            className={`text-sm font-medium font-[family-name:var(--font-inter)] ${annual ? 'text-[#191C1D]' : 'text-[#3D4A42]'}`}
+            className="font-[family-name:var(--font-inter)] font-medium"
+            style={{ fontSize: '0.875rem', color: annual ? '#1A1B19' : '#6B6D66' }}
           >
             Annual
           </span>
+
           {annual && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#FEF3C7] text-[#92400E]">
+            <span
+              className="font-[family-name:var(--font-manrope)] font-semibold px-[10px] py-[3px] rounded-full"
+              style={{
+                fontSize: '0.6875rem',
+                color: '#A88730',
+                background: '#FEF3CC',
+                border: '1px solid rgba(201,168,76,0.25)',
+              }}
+            >
               Save 30%
             </span>
           )}
         </div>
 
         {/* Cards */}
-        <div className="grid sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+        <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
+
           {/* Free card */}
-          <div role="region" aria-labelledby="free-plan-title" className="bg-[#F3F4F5] rounded-[2rem] p-8 md:p-10 flex flex-col gap-6 ring-1 ring-[#191C1D]/5">
-            <div>
-              <h3 id="free-plan-title" className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D]">
-                Free
-              </h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="font-[family-name:var(--font-manrope)] font-extrabold text-5xl md:text-[3.5rem] tracking-[-0.03em] text-[#191C1D]">
-                  £0
-                </span>
-                <span className="font-[family-name:var(--font-inter)] text-sm font-semibold tracking-wide text-[#3D4A42]">
-                  / forever
-                </span>
-              </div>
+          <div
+            role="region"
+            aria-labelledby="free-plan-title"
+            className="flex flex-col p-8 md:p-10"
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid rgba(201,168,76,0.20)',
+              borderRadius: 12,
+              boxShadow: '0 1px 4px rgba(26,27,25,0.04)',
+            }}
+          >
+            <div
+              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
+              style={{ fontSize: '0.6875rem', color: '#6B6D66' }}
+            >
+              Free
+            </div>
+            <div className="flex items-baseline gap-1 mb-1">
+              <span
+                id="free-plan-title"
+                className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
+                style={{ fontSize: '2.75rem', color: '#1A1B19', fontVariantNumeric: 'tabular-nums' }}
+              >
+                £0
+              </span>
+            </div>
+            <div
+              className="font-[family-name:var(--font-inter)] mb-7"
+              style={{ fontSize: '0.8125rem', color: '#6B6D66' }}
+            >
+              Forever free
             </div>
 
-            <ul className="flex flex-col gap-2.5 flex-1">
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#006948] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  Up to 3 trips logged
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#006948] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  Basic rolling window tracker
-                </span>
-              </li>
-              <li className="flex items-start gap-2 opacity-40">
-                <X className="w-4 h-4 text-[#191C1D] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  Risk alerts
-                </span>
-              </li>
+            <div
+              className="mb-6"
+              style={{ height: 1, background: 'rgba(201,168,76,0.15)' }}
+            />
+
+            <ul className="flex flex-col gap-[10px] flex-1 mb-7">
+              {[
+                { text: 'Up to 3 trips logged', included: true },
+                { text: 'Basic rolling window tracker', included: true },
+                { text: 'Risk alerts', included: false },
+              ].map(({ text, included }) => (
+                <li key={text} className="flex items-start gap-[10px]" style={{ opacity: included ? 1 : 0.4 }}>
+                  {included
+                    ? <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: '#A88730' }} strokeWidth={2} />
+                    : <X className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: '#1A1B19' }} strokeWidth={2} />
+                  }
+                  <span
+                    className="font-[family-name:var(--font-inter)] leading-[1.4]"
+                    style={{ fontSize: '0.875rem', color: '#2C2E2A' }}
+                  >
+                    {text}
+                  </span>
+                </li>
+              ))}
             </ul>
 
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-[#006948] border border-[#006948]/15 hover:bg-[#006948]/5 transition-colors"
+              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-all duration-200"
+              style={{
+                fontSize: '0.875rem',
+                color: '#1A1B19',
+                background: 'transparent',
+                border: '1px solid rgba(201,168,76,0.35)',
+              }}
             >
               Get Started
             </Link>
           </div>
 
-          {/* Pro card */}
-          <div role="region" aria-labelledby="pro-plan-title" className="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0px_24px_64px_rgba(0,33,20,0.08)] ring-2 ring-[#006948] flex flex-col gap-6 relative">
+          {/* Pro card — featured */}
+          <div
+            role="region"
+            aria-labelledby="pro-plan-title"
+            className="flex flex-col p-8 md:p-10 relative"
+            style={{
+              background: 'linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%)',
+              borderRadius: 12,
+              boxShadow: '0 16px 48px rgba(201,168,76,0.25), 0 1px 0 rgba(255,255,255,0.60) inset',
+              border: '1px solid transparent',
+            }}
+          >
             {/* Most Popular badge */}
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="inline-flex items-center px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase text-white bg-gradient-to-r from-[#006948] to-[#00855D] shadow-sm">
+            <div className="absolute -top-[12px] left-1/2 -translate-x-1/2">
+              <span
+                className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-manrope)] font-bold tracking-[0.08em] uppercase whitespace-nowrap"
+                style={{
+                  fontSize: '0.625rem',
+                  color: '#E8C87A',
+                  background: '#1A1B19',
+                  border: '1px solid rgba(201,168,76,0.20)',
+                }}
+              >
                 Most Popular
               </span>
             </div>
 
-            <div>
-              <h3 id="pro-plan-title" className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D]">
-                Pro
-              </h3>
-              <div className="mt-4 flex items-baseline gap-1 transition-all duration-300">
-                <span className="font-[family-name:var(--font-manrope)] font-extrabold text-5xl md:text-[3.5rem] tracking-[-0.03em] text-[#191C1D]">
-                  {annual ? '£24.99' : '£2.99'}
-                </span>
-                <span className="font-[family-name:var(--font-inter)] text-sm font-semibold tracking-wide text-[#3D4A42]">
-                  {annual ? '/ year' : '/ month'}
-                </span>
-              </div>
+            <div
+              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
+              style={{ fontSize: '0.6875rem', color: 'rgba(26,27,25,0.60)' }}
+            >
+              Pro
             </div>
 
-            <ul className="flex flex-col gap-2.5 flex-1">
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#006948] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  Unlimited trip logging
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#006948] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  What-if planning simulator
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#006948] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  Smart risk &amp; breach alerts
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="w-4 h-4 text-[#006948] mt-0.5 shrink-0" />
-                <span className="text-sm text-[#3D4A42] font-[family-name:var(--font-inter)]">
-                  Audit-ready PDF exports
-                </span>
-              </li>
+            <div className="flex items-baseline gap-1 mb-1 transition-all duration-300">
+              <span
+                id="pro-plan-title"
+                className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
+                style={{ fontSize: '2.75rem', color: '#1A1B19', fontVariantNumeric: 'tabular-nums' }}
+              >
+                {annual ? '£24.99' : '£2.99'}
+              </span>
+            </div>
+            <div
+              className="font-[family-name:var(--font-inter)] mb-7"
+              style={{ fontSize: '0.8125rem', color: 'rgba(26,27,25,0.60)' }}
+            >
+              {annual ? 'per year' : 'per month'}
+            </div>
+
+            <div
+              className="mb-6"
+              style={{ height: 1, background: 'rgba(26,27,25,0.15)' }}
+            />
+
+            <ul className="flex flex-col gap-[10px] flex-1 mb-7">
+              {[
+                'Unlimited trip logging',
+                'What-if planning simulator',
+                'Smart risk & breach alerts',
+                'Audit-ready PDF exports',
+              ].map((text) => (
+                <li key={text} className="flex items-start gap-[10px]">
+                  <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ stroke: '#1A1B19' }} strokeWidth={2} />
+                  <span
+                    className="font-[family-name:var(--font-inter)] leading-[1.4]"
+                    style={{ fontSize: '0.875rem', color: 'rgba(26,27,25,0.80)' }}
+                  >
+                    {text}
+                  </span>
+                </li>
+              ))}
             </ul>
 
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-br from-[#006948] to-[#00855D] hover:opacity-90 transition-opacity shadow-[0px_4px_16px_rgba(0,105,72,0.24)]"
+              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-opacity duration-200 hover:opacity-90"
+              style={{
+                fontSize: '0.875rem',
+                color: '#FEF3CC',
+                background: '#1A1B19',
+                border: 'none',
+              }}
             >
               Start Free Tracker
             </Link>
@@ -159,18 +267,25 @@ export default function Pricing() {
         </div>
 
         {/* Lifetime note */}
-        <p className="text-center mt-5 font-[family-name:var(--font-inter)] text-sm text-[#3D4A42]">
+        <p
+          className="font-[family-name:var(--font-inter)] mt-6"
+          style={{ fontSize: '0.875rem', color: '#6B6D66' }}
+        >
           Prefer to pay once?{' '}
           <Link
             href="/signup?plan=lifetime"
-            className="text-[#006948] font-medium hover:underline"
+            className="font-medium no-underline hover:underline transition-colors"
+            style={{ color: '#A88730' }}
           >
             Get lifetime Pro access for £49.99 →
           </Link>
         </p>
 
         {/* Reassurance */}
-        <p className="text-center mt-4 font-[family-name:var(--font-inter)] text-xs text-[#3D4A42]/70">
+        <p
+          className="font-[family-name:var(--font-inter)] mt-3"
+          style={{ fontSize: '0.75rem', color: '#A0A298' }}
+        >
           Cancel anytime. No hidden fees. Prices in GBP.
         </p>
       </div>

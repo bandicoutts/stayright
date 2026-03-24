@@ -1,28 +1,57 @@
-/* StayRight Design Tokens */
-/* Source of truth: /docs/DESIGN.md shared rules */
+/* StayRight Design Tokens — Obsidian Champagne */
+/* Source of truth: .claude/skills/stayright-design-system.md */
 
 :root {
-  /* Colors */
-  --color-primary: #006948;
-  --color-primary-gradient-start: #006948;
-  --color-primary-gradient-end: #00855D;
-  --color-background: #F8F9FA;
-  --color-surface: #FFFFFF;
-  --color-surface-container-low: #F3F4F5;
-  --color-text-primary: #191C1D;
-  --color-text-secondary: #3D4A42;
-  --color-status-amber: #D97706;
-  --color-status-red: #BA1A1A;
+  /* ── Backgrounds ─────────────────────────────── */
+  --color-bg:               #FAF8F2;   /* warm ivory paper */
+  --color-bg-tinted:        #F5F0E6;   /* slightly warmer for alternate rows */
 
-  /* Radius */
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-full: 9999px;
+  /* ── Surfaces ────────────────────────────────── */
+  --color-surface:          #FFFFFF;
+  --color-surface-warm:     #FFFDF7;   /* warm white for cards */
+  --color-surface-dark:     #1A1B19;   /* obsidian — footer, bento hero card */
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #006948, #00855D);
+  /* ── Text ────────────────────────────────────── */
+  --color-text-primary:     #1A1B19;   /* warm obsidian — not pure black */
+  --color-text-2:           #2C2E2A;
+  --color-text-3:           #3D3F3A;
+  --color-text-muted:       #6B6D66;
+  --color-text-faint:       #A0A298;
 
-  /* Shadows (tonal lift — ambient only) */
-  --shadow-tonal: 0px 12px 40px rgba(25, 28, 29, 0.04);
-  --shadow-ambient: 0px 12px 32px rgba(0, 33, 20, 0.06);
+  /* ── Gold accent ─────────────────────────────── */
+  --color-gold:             #C9A84C;
+  --color-gold-dark:        #A88730;
+  --color-gold-light:       #E8C87A;
+  --color-gold-pale:        #FEF3CC;   /* badge / chip backgrounds */
+
+  /* ── Borders ─────────────────────────────────── */
+  --color-border:           rgba(201, 168, 76, 0.20);
+  --color-border-strong:    rgba(201, 168, 76, 0.35);
+  --color-border-ink:       rgba(26, 27, 25, 0.10);
+
+  /* ── Semantic — do not change ────────────────── */
+  --color-safe-bg:          #9FF4CA;   /* SAFE badge — immigration indicator */
+  --color-safe-text:        #002114;
+
+  /* ── Status — shared with dashboard ─────────── */
+  --color-status-amber:     #D97706;
+  --color-status-red:       #BA1A1A;
+
+  /* ── Radius ──────────────────────────────────── */
+  --radius-sm:              4px;
+  --radius-md:              8px;
+  --radius-lg:              12px;
+  --radius-xl:              16px;
+  --radius-full:            9999px;
+
+  /* ── Shadows ─────────────────────────────────── */
+  --shadow-card:            0 1px 4px rgba(26, 27, 25, 0.04), 0 8px 24px rgba(201, 168, 76, 0.06);
+  --shadow-card-hover:      0 4px 16px rgba(26, 27, 25, 0.06), 0 16px 40px rgba(201, 168, 76, 0.10);
+  --shadow-ring-card:       0 2px 8px rgba(26, 27, 25, 0.04), 0 16px 48px rgba(201, 168, 76, 0.08), 0 1px 0 rgba(255, 255, 255, 0.90) inset;
+  --shadow-button:          0 4px 20px rgba(201, 168, 76, 0.25);
+  --shadow-button-hover:    0 8px 36px rgba(201, 168, 76, 0.40);
+
+  /* ── Gradients ───────────────────────────────── */
+  --gradient-gold:          linear-gradient(135deg, #E8C87A 0%, #C9A84C 100%);
+  --gradient-gold-text:     linear-gradient(135deg, #A88730 0%, #E8C87A 100%);
 }

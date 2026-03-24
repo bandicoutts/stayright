@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stayright — Navy Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0A1628;
+    --navy-mid: #112240;
+    --cobalt: #2563EB;
+    --cobalt-light: #3B82F6;
+    --cobalt-pale: #DBEAFE;
+    --bg: #F2F5FA;
+    --surface: #FFFFFF;
+    --ink: #0F1B2D;
+    --ink-2: #2D4060;
+    --ink-3: #4A6080;
+    --ink-4: #8AA0BC;
+    --rule: rgba(37,99,235,0.12);
+    --rule-strong: rgba(37,99,235,0.25);
+    --safe-bg: #9ff4ca;
+    --safe-text: #002114;
+    --font-head: 'Manrope', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ====== NAV ====== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--navy);
+  }
+  .nav-inner {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 56px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--font-head);
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-grid {
+    width: 20px; height: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+  .logo-grid span {
+    display: block;
+    background: var(--cobalt-light);
+    border-radius: 1px;
+  }
+  .logo-grid span:last-child { background: rgba(255,255,255,0.3); }
+  .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: rgba(255,255,255,0.9); }
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--cobalt), var(--cobalt-light));
+    padding: 9px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 12px rgba(37,99,235,0.4);
+    transition: all 0.15s;
+  }
+  .nav-cta:hover { box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 8px 20px rgba(37,99,235,0.5); transform: translateY(-1px); }
+
+  /* ====== HERO ====== */
+  .hero {
+    padding: 100px 56px 80px;
+    max-width: 1360px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+  }
+  /* Blueprint grid lines */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 70% 80% at 75% 50%, black 40%, transparent 80%);
+  }
+  .hero-left { position: relative; z-index: 1; }
+  .hero-right { position: relative; z-index: 1; display: flex; justify-content: center; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+    background: rgba(37,99,235,0.07);
+    border: 1px solid rgba(37,99,235,0.18);
+    padding: 5px 12px;
+    border-radius: 4px;
+    margin-bottom: 28px;
+  }
+
+  .hero-h1 {
+    font-family: var(--font-head);
+    font-size: clamp(3rem, 5.5vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.03;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .hero-h1 .accent {
+    color: var(--cobalt);
+    font-style: italic;
+    font-weight: 900;
+    display: block;
+    background: linear-gradient(135deg, var(--cobalt), var(--cobalt-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.72;
+    color: var(--ink-2);
+    margin-bottom: 40px;
+    max-width: 440px;
+    font-weight: 400;
+  }
+
+  .hero-ctas { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn-primary {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--cobalt), var(--cobalt-light));
+    padding: 13px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.35), 0 1px 0 rgba(255,255,255,0.15) inset;
+    transition: all 0.18s;
+    display: inline-block;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(37,99,235,0.45); }
+  .btn-ghost {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--cobalt);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.15s;
+  }
+  .btn-ghost:hover { gap: 10px; }
+
+  /* Marquee trust strip */
+  .trust-strip {
+    overflow: hidden;
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 20px;
+    position: relative;
+  }
+  .trust-track {
+    display: flex;
+    gap: 48px;
+    animation: marquee 18s linear infinite;
+    width: max-content;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .trust-track { animation: none; } }
+  .trust-item {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-3);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.03em;
+  }
+  .trust-dot { width: 4px; height: 4px; background: var(--cobalt); border-radius: 50%; opacity: 0.5; flex-shrink: 0; }
+
+  /* ====== RING CARD ====== */
+  .ring-card {
+    background: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 4px 24px rgba(10,22,40,0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Blueprint corner marks */
+  .ring-card::before, .ring-card::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    border-color: var(--cobalt);
+    border-style: solid;
+    opacity: 0.4;
+  }
+  .ring-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .ring-card::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  .ring-card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--rule-strong);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(37,99,235,0.03);
+  }
+  .ring-card-label {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .safe-badge {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--safe-text);
+    background: var(--safe-bg);
+    padding: 3px 10px;
+    border-radius: 3px;
+  }
+  .ring-body {
+    padding: 32px 20px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ring-svg-wrap { position: relative; }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-num {
+    font-family: var(--font-head);
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .ring-denom { font-family: var(--font-body); font-size: 0.75rem; color: var(--ink-3); font-weight: 500; margin-top: 4px; }
+  .ring-trips { width: 100%; margin-top: 20px; display: flex; flex-direction: column; }
+  .trip-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .trip-row:last-child { border-bottom: none; }
+  .trip-left { display: flex; align-items: center; gap: 10px; }
+  .trip-flag { font-size: 1rem; }
+  .trip-name { font-family: var(--font-body); font-size: 0.8125rem; font-weight: 500; color: var(--ink); }
+  .trip-dates { font-family: var(--font-body); font-size: 0.6875rem; color: var(--ink-3); margin-top: 1px; }
+  .trip-days {
+    font-family: var(--font-head);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--cobalt);
+    background: rgba(37,99,235,0.07);
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ====== SECTION CHROME ====== */
+  .section-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .section-eyebrow::before { content: ''; width: 20px; height: 1.5px; background: var(--cobalt); }
+
+  /* ====== FEATURES ====== */
+  .features { padding: 80px 56px; max-width: 1360px; margin: 0 auto; border-top: 1px solid var(--rule-strong); }
+  .features-h2 {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 3.2vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin-bottom: 48px;
+    line-height: 1.06;
+    max-width: 600px;
+  }
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background: var(--rule-strong);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .bento-card {
+    background: var(--surface);
+    padding: 28px;
+    transition: background 0.15s;
+  }
+  .bento-card:hover { background: rgba(37,99,235,0.02); }
+  .bento-hero {
+    grid-column: 1 / 6;
+    grid-row: 1 / 3;
+    background: var(--navy);
+    padding: 36px;
+    transition: background 0.15s;
+  }
+  .bento-hero:hover { background: var(--navy-mid); }
+  .bento-card:nth-child(2) { grid-column: 6 / 9; }
+  .bento-card:nth-child(3) { grid-column: 9 / 13; }
+  .bento-card:nth-child(4) { grid-column: 6 / 9; }
+  .bento-card:nth-child(5) { grid-column: 9 / 11; }
+  .bento-card:nth-child(6) { grid-column: 11 / 13; }
+
+  .bento-num {
+    font-family: var(--font-body);
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin-bottom: 14px;
+  }
+  .bento-hero .bento-num { color: rgba(255,255,255,0.25); }
+  .bento-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .bento-hero .bento-title { color: #fff; font-size: 1.5rem; margin-bottom: 12px; }
+  .bento-desc { font-family: var(--font-body); font-size: 0.8125rem; color: var(--ink-3); line-height: 1.6; }
+  .bento-hero .bento-desc { color: rgba(255,255,255,0.6); font-size: 0.9375rem; }
+
+  .mock-panel { margin-top: 28px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; background: rgba(0,0,0,0.2); }
+  .mock-row { display: flex; justify-content: space-between; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,0.07); font-family: var(--font-body); font-size: 0.8125rem; }
+  .mock-row:last-child { border-bottom: none; }
+  .mock-label { color: rgba(255,255,255,0.4); }
+  .mock-value { color: #fff; font-weight: 600; }
+  .mock-safe { color: var(--safe-bg); }
+
+  /* ====== PRICING ====== */
+  .pricing { padding: 80px 56px; max-width: 1360px; margin: 0 auto; border-top: 1px solid var(--rule-strong); }
+  .pricing-h2 { font-family: var(--font-head); font-size: clamp(2rem, 3.2vw, 3.25rem); font-weight: 800; letter-spacing: -0.04em; color: var(--ink); margin-bottom: 10px; }
+  .pricing-sub { font-family: var(--font-body); font-size: 1rem; color: var(--ink-3); margin-bottom: 36px; }
+  .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .toggle-label { font-family: var(--font-body); font-size: 0.875rem; font-weight: 500; color: var(--ink-3); }
+  .toggle-switch { width: 44px; height: 24px; background: var(--cobalt); border-radius: 4px; position: relative; cursor: pointer; border: none; outline: none; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+  .toggle-switch::after { content: ''; position: absolute; width: 18px; height: 18px; background: #fff; top: 3px; right: 3px; transition: transform 0.2s; border-radius: 2px; }
+  .toggle-switch.monthly::after { transform: translateX(-20px); }
+  .save-tag { font-family: var(--font-body); font-size: 0.6875rem; font-weight: 600; color: var(--cobalt); background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.2); padding: 4px 10px; border-radius: 4px; }
+  .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule-strong); border: 1px solid var(--rule-strong); border-radius: 8px; overflow: hidden; max-width: 720px; }
+  .price-card { background: var(--surface); padding: 36px; }
+  .price-card.featured { background: var(--navy); color: #fff; }
+  .price-plan { font-family: var(--font-body); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px; }
+  .price-card.featured .price-plan { color: rgba(255,255,255,0.4); }
+  .price-amount { font-family: var(--font-head); font-size: 3.5rem; font-weight: 900; letter-spacing: -0.04em; color: var(--ink); line-height: 1; font-variant-numeric: tabular-nums; }
+  .price-card.featured .price-amount { color: #fff; }
+  .price-amount sup { font-size: 1.25rem; vertical-align: top; margin-top: 10px; display: inline-block; font-weight: 400; }
+  .price-per { font-family: var(--font-body); font-size: 0.8125rem; color: var(--ink-3); margin-bottom: 28px; }
+  .price-card.featured .price-per { color: rgba(255,255,255,0.4); }
+  .price-features { list-style: none; margin-bottom: 28px; }
+  .price-features li { font-family: var(--font-body); font-size: 0.875rem; color: var(--ink-2); padding: 8px 0; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 8px; }
+  .price-features li:last-child { border-bottom: none; }
+  .price-card.featured .price-features li { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.08); }
+  .price-features li::before { content: '→'; color: var(--cobalt); font-weight: 700; font-size: 0.75rem; flex-shrink: 0; }
+  .price-card.featured .price-features li::before { color: var(--cobalt-light); }
+  .btn-plan { font-family: var(--font-body); font-size: 0.875rem; font-weight: 600; text-decoration: none; display: block; text-align: center; padding: 13px; border-radius: 6px; border: 1px solid var(--rule-strong); color: var(--cobalt); background: transparent; transition: all 0.15s; }
+  .btn-plan:hover { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+  .price-card.featured .btn-plan { background: linear-gradient(135deg, var(--cobalt), var(--cobalt-light)); color: #fff; border-color: transparent; box-shadow: 0 4px 16px rgba(37,99,235,0.35); }
+  .price-card.featured .btn-plan:hover { box-shadow: 0 8px 28px rgba(37,99,235,0.45); }
+
+  /* ====== TRUSTBAR ====== */
+  .trustbar { background: var(--navy); padding: 64px 56px; }
+  .trustbar-inner { max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; }
+  .trust-cell { background: var(--navy); padding: 32px; }
+  .trust-num { font-family: var(--font-head); font-size: 0.625rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cobalt-light); opacity: 0.6; margin-bottom: 16px; }
+  .trust-title { font-family: var(--font-head); font-size: 0.9375rem; font-weight: 700; color: #fff; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .trust-desc { font-family: var(--font-body); font-size: 0.8125rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  /* ====== FOOTER ====== */
+  footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.06); padding: 48px 56px; }
+  .footer-inner { max-width: 1360px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+  .footer-logo { font-family: var(--font-head); font-size: 1rem; font-weight: 800; letter-spacing: -0.03em; color: #fff; }
+  .footer-tagline { font-family: var(--font-body); font-size: 0.8125rem; color: rgba(255,255,255,0.3); margin-top: 4px; }
+  .footer-links { display: flex; gap: 28px; list-style: none; }
+  .footer-links a { font-family: var(--font-body); font-size: 0.8125rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.15s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; gap: 48px; }
+    .bento-hero { grid-column: 1 / -1; grid-row: auto; }
+    .bento-card:nth-child(n) { grid-column: span 4; }
+    .trustbar-inner { grid-template-columns: 1fr 1fr; }
+    .pricing-cards { grid-template-columns: 1fr; max-width: 400px; }
+  }
+  @media (max-width: 768px) {
+    .nav-inner, .hero, .features, .pricing, .trustbar, footer { padding-left: 20px; padding-right: 20px; }
+    .nav-links { display: none; }
+    .bento-card:nth-child(n) { grid-column: 1 / -1; }
+    .trustbar-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-grid" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      Stayright
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#">Login</a></li>
+    </ul>
+    <a href="#" class="nav-cta">Start Free Tracker</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">UK Immigration Compliance</div>
+    <h1 class="hero-h1">Know exactly<br>where you <span class="accent">stand.</span></h1>
+    <p class="hero-sub">Master the 180-day absence rule with precision. Automatically track your travel and secure your residency status without the paperwork headache.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary">Start Free Tracker</a>
+      <a href="#features" class="btn-ghost">See how it works →</a>
+    </div>
+    <div class="trust-strip">
+      <div class="trust-track">
+        <span class="trust-item"><span class="trust-dot"></span>Built by a Skilled Worker visa holder</span>
+        <span class="trust-item"><span class="trust-dot"></span>GDPR compliant</span>
+        <span class="trust-item"><span class="trust-dot"></span>UK data centres</span>
+        <span class="trust-item"><span class="trust-dot"></span>Not legal advice</span>
+        <span class="trust-item"><span class="trust-dot"></span>Built by a Skilled Worker visa holder</span>
+        <span class="trust-item"><span class="trust-dot"></span>GDPR compliant</span>
+        <span class="trust-item"><span class="trust-dot"></span>UK data centres</span>
+        <span class="trust-item"><span class="trust-dot"></span>Not legal advice</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="ring-card">
+      <div class="ring-card-header">
+        <span class="ring-card-label">Current Status</span>
+        <span class="safe-badge">SAFE</span>
+      </div>
+      <div class="ring-body">
+        <div class="ring-svg-wrap">
+          <svg width="212" height="212" viewBox="0 0 212 212" role="img" aria-label="42 of 180 days used">
+            <defs>
+              <linearGradient id="rg6" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1D4ED8"/>
+                <stop offset="100%" stop-color="#3B82F6"/>
+              </linearGradient>
+            </defs>
+            <circle cx="106" cy="106" r="90" fill="none" stroke="rgba(37,99,235,0.1)" stroke-width="16"/>
+            <circle cx="106" cy="106" r="90" fill="none" stroke="url(#rg6)" stroke-width="16"
+              stroke-linecap="round" stroke-dasharray="565.49" stroke-dashoffset="433.42"
+              transform="rotate(-90 106 106)"/>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-num">42</span>
+            <span class="ring-denom">/ 180 days</span>
+          </div>
+        </div>
+        <div class="ring-trips">
+          <div class="trip-row">
+            <div class="trip-left"><span class="trip-flag">🇵🇹</span><div><div class="trip-name">Lisbon, Portugal</div><div class="trip-dates">12 Oct – 19 Oct</div></div></div>
+            <span class="trip-days">7 days</span>
+          </div>
+          <div class="trip-row">
+            <div class="trip-left"><span class="trip-flag">🇺🇸</span><div><div class="trip-name">New York, USA</div><div class="trip-dates">04 Nov – 16 Nov</div></div></div>
+            <span class="trip-days">12 days</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-eyebrow">Features</div>
+  <h2 class="features-h2">Every tool you need.<br>Nothing you don't.</h2>
+  <div class="bento">
+    <div class="bento-card bento-hero">
+      <div class="bento-num">Hero Feature</div>
+      <div class="bento-title">What-If Trip Simulator</div>
+      <div class="bento-desc">Plan any future trip and instantly see its impact on your 180-day quota before you book. No guesswork, no surprises.</div>
+      <div class="mock-panel">
+        <div class="mock-row"><span class="mock-label">Destination</span><span class="mock-value">Barcelona, Spain</span></div>
+        <div class="mock-row"><span class="mock-label">Duration</span><span class="mock-value">10 days</span></div>
+        <div class="mock-row"><span class="mock-label">Days after trip</span><span class="mock-value">52 / 180</span></div>
+        <div class="mock-row"><span class="mock-label">Status</span><span class="mock-value mock-safe">Still SAFE ✓</span></div>
+      </div>
+    </div>
+    <div class="bento-card"><div class="bento-num">01</div><div class="bento-title">Live Absence Counter</div><div class="bento-desc">Real-time rolling 180-day window updated every time you log a trip.</div></div>
+    <div class="bento-card"><div class="bento-num">02</div><div class="bento-title">Automatic Risk Alerts</div><div class="bento-desc">Email notifications when your quota reaches warning and danger thresholds.</div></div>
+    <div class="bento-card"><div class="bento-num">03</div><div class="bento-title">ILR Timeline</div><div class="bento-desc">See exactly how many qualifying years remain on your path to settlement.</div></div>
+    <div class="bento-card"><div class="bento-num">04</div><div class="bento-title">PDF Export</div><div class="bento-desc">Audit-ready one-click export for visa applications.</div></div>
+    <div class="bento-card"><div class="bento-num">05</div><div class="bento-title">Crown Dependency</div><div class="bento-desc">Guernsey, Jersey, Isle of Man — handled correctly.</div></div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-eyebrow">Pricing</div>
+  <h2 class="pricing-h2">Simple, honest pricing.</h2>
+  <p class="pricing-sub">Start free. No credit card required.</p>
+  <div class="toggle-row">
+    <span class="toggle-label">Monthly</span>
+    <button class="toggle-switch" onclick="this.classList.toggle('monthly')" aria-label="Toggle billing"></button>
+    <span class="toggle-label">Annual</span>
+    <span class="save-tag">Save 30%</span>
+  </div>
+  <div class="pricing-cards">
+    <div class="price-card">
+      <div class="price-plan">Free</div>
+      <div class="price-amount">£0</div>
+      <div class="price-per">Forever free</div>
+      <ul class="price-features"><li>180-day absence tracking</li><li>Up to 10 trips</li><li>Basic risk status</li></ul>
+      <a href="#" class="btn-plan">Get started free</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-plan">Pro — Most Popular</div>
+      <div class="price-amount"><sup>£</sup>2.99</div>
+      <div class="price-per">/month, billed annually</div>
+      <ul class="price-features"><li>Everything in Free</li><li>Unlimited trips</li><li>What-If Simulator</li><li>ILR Timeline</li><li>Audit-Ready PDF Export</li><li>Email risk alerts</li></ul>
+      <a href="#" class="btn-plan">Start Free Tracker</a>
+    </div>
+  </div>
+</section>
+
+<div class="trustbar">
+  <div class="trustbar-inner">
+    <div class="trust-cell"><div class="trust-num">01</div><div class="trust-title">Built by a visa holder</div><div class="trust-desc">Made by someone navigating the same rules. Not a generic SaaS product.</div></div>
+    <div class="trust-cell"><div class="trust-num">02</div><div class="trust-title">GDPR compliant</div><div class="trust-desc">Your travel data is private, encrypted, and never sold.</div></div>
+    <div class="trust-cell"><div class="trust-num">03</div><div class="trust-title">UK data centres</div><div class="trust-desc">All data stored and processed in the United Kingdom.</div></div>
+    <div class="trust-cell"><div class="trust-num">04</div><div class="trust-title">Not legal advice</div><div class="trust-desc">A precision tool, not a substitute for professional counsel.</div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-logo">Stayright</div><div class="footer-tagline">Built for Skilled Workers, by one.</div></div>
+    <ul class="footer-links"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Contact</a></li></ul>
+  </div>
+</footer>
+
+</body>
+</html>
