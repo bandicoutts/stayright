@@ -87,6 +87,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @layer utilities {
+  /* Bento feature card — hover handled in CSS so Features.tsx stays a server component */
+  .bento-feature-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(201, 168, 76, 0.20);
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(26, 27, 25, 0.04);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .bento-feature-card:hover {
+    border-color: rgba(201, 168, 76, 0.40);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(201, 168, 76, 0.08);
+  }
+
   /* Drawer animations — used by dashboard trip drawer */
   .animate-drawer-mobile {
     animation: drawerMobile 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.05) forwards;

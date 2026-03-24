@@ -214,23 +214,7 @@ export default function Features() {
                 key={feature.title}
                 role="region"
                 aria-labelledby={id}
-                className="md:col-span-7 lg:col-span-3 p-7 transition-all duration-200"
-                style={{
-                  background: '#FFFFFF',
-                  border: '1px solid rgba(201,168,76,0.20)',
-                  borderRadius: 12,
-                  boxShadow: '0 1px 4px rgba(26,27,25,0.04)',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(201,168,76,0.40)';
-                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 28px rgba(201,168,76,0.08)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(201,168,76,0.20)';
-                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 4px rgba(26,27,25,0.04)';
-                }}
+                className="bento-feature-card md:col-span-7 lg:col-span-3 p-7"
               >
                 <div
                   className="w-9 h-9 rounded-[8px] flex items-center justify-center mb-4 shrink-0"
