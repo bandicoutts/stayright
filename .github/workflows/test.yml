@@ -51,31 +51,39 @@ jobs:
       - name: Get local Supabase status
         id: supabase_keys
         run: |
+          echo "Waiting 10s for services to stabilize..."
+          sleep 10
+          docker ps
+          
           # Wait up to 120s for services to be ready
-          for i in {1..60}; do
+          for i in {1..40}; do
+            # Try multiple output formats
+            STATUS_ENV=$(npx supabase status -o env || echo "")
             STATUS_JSON=$(npx supabase status -o json || echo "{}")
             STATUS_TEXT=$(npx supabase status || echo "")
             
             echo "--- Attempt $i ---"
             
-            # 1. Try JSON (api_url, anon_key, service_role_key)
-            URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
-            ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty')
-            SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty')
+            # 1. Try ENV format first (most reliable for scripting)
+            URL=$(echo "$STATUS_ENV" | grep "API_URL" | sed 's/.*=//' | xargs || echo "")
+            ANON=$(echo "$STATUS_ENV" | grep "ANON_KEY" | sed 's/.*=//' | xargs || echo "")
+            SERVICE=$(echo "$STATUS_ENV" | grep "SERVICE_ROLE_KEY" | sed 's/.*=//' | xargs || echo "")
             
-            # 2. Try greedy TEXT parsing if JSON failed
-            CLEAN_TEXT=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g')
+            # 2. Fallback to JSON
+            if [ -z "$URL" ]; then
+              URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
+              ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty')
+              SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty')
+            fi
+            
+            # 3. Fallback to aggressive TEXT parsing
             if [ -z "$URL" ] || [ "$URL" == "null" ]; then
+              CLEAN_TEXT=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g')
               URL=$(echo "$CLEAN_TEXT" | grep -i "API URL" | head -1 | sed 's/.*: //' | xargs || echo "")
-            fi
-            if [ -z "$ANON" ] || [ "$ANON" == "null" ]; then
               ANON=$(echo "$CLEAN_TEXT" | grep -i "anon key" | head -1 | sed 's/.*: //' | xargs || echo "")
-            fi
-            if [ -z "$SERVICE" ] || [ "$SERVICE" == "null" ]; then
               SERVICE=$(echo "$CLEAN_TEXT" | grep -i "service_role key" | head -1 | sed 's/.*: //' | xargs || echo "")
             fi
             
-            # 3. Check if we have what we need
             if [ ! -z "$URL" ] && [ "$URL" != "null" ] && [ ! -z "$ANON" ]; then
               echo "url=$URL" >> $GITHUB_OUTPUT
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
@@ -85,9 +93,9 @@ jobs:
             fi
             
             echo "Waiting for Supabase... ($i)"
-            sleep 2
+            sleep 3
           done
-          echo "Supabase timed out. Debugging status:"
+          echo "Supabase timed out. Final debug:"
           npx supabase status --debug
           exit 1
 
