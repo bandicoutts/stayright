@@ -57,39 +57,34 @@ jobs:
           
           # Wait up to 120s for services to be ready
           for i in {1..40}; do
-            # Try multiple output formats
             STATUS_ENV=$(npx supabase status -o env || echo "")
             STATUS_JSON=$(npx supabase status -o json || echo "{}")
             STATUS_TEXT=$(npx supabase status || echo "")
             
             echo "--- Attempt $i ---"
             
-            # 1. Try ENV format first (most reliable for scripting)
             URL=$(echo "$STATUS_ENV" | grep "API_URL" | sed 's/.*=//' | xargs || echo "")
-            ANON=$(echo "$STATUS_ENV" | grep "ANON_KEY" | sed 's/.*=//' | xargs || echo "")
-            SERVICE=$(echo "$STATUS_ENV" | grep "SERVICE_ROLE_KEY" | sed 's/.*=//' | xargs || echo "")
-            
-            # 2. Fallback to JSON
             if [ -z "$URL" ]; then
               URL=$(echo $STATUS_JSON | jq -r '.api_url // empty')
-              ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty')
-              SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty')
             fi
             
-            # 3. Fallback to aggressive TEXT parsing
-            if [ -z "$URL" ] || [ "$URL" == "null" ]; then
-              CLEAN_TEXT=$(echo "$STATUS_TEXT" | sed 's/\x1b\[[0-9;]*m//g')
-              URL=$(echo "$CLEAN_TEXT" | grep -i "API URL" | head -1 | sed 's/.*: //' | xargs || echo "")
-              ANON=$(echo "$CLEAN_TEXT" | grep -i "anon key" | head -1 | sed 's/.*: //' | xargs || echo "")
-              SERVICE=$(echo "$CLEAN_TEXT" | grep -i "service_role key" | head -1 | sed 's/.*: //' | xargs || echo "")
-            fi
-            
-            if [ ! -z "$URL" ] && [ "$URL" != "null" ] && [ ! -z "$ANON" ]; then
-              echo "url=$URL" >> $GITHUB_OUTPUT
-              echo "anon_key=$ANON" >> $GITHUB_OUTPUT
-              echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
-              echo "Supabase ready at $URL"
-              exit 0
+            if [ ! -z "$URL" ] && [ "$URL" != "null" ]; then
+              # Perform a real health check on the API Gateway
+              if curl -s -f "$URL/auth/v1/health" > /dev/null; then
+                ANON=$(echo "$STATUS_ENV" | grep "ANON_KEY" | sed 's/.*=//' | xargs || echo "")
+                if [ -z "$ANON" ]; then ANON=$(echo $STATUS_JSON | jq -r '.anon_key // empty'); fi
+                
+                SERVICE=$(echo "$STATUS_ENV" | grep "SERVICE_ROLE_KEY" | sed 's/.*=//' | xargs || echo "")
+                if [ -z "$SERVICE" ]; then SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty'); fi
+                
+                echo "url=$URL" >> $GITHUB_OUTPUT
+                echo "anon_key=$ANON" >> $GITHUB_OUTPUT
+                echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
+                echo "Supabase fully ready and responding at $URL"
+                exit 0
+              else
+                echo "Supabase CLI says running, but $URL/auth/v1/health is not responding yet..."
+              fi
             fi
             
             echo "Waiting for Supabase... ($i)"
