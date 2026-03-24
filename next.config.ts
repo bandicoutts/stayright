@@ -23,13 +23,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              // Next.js requires unsafe-inline for its runtime scripts.
-              // Nonce-based CSP is deferred to post-launch hardening (see DECISIONS.md).
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob:",
               "font-src 'self'",
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://eu.i.posthog.com",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://eu.i.posthog.com http://127.0.0.1:54321 http://localhost:54321",
               "frame-src https://js.stripe.com",
               "frame-ancestors 'none'",
             ].join('; '),
