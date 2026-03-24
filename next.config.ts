@@ -36,6 +36,19 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  async rewrites() {
+    // Only proxy in development/test to avoid CSP/CI networking issues
+    if (process.env.NODE_ENV === 'production' && !process.env.CI) {
+      return []
+    }
+
+    return [
+      {
+        source: '/supabase-api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321'}/:path*`,
+      },
+    ]
+  },
 }
 
 export default analyzer(nextConfig)
