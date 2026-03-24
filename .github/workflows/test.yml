@@ -78,12 +78,12 @@ jobs:
                 if [ -z "$SERVICE" ]; then SERVICE=$(echo $STATUS_JSON | jq -r '.service_role_key // empty'); fi
                 
               # Force localhost instead of 127.0.0.1 to avoid browser/CORS issues in CI
-              URL=$(echo "$URL" | sed 's/127\.0\.0\.1/localhost/')
+              URL_FINAL=${URL/127.0.0.1/localhost}
               
-              echo "url=$URL" >> $GITHUB_OUTPUT
+              echo "url=$URL_FINAL" >> $GITHUB_OUTPUT
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
               echo "service_role_key=$SERVICE" >> $GITHUB_OUTPUT
-              echo "Supabase fully ready and responding at $URL"
+              echo "Supabase fully ready and responding at $URL_FINAL"
               exit 0
               else
                 echo "Supabase CLI says running, but $URL/auth/v1/health is not responding yet..."
