@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { COOKIE_NAME } from '@/lib/supabase/constants'
 
 // Refresh the Supabase session on every request so it doesn't expire.
 // Also protects authenticated routes — redirects unauthenticated users to /login.
@@ -23,6 +24,9 @@ export async function proxy(request: NextRequest) {
             supabaseResponse.cookies.set(name, value, options)
           )
         },
+      },
+      cookieOptions: {
+        name: COOKIE_NAME,
       },
     }
   )

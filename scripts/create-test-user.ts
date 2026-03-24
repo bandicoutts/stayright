@@ -46,23 +46,32 @@ const anon = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 async function run() {
   console.log(`\n🔧  Creating test user: ${TEST_EMAIL}`)
+  console.log(`    Supabase URL: ${SUPABASE_URL}`)
 
   // 1. Check if user already exists
-  const { data: { users } } = await admin.auth.admin.listUsers({ page: 1, perPage: 100 })
+  const { data: { users }, error: listError } = await admin.auth.admin.listUsers({ page: 1, perPage: 100 })
+  if (listError) {
+    console.error(`❌  Failed to list users: ${listError.message}`)
+    throw listError
+  }
   const existing = users?.find((u) => u.email === TEST_EMAIL)
 
   let userId: string
 
   if (existing) {
-    console.log(`ℹ️   User already exists (${existing.id}) — resetting password`)
+    console.log(`ℹ️   User already exists (${existing.id}) — resetting password to match current environment`)
     const { data, error } = await admin.auth.admin.updateUserById(existing.id, {
       password: TEST_PASSWORD,
       email_confirm: true,
     })
-    if (error) throw new Error(`Failed to update user: ${error.message}`)
+    if (error) {
+      console.error(`❌  Failed to update user: ${error.message}`)
+      throw new Error(`Failed to update user: ${error.message}`)
+    }
     userId = data.user.id
   } else {
     // 2a. Try admin.createUser (works if trigger is up to date)
+    console.log('    Attempting to create via admin.auth.admin.createUser...')
     const { data: adminData, error: adminError } = await admin.auth.admin.createUser({
       email: TEST_EMAIL,
       password: TEST_PASSWORD,
@@ -79,7 +88,10 @@ async function run() {
         email: TEST_EMAIL,
         password: TEST_PASSWORD,
       })
-      if (signUpError) throw new Error(`signUp failed: ${signUpError.message}`)
+      if (signUpError) {
+        console.error(`❌  signUp fallback failed: ${signUpError.message}`)
+        throw new Error(`signUp failed: ${signUpError.message}`)
+      }
       if (!signUpData.user) throw new Error('signUp returned no user')
 
       userId = signUpData.user.id
@@ -91,7 +103,6 @@ async function run() {
       })
       if (confirmError) {
         console.warn(`⚠️   Could not auto-confirm email: ${confirmError.message}`)
-        console.warn('    Confirm manually in Supabase dashboard → Authentication → Users')
       } else {
         console.log(`✅  Email confirmed`)
       }
@@ -99,6 +110,7 @@ async function run() {
   }
 
   // 3. Upsert profile to mark onboarding complete
+  console.log('    Upserting profile row...')
   const { error: profileError } = await admin
     .from('profiles')
     .upsert(
@@ -114,26 +126,21 @@ async function run() {
 
   if (profileError) {
     console.warn(`⚠️   Profile upsert warning: ${profileError.message}`)
-    console.warn('    Try completing onboarding manually at http://localhost:3000/onboarding')
   } else {
     console.log(`✅  Profile row upserted — onboarding marked complete`)
-    console.log(`    Visa start date: 2023-01-14`)
   }
 
   console.log(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅  Test user ready!
-
   Email:    ${TEST_EMAIL}
-  Password: ${TEST_PASSWORD}
-
-These credentials are already set in .env.local.
-Run E2E tests with: npm run test:e2e
+  Password: ${TEST_PASSWORD[0] + '*'.repeat(TEST_PASSWORD.length - 2) + TEST_PASSWORD.slice(-1)}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `)
 }
 
 run().catch((err) => {
-  console.error('❌  Error:', err.message)
+  console.error('\n❌  Error during user creation:')
+  console.error(err)
   process.exit(1)
 })

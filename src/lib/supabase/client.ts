@@ -1,5 +1,6 @@
 import { createBrowserClient } from '@supabase/ssr'
 import type { Database } from '@/types/database'
+import { COOKIE_NAME } from './constants'
 
 // Browser client — use in Client Components ('use client')
 export function createClient() {
@@ -12,6 +13,11 @@ export function createClient() {
 
   return createBrowserClient<Database>(
     supabaseUrl,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookieOptions: {
+        name: COOKIE_NAME,
+      },
+    }
   )
 }

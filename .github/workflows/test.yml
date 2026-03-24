@@ -66,6 +66,8 @@ jobs:
               echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON" >> .env.local
               echo "SUPABASE_SERVICE_ROLE_KEY=$SERVICE" >> .env.local
               echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+              echo "TEST_USER_EMAIL=${{ secrets.TEST_USER_EMAIL || 'testuser@example.com' }}" >> .env.local
+              echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD || 'TestPassword123!' }}" >> .env.local
               
               echo "url=http://127.0.0.1:54321" >> $GITHUB_OUTPUT
               echo "anon_key=$ANON" >> $GITHUB_OUTPUT
@@ -83,6 +85,9 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Create Test User
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL || 'testuser@example.com' }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD || 'TestPassword123!' }}
         run: npm run test:create-user
 
       - name: Run Playwright Tests

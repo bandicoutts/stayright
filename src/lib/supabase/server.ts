@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { Database } from '@/types/database'
+import { COOKIE_NAME } from './constants'
 
 // Server client — use in Server Components, Server Actions, and Route Handlers
 export async function createClient() {
@@ -24,6 +25,9 @@ export async function createClient() {
             // Session refresh is handled by middleware instead.
           }
         },
+      },
+      cookieOptions: {
+        name: COOKIE_NAME,
       },
     }
   )
