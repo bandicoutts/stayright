@@ -51,11 +51,14 @@ jobs:
       - name: Get local Supabase status
         id: supabase_keys
         run: |
-          # Wait up to 30s for services to be ready
-          for i in {1..30}; do
+          # Wait up to 60s for services to be ready
+          for i in {1..60}; do
             STATUS=$(npx supabase status -o json)
+            # Debug: print the status (scrubbing secrets just in case)
+            echo "Attempt $i: $STATUS" | sed 's/:".*"/:"***"/g' 
+            
             URL=$(echo $STATUS | jq -r '.api_url // empty')
-            if [ ! -z "$URL" ]; then
+            if [ ! -z "$URL" ] && [ "$URL" != "null" ]; then
               echo "url=$URL" >> $GITHUB_OUTPUT
               echo "anon_key=$(echo $STATUS | jq -r '.anon_key')" >> $GITHUB_OUTPUT
               echo "service_role_key=$(echo $STATUS | jq -r '.service_role_key')" >> $GITHUB_OUTPUT
@@ -63,9 +66,10 @@ jobs:
               exit 0
             fi
             echo "Waiting for Supabase... ($i)"
-            sleep 1
+            sleep 2
           done
-          echo "Supabase timed out"
+          echo "Supabase timed out. Current status:"
+          npx supabase status
           exit 1
 
       - name: Install Playwright browsers
