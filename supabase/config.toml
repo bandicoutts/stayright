@@ -1,8 +1,5 @@
 # Supabase Local Configuration
 
-[project]
-id = "rzulxdaiqdqsmckanebd"
-
 [api]
 port = 54321
 schemas = ["public", "graphql_public"]
@@ -29,5 +26,3 @@ secret = "local-google-secret"
 [storage]
 enabled = false
 
-[inhabited]
-enabled = false
