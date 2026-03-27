@@ -26,4 +26,6 @@ export {
   FileArrowDown,
   TwitterLogo,
   LinkedinLogo,
+  Sun,
+  Moon,
 } from '@phosphor-icons/react'

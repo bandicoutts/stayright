@@ -18,6 +18,8 @@ interface Props {
   onClose?: () => void
 }
 
+import { ThemeToggle } from './ThemeToggle'
+
 export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props) {
   const pathname = usePathname()
   const router = useRouter()
@@ -48,8 +50,8 @@ export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props
         `}
       >
 
-      {/* Logo */}
-      <div className="px-8 pt-10 pb-6">
+      {/* Logo Area */}
+      <div className="px-8 pt-10 pb-6 flex items-center justify-between gap-4">
         <Link
           href="/"
           className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] no-underline"
@@ -57,6 +59,7 @@ export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props
         >
           Stayright
         </Link>
+        <ThemeToggle />
       </div>
 
       {/* Nav */}

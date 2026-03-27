@@ -63,33 +63,31 @@
   --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #00A874 100%);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg:             #080B08;   /* base bg — near-OLED */
-    --color-bg-tinted:      #0E1310;
-    
-    --color-surface:        #0E1310;   /* cards, panels */
-    --color-surface-warm:   #141A15;   /* elevated cards */
-    
-    --color-text-primary:   #E8EDE9;   /* near-white with green warmth */
-    --color-text-2:         #CFD8D0;
-    --color-text-3:         #A8B6AB;
-    --color-text-muted:     #8FA893;
-    --color-text-faint:     #4A5E4D;
-    
-    --color-border:         rgba(0, 105, 72, 0.18);
-    --color-border-strong:  rgba(0, 105, 72, 0.35);
-    
-    --shadow-card:          0 4px 24px rgba(0, 0, 0, 0.5);
-    --shadow-card-hover:    0 8px 32px rgba(0, 0, 0, 0.7);
+.dark {
+  --color-bg:             #080B08;   /* base bg — near-OLED */
+  --color-bg-tinted:      #0E1310;
+  
+  --color-surface:        #0E1310;   /* cards, panels */
+  --color-surface-warm:   #141A15;   /* elevated cards */
+  
+  --color-text-primary:   #E8EDE9;   /* near-white with green warmth */
+  --color-text-2:         #CFD8D0;
+  --color-text-3:         #A8B6AB;
+  --color-text-muted:     #8FA893;
+  --color-text-faint:     #4A5E4D;
+  
+  --color-border:         rgba(0, 105, 72, 0.18);
+  --color-border-strong:  rgba(0, 105, 72, 0.35);
+  
+  --shadow-card:          0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover:    0 8px 32px rgba(0, 0, 0, 0.7);
 
-    /* Status Dark Mode */
-    --color-warning-bg:     rgba(217, 119, 6, 0.12);
-    --color-warning-border: rgba(217, 119, 6, 0.25);
-    --color-warning-text:   #FBBF24;
+  /* Status Dark Mode */
+  --color-warning-bg:     rgba(217, 119, 6, 0.12);
+  --color-warning-border: rgba(217, 119, 6, 0.25);
+  --color-warning-text:   #FBBF24;
 
-    --color-danger-bg:      rgba(186, 26, 26, 0.15);
-    --color-danger-border:  rgba(186, 26, 26, 0.30);
-    --color-danger-text:    #F87171;
-  }
+  --color-danger-bg:      rgba(186, 26, 26, 0.15);
+  --color-danger-border:  rgba(186, 26, 26, 0.30);
+  --color-danger-text:    #F87171;
 }

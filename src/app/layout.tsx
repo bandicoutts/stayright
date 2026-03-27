@@ -34,6 +34,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,6 +45,7 @@ export default function RootLayout({
     <html
       lang="en-GB"
       className={`${manrope.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <meta name="theme-color" content="#006948" />
@@ -54,9 +57,16 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <PostHogProvider>{children}</PostHogProvider>
-        <CookieBanner />
-        <ServiceWorkerRegistration />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PostHogProvider>{children}</PostHogProvider>
+          <CookieBanner />
+          <ServiceWorkerRegistration />
+        </ThemeProvider>
       </body>
     </html>
   );
