@@ -1,0 +1,22 @@
+# Build artifacts
+.next/
+node_modules/
+coverage/
+test-results/
+playwright-report/
+tsconfig.tsbuildinfo
+
+# Large data files — not useful for coding
+lh-*.json
+package-lock.json
+
+# Wireframe binary/HTML assets — read docs/WIREFRAMES.md status tracker instead
+docs/wireframes/**/*.png
+docs/wireframes/**/*.html
+docs/wireframes/**/*.js
+
+# Claude skills directory
+.claude/skills/
+
+# Archive (historical content, rarely needed)
+docs/archive/

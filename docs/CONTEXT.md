@@ -1,10 +1,12 @@
 # StayRight — Project Context
 
-> **STOP.** Do not read `docs/PRD.md` or `docs/DECISIONS.md` in full under any circumstances.
-> Reading these files in full will exhaust your token budget before you write a single line of code.
+> **STOP — token budget warning.**
+> - `docs/DECISIONS.md` in full = **~25,000 tokens**. DO NOT read it in full.
+> - `docs/PRD.md` in full = **~15,000 tokens**. DO NOT read it in full.
 >
-> `docs/PRD.md` — read the **Feature Status table** at the top only, then pull the specific section for your task.
-> `docs/DECISIONS.md` — read the **Quick Reference table** at the top only, then pull specific entries if relevant.
+> Instead:
+> - For decisions → read `docs/DECISIONS-index.md` (~650 tokens), then open `docs/DECISIONS.md` for specific entries only.
+> - For PRD → read the **Feature Status table** (first 20 lines of `docs/PRD.md`), then pull the section for your task only.
 
 ---
 

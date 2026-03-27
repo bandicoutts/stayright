@@ -8,8 +8,8 @@ Only read a doc file when your specific task requires it.
 Docs are on-demand references, not mandatory reading.
 
 Quick guide — what each doc contains:
-- `docs/DECISIONS.md` — why architectural choices were made. Consult when you are about to make a structural decision or need to understand why something works the way it does.
-- `docs/PRD.md` — feature specs, UI copy, acceptance criteria, open questions. Consult when implementing a specific feature. Read the Feature Status table at the top first — it tells you which section covers your feature.
+- `docs/DECISIONS-index.md` — Quick Reference table only (~650 tokens). Read this to find relevant decisions, then open `docs/DECISIONS.md` for the full entry of a specific decision only. **Never read `docs/DECISIONS.md` in full** (~25,000 tokens).
+- `docs/PRD.md` — feature specs, UI copy, acceptance criteria, open questions. Read the Feature Status table at the top only, then pull the section for your feature. **Never read `docs/PRD.md` in full** (~15,000 tokens).
 - `docs/DESIGN.md` — design tokens reference. Consult when writing UI components.
 - `docs/WIREFRAMES.md` — screen status tracker. Consult when starting a new screen.
 - `docs/TESTING.md` — testing strategy. Consult when writing tests.
@@ -17,11 +17,11 @@ Quick guide — what each doc contains:
 What to read for common tasks:
 
 **Building or changing a feature:**
-Read `docs/PRD.md` → find your feature in the Feature Status table → read that section only.
-Read `docs/DECISIONS.md` → scan Quick Reference table → read any relevant decisions.
+Read `docs/PRD.md` → find your feature in the Feature Status table (first 20 lines) → read that section only.
+Read `docs/DECISIONS-index.md` → scan Quick Reference table → open `docs/DECISIONS.md` for specific entries only if relevant.
 
 **Making an architectural decision:**
-Read `docs/DECISIONS.md` → scan Quick Reference table → read relevant decisions → check for SUPERSEDED markers before relying on any decision.
+Read `docs/DECISIONS-index.md` → scan Quick Reference table → open `docs/DECISIONS.md` for the relevant entry → check for SUPERSEDED markers before relying on any decision.
 
 **Writing UI components:**
 Read `docs/DESIGN.md` → read in full (it is short).
@@ -31,7 +31,7 @@ Read `docs/TESTING.md` → read in full (it is short).
 Read `docs/PRD.md` → find your feature section → read acceptance criteria only.
 
 **Security or auth work:**
-Read `docs/DECISIONS.md` → scan Quick Reference → read DECISION-013 through DECISION-017, DECISION-040, DECISION-041.
+Read `docs/DECISIONS-index.md` → open `docs/DECISIONS.md` → read DECISION-013 through DECISION-017, DECISION-040, DECISION-041.
 
 ---
 
