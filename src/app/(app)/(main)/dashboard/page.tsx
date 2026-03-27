@@ -105,7 +105,7 @@ export default async function DashboardPage() {
   const complianceStatus = getRiskStatus(rollingWindow.days)
 
   return (
-    <div className="p-6 md:p-8 max-w-6xl">
+    <div className="p-6 md:p-8">
       {/* dashboard_viewed event + user property sync */}
       <Suspense fallback={null}>
         <DashboardAnalytics

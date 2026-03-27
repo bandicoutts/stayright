@@ -151,7 +151,7 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
 
   return (
     <>
-      <div className="p-6 md:p-8 max-w-4xl">
+      <div className="p-6 md:p-8">
         {/* Page header */}
         <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
           Reports &amp; Exports

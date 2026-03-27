@@ -349,7 +349,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="p-6 md:p-8 max-w-2xl">
+    <div className="p-6 md:p-8">
       <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-8">
         Settings
       </h1>
