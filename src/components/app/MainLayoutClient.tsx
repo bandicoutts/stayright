@@ -11,6 +11,7 @@ interface Props {
   userId: string
   userEmail?: string | null
   userInitial: string
+  userName: string
   isPaymentFailed: boolean
   children: ReactNode
 }
@@ -19,6 +20,7 @@ export function MainLayoutClient({
   userId,
   userEmail,
   userInitial,
+  userName,
   isPaymentFailed,
   children
 }: Props) {
@@ -37,6 +39,7 @@ export function MainLayoutClient({
       <Sidebar
         userEmail={userEmail}
         userInitial={userInitial}
+        userName={userName}
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
       />

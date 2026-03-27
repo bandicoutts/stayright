@@ -28,4 +28,5 @@ export {
   LinkedinLogo,
   Sun,
   Moon,
+  CaretUp,
 } from '@phosphor-icons/react'

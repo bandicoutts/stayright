@@ -1,28 +1,38 @@
-'use client'
-
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { SquaresFour, FileText, Gear, SignOut } from '@/components/ui/Icons'
+import { SquaresFour, FileText, Gear, SignOut, CaretUp } from '@/components/ui/Icons'
 import { createClient } from '@/lib/supabase/client'
+import { ThemeToggle } from './ThemeToggle'
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: SquaresFour },
   { href: '/reports',   label: 'Reports',   icon: FileText },
-  { href: '/settings',  label: 'Settings',  icon: Gear },
 ]
 
 interface Props {
+  userName?: string
   userEmail?: string | null
   userInitial?: string
   isOpen?: boolean
   onClose?: () => void
 }
 
-import { ThemeToggle } from './ThemeToggle'
-
-export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props) {
+export function Sidebar({ userName = 'Account', userEmail, userInitial = '?', isOpen, onClose }: Props) {
   const pathname = usePathname()
   const router = useRouter()
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   async function handleSignOut() {
     const supabase = createClient()
@@ -90,51 +100,66 @@ export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props
         })}
       </nav>
 
-      {/* User + sign out */}
-      <div className="px-4 pb-6 pt-4">
-        <div
-          className="flex items-center gap-3.5 px-4 py-3 mb-2 rounded-[10px]"
-          style={{
-            background: 'var(--color-surface-warm)',
-            border: '1px solid var(--color-border)',
-          }}
-        >
-          {/* Avatar */}
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: 'var(--color-green)' }}
+      {/* User Card with Popover */}
+      <div className="px-4 pb-6 pt-4 relative">
+        {/* Popover */}
+        {isProfileOpen && (
+          <div 
+            ref={popoverRef}
+            className="absolute bottom-full left-4 right-4 mb-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-2xl z-[110] overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200"
           >
-            <span
-              className="font-[family-name:var(--font-manrope)] font-bold"
-              style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}
-            >
-              {userInitial}
-            </span>
+            <div className="p-1.5 flex flex-col gap-1">
+              <Link
+                href="/settings"
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[14px] font-medium transition-colors hover:bg-[var(--color-bg-tinted)] no-underline"
+                style={{ color: 'var(--color-text-primary)' }}
+                onClick={() => {
+                  setIsProfileOpen(false)
+                  onClose?.()
+                }}
+              >
+                <Gear className="w-4 h-4 shrink-0" weight="regular" />
+                Settings
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsProfileOpen(false)
+                  handleSignOut()
+                }}
+                className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[14px] font-medium transition-colors hover:bg-[var(--color-bg-tinted)] cursor-pointer text-left"
+                style={{ color: 'var(--color-status-red)' }}
+              >
+                <SignOut className="w-4 h-4 shrink-0" weight="regular" />
+                Sign out
+              </button>
+            </div>
           </div>
-          <div className="flex flex-col overflow-hidden">
+        )}
+
+        <button
+          type="button"
+          onClick={() => setIsProfileOpen(!isProfileOpen)}
+          className={`
+            w-full flex items-center justify-between gap-3 px-4 py-3 rounded-[12px] transition-all group border
+            ${isProfileOpen ? 'bg-[var(--color-bg-tinted)] border-[var(--color-border-strong)]' : 'bg-[var(--color-surface-warm)] border-[var(--color-border)]'}
+          `}
+        >
+          <div className="flex flex-col min-w-0 text-left">
             <span
-              className="font-[family-name:var(--font-inter)] font-semibold leading-tight"
-              style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}
+              className="font-[family-name:var(--font-inter)] font-semibold leading-tight truncate"
+              style={{ fontSize: '13.5px', color: 'var(--color-text-primary)' }}
             >
-              Account
+              {userName}
             </span>
             <span
               className="font-[family-name:var(--font-inter)] truncate leading-tight mt-0.5"
-              style={{ fontSize: '11px', color: 'var(--color-text-faint)' }}
+              style={{ fontSize: '11.5px', color: 'var(--color-text-faint)' }}
             >
               {userEmail}
             </span>
           </div>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-[8px] text-[14px] font-medium transition-colors cursor-pointer"
-          style={{ color: 'var(--color-text-faint)' }}
-        >
-          <SignOut className="w-4 h-4 shrink-0" weight="regular" />
-          Sign out
+          <CaretUp className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} style={{ color: 'var(--color-text-faint)' }} />
         </button>
       </div>
       </aside>

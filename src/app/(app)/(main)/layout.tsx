@@ -23,11 +23,21 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
     subscription?.plan !== 'free' &&
     (subscription?.status === 'past_due' || subscription?.status === 'unpaid')
 
+  // Fetch user profile for name (PRD §4a)
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('first_name, last_name')
+    .eq('id', user.id)
+    .single()
+
+  const userName = profile ? `${profile.first_name} ${profile.last_name}`.trim() : 'Account'
+
   return (
     <MainLayoutClient
       userId={user.id}
       userEmail={user.email}
       userInitial={initial}
+      userName={userName}
       isPaymentFailed={isPaymentFailed}
     >
       {children}
