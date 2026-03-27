@@ -74,7 +74,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   useEffect(() => {
     if ((drawerMode === 'plan' || drawerMode === 'log') && atLimit) {
       setShowPaywall(true)
-      router.replace('/dashboard')
+      router.replace('/dashboard', { scroll: false })
     }
   }, [drawerMode, atLimit, router])
 
@@ -92,7 +92,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       setShowPaywall(true)
       return
     }
-    router.push(`?modal=${mode}`)
+    router.push(`?modal=${mode}`, { scroll: false })
   }
 
   function handleAddTrip() {
@@ -287,7 +287,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                     <div
                       key={trip.id}
                       className={`group w-full p-3 sm:px-4 sm:py-3 rounded-xl flex flex-col gap-3 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                        isSelected ? 'bg-[var(--color-green-pale)]/50 ring-1 ring-[var(--color-green)]/30 shadow-sm' : 'bg-[var(--color-bg-tinted)] hover:bg-[var(--color-surface)] hover:shadow-md ring-1 ring-transparent hover:ring-[var(--color-border)]'
+                        isSelected ? 'bg-[var(--color-green-pale)]/50 dark:bg-[var(--color-green)]/[0.08] ring-1 ring-[var(--color-green)]/30 shadow-sm' : 'bg-[var(--color-bg-tinted)] hover:bg-[var(--color-surface)] hover:shadow-md ring-1 ring-transparent hover:ring-[var(--color-border)]'
                       } ${
                         isOptimisticDeleted 
                           ? 'opacity-0 scale-95 pointer-events-none' 
@@ -436,7 +436,10 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                           <div className="flex gap-2">
                             <button
                               type="button"
-                              onClick={() => router.push(`?modal=edit&tripId=${trip.id}`)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`?modal=edit&tripId=${trip.id}`, { scroll: false });
+                              }}
                               className="flex-1 flex items-center justify-center gap-1.5 border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
                             >
                               <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
@@ -517,7 +520,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       <TripModal
         open={drawerOpen}
         mode={drawerMode ?? 'log'}
-        onClose={() => router.push('/dashboard')}
+        onClose={() => router.push('/dashboard', { scroll: false })}
         existingTrips={trips.map(toTripInput)}
         visaStartDate={visaStartDate}
         isPro={isPro}
