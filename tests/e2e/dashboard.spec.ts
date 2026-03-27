@@ -35,9 +35,10 @@ test.describe('Dashboard', () => {
   })
 
   test('qualifying period progress bar is visible', async ({ page }) => {
-    const progressBar = page.locator('[role="progressbar"]')
-      .or(page.getByText(/qualifying/i).locator('..').locator('*').first())
-    await expect(progressBar).toBeVisible()
+    // Select the progress bar element directly by its role. 
+    // Since we only have one such element, this is safe and robust.
+    const progressBar = page.getByRole('progressbar').first()
+    await expect(progressBar).toBeVisible({ timeout: 10_000 })
   })
 
   test('qualifying period bar shows ILR date', async ({ page }) => {

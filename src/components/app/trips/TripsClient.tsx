@@ -9,7 +9,8 @@ import {
   getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
-import { deleteTripAction } from '@/app/(app)/(main)/dashboard/actions'
+import { Trash } from '@/components/ui/Icons'
+import { deleteTripAction, bulkDeleteTripsAction } from '@/app/(app)/(main)/dashboard/actions'
 import { PaywallModal } from './PaywallModal'
 import { TripModal } from './TripModal'
 import { track } from '@/lib/posthog'
@@ -50,11 +51,12 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [showPaywall, setShowPaywall] = useState(false)
-  const [optimisticDeleteId, setOptimisticDeleteId] = useState<string | null>(null)
+  const [optimisticDeletedIds, setOptimisticDeletedIds] = useState<string[]>([])
 
   const selectedTrip = trips.find((t) => t.id === selectedId) ?? null
 
@@ -97,26 +99,66 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
     openDrawer('log')
   }
 
-  async function handleDelete(id: string) {
+  async function handleDeleteSingle(id: string) {
     setDeleting(true)
     setDeleteError(null)
+    
+    // Optimistic remove
+    setOptimisticDeletedIds(prev => [...prev, id])
+    if (selectedId === id) setSelectedId(null)
+    
     const result = await deleteTripAction(id)
     if ('error' in result) {
       setDeleteError(result.error)
+      setOptimisticDeletedIds(prev => prev.filter(oid => oid !== id))
       setDeleting(false)
       return
     }
+    
     track('trip_deleted')
     setDeleteTarget(null)
-    setOptimisticDeleteId(id)
-    if (selectedId === id) setSelectedId(null)
     
-    // Allow exit animation to play before reflow
     setTimeout(() => {
       router.refresh()
       setDeleting(false)
-      setOptimisticDeleteId(null)
-    }, 300)
+      setOptimisticDeletedIds(prev => prev.filter(oid => oid !== id))
+    }, 400)
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedIds.length} trips?`)) return
+    
+    setDeleting(true)
+    setDeleteError(null)
+    
+    // Optimistic remove
+    setOptimisticDeletedIds(prev => [...prev, ...selectedIds])
+    const currentSelected = [...selectedIds]
+    setSelectedIds([])
+    
+    const result = await bulkDeleteTripsAction(currentSelected)
+    if ('error' in result) {
+      setDeleteError(result.error)
+      setOptimisticDeletedIds(prev => prev.filter(oid => !currentSelected.includes(oid)))
+      setSelectedIds(currentSelected)
+      setDeleting(false)
+      return
+    }
+    
+    track('trips_bulk_deleted', { count: currentSelected.length })
+    
+    setTimeout(() => {
+      router.refresh()
+      setDeleting(false)
+      setOptimisticDeletedIds(prev => prev.filter(oid => !currentSelected.includes(oid)))
+    }, 400)
+  }
+
+  function toggleSelect(id: string) {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    )
   }
 
   // Side panel rolling window contribution: rolling window as of departure date
@@ -154,17 +196,30 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Your complete absence record</p>
         </div>
-        <button
-          type="button"
-          onClick={handleAddTrip}
-          className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer text-white"
-          style={{ background: 'var(--gradient-green)' }}
-        >
-          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-            <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          Add trip
-        </button>
+        <div className="flex items-center gap-3">
+          {selectedIds.length > 0 && (
+            <button
+              type="button"
+              onClick={handleBulkDelete}
+              disabled={deleting}
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-[var(--color-danger-text)] border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+            >
+              <Trash className="w-4 h-4" weight="bold" />
+              Delete {selectedIds.length} selected
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={handleAddTrip}
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer text-white"
+            style={{ background: 'var(--gradient-green)' }}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Add trip
+          </button>
+        </div>
       </div>
 
       {/* Main layout: list + side panel */}
@@ -210,7 +265,8 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                   const status = absenceDays !== null ? getRiskStatus(absenceDays) : null
                   const cfg = status ? RISK_CONFIG[status] : null
                   const isSelected = selectedId === trip.id
-                  const isOptimisticDeleted = optimisticDeleteId === trip.id
+                  const isChecked = selectedIds.includes(trip.id)
+                  const isOptimisticDeleted = optimisticDeletedIds.includes(trip.id)
                   const isCrownDep = isCrownDependency(trip.destination)
 
                   // Attempt flag separation
@@ -222,20 +278,37 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                   const destText = isProbableFlag ? restWord : trip.destination
 
                   return (
-                    <button
+                    <div
                       key={trip.id}
-                      type="button"
-                      onClick={() => setSelectedId(isSelected ? null : trip.id)}
-                      className={`w-full text-left p-4 sm:px-5 sm:py-4 rounded-xl flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer ${
+                      className={`group w-full p-3 sm:px-4 sm:py-3 rounded-xl flex items-center gap-3 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                         isSelected ? 'bg-[var(--color-green-pale)]/50 ring-1 ring-[var(--color-green)]/30 shadow-sm' : 'bg-[var(--color-bg-tinted)] hover:bg-[var(--color-surface)] hover:shadow-md ring-1 ring-transparent hover:ring-[var(--color-border)]'
                       } ${
                         isOptimisticDeleted 
-                          ? 'opacity-0 translate-x-[10%]' 
+                          ? 'opacity-0 scale-95 pointer-events-none' 
                           : 'animate-in fade-in slide-in-from-bottom-2 fill-mode-both'
                       }`}
                       style={!isOptimisticDeleted ? { animationDelay: `${i * 40}ms` } : undefined}
                     >
-                      <div className="flex items-center gap-4 min-w-0">
+                      {/* Checkbox */}
+                      <div className="flex items-center">
+                        <input
+                          id={`select-trip-${trip.id}`}
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleSelect(trip.id)}
+                          className="w-5 h-5 rounded-md border-var(--color-border-strong) bg-var(--color-surface) text-[var(--color-green)] focus:ring-[var(--color-green)]/30 cursor-pointer"
+                          aria-label={`Select trip to ${destText}`}
+                        />
+                      </div>
+
+                      {/* Main click area (Selection) */}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(isSelected ? null : trip.id)}
+                        className="flex-1 flex items-center gap-4 min-w-0 text-left cursor-pointer"
+                        aria-expanded={isSelected}
+                        aria-controls="trip-details-panel"
+                      >
                         {flag && <span className="text-[1.35rem] leading-none" aria-hidden="true">{flag}</span>}
                         <div className="flex flex-col min-w-0">
                           <p className="text-[15px] font-semibold text-[var(--color-text-primary)] truncate">{destText}</p>
@@ -243,27 +316,46 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                             {formatDateRange(trip.departure_date, trip.return_date)}
                           </p>
                         </div>
-                      </div>
-                      <div className="shrink-0 flex items-center gap-3">
+                      </button>
+
+                      <div className="shrink-0 flex items-center gap-2 sm:gap-3">
                         {trip.return_date === null ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
                             <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-warning-text)] animate-pulse"></span>
                             Abroad
                           </span>
                         ) : isCrownDep ? (
-                          <span className="inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]">
                             0 days
                           </span>
                         ) : cfg ? (
-                          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase transition-colors ${cfg.bg} ${cfg.text}`}>
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase transition-colors ${cfg.bg} ${cfg.text}`}>
                             {absenceDays}d &middot; {cfg.label}
                           </span>
                         ) : null}
-                        <svg className={`w-4 h-4 text-[var(--color-text-muted)] transition-transform ${isSelected ? 'rotate-180' : ''}`} viewBox="0 0 16 16" fill="none">
-                          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setDeleteTarget(trip.id)}
+                            className="p-1.5 text-[var(--color-text-faint)] hover:text-[var(--color-danger-text)] hover:bg-[var(--color-danger-bg)] rounded-lg transition-colors cursor-pointer"
+                            aria-label={`Delete trip to ${destText}`}
+                          >
+                            <Trash className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedId(isSelected ? null : trip.id)}
+                            className={`p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-transform cursor-pointer ${isSelected ? 'rotate-180' : ''}`}
+                            aria-label={isSelected ? 'Hide details' : 'Show details'}
+                          >
+                            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
-                    </button>
+                    </div>
                   )
                 })}
               </div>
@@ -313,7 +405,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
               </button>
               <button
                 type="button"
-                onClick={() => handleDelete(deleteTarget)}
+                onClick={() => handleDeleteSingle(deleteTarget)}
                 disabled={deleting}
                 className="flex-1 px-4 py-3 text-sm font-semibold text-white bg-[var(--color-danger-text)] rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
               >

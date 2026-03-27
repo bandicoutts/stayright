@@ -169,14 +169,14 @@ export default async function DashboardPage() {
           {qualifying && (
             <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                <h2 id="qualifying-period-heading" className="text-sm font-semibold text-[var(--color-text-primary)]">
                   Qualifying period
                 </h2>
                 <span className="text-sm font-semibold text-[var(--color-green)]">
                   {qualifying.percentage}%
                 </span>
               </div>
-              <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100}>
+              <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100} aria-labelledby="qualifying-period-heading">
                 <div
                   className="h-full rounded-full transition-all duration-700"
                   style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}

@@ -52,6 +52,7 @@ export type AnalyticsEvent =
   | 'trip_logged'
   | 'trip_edited'
   | 'trip_deleted'
+  | 'trips_bulk_deleted'
   | 'dashboard_viewed'
   | 'reports_viewed'
 
