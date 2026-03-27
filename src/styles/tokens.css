@@ -61,9 +61,15 @@
   /* ── Gradients ───────────────────────────────── */
   --gradient-green:         linear-gradient(135deg, #00A874 0%, #006948 100%);
   --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #00A874 100%);
+
+  /* ── Sidebar/Nav Specific ────────────────────── */
+  --color-sidebar-bg:       var(--color-bg-tinted);
+  --color-sidebar-border:   var(--color-border);
 }
 
 .dark {
+  --color-sidebar-bg:       var(--color-surface-dark);
+  --color-sidebar-border:   transparent;
   --color-bg:             #080B08;   /* base bg — near-OLED */
   --color-bg-tinted:      #0E1310;
   

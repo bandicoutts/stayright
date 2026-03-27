@@ -44,7 +44,7 @@ export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props
 
       <aside
         className={`
-          fixed inset-y-0 left-0 z-[100] w-[240px] flex flex-col shrink-0 min-h-screen bg-[var(--color-surface-dark)] 
+          fixed inset-y-0 left-0 z-[100] w-[240px] flex flex-col shrink-0 min-h-screen bg-[var(--color-sidebar-bg)] border-r border-[var(--color-sidebar-border)]
           transition-transform duration-300 ease-in-out md:translate-x-0 md:static
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}

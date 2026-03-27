@@ -11,7 +11,7 @@ import { ThemeToggle } from './ThemeToggle'
 
 export function MobileNav({ onOpenMenu }: Props) {
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 bg-[var(--color-surface-dark)] border-b border-[var(--color-border)] md:hidden">
+    <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 bg-[var(--color-sidebar-bg)] border-b border-[var(--color-sidebar-border)] md:hidden">
       <div
         className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] flex items-center gap-2 text-[var(--color-text-primary)]"
       >
