@@ -223,9 +223,9 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       </div>
 
       {/* Main layout: list + side panel */}
-      <div className="flex gap-6">
-        {/* Trip list */}
-        <div className={`flex-1 min-w-0 ${selectedTrip ? 'hidden md:block' : ''}`}>
+      {/* Trip list */}
+      <div className="w-full">
+        <div className="space-y-4">
           {trips.length === 0 ? (
             <div className="bg-[var(--color-surface)] rounded-[1.5rem] shadow-sm ring-1 ring-[var(--color-border)] p-16 md:p-24 flex flex-col items-center justify-center text-center">
               <div className="w-16 h-16 rounded-[1.25rem] bg-[var(--color-green-pale)] flex items-center justify-center mb-6">
@@ -277,10 +277,16 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                   const flag = isProbableFlag ? firstWord : null
                   const destText = isProbableFlag ? restWord : trip.destination
 
+                  const contribution = getPanelContribution(trip)
+                  const panelStatus = trip.return_date && !isCrownDep
+                    ? getRiskStatus(contribution.absenceDays)
+                    : isCrownDep ? 'SAFE' as const : null
+                  const panelCfg = panelStatus ? RISK_CONFIG[panelStatus] : null
+
                   return (
                     <div
                       key={trip.id}
-                      className={`group w-full p-3 sm:px-4 sm:py-3 rounded-xl flex items-center gap-3 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      className={`group w-full p-3 sm:px-4 sm:py-3 rounded-xl flex flex-col gap-3 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                         isSelected ? 'bg-[var(--color-green-pale)]/50 ring-1 ring-[var(--color-green)]/30 shadow-sm' : 'bg-[var(--color-bg-tinted)] hover:bg-[var(--color-surface)] hover:shadow-md ring-1 ring-transparent hover:ring-[var(--color-border)]'
                       } ${
                         isOptimisticDeleted 
@@ -289,72 +295,168 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                       }`}
                       style={!isOptimisticDeleted ? { animationDelay: `${i * 40}ms` } : undefined}
                     >
-                      {/* Checkbox */}
-                      <div className="flex items-center">
-                        <input
-                          id={`select-trip-${trip.id}`}
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleSelect(trip.id)}
-                          className="w-5 h-5 rounded-md border-var(--color-border-strong) bg-var(--color-surface) text-[var(--color-green)] focus:ring-[var(--color-green)]/30 cursor-pointer"
-                          aria-label={`Select trip to ${destText}`}
-                        />
+                      <div className="flex items-center gap-3">
+                        {/* Checkbox */}
+                        <div className="flex items-center">
+                          <input
+                            id={`select-trip-${trip.id}`}
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleSelect(trip.id)}
+                            className="w-5 h-5 rounded-md border-var(--color-border-strong) bg-var(--color-surface) text-[var(--color-green)] focus:ring-[var(--color-green)]/30 cursor-pointer"
+                            aria-label={`Select trip to ${destText}`}
+                          />
+                        </div>
+
+                        {/* Main click area (Selection) */}
+                        <button
+                          type="button"
+                          onClick={() => setSelectedId(isSelected ? null : trip.id)}
+                          className="flex-1 flex items-center gap-4 min-w-0 text-left cursor-pointer"
+                          aria-expanded={isSelected}
+                          aria-controls="trip-details-panel"
+                        >
+                          {flag && <span className="text-[1.35rem] leading-none" aria-hidden="true">{flag}</span>}
+                          <div className="flex flex-col min-w-0">
+                            <p className="text-[15px] font-semibold text-[var(--color-text-primary)] truncate">{destText}</p>
+                            <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                              {formatDateRange(trip.departure_date, trip.return_date)}
+                            </p>
+                          </div>
+                        </button>
+
+                        <div className="shrink-0 flex items-center gap-2 sm:gap-3">
+                          {trip.return_date === null ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-warning-text)] animate-pulse"></span>
+                              Abroad
+                            </span>
+                          ) : isCrownDep ? (
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]">
+                              0 days
+                            </span>
+                          ) : cfg ? (
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase transition-colors ${cfg.bg} ${cfg.text}`}>
+                              {absenceDays}d &middot; {cfg.label}
+                            </span>
+                          ) : null}
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(trip.id)}
+                              className="p-1.5 text-[var(--color-text-faint)] hover:text-[var(--color-danger-text)] hover:bg-[var(--color-danger-bg)] rounded-lg transition-colors cursor-pointer"
+                              aria-label={`Delete trip to ${destText}`}
+                            >
+                              <Trash className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedId(isSelected ? null : trip.id)}
+                              className={`p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-transform cursor-pointer [transition-duration:400ms] ${isSelected ? 'rotate-180' : ''}`}
+                              aria-label={isSelected ? 'Hide details' : 'Show details'}
+                            >
+                              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                                <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Main click area (Selection) */}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedId(isSelected ? null : trip.id)}
-                        className="flex-1 flex items-center gap-4 min-w-0 text-left cursor-pointer"
-                        aria-expanded={isSelected}
-                        aria-controls="trip-details-panel"
-                      >
-                        {flag && <span className="text-[1.35rem] leading-none" aria-hidden="true">{flag}</span>}
-                        <div className="flex flex-col min-w-0">
-                          <p className="text-[15px] font-semibold text-[var(--color-text-primary)] truncate">{destText}</p>
-                          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
-                            {formatDateRange(trip.departure_date, trip.return_date)}
-                          </p>
-                        </div>
-                      </button>
+                      {/* Expandable Details */}
+                      {isSelected && (
+                        <div className="w-full pt-3 border-t border-[var(--color-border)] animate-in fade-in slide-in-from-top-2 duration-300">
+                          {/* Dates */}
+                          <div className="space-y-1.5 mb-4 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-[var(--color-text-muted)]">Departed UK</span>
+                              <span className="font-medium text-[var(--color-text-primary)]">{formatDate(trip.departure_date)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-[var(--color-text-muted)]">Returned to UK</span>
+                              <span className="font-medium text-[var(--color-text-primary)]">
+                                {trip.return_date ? formatDate(trip.return_date) : 'Currently abroad'}
+                              </span>
+                            </div>
+                          </div>
 
-                      <div className="shrink-0 flex items-center gap-2 sm:gap-3">
-                        {trip.return_date === null ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-warning-text)] animate-pulse"></span>
-                            Abroad
-                          </span>
-                        ) : isCrownDep ? (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]">
-                            0 days
-                          </span>
-                        ) : cfg ? (
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase transition-colors ${cfg.bg} ${cfg.text}`}>
-                            {absenceDays}d &middot; {cfg.label}
-                          </span>
-                        ) : null}
+                          {/* Absence */}
+                          <div className="flex items-center justify-between py-3 border-t border-b border-[var(--color-border)] mb-4">
+                            <span className="text-sm text-[var(--color-text-muted)]">Absence days</span>
+                            <div className="flex items-center gap-2">
+                              {isCrownDep ? (
+                                <>
+                                  <span className="text-sm font-semibold text-[var(--color-green)]">0 days</span>
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold bg-[var(--color-green-pale)] text-[var(--color-green)]">
+                                    Crown Dep.
+                                  </span>
+                                </>
+                              ) : trip.return_date ? (
+                                <>
+                                  <span className="text-sm font-semibold text-[var(--color-text-primary)]">{contribution.absenceDays} days</span>
+                                  {panelCfg && (
+                                    <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${panelCfg.bg} ${panelCfg.text}`}>
+                                      {panelCfg.label}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <span className="text-sm font-medium text-[var(--color-warning-text)]">Ongoing</span>
+                              )}
+                            </div>
+                          </div>
 
-                        <div className="flex items-center gap-1">
-                          <button
-                            type="button"
-                            onClick={() => setDeleteTarget(trip.id)}
-                            className="p-1.5 text-[var(--color-text-faint)] hover:text-[var(--color-danger-text)] hover:bg-[var(--color-danger-bg)] rounded-lg transition-colors cursor-pointer"
-                            aria-label={`Delete trip to ${destText}`}
-                          >
-                            <Trash className="w-4 h-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedId(isSelected ? null : trip.id)}
-                            className={`p-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-transform cursor-pointer ${isSelected ? 'rotate-180' : ''}`}
-                            aria-label={isSelected ? 'Hide details' : 'Show details'}
-                          >
-                            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-                              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </button>
+                          {/* Rolling window at time of trip */}
+                          {trip.return_date && (
+                            <div className="mb-4">
+                              <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">
+                                Rolling window at departure
+                              </p>
+                              <p className="text-sm text-[var(--color-text-primary)]">
+                                {contribution.windowDays} / 180 days used
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Notes */}
+                          {trip.notes && (
+                            <div className="mb-4">
+                              <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Notes</p>
+                              <p className="text-sm text-[var(--color-text-primary)]">{trip.notes}</p>
+                            </div>
+                          )}
+
+                          {/* Disclaimer — always visible, no exceptions */}
+                          <div className="mb-4 px-3 py-2.5 bg-[var(--color-bg-tinted)] rounded-xl">
+                            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">{DISCLAIMER}</p>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => router.push(`?modal=edit&tripId=${trip.id}`)}
+                              className="flex-1 flex items-center justify-center gap-1.5 border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+                            >
+                              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                                <path d="M10 1.5l2.5 2.5-8 8H2v-2.5l8-8z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(trip.id)}
+                              className="flex-1 flex items-center justify-center gap-1.5 border border-[var(--color-danger-text)]/20 text-[var(--color-danger-text)] rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-[var(--color-danger-bg)] transition-colors cursor-pointer"
+                            >
+                              <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
+                                <path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.5 8h6l.5-8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                              Delete
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   )
                 })}
@@ -362,18 +464,6 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
             </div>
           )}
         </div>
-
-        {/* Side panel */}
-        {selectedTrip && (
-          <SidePanel
-            trip={selectedTrip}
-            contribution={getPanelContribution(selectedTrip)}
-            visaStartDate={visaStartDate}
-            onEdit={() => router.push(`?modal=edit&tripId=${selectedTrip.id}`)}
-            onDelete={() => setDeleteTarget(selectedTrip.id)}
-            onClose={() => setSelectedId(null)}
-          />
-        )}
       </div>
 
       {/* Delete confirmation dialog */}
@@ -438,151 +528,4 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Side panel
-// ---------------------------------------------------------------------------
-
 const DISCLAIMER = 'Time in Crown Dependencies (Jersey, Guernsey, Isle of Man) does not count as absence. Time in British Overseas Territories (Gibraltar, Bermuda etc.) does count as absence. If you are unsure, consult an immigration adviser.'
-
-function SidePanel({
-  trip,
-  contribution,
-  visaStartDate: _visaStartDate,
-  onEdit,
-  onDelete,
-  onClose,
-}: {
-  trip: TripRow
-  contribution: { absenceDays: number; windowDays: number }
-  visaStartDate?: string
-  onEdit: () => void
-  onDelete: () => void
-  onClose: () => void
-}) {
-  const isCrownDep = isCrownDependency(trip.destination)
-  const status = trip.return_date && !isCrownDep
-    ? getRiskStatus(contribution.absenceDays)
-    : isCrownDep ? 'SAFE' as const : null
-  const cfg = status ? RISK_CONFIG[status] : null
-
-  // Attempt flag separation
-  const firstSpace = trip.destination.indexOf(' ')
-  const firstWord = firstSpace !== -1 ? trip.destination.slice(0, firstSpace) : trip.destination
-  const restWord = firstSpace !== -1 ? trip.destination.slice(firstSpace + 1) : ''
-  const isProbableFlag = firstWord.length > 0 && !/[a-zA-Z]/.test(firstWord)
-  const flag = isProbableFlag ? firstWord : null
-  const destText = isProbableFlag ? restWord : trip.destination
-
-  return (
-    <div className="w-full md:w-80 shrink-0">
-      <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-5">
-        {/* Panel header */}
-        <div className="flex items-start justify-between mb-4">
-          <h2 className="font-[family-name:var(--font-manrope)] font-bold text-[1.15rem] tracking-[-0.01em] text-[var(--color-text-primary)] leading-snug pr-2 flex items-center gap-2.5">
-            {flag && <span className="text-[1.5rem] leading-none" aria-hidden="true">{flag}</span>}
-            <span>{destText}</span>
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close panel"
-            className="shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer p-1 rounded-lg hover:bg-[var(--color-bg-tinted)] -mt-1 -mr-1"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Dates */}
-        <div className="space-y-1.5 mb-4 text-sm">
-          <div className="flex justify-between">
-            <span className="text-[var(--color-text-muted)]">Departed UK</span>
-            <span className="font-medium text-[var(--color-text-primary)]">{formatDate(trip.departure_date)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-[var(--color-text-muted)]">Returned to UK</span>
-            <span className="font-medium text-[var(--color-text-primary)]">
-              {trip.return_date ? formatDate(trip.return_date) : 'Currently abroad'}
-            </span>
-          </div>
-        </div>
-
-        {/* Absence */}
-        <div className="flex items-center justify-between py-3 border-t border-b border-[var(--color-border)] mb-4">
-          <span className="text-sm text-[var(--color-text-muted)]">Absence days</span>
-          <div className="flex items-center gap-2">
-            {isCrownDep ? (
-              <>
-                <span className="text-sm font-semibold text-[var(--color-green)]">0 days</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-semibold bg-[var(--color-green-pale)] text-[var(--color-green)]">
-                  Crown Dep.
-                </span>
-              </>
-            ) : trip.return_date ? (
-              <>
-                <span className="text-sm font-semibold text-[var(--color-text-primary)]">{contribution.absenceDays} days</span>
-                {cfg && (
-                  <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${cfg.bg} ${cfg.text}`}>
-                    {cfg.label}
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-sm font-medium text-[var(--color-warning-text)]">Ongoing</span>
-            )}
-          </div>
-        </div>
-
-        {/* Rolling window at time of trip */}
-        {trip.return_date && (
-          <div className="mb-4">
-            <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">
-              Rolling window at departure
-            </p>
-            <p className="text-sm text-[var(--color-text-primary)]">
-              {contribution.windowDays} / 180 days used
-            </p>
-          </div>
-        )}
-
-        {/* Notes */}
-        {trip.notes && (
-          <div className="mb-4">
-            <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Notes</p>
-            <p className="text-sm text-[var(--color-text-primary)]">{trip.notes}</p>
-          </div>
-        )}
-
-        {/* Disclaimer — always visible, no exceptions */}
-        <div className="mb-4 px-3 py-2.5 bg-[var(--color-bg-tinted)] rounded-xl">
-          <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">{DISCLAIMER}</p>
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onEdit}
-            className="flex-1 flex items-center justify-center gap-1.5 border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-              <path d="M10 1.5l2.5 2.5-8 8H2v-2.5l8-8z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex-1 flex items-center justify-center gap-1.5 border border-[var(--color-danger-text)]/20 text-[var(--color-danger-text)] rounded-xl px-3 py-2.5 text-sm font-medium hover:bg-[var(--color-danger-bg)] transition-colors cursor-pointer"
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
-              <path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.5 8h6l.5-8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
