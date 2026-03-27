@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { SquaresFour, FileText, Gear, SignOut, X } from '@/components/ui/Icons'
+import { SquaresFour, FileText, Gear, SignOut } from '@/components/ui/Icons'
 import { createClient } from '@/lib/supabase/client'
 
 const NAV_ITEMS = [
@@ -47,14 +47,6 @@ export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        {/* Mobile Close Button */}
-        <button
-          onClick={onClose}
-          className="md:hidden absolute top-6 right-[-48px] p-2 bg-[var(--color-surface-dark)] rounded-r-lg border-y border-r border-[var(--color-border)]"
-          aria-label="Close menu"
-        >
-          <X className="w-5 h-5 text-[var(--color-text-primary)]" />
-        </button>
 
       {/* Logo */}
       <div className="px-8 pt-10 pb-6">
