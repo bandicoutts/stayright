@@ -10,13 +10,11 @@ StayRight is a premium, high-integrity visa absence tracker designed specificall
 
 StayRight features an editorial-grade design system that adapts to your environment and device.
 
-````carousel
 ![Dashboard Dark Mode](public/screenshots/dashboard-dark.png)
-<!-- slide -->
+
 ![Dashboard Light Mode](public/screenshots/dashboard-light.png)
-<!-- slide -->
+
 ![Mobile Experience](public/screenshots/dashboard-mobile.png)
-````
 
 ---
 
