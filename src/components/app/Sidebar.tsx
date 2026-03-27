@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { SquaresFour, FileText, Gear, SignOut } from '@/components/ui/Icons'
+import { SquaresFour, FileText, Gear, SignOut, X } from '@/components/ui/Icons'
 import { createClient } from '@/lib/supabase/client'
 
 const NAV_ITEMS = [
@@ -14,9 +14,11 @@ const NAV_ITEMS = [
 interface Props {
   userEmail?: string | null
   userInitial?: string
+  isOpen?: boolean
+  onClose?: () => void
 }
 
-export function Sidebar({ userEmail, userInitial = '?' }: Props) {
+export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -28,7 +30,31 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
   }
 
   return (
-    <aside className="hidden md:flex flex-col w-[240px] shrink-0 min-h-screen bg-[var(--color-surface-dark)]">
+    <>
+      {/* Backdrop for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] md:hidden transition-opacity duration-300"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`
+          fixed inset-y-0 left-0 z-[100] w-[240px] flex flex-col shrink-0 min-h-screen bg-[var(--color-surface-dark)] 
+          transition-transform duration-300 ease-in-out md:translate-x-0 md:static
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        {/* Mobile Close Button */}
+        <button
+          onClick={onClose}
+          className="md:hidden absolute top-6 right-[-48px] p-2 bg-[var(--color-surface-dark)] rounded-r-lg border-y border-r border-[var(--color-border)]"
+          aria-label="Close menu"
+        >
+          <X className="w-5 h-5 text-[var(--color-text-primary)]" />
+        </button>
 
       {/* Logo */}
       <div className="px-8 pt-10 pb-6">
@@ -57,6 +83,7 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
               key={href}
               href={href}
               className="flex items-center gap-3.5 px-4 py-3 rounded-[8px] text-[15px] font-medium transition-colors no-underline"
+              onClick={onClose}
               style={active
                 ? { background: 'var(--color-border-strong)', color: 'var(--color-green-light)' }
                 : { color: 'var(--color-text-muted)' }
@@ -116,6 +143,7 @@ export function Sidebar({ userEmail, userInitial = '?' }: Props) {
           Sign out
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }
