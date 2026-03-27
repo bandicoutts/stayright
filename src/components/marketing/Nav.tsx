@@ -61,13 +61,12 @@ export default function Nav() {
       <div className="max-w-[1320px] mx-auto px-6 md:px-14 h-[62px] flex items-center justify-between">
 
         {/* Logo */}
-        <Link
-          href="/"
-          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] flex items-center gap-2 text-[var(--color-text-primary)] no-underline"
+        <div
+          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] flex items-center gap-2 text-[var(--color-text-primary)]"
         >
           <span className="w-5 h-5 rounded-[5px] bg-[var(--gradient-green)]" />
           Stayright
-        </Link>
+        </div>
 
         {/* Desktop nav links — centred */}
         <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2 gap-8">

@@ -12,13 +12,12 @@ import { ThemeToggle } from './ThemeToggle'
 export function MobileNav({ onOpenMenu }: Props) {
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 bg-[var(--color-surface-dark)] border-b border-[var(--color-border)] md:hidden">
-      <Link
-        href="/dashboard"
-        className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] flex items-center gap-2 text-[var(--color-text-primary)] no-underline"
+      <div
+        className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] flex items-center gap-2 text-[var(--color-text-primary)]"
       >
         <span className="w-5 h-5 rounded-[5px] bg-[var(--gradient-green)]" />
         Stayright
-      </Link>
+      </div>
       
       <div className="flex items-center gap-2">
         <ThemeToggle />

@@ -52,13 +52,12 @@ export function Sidebar({ userEmail, userInitial = '?', isOpen, onClose }: Props
 
       {/* Logo Area */}
       <div className="px-8 pt-10 pb-6 flex items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em] no-underline"
+        <div
+          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.125rem] tracking-[-0.03em]"
           style={{ color: 'var(--color-text-primary)' }}
         >
           Stayright
-        </Link>
+        </div>
         <ThemeToggle />
       </div>
 
