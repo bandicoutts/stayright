@@ -99,7 +99,7 @@ export default function Nav() {
               boxShadow: 'var(--shadow-button)',
             }}
           >
-            Start Free Tracker
+            Try free
           </Link>
         </div>
 
@@ -153,7 +153,7 @@ export default function Nav() {
                 boxShadow: 'var(--shadow-button)',
               }}
             >
-              Start Free Tracker
+              Try free
             </Link>
           </div>
         </div>

@@ -286,18 +286,6 @@ export default function Hero() {
             >
               Start Free Tracker
             </Link>
-            <a
-              href="#features"
-              className="inline-flex items-center font-[family-name:var(--font-inter)] text-[15px] font-normal no-underline transition-all duration-150"
-              style={{
-                color: 'var(--color-text-muted)',
-                borderBottom: '1px solid var(--color-border-strong)',
-                paddingBottom: 2,
-                gap: 6,
-              }}
-            >
-              See how it works →
-            </a>
           </div>
 
           {/* Trust micro-tags */}
