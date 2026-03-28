@@ -243,19 +243,9 @@ export default async function DashboardPage() {
                 style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
               />
             </div>
-            <div className="mt-3 flex justify-between text-xs">
-              <div>
-                <p className="font-medium text-[var(--color-text-primary)]">Visa started</p>
-                <p className="text-[var(--color-text-muted)] mt-0.5">{qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-              </div>
-              <div className="text-center">
-                <p className="font-semibold text-[var(--color-green)]">{qualifying.percentage}% complete</p>
-                <p className="text-[var(--color-text-muted)] mt-0.5">{today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-medium text-[var(--color-text-primary)]">ILR eligibility</p>
-                <p className="text-[var(--color-text-muted)] mt-0.5">{qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-              </div>
+            <div className="mt-2 flex justify-between text-xs text-[var(--color-text-muted)]">
+              <span>Started {qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              <span>ILR eligible {qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
             </div>
           </div>
         )}
