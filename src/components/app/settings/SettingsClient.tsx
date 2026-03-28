@@ -571,7 +571,7 @@ export function SettingsClient({ profile, subscription, userEmail }: SettingsCli
         </div>
         {(!subscription?.plan || subscription.plan === 'free') && (
           <p className="mt-3 text-xs text-[var(--color-text-muted)]">
-            Upgrade to Pro for unlimited trips, PDF exports, and email alerts.{' '}
+            Secure Pro access for unlimited trips, PDF exports, and email alerts.{' '}
             <a href="/trips" className="text-[var(--color-green-light)] underline font-medium">
               View Pro plans
             </a>

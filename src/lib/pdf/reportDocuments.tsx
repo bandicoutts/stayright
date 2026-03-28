@@ -425,8 +425,8 @@ export function RollingWindowHistoryDocument({ trips, profile, generatedOn }: Ro
 
   const riskLabel = (status: string) => {
     switch (status) {
-      case 'WARNING': return 'Warning'
-      case 'DANGER': return 'Danger'
+      case 'WARNING': return 'Approaching Limit'
+      case 'DANGER': return 'Risk of Breach'
       case 'BREACH': return 'Breach'
       default: return 'Safe'
     }

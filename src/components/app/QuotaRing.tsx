@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import type { RiskStatus } from '@/lib/calculations/absenceEngine'
+import { RISK_CONFIG } from '@/lib/riskConfig'
 
 const RADIUS = 90
 const STROKE = 14
@@ -106,11 +107,11 @@ export function QuotaRing({ days, status }: Props) {
           className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${STATUS_CHIPS[status]}`}
           aria-hidden="true"
         >
-          {status}
+          {RISK_CONFIG[status].label}
         </div>
 
         <p className="text-[15px] font-[family-name:var(--font-inter)] text-[var(--color-text-muted)]">
-          <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in current window
+          <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in today's rolling 12-month window
         </p>
       </div>
     </div>

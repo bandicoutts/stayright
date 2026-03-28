@@ -149,7 +149,7 @@ export function threshold120Email(params: {
         </p>
         <div style="background:${riskColour.bg};border-radius:8px;padding:20px;margin:0 0 24px;text-align:center;">
           <p style="margin:0 0 4px;font-size:36px;font-weight:700;color:${riskColour.text};">${params.daysUsed} / 180</p>
-          <span style="display:inline-block;background:${riskColour.text};color:#fff;font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;">WARNING</span>
+          <span style="display:inline-block;background:${riskColour.text};color:#fff;font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;">APPROACHING LIMIT</span>
           <p style="margin:8px 0 0;font-size:13px;color:${TEXT_SECONDARY};">${remaining} days remaining in your rolling window</p>
         </div>
         <p style="margin:0 0 24px;font-size:15px;color:${TEXT_SECONDARY};line-height:1.6;">
@@ -198,7 +198,7 @@ export function threshold150Email(params: {
         </p>
         <div style="background:${riskColour.bg};border-radius:8px;padding:20px;margin:0 0 24px;text-align:center;">
           <p style="margin:0 0 4px;font-size:36px;font-weight:700;color:${riskColour.text};">${params.daysUsed} / 180</p>
-          <span style="display:inline-block;background:${riskColour.text};color:#fff;font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;">DANGER</span>
+          <span style="display:inline-block;background:${riskColour.text};color:#fff;font-size:12px;font-weight:600;padding:3px 10px;border-radius:9999px;">RISK OF BREACH</span>
           <p style="margin:8px 0 0;font-size:13px;color:${TEXT_SECONDARY};">Only ${remaining} days remaining</p>
         </div>
         <p style="margin:0 0 16px;font-size:15px;color:${TEXT_SECONDARY};line-height:1.6;">

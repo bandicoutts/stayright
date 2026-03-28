@@ -34,9 +34,9 @@ function PeakWindowCard({
     d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
   const statusConfig = {
-    SAFE: { label: 'Safe', color: 'var(--color-green)', bg: 'var(--color-green-pale)' },
-    WARNING: { label: 'Warning', color: 'var(--color-warning-text)', bg: 'var(--color-warning-bg)' },
-    DANGER: { label: 'Danger', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
+    SAFE: { label: 'Compliant', color: 'var(--color-green)', bg: 'var(--color-green-pale)' },
+    WARNING: { label: 'Approaching Limit', color: 'var(--color-warning-text)', bg: 'var(--color-warning-bg)' },
+    DANGER: { label: 'Risk of Breach', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
     BREACH: { label: 'Breach', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
   }[peak.status]
 

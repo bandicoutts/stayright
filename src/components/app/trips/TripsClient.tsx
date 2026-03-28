@@ -235,10 +235,10 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                 </svg>
               </div>
               <h3 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mb-3 leading-tight tracking-tight">
-                No trips tracked yet.
+                Secure your residency record.
               </h3>
               <p className="text-[15px] text-[var(--color-text-muted)] max-w-sm mx-auto mb-8 leading-relaxed font-[family-name:var(--font-inter)]">
-                Begin adding your travel history to see your rolling 180-day compliance window instantly calculate.
+                Enter your travel history to instantly audit your compliance with the 180-day rule.
               </p>
               <button
                 type="button"
@@ -249,7 +249,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                 <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
                   <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
-                Add your first trip
+                Start Audit Log
               </button>
             </div>
           ) : (
@@ -412,7 +412,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                           {trip.return_date && (
                             <div className="mb-4">
                               <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">
-                                Rolling window at departure
+                                Window status as of departure
                               </p>
                               <p className="text-sm text-[var(--color-text-primary)]">
                                 {contribution.windowDays} / 180 days used
