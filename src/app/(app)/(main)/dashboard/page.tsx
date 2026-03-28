@@ -46,21 +46,20 @@ function PeakWindowCard({
           {cfg.label}
         </span>
       </div>
-      <div className="flex items-baseline gap-1.5 mb-1">
-        <span
-          className={`font-[family-name:var(--font-manrope)] text-3xl font-extrabold ${cfg.text}`}
-        >
+      <div className="flex items-baseline gap-1.5 mb-3">
+        <span className="font-[family-name:var(--font-manrope)] text-3xl font-extrabold text-[var(--color-text-primary)]">
           {peak.days}
         </span>
         <span className="text-sm text-[var(--color-text-muted)]">/ 180 days</span>
       </div>
+      <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden mb-3">
+        <div
+          className="h-full rounded-full"
+          style={{ width: `${Math.min((peak.days / 180) * 100, 100)}%`, background: `var(${peak.status === 'SAFE' ? '--color-green' : peak.status === 'WARNING' ? '--color-status-amber' : '--color-status-red'})` }}
+        />
+      </div>
       <p className="text-xs text-[var(--color-text-muted)]">
         {fmt(peak.windowStart)} – {fmt(peak.windowEnd)}
-      </p>
-      <p className="mt-3 text-xs text-[var(--color-text-muted)] leading-relaxed">
-        {isSameAsCurrent
-          ? 'This is also your current rolling window — your worst period is right now.'
-          : 'Worst 12-month window across your entire qualifying period.'}
       </p>
     </div>
   )
