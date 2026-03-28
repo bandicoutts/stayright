@@ -217,23 +217,26 @@ export default async function DashboardPage() {
         {/* Qualifying period */}
         {qualifying && (
           <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
-            <div className="flex items-center justify-between mb-3">
-              <h2 id="qualifying-period-heading" className="text-sm font-semibold text-[var(--color-text-primary)]">
-                Qualifying period
-              </h2>
-              <span className="text-sm font-semibold text-[var(--color-green)]">
-                {qualifying.percentage}%
-              </span>
-            </div>
-            <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100} aria-labelledby="qualifying-period-heading">
-              <div
-                className="h-full rounded-full transition-all duration-700"
-                style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
-              />
-            </div>
-            <div className="mt-2 flex justify-between text-xs text-[var(--color-text-muted)]">
-              <span>Started {qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-              <span>ILR eligible {qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+            <h2 id="qualifying-period-heading" className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">
+              Qualifying period
+            </h2>
+            <div className="flex flex-col items-center gap-4">
+              <div className="text-center">
+                <p className="font-[family-name:var(--font-manrope)] font-extrabold text-[3rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+                  {qualifying.percentage}%
+                </p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1">of qualifying period complete</p>
+              </div>
+              <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100} aria-labelledby="qualifying-period-heading">
+                <div
+                  className="h-full rounded-full transition-all duration-700"
+                  style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
+                />
+              </div>
+              <div className="w-full flex justify-between text-xs text-[var(--color-text-muted)]">
+                <span>Started {qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                <span>ILR eligible {qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              </div>
             </div>
           </div>
         )}
