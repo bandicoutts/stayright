@@ -37,6 +37,7 @@ import {
   addTripAction,
   updateTripAction,
   deleteTripAction,
+  bulkDeleteTripsAction,
   redirectToDashboard,
 } from './actions'
 
@@ -404,6 +405,73 @@ describe('updateTripAction — overlap branch', () => {
     // updating a different trip (id trip-2) with dates that overlap t1
     const result = await updateTripAction('trip-2', validTripData) // departs Jun 1, inside t1
     expect(result).toEqual(expect.objectContaining({ error: expect.stringContaining('overlap') }))
+  })
+})
+
+// ===========================================================================
+// bulkDeleteTripsAction
+// ===========================================================================
+
+describe('bulkDeleteTripsAction', () => {
+  it('returns auth error when not authenticated', async () => {
+    mockGetUser.mockResolvedValue(notAuthed())
+    const result = await bulkDeleteTripsAction(['trip-1', 'trip-2'])
+    expect(result).toEqual({ error: 'Not authenticated' })
+  })
+
+  it('returns success immediately for empty ids array (no DB call)', async () => {
+    mockGetUser.mockResolvedValue(authedUser())
+    const result = await bulkDeleteTripsAction([])
+    expect(result).toEqual({ success: true })
+    expect(mockFrom).not.toHaveBeenCalled()
+  })
+
+  it('returns success on bulk deletion — user_id filter applied', async () => {
+    mockGetUser.mockResolvedValue(authedUser())
+
+    const deleteChain: Record<string, unknown> = {
+      delete: vi.fn(() => ({
+        in: vi.fn(() => ({
+          eq: vi.fn(() => Promise.resolve({ error: null })),
+        })),
+      })),
+    }
+    mockFrom.mockReturnValueOnce(deleteChain)
+
+    const result = await bulkDeleteTripsAction(['trip-1', 'trip-2'])
+    expect(result).toEqual({ success: true })
+  })
+
+  it('returns error on Supabase bulk delete failure', async () => {
+    mockGetUser.mockResolvedValue(authedUser())
+
+    const deleteChain: Record<string, unknown> = {
+      delete: vi.fn(() => ({
+        in: vi.fn(() => ({
+          eq: vi.fn(() => Promise.resolve({ error: { message: 'bulk delete failed' } })),
+        })),
+      })),
+    }
+    mockFrom.mockReturnValueOnce(deleteChain)
+
+    const result = await bulkDeleteTripsAction(['trip-1', 'trip-2'])
+    expect(result).toEqual({ error: 'bulk delete failed' })
+  })
+
+  it('enforces user_id filter — eq called with authenticated user id', async () => {
+    mockGetUser.mockResolvedValue(authedUser('user-A'))
+
+    const eqMock = vi.fn(() => Promise.resolve({ error: null }))
+    const inMock = vi.fn(() => ({ eq: eqMock }))
+    const deleteChain: Record<string, unknown> = {
+      delete: vi.fn(() => ({ in: inMock })),
+    }
+    mockFrom.mockReturnValueOnce(deleteChain)
+
+    await bulkDeleteTripsAction(['trip-1'])
+
+    expect(inMock).toHaveBeenCalledWith('id', ['trip-1'])
+    expect(eqMock).toHaveBeenCalledWith('user_id', 'user-A')
   })
 })
 

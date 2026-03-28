@@ -66,7 +66,7 @@ export function isCrownDependency(destination: string): boolean {
   const lower = destination.toLowerCase().trim()
   return CROWN_DEPENDENCIES_EXACT.some((cd) => {
     if (lower === cd) return true
-    const lastPart = lower.split(',').at(-1)?.trim() ?? ''
+    const lastPart = lower.split(',').at(-1)!.trim()
     return lastPart === cd
   })
 }
@@ -91,21 +91,6 @@ export function calculateTripAbsenceDays(trip: {
 }
 
 /**
- * Returns how many absence days from a trip fall within [windowStart, windowEnd].
- * Handles trips that span window boundaries by clipping the absence range.
- * Used for single-trip display (calculateTripAbsenceDays callers).
- */
-function tripDaysInWindow(
-  trip: TripInput,
-  windowStart: Date,
-  windowEnd: Date
-): number {
-  const interval = tripAbsenceInterval(trip, windowStart, windowEnd)
-  if (!interval) return 0
-  return daysBetween(interval.start, interval.end) + 1
-}
-
-/**
  * Returns the clipped absence interval for a trip within [windowStart, windowEnd],
  * or null if the trip contributes zero absence days.
  */
@@ -114,11 +99,11 @@ function tripAbsenceInterval(
   windowStart: Date,
   windowEnd: Date
 ): { start: Date; end: Date } | null {
-  if (!trip.return_date) return null
   if (isCrownDependency(trip.destination)) return null
 
   const dep = parseDate(trip.departure_date)
-  const ret = parseDate(trip.return_date)
+  // Callers guarantee return_date is non-null before calling this function
+  const ret = parseDate(trip.return_date as string)
 
   // Absence days are strictly between departure and return (exclusive both ends)
   const absStart = addDays(dep, 1)

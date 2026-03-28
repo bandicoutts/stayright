@@ -155,10 +155,16 @@ describe('Edge cases', () => {
     expect(getRiskStatus(181)).toBe('BREACH')
   })
 
-  it('TC15 — overlapping trips: double-count is a known limitation; prevented by hasOverlappingTrip at input', () => {
-    // Verify that hasOverlappingTrip correctly flags the overlap
-    const existing = [trip('a', 'Spain', '2025-03-01', '2025-03-20')]
-    expect(hasOverlappingTrip(existing, '2025-03-15', '2025-03-25')).toBe(true)
+  it('TC15 — overlapping trips are de-duplicated; each calendar day counted once', () => {
+    // Trip A: Jan 1–10 → absence Jan 2–9 (8 days)
+    // Trip B: Jan 5–15 → absence Jan 6–14 (9 days)
+    // Merged interval: Jan 2–14 → 13 days (not 8+9=17)
+    const trips = [
+      trip('a', 'USA', '2025-01-01', '2025-01-10'),
+      trip('b', 'USA', '2025-01-05', '2025-01-15'),
+    ]
+    const result = getCurrentRollingWindow(trips, d('2025-06-01'))
+    expect(result.days).toBe(13)
   })
 
   it('TC16 — leap year trip spanning Feb 29: 4 days', () => {
@@ -344,6 +350,30 @@ describe('hasOverlappingTrip — additional cases', () => {
     const existing = [trip('a', 'Spain', '2025-03-01', null)]
     expect(hasOverlappingTrip(existing, '2025-06-01', '2025-06-10')).toBe(true)
   })
+
+  it('new trip with null returnDate (ongoing) overlaps existing trip', () => {
+    const existing = [trip('a', 'Spain', '2025-03-01', '2025-03-20')]
+    // New trip starts inside the existing trip, no return date → treated as far future
+    expect(hasOverlappingTrip(existing, '2025-03-10', null)).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// countDedupedDays — contained interval (FALSE branch of r.end > last.end)
+// ---------------------------------------------------------------------------
+
+describe('countDedupedDays — contained interval', () => {
+  it('TC15b — trip completely contained in another: each day counted once', () => {
+    // Trip A: Jan 1–20 → absence Jan 2–19 (18 days)
+    // Trip B: Jan 5–10 → absence Jan 6–9 (4 days, fully inside A)
+    // Merged interval: Jan 2–19 → 18 days (not 18+4=22)
+    const trips = [
+      trip('a', 'USA', '2025-01-01', '2025-01-20'),
+      trip('b', 'USA', '2025-01-05', '2025-01-10'),
+    ]
+    const result = getCurrentRollingWindow(trips, d('2025-06-01'))
+    expect(result.days).toBe(18)
+  })
 })
 
 // ---------------------------------------------------------------------------
@@ -370,7 +400,7 @@ describe('Branch coverage — tripDaysInWindow internal guards', () => {
     expect(result.days).toBe(0)
   })
 
-  it('tripDaysInWindow clips correctly when trip return is before window start (no overlap → 0)', () => {
+  it('trip return is before window start: no overlap → 0 days', () => {
     // Trip ends Dec 2023 entirely before the window starting Dec 2024
     const trips = [trip('a', 'USA', '2023-11-01', '2023-12-01')]
     const result = getCurrentRollingWindow(trips, d('2025-01-01')) // window: Jan 2024 – Jan 2025
