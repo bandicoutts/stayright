@@ -111,7 +111,7 @@ export function QuotaRing({ days, status }: Props) {
         </div>
 
         <p className="text-[15px] font-[family-name:var(--font-inter)] text-[var(--color-text-muted)]">
-          <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in today's rolling 12-month window
+          <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in your current window
         </p>
       </div>
     </div>

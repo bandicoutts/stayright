@@ -106,7 +106,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       <div className="flex items-start justify-between mb-6">
         <div>
           <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)]">
-            Secure Your Residency
+            Audit Your Full 5-Year History
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
             Audit your full 5-year history and prevent ILR rejection.
@@ -196,7 +196,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
         className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-white"
         style={{ background: 'var(--gradient-green)' }}
       >
-        {loading ? 'Redirecting to checkout…' : `Secure Pro Compliance Access — ${currentPlan.detail}`}
+        {loading ? 'Redirecting to checkout…' : `Unlock Pro — ${currentPlan.detail}`}
       </button>
 
       {error && (

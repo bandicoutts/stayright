@@ -33,12 +33,6 @@ export default function Pricing() {
               Pricing
             </span>
           </div>
-          <h2
-            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em]"
-            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
-          >
-            Investment in your residency.
-          </h2>
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4 max-w-[400px]"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}

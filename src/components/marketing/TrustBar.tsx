@@ -11,10 +11,6 @@ const trustCells = [
     value: 'GDPR compliant',
     label: 'UK-based data storage',
   },
-  {
-    value: 'Built by a Tier 2/Skilled Worker veteran',
-    label: 'Real-world visa experience',
-  },
 ];
 
 export default function TrustBar() {
@@ -27,7 +23,7 @@ export default function TrustBar() {
       }}
     >
       <div
-        className="max-w-[1320px] mx-auto grid grid-cols-2 lg:grid-cols-4"
+        className="max-w-[1320px] mx-auto grid grid-cols-2 lg:grid-cols-3"
         role="list"
         aria-label="Trust signals"
       >
