@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { isPlanPro } from '@/lib/subscriptionUtils'
@@ -258,25 +257,6 @@ export default async function DashboardPage() {
             </div>
           </div>
         )}
-
-        {/* Action buttons */}
-        <div className="flex gap-3">
-          <Link
-            href="?modal=plan"
-            className="flex items-center justify-between flex-1 rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity text-white"
-            style={{ background: 'var(--gradient-green)' }}
-          >
-            <span>Plan a trip</span>
-            <span>→</span>
-          </Link>
-          <Link
-            href="?modal=log"
-            className="flex items-center justify-between flex-1 border border-[var(--color-border-strong)] text-[var(--color-text-primary)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors"
-          >
-            <span>Log a past trip</span>
-            <span className="text-[var(--color-text-muted)]">→</span>
-          </Link>
-        </div>
 
         {/* Full Trip Log */}
         <TripsClient
