@@ -217,7 +217,7 @@ export default function Features() {
                 key={feature.title}
                 role="region"
                 aria-labelledby={id}
-                className={`bento-feature-card p-7${isLoneLastCard ? ' sm:col-span-2' : ''}`}
+                className={`bento-feature-card p-7 ${isLoneLastCard ? 'sm:col-span-2' : ''}`}
               >
                 <div
                   className="w-9 h-9 rounded-[8px] flex items-center justify-center mb-4 shrink-0"
