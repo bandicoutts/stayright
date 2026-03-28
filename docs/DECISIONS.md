@@ -176,25 +176,25 @@ Mobile is the first priority for v2 once product-market fit is established on we
 
 ---
 
-### [DECISION-004] Freemium model with 3-trip free tier
-**Date:** 2026-03-21
+### [DECISION-004] Freemium model — free tier limit raised from 3 to 10 trips
+**Date:** 2026-03-21 (revised 2026-03-28)
 **Status:** Decided
-**Decided by:** David Flynn-Coutts (founder), recommended by PM review
+**Decided by:** David Flynn-Coutts (founder); revised following CPO audit recommendation
 
 **Decision:**
-The free tier allows up to 3 trips logged. Pro is £2.99/month or £24.99/year. No family tier in v1. No 14-day free trial — the free tier itself serves as the trial experience.
+The free tier allows up to 10 trips logged. Pro is £2.99/month or £24.99/year. No family tier in v1. No 14-day free trial — the free tier itself serves as the trial experience.
 
 **Reasoning:**
-A 3-trip free tier lets users experience the core "what if" calculation before hitting the paywall, without giving away so much that there's no incentive to upgrade. The paywall triggers naturally at the point users are invested enough to pay. Dropping the 14-day trial removes billing complexity (trial period tracking, trial expiry, trial-to-paid conversion) at no meaningful cost to conversion since the free tier already demonstrates value.
+The original 3-trip limit was reached within minutes of onboarding for a typical Skilled Worker visa holder (2–5 years of history, 10–30 trips). Forcing a credit card before the user sees a single meaningful calculation is a conversion killer. The CPO audit identified this as a [CRITICAL] churn risk. Raising the limit to 10 gives users enough room to enter meaningful history and experience a real calculation result before the paywall triggers. 10 trips still leaves the majority of active users below the ceiling while preserving a strong upgrade incentive.
 
 **Alternatives considered:**
 - 14-day free trial — rejected. Adds Stripe trial period complexity. The free tier already serves this purpose with less engineering.
-- 10-trip free tier — rejected. Too generous. A user with 10 trips logged has already solved their immediate problem and has less incentive to upgrade.
+- Keep at 3 trips — rejected. Causes churn at the most critical conversion moment (first calculation).
 - No free tier (paid only) — rejected. Creates too much friction for a new product with no brand recognition.
 - Family tier at £4.99/month — rejected for v1. Multi-tenancy adds significant complexity for marginal revenue. Validate demand first.
 
 **Consequences:**
-The paywall must trigger at exactly 3 saved trips, not 3 what-if simulations. Users can run unlimited what-if calculations but can only save 3 trips. Stripe must be configured for monthly and annual plans only — no trial periods, no family plan.
+The paywall triggers at exactly 10 saved trips. `FREE_TRIP_LIMIT` constant in `src/lib/subscriptionUtils.ts` is the single source of truth — all server-side enforcement and client-side UI derive from it. Users can run unlimited what-if calculations but can only save 10 trips on the free tier.
 
 **Related:** PRD.md Section 3
 
@@ -1372,3 +1372,21 @@ StayRight requires a high-end "Editorial Concierge" aesthetic which is notorious
 Every new component must use semantic variables. The `tokens.css` file is the canonical reference for all styling. Global styles in `globals.css` are reduced to structural concerns, with all design identity residing in the tokens.
 
 **Related:** `docs/DESIGN.md`, `tokens.css`, DECISION-060
+
+---
+
+### [DECISION-047] Absence engine window summation is de-duplicated against overlapping trips
+**Date:** 2026-03-28
+**Status:** Decided
+**Decided by:** David Flynn-Coutts + CPO audit recommendation
+
+**Decision:**
+`getCurrentRollingWindow` and `getPeakRollingWindow` now collect per-trip absence intervals, merge any overlapping intervals, and count unique days — rather than summing raw per-trip day counts. The new private helpers `tripAbsenceInterval` (returns a clipped `{start, end}` pair or null) and `countDedupedDays` (merges and sums) implement this. The existing `tripDaysInWindow` is preserved for single-trip display calls (trip list row counts).
+
+**Reasoning:**
+The PRD (§4c) mandates that overlapping trips count each calendar day only once. While the UI's `hasOverlappingTrip` guard prevents overlaps at entry time, the engine had no defence against dirty data arriving via future bulk import, API bug, or admin DB edit. A CPO audit flagged this as a correctness risk: the calculation engine for a compliance tool must be idempotent regardless of data quality. The fix is O(T log T) per window evaluation — negligible cost.
+
+**Consequences:**
+If a user's data contains overlapping trips (which the UI would normally block), the engine now returns the correct, lower day count rather than an inflated one. No behaviour change for clean (non-overlapping) data. Any new function that sums days across multiple trips must use `countDedupedDays` rather than accumulating `tripDaysInWindow` directly.
+
+**Related:** PRD §4c; DECISION-002; DECISION-018; `src/lib/calculations/absenceEngine.ts`

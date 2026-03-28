@@ -1,7 +1,7 @@
 const trustCells = [
   {
-    value: '2,000+',
-    label: 'Skilled Worker visa holders',
+    value: 'Home Office aligned',
+    label: 'Built for Skilled Worker compliance',
   },
   {
     value: 'Solicitor reviewed',

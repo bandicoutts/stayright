@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   const today = new Date()
   const todayStr = today.toISOString().split('T')[0]
 
-  // Fetch all Pro users whose profiles have notification settings
+  // Fetch all profiles (one query).
   const { data: profiles, error: profilesError } = await supabase
     .from('profiles')
     .select('id, first_name, last_name, visa_start_date, notifications_120_day, notifications_150_day, notifications_ilr_reminder, notifications_return_reminder, notified_120_day_at, notified_150_day_at')
@@ -48,6 +48,22 @@ export async function GET(request: NextRequest) {
       .filter((s) => isPlanPro(s.plan, s.status))
       .map((s) => s.user_id)
   )
+
+  // Fetch all trips for all profiles in a single query, then group by user_id in memory.
+  // This eliminates the O(N) per-user trip queries that previously ran inside the loop.
+  const profileIds = profiles.map((p) => p.id)
+  const { data: allTrips } = await supabase
+    .from('trips')
+    .select('id, user_id, destination, departure_date, return_date')
+    .in('user_id', profileIds)
+
+  type TripRow = { id: string; user_id: string; destination: string; departure_date: string; return_date: string | null }
+  const tripsByUser = new Map<string, TripRow[]>()
+  for (const trip of (allTrips ?? []) as TripRow[]) {
+    const list = tripsByUser.get(trip.user_id) ?? []
+    list.push(trip)
+    tripsByUser.set(trip.user_id, list)
+  }
 
   // Fetch all users' emails via auth.admin — paginate to handle >1000 users
   const allAuthUsers: { id: string; email?: string }[] = []
@@ -71,14 +87,7 @@ export async function GET(request: NextRequest) {
 
     const isPro = proUserIds.has(profile.id)
 
-    // Fetch this user's trips
-    const { data: trips } = await supabase
-      .from('trips')
-      .select('id, destination, departure_date, return_date')
-      .eq('user_id', profile.id)
-      .order('departure_date', { ascending: true })
-
-    const tripInputs: TripInput[] = (trips ?? []).map((t) => ({
+    const tripInputs: TripInput[] = (tripsByUser.get(profile.id) ?? []).map((t) => ({
       id: t.id,
       destination: t.destination,
       departure_date: t.departure_date,

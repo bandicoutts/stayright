@@ -14,7 +14,7 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-001 | Tech stack selection | Next.js + Supabase + Vercel + Stripe + Resend; TypeScript strict throughout | Decided |
 | DECISION-002 | Absence day counting formula | `absence = (return − departure) − 1`; neither departure nor return day counts | Decided |
 | DECISION-003 | No native mobile app in v1 | Web-only; PWA covers mobile use case | Decided |
-| DECISION-004 | Freemium model with 3-trip free tier | Free up to 3 trips; Pro unlocks unlimited trips and PDF export | Decided |
+| DECISION-004 | Freemium model — free tier raised to 10 trips | Free up to 10 trips (raised from 3); Pro unlocks unlimited trips and PDF export | Decided |
 | DECISION-005 | Calculations never stored, always computed on read | DB stores raw trip dates only; engine always recalculates | Decided |
 | DECISION-006 | Design system source of truth | DESIGN.md + tokens.css are authoritative; wireframes are reference only | Decided |
 | DECISION-007 | Wireframe folder structure | `/docs/wireframes/` with per-screen subdirectories | Decided |
@@ -57,3 +57,4 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-046 | Dashboard & Trips Consolidation | Converge dashboard and trips views into a single workspace; convert drawer to modal | Decided |
 | DECISION-060 | Design System Pivot (Gold to Green) | Revert to green-tinted Dark Luxury palette for better alignment with semantic compliance colors | Decided |
 | DECISION-061 | Semantic Token Architecture | Implementation of a full suite of CSS variables in tokens.css to replace hardcoded hex values | Decided |
+| DECISION-047 | Engine window summation de-duplicated against overlapping trips | `getCurrentRollingWindow` and `getPeakRollingWindow` now merge intervals before counting; idempotent against dirty data | Decided |

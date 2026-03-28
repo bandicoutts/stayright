@@ -93,14 +93,29 @@ export function calculateTripAbsenceDays(trip: {
 /**
  * Returns how many absence days from a trip fall within [windowStart, windowEnd].
  * Handles trips that span window boundaries by clipping the absence range.
+ * Used for single-trip display (calculateTripAbsenceDays callers).
  */
 function tripDaysInWindow(
   trip: TripInput,
   windowStart: Date,
   windowEnd: Date
 ): number {
-  if (!trip.return_date) return 0
-  if (isCrownDependency(trip.destination)) return 0
+  const interval = tripAbsenceInterval(trip, windowStart, windowEnd)
+  if (!interval) return 0
+  return daysBetween(interval.start, interval.end) + 1
+}
+
+/**
+ * Returns the clipped absence interval for a trip within [windowStart, windowEnd],
+ * or null if the trip contributes zero absence days.
+ */
+function tripAbsenceInterval(
+  trip: TripInput,
+  windowStart: Date,
+  windowEnd: Date
+): { start: Date; end: Date } | null {
+  if (!trip.return_date) return null
+  if (isCrownDependency(trip.destination)) return null
 
   const dep = parseDate(trip.departure_date)
   const ret = parseDate(trip.return_date)
@@ -109,15 +124,36 @@ function tripDaysInWindow(
   const absStart = addDays(dep, 1)
   const absEnd = addDays(ret, -1)
 
-  if (absEnd < absStart) return 0 // 0 or 1-day gap → no absence
+  if (absEnd < absStart) return null // 0 or 1-day gap → no absence
 
   // Clip to the window
   const overlapStart = absStart > windowStart ? absStart : windowStart
   const overlapEnd = absEnd < windowEnd ? absEnd : windowEnd
 
-  if (overlapEnd < overlapStart) return 0
+  if (overlapEnd < overlapStart) return null
 
-  return daysBetween(overlapStart, overlapEnd) + 1 // inclusive of both ends
+  return { start: overlapStart, end: overlapEnd }
+}
+
+/**
+ * Merges an array of date intervals and counts unique days across all of them.
+ * Prevents double-counting when overlapping trips enter the database (e.g. via
+ * a future bulk import or admin edit) despite the UI's overlap guard.
+ * This makes window summation idempotent against dirty data (DECISION-047).
+ */
+function countDedupedDays(intervals: Array<{ start: Date; end: Date }>): number {
+  if (intervals.length === 0) return 0
+  const sorted = [...intervals].sort((a, b) => a.start.getTime() - b.start.getTime())
+  const merged: Array<{ start: Date; end: Date }> = [{ ...sorted[0] }]
+  for (const r of sorted.slice(1)) {
+    const last = merged[merged.length - 1]
+    if (r.start <= last.end) {
+      if (r.end > last.end) last.end = r.end
+    } else {
+      merged.push({ ...r })
+    }
+  }
+  return merged.reduce((sum, r) => sum + daysBetween(r.start, r.end) + 1, 0)
 }
 
 // ---------------------------------------------------------------------------
@@ -145,12 +181,15 @@ export function getCurrentRollingWindow(
   // the days already spent abroad are counted in the current rolling window.
   const provisionalReturn = formatDate(windowEnd)
 
-  let days = 0
-  for (const trip of trips) {
-    if (visaStartDate && trip.departure_date < visaStartDate) continue
-    const effectiveTrip = trip.return_date ? trip : { ...trip, return_date: provisionalReturn }
-    days += tripDaysInWindow(effectiveTrip, windowStart, windowEnd)
-  }
+  const intervals = trips
+    .filter((trip) => !(visaStartDate && trip.departure_date < visaStartDate))
+    .map((trip) => {
+      const effectiveTrip = trip.return_date ? trip : { ...trip, return_date: provisionalReturn }
+      return tripAbsenceInterval(effectiveTrip, windowStart, windowEnd)
+    })
+    .filter((i): i is { start: Date; end: Date } => i !== null)
+
+  const days = countDedupedDays(intervals)
 
   return {
     days,
@@ -182,12 +221,12 @@ export function getPeakRollingWindow(
     const windowStart = new Date(cursor)
     windowStart.setFullYear(windowStart.getFullYear() - 1)
 
-    let days = 0
-    for (const trip of trips) {
-      if (!trip.return_date) continue
-      if (trip.departure_date < visaStartDate) continue
-      days += tripDaysInWindow(trip, windowStart, cursor)
-    }
+    const intervals = trips
+      .filter((trip) => trip.return_date && trip.departure_date >= visaStartDate)
+      .map((trip) => tripAbsenceInterval(trip, windowStart, cursor))
+      .filter((i): i is { start: Date; end: Date } => i !== null)
+
+    const days = countDedupedDays(intervals)
 
     if (days > peakDays) {
       peakDays = days

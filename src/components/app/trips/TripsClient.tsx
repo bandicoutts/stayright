@@ -16,6 +16,7 @@ import { TripModal } from './TripModal'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
 import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
+import { FREE_TRIP_LIMIT } from '@/lib/subscriptionUtils'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -69,7 +70,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
       ? rawDrawerMode
       : null
 
-  const atLimit = !isPro && trips.length >= 3
+  const atLimit = !isPro && trips.length >= FREE_TRIP_LIMIT
 
   useEffect(() => {
     if ((drawerMode === 'plan' || drawerMode === 'log') && atLimit) {

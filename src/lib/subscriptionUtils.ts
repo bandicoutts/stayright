@@ -12,7 +12,7 @@
  */
 
 /** Maximum trips a Free user may store. Enforced server-side in every write action. */
-export const FREE_TRIP_LIMIT = 3
+export const FREE_TRIP_LIMIT = 10
 
 /**
  * Returns true only when the plan+status combination grants full Pro access.
