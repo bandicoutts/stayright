@@ -12,7 +12,7 @@ const trustCells = [
     label: 'UK-based data storage',
   },
   {
-    value: 'Built by a holder',
+    value: 'Built by a Tier 2/Skilled Worker veteran',
     label: 'Real-world visa experience',
   },
 ];

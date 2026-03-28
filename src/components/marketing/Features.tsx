@@ -10,7 +10,7 @@ import {
 const features = [
   {
     icon: Calendar,
-    title: 'Rolling 12-month tracker',
+    title: 'Continuous Residence Monitor',
     description:
       'Visual calendar and running total against the 180-day ILR limit. Never lose track of your window.',
   },
@@ -22,13 +22,13 @@ const features = [
   },
   {
     icon: ShieldCheck,
-    title: 'Instant risk status',
+    title: 'Compliance Dashboard',
     description:
       'Green / amber / red compliance indicator at a glance. Instant peace of mind for your visa status.',
   },
   {
     icon: Bell,
-    title: 'Smart alerts',
+    title: 'Breach Prevention Alerts',
     description:
       "Email reminders before you approach your limit. We watch the clock so you don't have to.",
   },
@@ -71,7 +71,7 @@ export default function Features() {
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em]"
             style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
-            Compliance,{' '}
+            Built for the{' '}
             <em
               className="not-italic"
               style={{
@@ -83,15 +83,16 @@ export default function Features() {
                 backgroundClip: 'text',
               }}
             >
-              Simplified.
+              'Any 12-Month' Rule.
             </em>
           </h2>
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.6] mt-5 max-w-[480px]"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
-            Everything you need to maintain your residency status without the
-            spreadsheets or the stress.
+            The Home Office doesn't just look at the last year. They check every
+            possible 12-month window in your 5-year history. StayRight does the
+            math for you.
           </p>
         </div>
 

@@ -265,7 +265,7 @@ export default function Hero() {
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
             style={{ fontSize: 'clamp(3rem, 5.5vw, 5.5rem)', color: 'var(--color-text-primary)' }}
           >
-            Know exactly where you{' '}
+            Don't risk your ILR{' '}
             <em
               className="not-italic block font-light"
               style={{
@@ -278,7 +278,7 @@ export default function Hero() {
                 backgroundClip: 'text',
               }}
             >
-              stand.
+              on a spreadsheet.
             </em>
           </h1>
 
@@ -287,9 +287,9 @@ export default function Hero() {
             className="font-[family-name:var(--font-inter)] leading-[1.72] mb-11 max-w-[440px] animate-fade-up animate-fade-up-3"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
-            Master the 180-day absence rule with precision. Automatically track
-            your travel and secure your residency status without the paperwork
-            headache.
+            Precision tracking for the UK's 180-day rule. Automatically monitor
+            every rolling 12-month window and ensure you're fully compliant with
+            Appendix Continuous Residence.
           </p>
 
           {/* CTAs */}
