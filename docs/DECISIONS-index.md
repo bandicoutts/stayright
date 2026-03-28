@@ -51,10 +51,12 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-038 | Stripe customer deleted on account deletion | `stripe.customers.del()` called in hard-delete flow (GDPR right to erasure) | Decided |
 | DECISION-039 | Password reset does not invalidate other sessions in v1 | Supabase default behaviour; full session invalidation deferred | Decided |
 | DECISION-040 | Server-side paywall enforcement + `isPlanPro` utility | `isPlanPro(plan, status)` in `src/lib/subscriptionUtils.ts`; checks both plan AND status | Decided |
-| DECISION-041 | Webhook idempotency and rate limiting deferred to v1.1 | M-3 and L-1 security gaps acknowledged; mitigated but not fully closed | Decided |
+| DECISION-041 | Webhook idempotency (M-3) resolved; rate limiting (L-1) still deferred | M-3 closed via DECISION-048; L-1 remains open until v1.1 | Partially resolved |
 | DECISION-042 | Ongoing trips counted with provisional return; Crown Dependency exact matching | Trips with no `return_date` use today as provisional end; Crown Dependency list is exact-match only | Decided |
 | DECISION-043 | WCAG 2.2 AA Accessibility Compliance Architecture | Enforces contrast ratios, global focus states, reduced-motion queries, focus-trapping, and axe-core E2E tests | Decided |
 | DECISION-046 | Dashboard & Trips Consolidation | Converge dashboard and trips views into a single workspace; convert drawer to modal | Decided |
 | DECISION-060 | Design System Pivot (Gold to Green) | Revert to green-tinted Dark Luxury palette for better alignment with semantic compliance colors | Decided |
 | DECISION-061 | Semantic Token Architecture | Implementation of a full suite of CSS variables in tokens.css to replace hardcoded hex values | Decided |
 | DECISION-047 | Engine window summation de-duplicated against overlapping trips | `getCurrentRollingWindow` and `getPeakRollingWindow` now merge intervals before counting; idempotent against dirty data | Decided |
+| DECISION-048 | Stripe webhook idempotency via processed_webhook_events table | Closes M-3; insert-after-success pattern ensures retries work and replays are no-ops | Decided |
+| DECISION-049 | Peak rolling window surfaced on dashboard | `getPeakRollingWindow` shown as PeakWindowCard; worst historical 12-month period now visible without navigating to Reports | Decided |

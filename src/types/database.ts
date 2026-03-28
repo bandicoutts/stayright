@@ -76,6 +76,21 @@ export type Database = {
         }
         Relationships: []
       }
+      processed_webhook_events: {
+        Row: {
+          stripe_event_id: string
+          processed_at: string
+        }
+        Insert: {
+          stripe_event_id: string
+          processed_at?: string
+        }
+        Update: {
+          stripe_event_id?: string
+          processed_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string

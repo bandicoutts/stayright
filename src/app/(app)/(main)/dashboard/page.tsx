@@ -9,12 +9,13 @@ import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytic
 import { TripsClient } from '@/components/app/trips/TripsClient'
 import {
   getCurrentRollingWindow,
+  getPeakRollingWindow,
   getQualifyingPeriod,
   calculateTripAbsenceDays,
   getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
 import type { Metadata } from 'next'
-import type { TripInput } from '@/lib/calculations/absenceEngine'
+import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
 
 export const metadata: Metadata = { title: 'Dashboard — StayRight' }
 
@@ -66,6 +67,14 @@ export default async function DashboardPage() {
   const qualifying = visaStartDate
     ? getQualifyingPeriod(visaStartDate, today)
     : null
+
+  // Peak rolling window — worst 12-month period across the entire qualifying
+  // history. Only meaningful once there is at least one completed trip.
+  const hasCompletedTrips = trips.some((t) => t.return_date !== null)
+  const peakWindow =
+    visaStartDate && hasCompletedTrips
+      ? getPeakRollingWindow(trips, visaStartDate, today)
+      : null
 
   // Trip summary for right column
   const tripCount = trips.length
@@ -164,6 +173,11 @@ export default async function DashboardPage() {
               with an immigration adviser if you are approaching the limit.
             </p>
           </div>
+
+          {/* Peak rolling window */}
+          {peakWindow && (
+            <PeakWindowCard peak={peakWindow} current={rollingWindow} />
+          )}
 
           {/* Qualifying period */}
           {qualifying && (
@@ -276,6 +290,59 @@ export default async function DashboardPage() {
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
+
+function PeakWindowCard({
+  peak,
+  current,
+}: {
+  peak: RollingWindowResult
+  current: RollingWindowResult
+}) {
+  const fmt = (d: Date) =>
+    d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+
+  const statusConfig = {
+    SAFE: { label: 'Safe', color: 'var(--color-green)', bg: 'var(--color-green-pale)' },
+    WARNING: { label: 'Warning', color: 'var(--color-warning-text)', bg: 'var(--color-warning-bg)' },
+    DANGER: { label: 'Danger', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
+    BREACH: { label: 'Breach', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
+  }[peak.status]
+
+  const isSameAsCurrent = peak.days === current.days
+
+  return (
+    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
+          Historical peak
+        </h2>
+        <span
+          className="text-xs font-semibold px-2 py-0.5 rounded-full"
+          style={{ color: statusConfig.color, background: statusConfig.bg }}
+        >
+          {statusConfig.label}
+        </span>
+      </div>
+      <div className="flex items-baseline gap-1.5 mb-1">
+        <span
+          className="font-[family-name:var(--font-manrope)] text-3xl font-extrabold"
+          style={{ color: statusConfig.color }}
+        >
+          {peak.days}
+        </span>
+        <span className="text-sm text-[var(--color-text-muted)]">/ 180 days</span>
+      </div>
+      <p className="text-xs text-[var(--color-text-muted)]">
+        {fmt(peak.windowStart)} – {fmt(peak.windowEnd)}
+      </p>
+      <p className="mt-3 text-xs text-[var(--color-text-muted)] leading-relaxed">
+        {isSameAsCurrent
+          ? 'This is also your current rolling window — your worst period is right now.'
+          : 'Worst 12-month window across your entire qualifying period.'}
+      </p>
+    </div>
+  )
+}
 
 function AlertCard({
   days,

@@ -24,13 +24,34 @@ export async function POST(request: NextRequest) {
 
   console.log(`[webhook] received: ${event.type} (${event.id})`)
 
+  // Idempotency guard (DECISION-048): check before processing so that Stripe
+  // retries on failure (event absent from table) but replays are silently
+  // accepted (event already in table). Insert happens only after success.
+  const supabase = createAdminClient()
+  const { data: alreadyProcessed } = await supabase
+    .from('processed_webhook_events')
+    .select('stripe_event_id')
+    .eq('stripe_event_id', event.id)
+    .maybeSingle()
+
+  if (alreadyProcessed) {
+    console.log(`[webhook] duplicate ignored: ${event.id}`)
+    return NextResponse.json({ received: true })
+  }
+
   try {
     await handleEvent(event)
   } catch (err) {
-    // Log and return 500 so Stripe retries (up to 3 times per PRD §4j)
+    // Return 500 so Stripe retries — event ID NOT inserted, so next retry
+    // will be treated as a new (unprocessed) event.
     console.error(`[webhook] handler error for ${event.type}:`, err)
     return NextResponse.json({ error: 'Handler failed' }, { status: 500 })
   }
+
+  // Mark as successfully processed — subsequent replays will be no-ops.
+  await supabase
+    .from('processed_webhook_events')
+    .insert({ stripe_event_id: event.id })
 
   return NextResponse.json({ received: true })
 }

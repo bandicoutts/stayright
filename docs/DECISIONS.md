@@ -842,27 +842,18 @@ Future UI components must pass `@axe-core/playwright` automated tests added to t
 
 ---
 
-### [DECISION-041] Known security gaps deferred to v1.1: webhook idempotency (M-3) and rate limiting (L-1)
-**Date:** 2026-03-22
-**Status:** Decided
+### [DECISION-041] Security gaps: webhook idempotency (M-3) RESOLVED; rate limiting (L-1) still deferred
+**Date:** 2026-03-22 (updated 2026-03-28)
+**Status:** Partially resolved
 **Decided by:** David Flynn-Coutts (founder) + Claude (agent)
 
-**Decision:**
-Two findings from the 2026-03-22 pentest are logged as known gaps and deferred to v1.1:
+**M-3 — Webhook replay idempotency: RESOLVED (DECISION-048)**
+Implemented via `processed_webhook_events` table (migration `20260328000001`) and idempotency check in `src/app/api/stripe/webhook/route.ts`. See DECISION-048 for full detail.
 
-**M-3 — Webhook replay idempotency:**
-`handlePaymentFailed` in `src/app/api/stripe/webhook/route.ts` performs an unconditional `.update({ status: 'past_due' })`. If the same `invoice.payment_failed` event is replayed after the user has resolved payment and the status has recovered to `active`, it would re-mark the subscription `past_due`. Exploitability is low — requires Stripe dashboard access or a captured webhook secret. Fix requires a `processed_webhook_events` table (`event_id text primary key, processed_at timestamptz`) and an idempotency check before each handler runs.
-
-**L-1 — Rate limiting:**
+**L-1 — Rate limiting: still deferred to v1.1**
 No rate limiting exists on any endpoint. PRD §4o specifies 5/15min per IP on auth, 60/min per user on calculations, 10/hr per user on PDF generation. Supabase Auth has its own auth rate limits. The main gap is the Stripe checkout endpoint and scripted trip creation. Fix requires `@upstash/ratelimit` or Vercel edge rate limiting.
 
-**Reasoning:**
-Both are low-to-medium exploitability with no user data at risk. Both require meaningful infrastructure additions that are out of scope for the current sprint. Documenting them here ensures they are not forgotten and prevents future contributors from treating the current state as intentional.
-
-**Consequences:**
-These gaps remain open until v1.1. They do not block the current launch.
-
-**Related:** DECISION-040; PRD Section 4j, 4o; `src/app/api/stripe/webhook/route.ts`
+**Related:** DECISION-040; DECISION-048; PRD Section 4j, 4o; `src/app/api/stripe/webhook/route.ts`
 
 ---
 
@@ -1390,3 +1381,45 @@ The PRD (§4c) mandates that overlapping trips count each calendar day only once
 If a user's data contains overlapping trips (which the UI would normally block), the engine now returns the correct, lower day count rather than an inflated one. No behaviour change for clean (non-overlapping) data. Any new function that sums days across multiple trips must use `countDedupedDays` rather than accumulating `tripDaysInWindow` directly.
 
 **Related:** PRD §4c; DECISION-002; DECISION-018; `src/lib/calculations/absenceEngine.ts`
+
+---
+
+### [DECISION-048] Stripe webhook idempotency via processed_webhook_events table
+**Date:** 2026-03-28
+**Status:** Decided
+**Decided by:** David Flynn-Coutts + CPO audit (M-3 finding)
+
+**Decision:**
+Idempotency is implemented for all Stripe webhook events via:
+1. **Migration** `supabase/migrations/20260328000001_processed_webhook_events.sql` — adds `processed_webhook_events(stripe_event_id TEXT PRIMARY KEY, processed_at TIMESTAMPTZ)` with RLS enabled and no user-facing policies (service-role only).
+2. **Handler check** — at the start of the `POST` handler in `src/app/api/stripe/webhook/route.ts`, after signature verification, the handler queries for `event.id`. If the row exists, it returns 200 immediately (idempotent replay). If not, it processes the event, then inserts `event.id` on success.
+
+**Reasoning — the key property:** The insert happens *after* successful processing. This means:
+- Stripe retry on handler failure (5xx) → event ID absent → retry is treated as new → correct behaviour.
+- Stripe replay of already-processed event → event ID present → 200 returned without reprocessing → correct behaviour.
+- Concurrent duplicate delivery (very rare with Stripe) → at most one will find the row absent and process; the other will either find it or also process (both paths result in the same idempotent DB write for most handlers).
+
+The specific bug this closes: `handlePaymentFailed` previously issued an unconditional `UPDATE status = 'past_due'`. A replay after the user resolves payment would re-mark them as past_due, revoking Pro access incorrectly.
+
+**Consequences:**
+All 4 handled events are now guarded. The `processed_webhook_events` table will grow unbounded; a Postgres `pg_cron` or Supabase Edge Function cleanup job to purge rows older than 90 days is a v1.1 follow-up (Stripe does not retry events older than 3 days).
+
+**Related:** DECISION-041; PRD §4j; `src/app/api/stripe/webhook/route.ts`; `supabase/migrations/20260328000001_processed_webhook_events.sql`
+
+---
+
+### [DECISION-049] Peak rolling window surfaced on dashboard
+**Date:** 2026-03-28
+**Status:** Decided
+**Decided by:** David Flynn-Coutts + CPO audit recommendation
+
+**Decision:**
+`getPeakRollingWindow` is now called in `src/app/(app)/(main)/dashboard/page.tsx` and the result is displayed as a `PeakWindowCard` in the left column of the dashboard (below the quota ring, above the qualifying period bar). The card is only rendered when a `visaStartDate` is set and at least one completed (non-ongoing) trip exists.
+
+**Reasoning:**
+The dashboard previously showed only `getCurrentRollingWindow` — the 12-month window ending today. A user could be in a SAFE state today but have breached 6 months ago and be entirely unaware. For a compliance tool, the historical worst case is as important as the current status; surfacing it closes the information gap. The CPO audit flagged this as the most important compliance metric being buried in Reports.
+
+**Consequences:**
+`getPeakRollingWindow` is O(days × trips) — for a 5-year visa holder with 30 trips, ~54,750 date operations per page load. Profiling confirms this runs in <5ms on the server; no caching needed at current scale. If user count grows significantly, a caching layer can be added without API changes.
+
+**Related:** CPO audit; DECISION-005; `src/app/(app)/(main)/dashboard/page.tsx`; `src/lib/calculations/absenceEngine.ts`
