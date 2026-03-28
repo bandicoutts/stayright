@@ -96,14 +96,14 @@ export default function Features() {
           </p>
         </div>
 
-        {/* Bento grid — 12 cols with hero card spanning cols 1–5 */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+        {/* Bento grid — hero left, feature cards right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-3 items-start">
 
-          {/* Hero card — What-If Simulator (spans 5 of 12) */}
+          {/* Hero card — What-If Simulator */}
           <div
             role="region"
             aria-labelledby="feature-what-if-title"
-            className="md:col-span-5 md:row-span-2 flex flex-col p-10 group relative overflow-hidden"
+            className="flex flex-col p-10 group relative overflow-hidden"
             style={{
               background: 'var(--color-surface-dark)',
               border: '1px solid transparent',
@@ -206,16 +206,18 @@ export default function Features() {
             </div>
           </div>
 
-          {/* Standard feature cards — span 7 across two rows */}
-          {features.map((feature) => {
+          {/* Standard feature cards — 2-col nested grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {features.map((feature, i) => {
             const Icon = feature.icon;
             const id = `feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`;
+            const isLoneLastCard = i === features.length - 1 && features.length % 2 !== 0;
             return (
               <div
                 key={feature.title}
                 role="region"
                 aria-labelledby={id}
-                className="bento-feature-card md:col-span-7 lg:col-span-3 p-7"
+                className={`bento-feature-card p-7${isLoneLastCard ? ' sm:col-span-2' : ''}`}
               >
                 <div
                   className="w-9 h-9 rounded-[8px] flex items-center justify-center mb-4 shrink-0"
@@ -244,6 +246,7 @@ export default function Features() {
               </div>
             );
           })}
+          </div>
         </div>
       </div>
     </section>

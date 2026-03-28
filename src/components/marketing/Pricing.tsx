@@ -95,7 +95,7 @@ export default function Pricing() {
         </div>
 
         {/* Cards */}
-        <div className="grid sm:grid-cols-2 gap-4 max-w-2xl">
+        <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
 
           {/* Free card */}
           <div
