@@ -101,11 +101,10 @@ export function Sidebar({ userName = 'Account', userEmail, userInitial = '?', is
       </nav>
 
       {/* User Card with Popover */}
-      <div className="px-4 pb-6 pt-4 relative">
+      <div ref={popoverRef} className="px-4 pb-6 pt-4 relative">
         {/* Popover */}
         {isProfileOpen && (
-          <div 
-            ref={popoverRef}
+          <div
             className="absolute bottom-full left-4 right-4 mb-2 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-2xl z-[110] overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200"
           >
             <div className="p-1.5 flex flex-col gap-1">
