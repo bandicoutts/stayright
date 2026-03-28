@@ -14,6 +14,7 @@ import {
   calculateTripAbsenceDays,
   getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
+import { RISK_CONFIG } from '@/lib/riskConfig'
 import type { Metadata } from 'next'
 import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
 
@@ -33,13 +34,7 @@ function PeakWindowCard({
   const fmt = (d: Date) =>
     d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
-  const statusConfig = {
-    SAFE: { label: 'Compliant', color: 'var(--color-green)', bg: 'var(--color-green-pale)' },
-    WARNING: { label: 'Approaching Limit', color: 'var(--color-warning-text)', bg: 'var(--color-warning-bg)' },
-    DANGER: { label: 'Risk of Breach', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
-    BREACH: { label: 'Breach', color: 'var(--color-danger-text)', bg: 'var(--color-danger-bg)' },
-  }[peak.status]
-
+  const cfg = RISK_CONFIG[peak.status]
   const isSameAsCurrent = peak.days === current.days
 
   return (
@@ -48,17 +43,13 @@ function PeakWindowCard({
         <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
           Historical peak
         </h2>
-        <span
-          className="text-xs font-semibold px-2 py-0.5 rounded-full"
-          style={{ color: statusConfig.color, background: statusConfig.bg }}
-        >
-          {statusConfig.label}
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${cfg.chip}`}>
+          {cfg.label}
         </span>
       </div>
       <div className="flex items-baseline gap-1.5 mb-1">
         <span
-          className="font-[family-name:var(--font-manrope)] text-3xl font-extrabold"
-          style={{ color: statusConfig.color }}
+          className={`font-[family-name:var(--font-manrope)] text-3xl font-extrabold ${cfg.text}`}
         >
           {peak.days}
         </span>

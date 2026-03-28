@@ -17,12 +17,6 @@ const GRADIENTS: Record<RiskStatus, { start: string; end: string }> = {
   BREACH: { start: '#680005', end: '#8E0009' },
 }
 
-const STATUS_CHIPS: Record<RiskStatus, string> = {
-  SAFE: 'bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]',
-  WARNING: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]',
-  DANGER: 'bg-[var(--color-danger-bg)] text-[var(--color-danger-text)]',
-  BREACH: 'bg-[var(--color-danger-bg)] text-[var(--color-danger-text)]',
-}
 
 interface Props {
   days: number
@@ -104,7 +98,7 @@ export function QuotaRing({ days, status }: Props) {
       <div className="flex flex-col items-center gap-3 mt-2">
         {/* Status badge */}
         <div
-          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${STATUS_CHIPS[status]}`}
+          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${RISK_CONFIG[status].chip}`}
           aria-hidden="true"
         >
           {RISK_CONFIG[status].label}

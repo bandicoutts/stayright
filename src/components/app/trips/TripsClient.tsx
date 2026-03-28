@@ -338,7 +338,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
                             </span>
                           ) : cfg ? (
                             <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase transition-colors ${cfg.bg} ${cfg.text}`}>
-                              {absenceDays}d &middot; {cfg.label}
+                              {absenceDays}d
                             </span>
                           ) : null}
 
