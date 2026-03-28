@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import type { RiskStatus } from '@/lib/calculations/absenceEngine'
-import { RISK_CONFIG } from '@/lib/riskConfig'
 
 const RADIUS = 68
 const STROKE = 12
@@ -39,9 +38,8 @@ export function QuotaRing({ days, status }: Props) {
   const remaining = Math.max(0, 180 - days)
 
   return (
-    <div className="flex items-center gap-8">
-      {/* Ring */}
-      <div className="relative shrink-0" style={{ width: SIZE, height: SIZE }}>
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative" style={{ width: SIZE, height: SIZE }}>
         <svg
           width={SIZE}
           height={SIZE}
@@ -55,38 +53,18 @@ export function QuotaRing({ days, status }: Props) {
               <stop offset="100%" stopColor={gradient.end} />
             </linearGradient>
           </defs>
-          {/* Track */}
+          <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="var(--color-border)" strokeWidth={STROKE} />
           <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={RADIUS}
-            fill="none"
-            stroke="var(--color-border)"
-            strokeWidth={STROKE}
-          />
-          {/* Progress */}
-          <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={RADIUS}
-            fill="none"
-            stroke={`url(#ringGrad-${status})`}
-            strokeWidth={STROKE}
-            strokeLinecap="round"
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={CIRCUMFERENCE}
+            cx={CENTER} cy={CENTER} r={RADIUS} fill="none"
+            stroke={`url(#ringGrad-${status})`} strokeWidth={STROKE} strokeLinecap="round"
+            strokeDasharray={CIRCUMFERENCE} strokeDashoffset={CIRCUMFERENCE}
             transform={`rotate(-90 ${CENTER} ${CENTER})`}
             className="transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
             style={{ strokeDashoffset: dashOffset }}
           />
         </svg>
-
-        {/* Centre text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
-          <span
-            className="font-[family-name:var(--font-manrope)] font-bold text-[3rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]"
-            aria-hidden="true"
-          >
+          <span className="font-[family-name:var(--font-manrope)] font-bold text-[3rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]" aria-hidden="true">
             {days}
           </span>
           <span className="font-[family-name:var(--font-inter)] text-xs font-medium text-[var(--color-text-muted)] mt-1">
@@ -94,24 +72,9 @@ export function QuotaRing({ days, status }: Props) {
           </span>
         </div>
       </div>
-
-      {/* Info */}
-      <div className="flex flex-col gap-3">
-        <div
-          className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${RISK_CONFIG[status].chip}`}
-          aria-hidden="true"
-        >
-          {RISK_CONFIG[status].label}
-        </div>
-
-        <p className="text-[15px] font-[family-name:var(--font-inter)] text-[var(--color-text-muted)]">
-          <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in your current window
-        </p>
-
-        <p className="text-xs text-[var(--color-text-muted)] leading-relaxed max-w-xs">
-          Calculations follow official Home Office guidance. Always verify with an immigration adviser if you are approaching the limit.
-        </p>
-      </div>
+      <p className="text-sm font-[family-name:var(--font-inter)] text-[var(--color-text-muted)] text-center">
+        <span className="font-semibold text-[var(--color-text-primary)]">{remaining} days</span> remaining in your current window
+      </p>
     </div>
   )
 }

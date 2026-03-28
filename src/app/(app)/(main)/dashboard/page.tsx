@@ -208,14 +208,20 @@ export default async function DashboardPage() {
         <AlertCard days={rollingWindow.days} status={rollingWindow.status} />
       )}
 
-      {/* Cards */}
-      <div className="space-y-6">
-        {/* Quota ring card */}
+      {/* Stat cards — three columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Current window */}
         <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Current window</h2>
+            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${RISK_CONFIG[rollingWindow.status].chip}`}>
+              {RISK_CONFIG[rollingWindow.status].label}
+            </span>
+          </div>
           <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
         </div>
 
-        {/* Peak rolling window */}
+        {/* Historical peak */}
         {peakWindow && (
           <PeakWindowCard peak={peakWindow} current={rollingWindow} />
         )}
@@ -253,8 +259,10 @@ export default async function DashboardPage() {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Full Trip Log */}
+      {/* Full Trip Log */}
+      <div className="mt-6">
         <TripsClient
           trips={rawTrips ?? []}
           visaStartDate={visaStartDate}
