@@ -323,7 +323,7 @@ export default function Hero() {
             {[
               'Free to start',
               'No credit card',
-              'Used by 2,000+ visa holders',
+              'Built for Skilled Worker compliance',
             ].map((tag) => (
               <span
                 key={tag}

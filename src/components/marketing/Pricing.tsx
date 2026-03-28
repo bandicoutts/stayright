@@ -144,7 +144,7 @@ export default function Pricing() {
 
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
               {[
-                { text: 'Up to 3 trips logged', included: true },
+                { text: 'Up to 10 trips logged', included: true },
                 { text: 'Basic rolling window tracker', included: true },
                 { text: 'Risk alerts', included: false },
               ].map(({ text, included }) => (
