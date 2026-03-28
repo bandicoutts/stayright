@@ -209,97 +209,81 @@ export default async function DashboardPage() {
         <AlertCard days={rollingWindow.days} status={rollingWindow.status} />
       )}
 
-      {/* Main grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left column — quota ring + qualifying period */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Quota ring card */}
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
-            <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
-            <p className="mt-5 text-xs text-center text-[var(--color-text-muted)] max-w-sm mx-auto leading-relaxed">
-              Calculations follow official Home Office guidance. Always verify
-              with an immigration adviser if you are approaching the limit.
-            </p>
-          </div>
+      {/* Cards */}
+      <div className="space-y-6">
+        {/* Quota ring card */}
+        <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
+          <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
+          <p className="mt-5 text-xs text-center text-[var(--color-text-muted)] max-w-sm mx-auto leading-relaxed">
+            Calculations follow official Home Office guidance. Always verify
+            with an immigration adviser if you are approaching the limit.
+          </p>
+        </div>
 
-          {/* Peak rolling window */}
-          {peakWindow && (
-            <PeakWindowCard peak={peakWindow} current={rollingWindow} />
-          )}
+        {/* Peak rolling window */}
+        {peakWindow && (
+          <PeakWindowCard peak={peakWindow} current={rollingWindow} />
+        )}
 
-          {/* Qualifying period */}
-          {qualifying && (
-            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h2 id="qualifying-period-heading" className="text-sm font-semibold text-[var(--color-text-primary)]">
-                  Qualifying period
-                </h2>
-                <span className="text-sm font-semibold text-[var(--color-green)]">
-                  {qualifying.percentage}%
-                </span>
-              </div>
-              <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100} aria-labelledby="qualifying-period-heading">
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
-                />
-              </div>
-              <div className="mt-5 space-y-3">
-                <TimelineItem
-                  label="Visa started"
-                  date={qualifying.visaStartDate}
-                  done
-                />
-                <div className="ml-3 w-px h-4 bg-[var(--color-green)]/30" />
-                <TimelineItem
-                  label={`${qualifying.percentage}% complete`}
-                  date={today}
-                  active
-                />
-                <div className="ml-3 w-px h-4 bg-[var(--color-text-primary)]/10" />
-                <TimelineItem
-                  label="ILR eligibility"
-                  date={qualifying.ilrDate}
-                />
-              </div>
+        {/* Qualifying period */}
+        {qualifying && (
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
+            <div className="flex items-center justify-between mb-3">
+              <h2 id="qualifying-period-heading" className="text-sm font-semibold text-[var(--color-text-primary)]">
+                Qualifying period
+              </h2>
+              <span className="text-sm font-semibold text-[var(--color-green)]">
+                {qualifying.percentage}%
+              </span>
             </div>
-          )}
-        </div>
-
-        {/* Right column — actions + ILR timeline + trip summary */}
-        <div className="space-y-6">
-          {/* CTAs */}
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6 space-y-3">
-            <Link
-              href="?modal=plan"
-              className="flex items-center justify-between w-full rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity text-white"
-              style={{ background: 'var(--gradient-green)' }}
-            >
-              <span>Plan a trip</span>
-              <span>→</span>
-            </Link>
-            <p className="text-xs text-[var(--color-text-muted)] text-center -mt-1">
-              See the impact before you book
-            </p>
-            <Link
-              href="?modal=log"
-              className="flex items-center justify-between w-full border border-[var(--color-border-strong)] text-[var(--color-text-primary)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors"
-            >
-              <span>Log a past trip</span>
-              <span className="text-[var(--color-text-muted)]">→</span>
-            </Link>
-            <p className="text-xs text-[var(--color-text-muted)] text-center -mt-1">
-              Add trips you&apos;ve already taken
-            </p>
+            <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100} aria-labelledby="qualifying-period-heading">
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
+              />
+            </div>
+            <div className="mt-5 space-y-3">
+              <TimelineItem
+                label="Visa started"
+                date={qualifying.visaStartDate}
+                done
+              />
+              <div className="ml-3 w-px h-4 bg-[var(--color-green)]/30" />
+              <TimelineItem
+                label={`${qualifying.percentage}% complete`}
+                date={today}
+                active
+              />
+              <div className="ml-3 w-px h-4 bg-[var(--color-text-primary)]/10" />
+              <TimelineItem
+                label="ILR eligibility"
+                date={qualifying.ilrDate}
+              />
+            </div>
           </div>
+        )}
 
-
+        {/* Action buttons */}
+        <div className="flex gap-3">
+          <Link
+            href="?modal=plan"
+            className="flex items-center justify-between flex-1 rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity text-white"
+            style={{ background: 'var(--gradient-green)' }}
+          >
+            <span>Plan a trip</span>
+            <span>→</span>
+          </Link>
+          <Link
+            href="?modal=log"
+            className="flex items-center justify-between flex-1 border border-[var(--color-border-strong)] text-[var(--color-text-primary)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors"
+          >
+            <span>Log a past trip</span>
+            <span className="text-[var(--color-text-muted)]">→</span>
+          </Link>
         </div>
-      </div>
 
-      {/* Full Trip Log */}
-      <div className="mt-8">
-        <TripsClient 
+        {/* Full Trip Log */}
+        <TripsClient
           trips={rawTrips ?? []}
           visaStartDate={visaStartDate}
           isPro={isPro}
