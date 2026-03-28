@@ -211,12 +211,8 @@ export default async function DashboardPage() {
       {/* Cards */}
       <div className="space-y-6">
         {/* Quota ring card */}
-        <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-8">
+        <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
           <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
-          <p className="mt-5 text-xs text-center text-[var(--color-text-muted)] max-w-sm mx-auto leading-relaxed">
-            Calculations follow official Home Office guidance. Always verify
-            with an immigration adviser if you are approaching the limit.
-          </p>
         </div>
 
         {/* Peak rolling window */}
