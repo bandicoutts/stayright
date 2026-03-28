@@ -70,9 +70,10 @@ describe('isPlanPro', () => {
 })
 
 describe('FREE_TRIP_LIMIT', () => {
-  it('is 3', () => {
+  it('is 10', () => {
     // If this constant ever changes, the quota gate changes with it.
     // A deliberate change here is fine; an accidental one is caught.
-    expect(FREE_TRIP_LIMIT).toBe(3)
+    // Raised from 3 → 10 per CPO audit (DECISION-004 revised 2026-03-28).
+    expect(FREE_TRIP_LIMIT).toBe(10)
   })
 })

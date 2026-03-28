@@ -116,16 +116,17 @@ describe('addTripAction', () => {
     expect(result).toEqual(expect.objectContaining({ error: expect.stringContaining('YYYY-MM-DD') }))
   })
 
-  it('enforces 3-trip Free tier limit server-side', async () => {
+  it('enforces 10-trip Free tier limit server-side', async () => {
     mockGetUser.mockResolvedValue(authedUser())
 
-    // Mock: 3 existing trips (at the limit) + no subscription (Free user)
+    // Mock: 10 existing trips (at the limit) + no subscription (Free user)
     const tripsQuery = buildQueryChain('eq', {
-      data: [
-        { id: 't1', destination: 'USA', departure_date: '2025-01-01', return_date: '2025-01-10' },
-        { id: 't2', destination: 'Spain', departure_date: '2025-02-01', return_date: '2025-02-10' },
-        { id: 't3', destination: 'France', departure_date: '2025-03-01', return_date: '2025-03-10' },
-      ],
+      data: Array.from({ length: 10 }, (_, i) => ({
+        id: `t${i + 1}`,
+        destination: 'USA',
+        departure_date: `2024-${String(i + 1).padStart(2, '0')}-01`,
+        return_date: `2024-${String(i + 1).padStart(2, '0')}-10`,
+      })),
       error: null,
     })
     const subscriptionQuery = buildQueryChain('single', {
