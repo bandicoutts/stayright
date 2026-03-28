@@ -244,23 +244,23 @@ export default async function DashboardPage() {
                   style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
                 />
               </div>
-              <div className="flex justify-between mt-2 text-xs text-[var(--color-text-muted)]">
-                <span>
-                  Started{' '}
-                  {qualifying.visaStartDate.toLocaleDateString('en-GB', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </span>
-                <span>
-                  ILR eligible{' '}
-                  {qualifying.ilrDate.toLocaleDateString('en-GB', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </span>
+              <div className="mt-5 space-y-3">
+                <TimelineItem
+                  label="Visa started"
+                  date={qualifying.visaStartDate}
+                  done
+                />
+                <div className="ml-3 w-px h-4 bg-[var(--color-green)]/30" />
+                <TimelineItem
+                  label={`${qualifying.percentage}% complete`}
+                  date={today}
+                  active
+                />
+                <div className="ml-3 w-px h-4 bg-[var(--color-text-primary)]/10" />
+                <TimelineItem
+                  label="ILR eligibility"
+                  date={qualifying.ilrDate}
+                />
               </div>
             </div>
           )}
@@ -293,32 +293,6 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          {/* ILR eligibility timeline */}
-          {qualifying && (
-            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
-              <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">
-                ILR timeline
-              </h2>
-              <div className="space-y-3">
-                <TimelineItem
-                  label="Visa started"
-                  date={qualifying.visaStartDate}
-                  done
-                />
-                <div className="ml-3 w-px h-4 bg-[var(--color-green)]/30" />
-                <TimelineItem
-                  label={`${qualifying.percentage}% complete`}
-                  date={today}
-                  active
-                />
-                <div className="ml-3 w-px h-4 bg-[var(--color-text-primary)]/10" />
-                <TimelineItem
-                  label="ILR eligibility"
-                  date={qualifying.ilrDate}
-                />
-              </div>
-            </div>
-          )}
 
         </div>
       </div>
