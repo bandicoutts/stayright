@@ -51,18 +51,10 @@ export default function Features() {
 
         {/* Section header */}
         <div className="max-w-2xl mb-14">
-          <div
-            className="flex items-center gap-[10px] mb-[14px]"
-            style={{ color: 'var(--color-green)' }}
-          >
-            <span
-              className="block shrink-0"
-              style={{ width: 20, height: 1, background: 'var(--color-green)' }}
-              aria-hidden="true"
-            />
+          <div className="mb-[14px]">
             <span
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
-              style={{ fontSize: '0.625rem' }}
+              style={{ fontSize: '0.625rem', color: 'var(--color-green)' }}
             >
               Features
             </span>

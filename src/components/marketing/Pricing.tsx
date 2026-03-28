@@ -17,18 +17,10 @@ export default function Pricing() {
 
         {/* Section header */}
         <div className="mb-12">
-          <div
-            className="flex items-center gap-[10px] mb-[14px]"
-            style={{ color: 'var(--color-green)' }}
-          >
-            <span
-              className="block shrink-0"
-              style={{ width: 20, height: 1, background: 'var(--color-green)' }}
-              aria-hidden="true"
-            />
+          <div className="mb-[14px]">
             <span
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
-              style={{ fontSize: '0.625rem' }}
+              style={{ fontSize: '0.625rem', color: 'var(--color-green)' }}
             >
               Pricing
             </span>
@@ -42,7 +34,7 @@ export default function Pricing() {
         </div>
 
         {/* Toggle */}
-        <div className="flex items-center gap-3 mb-12">
+        <div className="flex items-center justify-center gap-3 mb-12 max-w-2xl mx-auto">
           <span
             id="monthly-label"
             className="font-[family-name:var(--font-inter)] font-medium"
@@ -255,14 +247,14 @@ export default function Pricing() {
                 border: 'none',
               }}
             >
-              Start Free Tracker
+              Start Pro Trial
             </Link>
           </div>
         </div>
 
         {/* Lifetime note */}
         <p
-          className="font-[family-name:var(--font-inter)] mt-6"
+          className="font-[family-name:var(--font-inter)] mt-6 max-w-2xl mx-auto text-center"
           style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}
         >
           Prefer to pay once?{' '}
@@ -277,7 +269,7 @@ export default function Pricing() {
 
         {/* Reassurance */}
         <p
-          className="font-[family-name:var(--font-inter)] mt-3"
+          className="font-[family-name:var(--font-inter)] mt-3 max-w-2xl mx-auto text-center"
           style={{ fontSize: '0.75rem', color: 'var(--color-text-faint)' }}
         >
           Cancel anytime. No hidden fees. Prices in GBP.

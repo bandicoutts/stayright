@@ -242,24 +242,6 @@ export default function Hero() {
         {/* ── Left column ── */}
         <div className="flex flex-col max-w-xl">
 
-          {/* Eyebrow */}
-          <div
-            className="flex items-center gap-3 mb-7 animate-fade-up animate-fade-up-1"
-            style={{ color: 'var(--color-green)' }}
-          >
-            <span
-              className="block shrink-0"
-              style={{ width: 28, height: 1, background: 'var(--color-green)' }}
-              aria-hidden="true"
-            />
-            <span
-              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
-              style={{ fontSize: '0.625rem' }}
-            >
-              UK Skilled Worker Visa
-            </span>
-          </div>
-
           {/* Headline */}
           <h1
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
