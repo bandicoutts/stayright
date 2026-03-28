@@ -89,7 +89,7 @@ export default function Features() {
         </div>
 
         {/* Bento grid — hero left, feature cards right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-3 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-3 items-stretch">
 
           {/* Hero card — What-If Simulator */}
           <div
