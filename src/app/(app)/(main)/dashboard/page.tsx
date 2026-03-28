@@ -242,23 +242,19 @@ export default async function DashboardPage() {
                 style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
               />
             </div>
-            <div className="mt-5 space-y-3">
-              <TimelineItem
-                label="Visa started"
-                date={qualifying.visaStartDate}
-                done
-              />
-              <div className="ml-3 w-px h-4 bg-[var(--color-green)]/30" />
-              <TimelineItem
-                label={`${qualifying.percentage}% complete`}
-                date={today}
-                active
-              />
-              <div className="ml-3 w-px h-4 bg-[var(--color-text-primary)]/10" />
-              <TimelineItem
-                label="ILR eligibility"
-                date={qualifying.ilrDate}
-              />
+            <div className="mt-3 flex justify-between text-xs">
+              <div>
+                <p className="font-medium text-[var(--color-text-primary)]">Visa started</p>
+                <p className="text-[var(--color-text-muted)] mt-0.5">{qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+              </div>
+              <div className="text-center">
+                <p className="font-semibold text-[var(--color-green)]">{qualifying.percentage}% complete</p>
+                <p className="text-[var(--color-text-muted)] mt-0.5">{today.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-medium text-[var(--color-text-primary)]">ILR eligibility</p>
+                <p className="text-[var(--color-text-muted)] mt-0.5">{qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+              </div>
             </div>
           </div>
         )}
@@ -294,7 +290,7 @@ export default async function DashboardPage() {
 }
 
 // ---------------------------------------------------------------------------
-// Sub-components (AlertCard, TimelineItem, getGreeting)
+// Sub-components (AlertCard, getGreeting)
 // ---------------------------------------------------------------------------
 
 function AlertCard({
@@ -336,54 +332,6 @@ function AlertCard({
   )
 }
 
-function TimelineItem({
-  label,
-  date,
-  done = false,
-  active = false,
-}: {
-  label: string
-  date: Date
-  done?: boolean
-  active?: boolean
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <div
-        className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
-          done
-            ? 'text-white'
-            : active
-            ? 'border-2 border-[var(--color-green)] bg-[var(--color-green-pale)]'
-            : 'bg-[var(--color-bg)] border-2 border-[var(--color-border-strong)]'
-        }`}
-        style={done ? { background: 'var(--color-green)' } : undefined}
-      >
-        {done && (
-          <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M2 6l3 3 5-5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
-      </div>
-      <div>
-        <p className="text-xs font-medium text-[var(--color-text-primary)]">{label}</p>
-        <p className="text-xs text-[var(--color-text-muted)]">
-          {date.toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          })}
-        </p>
-      </div>
-    </div>
-  )
-}
 
 function getGreeting() {
   const h = new Date().getHours()
