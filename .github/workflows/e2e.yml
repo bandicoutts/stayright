@@ -1,0 +1,86 @@
+name: E2E Smoke Tests
+
+# Manual trigger only for now.
+# Promote to `on: push: branches: [main]` once the suite is confirmed stable.
+on:
+  workflow_dispatch:
+
+# Cancel any in-progress run for the same ref when manually triggered again.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Playwright Smoke (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # ── Supabase ────────────────────────────────────────────────────────────
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start local Supabase
+        run: supabase start
+
+      - name: Export Supabase credentials
+        run: |
+          STATUS=$(supabase status --output json)
+          echo "NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(echo "$STATUS" | jq -r '."anon key"')" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=$(echo "$STATUS" | jq -r '."service_role key"')" >> $GITHUB_ENV
+
+      # ── App env (non-Supabase) ───────────────────────────────────────────────
+      # Stripe/PostHog/Resend are not exercised by the smoke tests — placeholder
+      # values are sufficient to let `next build` succeed.
+      - name: Set remaining env vars
+        run: |
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=sk_test_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_WEBHOOK_SECRET=whsec_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_PRICE_MONTHLY=price_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_PRICE_ANNUAL=price_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_PRICE_LIFETIME=price_placeholder" >> $GITHUB_ENV
+          echo "RESEND_API_KEY=re_placeholder" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_POSTHOG_KEY=phc_placeholder" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com" >> $GITHUB_ENV
+          echo "CRON_SECRET=placeholder" >> $GITHUB_ENV
+          echo "TEST_USER_EMAIL=testuser@stayright.test" >> $GITHUB_ENV
+          echo "TEST_USER_PASSWORD=TestPassword123!" >> $GITHUB_ENV
+
+      # ── Build ────────────────────────────────────────────────────────────────
+      - name: Build Next.js app
+        run: npm run build
+
+      # ── Test user ────────────────────────────────────────────────────────────
+      # Creates a verified user + profile row in local Supabase so auth.setup.ts
+      # can log in successfully.
+      - name: Create E2E test user
+        run: npm run test:create-user
+
+      # ── Playwright ───────────────────────────────────────────────────────────
+      - name: Install Playwright (Chromium only)
+        run: npx playwright install chromium --with-deps
+
+      - name: Run smoke suite
+        run: npx playwright test --config playwright.smoke.config.ts
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-smoke-report
+          path: playwright-report/
+          retention-days: 7
