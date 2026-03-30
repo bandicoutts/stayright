@@ -65,11 +65,23 @@
   /* ── Sidebar/Nav Specific ────────────────────── */
   --color-sidebar-bg:       var(--color-bg-tinted);
   --color-sidebar-border:   var(--color-border);
+
+  /* ── Surface depth layers (for table rows, nav, raised panels) ── */
+  --color-surface-raised:   #F8FCF9;
+  --color-surface-sunken:   #EBF3EE;
+  --color-nav-bg:           rgba(245, 250, 247, 0.90);
+  --color-nav-border:       rgba(0, 105, 72, 0.12);
 }
 
 .dark {
   --color-sidebar-bg:       var(--color-surface-dark);
   --color-sidebar-border:   transparent;
+
+  /* ── Surface depth layers — dark mode ── */
+  --color-surface-raised:   #131a15;
+  --color-surface-sunken:   #060b08;
+  --color-nav-bg:           rgba(11, 16, 14, 0.88);
+  --color-nav-border:       rgba(0, 105, 72, 0.15);
   --color-bg:             #080B08;   /* base bg — near-OLED */
   --color-bg-tinted:      #0E1310;
   

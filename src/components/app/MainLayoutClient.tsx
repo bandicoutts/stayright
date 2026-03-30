@@ -1,17 +1,19 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { Sidebar } from '@/components/app/Sidebar'
-import { MobileNav } from '@/components/app/MobileNav'
+import { TopNav } from '@/components/app/TopNav'
 import { PostHogIdentify } from '@/components/app/PostHogIdentify'
 import { LoginTracker } from '@/components/app/LoginTracker'
 import { ReturnVisitTracker } from '@/components/ReturnVisitTracker'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 
 interface Props {
   userId: string
   userEmail?: string | null
   userInitial: string
   userName: string
+  subscriptionPlan?: string | null
+  subscriptionStatus?: string | null
   isPaymentFailed: boolean
   children: ReactNode
 }
@@ -21,44 +23,46 @@ export function MainLayoutClient({
   userEmail,
   userInitial,
   userName,
+  subscriptionPlan,
+  subscriptionStatus,
   isPaymentFailed,
-  children
+  children,
 }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  const isPro = isPlanPro(subscriptionPlan, subscriptionStatus)
+  const planLabel = isPro ? 'Pro' : null
+
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-[var(--color-bg)]">
+    <div className="flex flex-col min-h-screen bg-[var(--color-bg)]">
       <PostHogIdentify userId={userId} />
       <LoginTracker />
       <ReturnVisitTracker />
 
-      {/* Mobile Header */}
-      <MobileNav onOpenMenu={() => setIsMenuOpen(true)} />
-
-      {/* Dashboard Sidebar */}
-      <Sidebar
-        userEmail={userEmail}
-        userInitial={userInitial}
+      <TopNav
         userName={userName}
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
+        userEmail={userEmail}
+        planLabel={planLabel}
+        isPro={isPro}
+        userInitial={userInitial}
+        isMenuOpen={isMenuOpen}
+        onOpenMenu={() => setIsMenuOpen(true)}
+        onCloseMenu={() => setIsMenuOpen(false)}
       />
 
-      {/* Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col">
-        {isPaymentFailed && (
-          <div className="bg-[var(--color-status-red)] text-white text-sm font-medium px-4 py-2.5 text-center">
-            Your payment failed. Please{' '}
-            <a href="/settings" className="underline font-semibold">
-              update your payment method
-            </a>{' '}
-            to keep Pro features.
-          </div>
-        )}
-        <main className="flex-1">
-          {children}
-        </main>
-      </div>
+      {isPaymentFailed && (
+        <div className="bg-[var(--color-status-red)] text-white text-sm font-medium px-4 py-2.5 text-center">
+          Your payment failed. Please{' '}
+          <a href="/settings" className="underline font-semibold">
+            update your payment method
+          </a>{' '}
+          to keep Pro features.
+        </div>
+      )}
+
+      <main className="flex-1" id="main-content">
+        {children}
+      </main>
     </div>
   )
 }

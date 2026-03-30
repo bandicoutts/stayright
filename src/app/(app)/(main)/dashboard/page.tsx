@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { isPlanPro } from '@/lib/subscriptionUtils'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
 import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytics'
-import { TripsClient } from '@/components/app/trips/TripsClient'
+import { DashboardTripsPreview } from '@/components/app/dashboard/DashboardTripsPreview'
 import {
   getCurrentRollingWindow,
   getPeakRollingWindow,
@@ -19,36 +20,66 @@ import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceE
 export const metadata: Metadata = { title: 'Dashboard — StayRight' }
 
 // ---------------------------------------------------------------------------
-// Sub-components (defined before the page so RSC compiler resolves them)
+// Sub-components
 // ---------------------------------------------------------------------------
 
-function PeakWindowCard({
-  peak,
-}: {
-  peak: RollingWindowResult
-}) {
+function PeakWindowCard({ peak }: { peak: RollingWindowResult }) {
   const fmt = (d: Date) =>
     d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
   const cfg = RISK_CONFIG[peak.status]
 
+  // Smaller ring constants
+  const RADIUS = 50
+  const STROKE = 8
+  const SIZE = (RADIUS + STROKE) * 2
+  const CENTER = SIZE / 2
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+
   return (
-    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">
+    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
           Historical peak
         </h2>
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${cfg.chip}`}>
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase ${cfg.chip}`}>
           {cfg.label}
         </span>
       </div>
-      <QuotaRing days={peak.days} status={peak.status} />
-      <p className="mt-3 text-xs text-[var(--color-text-muted)] text-center">
-        {fmt(peak.windowStart)} – {fmt(peak.windowEnd)}
-      </p>
+      <div className="flex flex-col items-center">
+        <div className="relative mb-3" style={{ width: SIZE, height: SIZE }}>
+          <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
+            <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="var(--color-border)" strokeWidth={STROKE} />
+            <circle
+              cx={CENTER} cy={CENTER} r={RADIUS} fill="none"
+              stroke="var(--color-green-light)" strokeWidth={STROKE} strokeLinecap="round"
+              strokeDasharray={CIRCUMFERENCE}
+              strokeDashoffset={CIRCUMFERENCE * (1 - Math.min(peak.days / 180, 1))}
+              transform={`rotate(-90 ${CENTER} ${CENTER})`}
+              className="transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="font-[family-name:var(--font-manrope)] font-bold text-3xl leading-none tracking-tight text-[var(--color-text-primary)]">
+              {peak.days}
+            </span>
+            <span className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)] mt-1">/ 180</span>
+          </div>
+        </div>
+        <p className="text-xs text-[var(--color-text-muted)] text-center">
+          <span className="font-semibold text-[var(--color-text-primary)]">{Math.max(0, 180 - peak.days)} days</span> remaining
+        </p>
+        <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)] mt-1 text-center">
+          {fmt(peak.windowStart)} – {fmt(peak.windowEnd)}
+        </p>
+      </div>
     </div>
   )
 }
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -57,7 +88,6 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Load profile
   const { data: profile } = await supabase
     .from('profiles')
     .select('onboarding_completed, visa_route, visa_start_date, first_name')
@@ -66,11 +96,7 @@ export default async function DashboardPage() {
 
   if (!profile?.onboarding_completed) redirect('/onboarding')
 
-  // Load trips and subscription in parallel (since both depend only on user.id)
-  const [
-    { data: rawTrips },
-    { data: subscription }
-  ] = await Promise.all([
+  const [{ data: rawTrips }, { data: subscription }] = await Promise.all([
     supabase
       .from('trips')
       .select('id, destination, departure_date, return_date, notes')
@@ -80,7 +106,7 @@ export default async function DashboardPage() {
       .from('subscriptions')
       .select('plan, status')
       .eq('user_id', user.id)
-      .single()
+      .single(),
   ])
 
   const trips: TripInput[] = (rawTrips ?? []).map((t) => ({
@@ -93,30 +119,21 @@ export default async function DashboardPage() {
   const today = new Date()
   const visaStartDate = profile.visa_start_date ?? undefined
 
-  // Core calculations
   const rollingWindow = getCurrentRollingWindow(trips, today, visaStartDate)
-  const qualifying = visaStartDate
-    ? getQualifyingPeriod(visaStartDate, today)
-    : null
+  const qualifying = visaStartDate ? getQualifyingPeriod(visaStartDate, today) : null
 
-  // Peak rolling window — worst 12-month period across the entire qualifying
-  // history. Only meaningful once there is at least one completed trip.
   const hasCompletedTrips = trips.some((t) => t.return_date !== null)
   const peakWindow =
     visaStartDate && hasCompletedTrips
       ? getPeakRollingWindow(trips, visaStartDate, today)
       : null
 
-  // Trip summary for right column
   const tripCount = trips.length
-
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
   const firstName = profile.first_name || user.email?.split('@')[0] || 'there'
 
-  // Subscription is already fetched via Promise.all earlier
   const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
-  // Derived values for PostHog user properties
   const ilrEligibilityDate = visaStartDate
     ? (() => {
         const d = new Date(visaStartDate)
@@ -126,15 +143,13 @@ export default async function DashboardPage() {
     : null
   const daysUntilIlr = ilrEligibilityDate
     ? Math.ceil(
-        (new Date(ilrEligibilityDate).getTime() - today.getTime()) /
-          (1000 * 60 * 60 * 24)
+        (new Date(ilrEligibilityDate).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
       )
     : null
   const complianceStatus = getRiskStatus(rollingWindow.days)
 
   return (
     <div className="p-6 md:p-8">
-      {/* dashboard_viewed event + user property sync */}
       <Suspense fallback={null}>
         <DashboardAnalytics
           visaRoute={profile.visa_route ?? null}
@@ -146,47 +161,68 @@ export default async function DashboardPage() {
           complianceStatus={complianceStatus}
         />
       </Suspense>
-
-      {/* Track upgrade_completed when redirected back from Stripe Checkout */}
       <Suspense fallback={null}>
         <UpgradeTracker planType={subscription?.plan ?? 'unknown'} />
       </Suspense>
 
       {/* Page header */}
-      <div className="mb-8">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)]">
-          Good {getGreeting()}, {firstName}
-        </h1>
-        <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
-          {isCurrentlyAbroad
-            ? 'You are currently abroad.'
-            : "Here's your compliance status."}
-        </p>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
+            Good {getGreeting()}, {firstName}
+          </h1>
+          <p className="text-sm text-[var(--color-text-muted)] mt-1">
+            {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
+          </p>
+        </div>
+        <div className="hidden sm:flex items-center gap-2.5">
+          <Link
+            href="/trips?modal=plan"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
+          >
+            Plan trip
+          </Link>
+          <Link
+            href="/trips?modal=log"
+            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
+            style={{ background: 'var(--gradient-green)' }}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Log trip
+          </Link>
+        </div>
       </div>
 
       {/* Currently abroad banner */}
       {isCurrentlyAbroad && (
         <div className="mb-6 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-center gap-3">
-          <span className="text-lg">✈️</span>
+          <span className="text-lg shrink-0">✈️</span>
           <p className="text-sm text-[var(--color-text-primary)]">
-            <span className="font-semibold">You&apos;re currently abroad.</span> Return
-            date not yet logged — log your return when you&apos;re back in the UK.
+            <span className="font-semibold">You&apos;re currently abroad.</span>{' '}
+            Return date not yet logged —{' '}
+            <Link href="/trips" className="underline font-medium">log your return</Link>{' '}
+            when you&apos;re back in the UK.
           </p>
         </div>
       )}
 
-      {/* Alert card — shown when WARNING or above */}
+      {/* Alert card */}
       {rollingWindow.status !== 'SAFE' && (
         <AlertCard days={rollingWindow.days} status={rollingWindow.status} />
       )}
 
       {/* Stat cards — three columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Current window */}
-        <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-[var(--color-text-primary)]">Current window</h2>
-            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold tracking-[0.05em] uppercase ${RISK_CONFIG[rollingWindow.status].chip}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+
+        {/* Current window — hero ring */}
+        <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
+              Current window
+            </h2>
+            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase ${RISK_CONFIG[rollingWindow.status].chip}`}>
               {RISK_CONFIG[rollingWindow.status].label}
             </span>
           </div>
@@ -194,52 +230,63 @@ export default async function DashboardPage() {
         </div>
 
         {/* Historical peak */}
-        {peakWindow && (
+        {peakWindow ? (
           <PeakWindowCard peak={peakWindow} />
+        ) : (
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)] mb-3">Historical peak</h2>
+            <p className="text-sm text-[var(--color-text-muted)]">Available once you have a completed trip.</p>
+          </div>
         )}
 
         {/* Qualifying period */}
-        {qualifying && (
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
-            <h2 id="qualifying-period-heading" className="text-sm font-semibold text-[var(--color-text-primary)] mb-4">
+        {qualifying ? (
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)] mb-5">
               Qualifying period
             </h2>
             <div className="flex flex-col items-center gap-4">
               <div className="text-center">
-                <p className="font-[family-name:var(--font-manrope)] font-extrabold text-[3rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+                <p className="font-[family-name:var(--font-manrope)] font-extrabold text-[3.5rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
                   {qualifying.percentage}%
                 </p>
-                <p className="text-xs text-[var(--color-text-muted)] mt-1">of qualifying period complete</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-1.5">of qualifying period complete</p>
               </div>
-              <div className="w-full h-2 bg-[var(--color-bg-tinted)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={qualifying.percentage} aria-valuemin={0} aria-valuemax={100} aria-labelledby="qualifying-period-heading">
+              <div
+                className="w-full h-2 bg-[var(--color-surface-sunken)] rounded-full overflow-hidden"
+                role="progressbar"
+                aria-valuenow={qualifying.percentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="ILR qualifying period progress"
+              >
                 <div
                   className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${qualifying.percentage}%`, background: 'var(--color-green)' }}
+                  style={{ width: `${qualifying.percentage}%`, background: 'var(--gradient-green)' }}
                 />
               </div>
-              <div className="w-full flex justify-between text-xs text-[var(--color-text-muted)]">
-                <span>Started {qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                <span>ILR eligible {qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              <div className="w-full flex justify-between font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)]">
+                <span>{qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                <span>ILR {qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
               </div>
             </div>
+          </div>
+        ) : (
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)] mb-3">Qualifying period</h2>
+            <p className="text-sm text-[var(--color-text-muted)]">Set your visa start date in Settings to track progress.</p>
           </div>
         )}
       </div>
 
-      {/* Full Trip Log */}
-      <div className="mt-6">
-        <TripsClient
-          trips={rawTrips ?? []}
-          visaStartDate={visaStartDate}
-          isPro={isPro}
-        />
-      </div>
+      {/* Recent trips preview */}
+      <DashboardTripsPreview trips={rawTrips ?? []} />
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Sub-components (AlertCard, getGreeting)
+// Sub-components
 // ---------------------------------------------------------------------------
 
 function AlertCard({
@@ -271,16 +318,12 @@ function AlertCard({
   }[status]
 
   return (
-    <div
-      className={`mb-6 px-4 py-4 border rounded-xl flex gap-3 ${config.bg}`}
-      role="alert"
-    >
+    <div className={`mb-6 px-4 py-4 border rounded-xl flex gap-3 ${config.bg}`} role="alert">
       <span className="text-lg shrink-0">{config.icon}</span>
       <p className={`text-sm font-medium ${config.text}`}>{config.message}</p>
     </div>
   )
 }
-
 
 function getGreeting() {
   const h = new Date().getHours()

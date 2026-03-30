@@ -38,6 +38,8 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
       userEmail={user.email}
       userInitial={initial}
       userName={userName}
+      subscriptionPlan={subscription?.plan ?? null}
+      subscriptionStatus={subscription?.status ?? null}
       isPaymentFailed={isPaymentFailed}
     >
       {children}
