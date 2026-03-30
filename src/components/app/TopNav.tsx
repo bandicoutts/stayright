@@ -29,7 +29,6 @@ export function TopNav({
   userName = 'Account',
   userEmail,
   planLabel,
-  isPro,
   userInitial = '?',
   isMenuOpen,
   onOpenMenu,

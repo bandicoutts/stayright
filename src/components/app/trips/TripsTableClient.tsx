@@ -15,7 +15,7 @@ import { PaywallModal } from './PaywallModal'
 import { TripModal } from './TripModal'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
-import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
+import { formatDate } from '@/lib/utils/dateFormatters'
 import { FREE_TRIP_LIMIT } from '@/lib/subscriptionUtils'
 
 // ---------------------------------------------------------------------------
@@ -106,7 +106,10 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
-  const [showPaywall, setShowPaywall] = useState(false)
+  const [showPaywall, setShowPaywall] = useState(() => {
+    const mode = searchParams.get('modal')
+    return (mode === 'plan' || mode === 'log') && !isPro && trips.length >= FREE_TRIP_LIMIT
+  })
   const [optimisticDeletedIds, setOptimisticDeletedIds] = useState<string[]>([])
 
   // URL-driven modal state (same pattern as TripsClient)
@@ -121,7 +124,6 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
 
   useEffect(() => {
     if ((drawerMode === 'plan' || drawerMode === 'log') && atLimit) {
-      setShowPaywall(true)
       router.replace(returnTo, { scroll: false })
     }
   }, [drawerMode, atLimit, router, returnTo])

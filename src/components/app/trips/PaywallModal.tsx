@@ -20,13 +20,6 @@ const PLANS = [
 
 type PlanId = typeof PLANS[number]['id']
 
-const BENEFITS = [
-  'Unlimited trip logging',
-  'What-if planning simulator',
-  'Smart risk & breach alerts',
-  'Audit-ready PDF exports',
-]
-
 // Map modal plan IDs to the API's plan keys
 const PLAN_API_MAP: Record<PlanId, string> = {
   monthly: 'pro_monthly',
