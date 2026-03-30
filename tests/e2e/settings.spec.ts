@@ -54,7 +54,9 @@ test.describe('Settings', () => {
   })
 
   test('Notifications: Pro lock badge visible for free user', async ({ page }) => {
-    await page.getByText('Notifications').click()
+    // Use exact:true so the locator matches only the nav tab button (text = "Notifications")
+    // and not ancestor elements whose text *contains* "Notifications" as a substring.
+    await page.getByText('Notifications', { exact: true }).click()
     // Pro badge should appear on at least one notification toggle
     await expect(
       page.getByText('Pro').first()
@@ -62,7 +64,9 @@ test.describe('Settings', () => {
   })
 
   test('Account: "Export my data" button is present', async ({ page }) => {
-    await page.getByText('Account').click()
+    // Use exact:true to avoid strict-mode violations from ancestor elements that
+    // contain "Account" as a substring (e.g. the <nav> wrapping all three tabs).
+    await page.getByText('Account', { exact: true }).click()
     await expect(
       page.getByRole('button', { name: /export my data/i })
         .or(page.getByRole('link', { name: /export my data/i }))
@@ -70,7 +74,7 @@ test.describe('Settings', () => {
   })
 
   test('Account: delete confirmation asks to type "delete my account"', async ({ page }) => {
-    await page.getByText('Account').click()
+    await page.getByText('Account', { exact: true }).click()
     const deleteBtn = page.getByRole('button', { name: /delete account/i })
     if (await deleteBtn.isVisible({ timeout: 3_000 })) {
       await deleteBtn.click()

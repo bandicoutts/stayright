@@ -38,10 +38,11 @@ test.describe('Auth flows', () => {
 
   test('logout clears session and redirects to /login', async ({ page }) => {
     await login(page)
-    const logoutBtn = page
-      .getByRole('button', { name: /sign out/i })
-      .or(page.getByRole('link', { name: /sign out/i }))
-    await logoutBtn.click()
+    // The "Sign out" button lives inside the sidebar profile popover, which is
+    // only rendered when the user card is toggled open.  Click the last button
+    // in <aside> (the user card toggle) to open the popover, then click Sign out.
+    await page.locator('aside').getByRole('button').last().click()
+    await page.getByRole('button', { name: /sign out/i }).click()
     await page.waitForURL(/\/login/, { timeout: 10_000 })
     await expect(page).toHaveURL(/\/login/)
   })

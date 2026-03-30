@@ -58,7 +58,10 @@ export default defineConfig({
       },
       dependencies: ['setup-free', 'setup-pro'],
       // auth.spec.ts and landing.spec.ts manage their own session state.
-      testIgnore: /\/(auth|landing)\.spec\.ts/,
+      // smoke.spec.ts has its own config (playwright.smoke.config.ts) — exclude here
+      // so it doesn't double-run. Note: project-level testIgnore overrides the global
+      // one, so smoke must be listed explicitly here.
+      testIgnore: [/\/(auth|landing)\.spec\.ts/, /smoke\.spec\.ts/],
     },
 
     // auth.spec.ts and landing.spec.ts need no stored session.

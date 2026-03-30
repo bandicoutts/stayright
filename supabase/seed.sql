@@ -90,7 +90,6 @@ DECLARE
   v_user_id  uuid;
   v_email    text := 'e2e-free@stayright.test';
   v_password text := 'TestFree123!';
-  v_trip_count int;
 BEGIN
   SELECT id INTO v_user_id FROM auth.users WHERE email = v_email;
 
@@ -150,24 +149,22 @@ BEGIN
 
   -- Subscription stays free (trigger default = 'free', status = 'active')
 
-  -- Seed 10 trips so the paywall triggers immediately on the plan modal.
-  -- Only insert if not already seeded (check total count for this user).
-  SELECT COUNT(*) INTO v_trip_count FROM public.trips WHERE user_id = v_user_id;
-
-  IF v_trip_count < 10 THEN
-    INSERT INTO public.trips (user_id, destination, departure_date, return_date)
-    VALUES
-      (v_user_id, 'France',      '2022-03-01', '2022-03-08'),
-      (v_user_id, 'Germany',     '2022-05-10', '2022-05-17'),
-      (v_user_id, 'Spain',       '2022-07-20', '2022-07-27'),
-      (v_user_id, 'Italy',       '2022-09-05', '2022-09-12'),
-      (v_user_id, 'Portugal',    '2022-11-14', '2022-11-21'),
-      (v_user_id, 'Netherlands', '2023-01-09', '2023-01-16'),
-      (v_user_id, 'Greece',      '2023-03-20', '2023-03-27'),
-      (v_user_id, 'Austria',     '2023-05-08', '2023-05-15'),
-      (v_user_id, 'Belgium',     '2023-07-17', '2023-07-24'),
-      (v_user_id, 'Poland',      '2023-09-04', '2023-09-11');
-  END IF;
+  -- Seed exactly 10 trips so the paywall triggers immediately on the plan modal.
+  -- Always DELETE + re-INSERT to guarantee deterministic state across repeated runs
+  -- (previous CI runs or CRUD tests can leave extra trips behind).
+  DELETE FROM public.trips WHERE user_id = v_user_id;
+  INSERT INTO public.trips (user_id, destination, departure_date, return_date)
+  VALUES
+    (v_user_id, 'France',      '2022-03-01', '2022-03-08'),
+    (v_user_id, 'Germany',     '2022-05-10', '2022-05-17'),
+    (v_user_id, 'Spain',       '2022-07-20', '2022-07-27'),
+    (v_user_id, 'Italy',       '2022-09-05', '2022-09-12'),
+    (v_user_id, 'Portugal',    '2022-11-14', '2022-11-21'),
+    (v_user_id, 'Netherlands', '2023-01-09', '2023-01-16'),
+    (v_user_id, 'Greece',      '2023-03-20', '2023-03-27'),
+    (v_user_id, 'Austria',     '2023-05-08', '2023-05-15'),
+    (v_user_id, 'Belgium',     '2023-07-17', '2023-07-24'),
+    (v_user_id, 'Poland',      '2023-09-04', '2023-09-11');
 
 END $$;
 

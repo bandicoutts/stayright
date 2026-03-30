@@ -2,12 +2,27 @@
  * Dashboard E2E tests
  *
  * Persona split:
- *   Free user — page load, quota ring, progress bar, status chip, CTAs,
- *               disclaimer, trip log section. The free user has 10 trips
- *               so the paywall triggers inside the modal, but URL tests
- *               still pass (the link navigates regardless).
- *   Pro user  — the "save trip and return to dashboard" test, because the
- *               free user's trip modal immediately shows the paywall.
+ *   Free user  — page-level content only (quota ring, progress bar, status chip,
+ *                "Recent trips" section). The free user has 10 seeded trips and is
+ *                at the free-tier limit; any attempt to open the trip modal from the
+ *                dashboard redirects back to /dashboard (TripsTableClient useEffect),
+ *                so those URL assertions belong in the pro block instead.
+ *   Pro user   — CTA link URL assertions ("Plan trip" / "Log trip") and the
+ *                trip-save round-trip test. The pro user has no trip limit, so the
+ *                modal opens normally and the URL stays as expected.
+ *
+ * Note on "Plan trip" / "Log trip" links:
+ *   These are <Link href="/trips?modal=plan&returnTo=%2Fdashboard"> elements on the
+ *   dashboard page. When a free user (at limit) follows the link, TripsTableClient's
+ *   useEffect immediately calls router.replace(returnTo), stripping the modal param
+ *   before the URL assertion can reliably catch it. The pro user has no limit so the
+ *   modal stays open and the URL is stable.
+ *
+ * Note on "Trip Log" / disclaimer:
+ *   The dashboard renders DashboardTripsPreview (a read-only preview), NOT the full
+ *   TripsTableClient. The "Trip Log" heading and DISCLAIMER constant live only in
+ *   TripsTableClient (rendered at /trips). The dashboard section heading is
+ *   "Recent trips" (DashboardTripsPreview line 37).
  */
 
 import { test, expect } from '@playwright/test'
@@ -75,7 +90,7 @@ async function goToStep2(
 }
 
 // ---------------------------------------------------------------------------
-// Free user tests — page-level content, no trip modal interaction
+// Free user — page-level content only (no modal interaction)
 // ---------------------------------------------------------------------------
 
 test.describe('Dashboard', () => {
@@ -112,7 +127,32 @@ test.describe('Dashboard', () => {
     expect(valid).toBe(true)
   })
 
+  test('"Recent trips" section is visible', async ({ page }) => {
+    // The dashboard renders DashboardTripsPreview with heading "Recent trips".
+    // The full "Trip Log" heading lives only on the /trips page (TripsTableClient).
+    await expect(
+      page.getByText('Recent trips')
+    ).toBeVisible({ timeout: 10_000 })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Pro user — CTA links + trip-save round-trip
+// ---------------------------------------------------------------------------
+
+test.describe('Dashboard — pro user', () => {
+  test.use({ storageState: PRO_AUTH })
+
+  test.beforeEach(async ({ page }) => {
+    await suppressCookieBanner(page)
+    await page.goto('/dashboard')
+    await expect(page).toHaveURL(/\/dashboard/)
+  })
+
   test('"Plan trip" link → URL has ?modal=plan', async ({ page }) => {
+    // The link href is /trips?modal=plan&returnTo=%2Fdashboard.
+    // Pro user is not at the trip limit, so TripsTableClient does NOT redirect
+    // back — the URL stays stable with modal=plan.
     const btn = page.getByRole('link', { name: /plan trip/i }).first()
     await expect(btn).toBeVisible()
     await btn.click()
@@ -126,32 +166,10 @@ test.describe('Dashboard', () => {
     await expect(page).toHaveURL(/modal=log/, { timeout: 5_000 })
   })
 
-  test('disclaimer visible — "consult an immigration adviser"', async ({ page }) => {
-    // Text lives in TripsClient DISCLAIMER constant
-    await expect(
-      page.getByText(/consult an immigration adviser/i)
-    ).toBeVisible({ timeout: 10_000 })
-  })
-
-  test('"Trip Log" section is visible', async ({ page }) => {
-    await expect(
-      page.getByText('Trip Log')
-        .or(page.getByText('Your complete absence record.'))
-        .first()
-    ).toBeVisible({ timeout: 10_000 })
-  })
-})
-
-// ---------------------------------------------------------------------------
-// Pro user — trip save (free user hits paywall, can't reach Step 1)
-// ---------------------------------------------------------------------------
-
-test.describe('Dashboard — trip save', () => {
-  test.use({ storageState: PRO_AUTH })
-
   test('saving a trip from dashboard → returns to /dashboard (not modal URL)', async ({ page }) => {
-    await suppressCookieBanner(page)
-    await page.goto('/dashboard?modal=log')
+    // The dashboard "Log trip" button is a <Link href="/trips?modal=log&returnTo=/dashboard">.
+    // Navigate directly to that URL to simulate the click and verify the returnTo flow.
+    await page.goto('/trips?modal=log&returnTo=%2Fdashboard')
     await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
 
     await goToStep2(page, 'Dashboard Return Test')
@@ -163,6 +181,7 @@ test.describe('Dashboard — trip save', () => {
     await expect(page.getByText('Step 3 of 3')).toBeVisible({ timeout: 5_000 })
     await page.getByRole('button', { name: 'Save trip' }).click()
 
+    // TripFlowClient reads returnTo from the URL and calls router.push('/dashboard')
     await page.waitForURL('**/dashboard', { timeout: 15_000 })
     expect(page.url()).not.toContain('modal=')
   })
