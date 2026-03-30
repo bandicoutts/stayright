@@ -34,12 +34,14 @@ jobs:
       - name: Start local Supabase
         run: supabase start
 
-      - name: Export Supabase credentials
+      # Local Supabase always uses the same default keys (derived from the
+      # default JWT secret). These are published in Supabase's own docs and
+      # are not considered secrets — they only work against localhost:54321.
+      - name: Set Supabase credentials
         run: |
-          SUPABASE_ENV=$(supabase status --output env)
           echo "NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321" >> $GITHUB_ENV
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(echo "$SUPABASE_ENV" | grep '^ANON_KEY=' | cut -d= -f2-)" >> $GITHUB_ENV
-          echo "SUPABASE_SERVICE_ROLE_KEY=$(echo "$SUPABASE_ENV" | grep '^SERVICE_ROLE_KEY=' | cut -d= -f2-)" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRFA0NiK7kyqd9og3njVFQpUzCOB1Yn4GhC7lcQqzKk" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hj04zWl196z2-SB38" >> $GITHUB_ENV
 
       # ── App env (non-Supabase) ───────────────────────────────────────────────
       # Stripe/PostHog/Resend are not exercised by the smoke tests — placeholder
