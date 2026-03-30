@@ -166,25 +166,47 @@ export default async function DashboardPage() {
       </Suspense>
 
       {/* Page header */}
-      <div className="flex items-start justify-between mb-8">
-        <div>
-          <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
-            Good {getGreeting()}, {firstName}
-          </h1>
-          <p className="text-sm text-[var(--color-text-muted)] mt-1">
-            {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
-          </p>
+      <div className="mb-8">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
+              Good {getGreeting()}, {firstName}
+            </h1>
+            <p className="text-sm text-[var(--color-text-muted)] mt-1">
+              {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
+            </p>
+          </div>
+          {/* Desktop buttons */}
+          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+            <Link
+              href="/trips?modal=plan&returnTo=%2Fdashboard"
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
+            >
+              Plan trip
+            </Link>
+            <Link
+              href="/trips?modal=log&returnTo=%2Fdashboard"
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
+              style={{ background: 'var(--gradient-green)' }}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              Log trip
+            </Link>
+          </div>
         </div>
-        <div className="hidden sm:flex items-center gap-2.5">
+        {/* Mobile buttons — below heading */}
+        <div className="flex sm:hidden items-center gap-2.5 mt-4">
           <Link
-            href="/trips?modal=plan"
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
+            href="/trips?modal=plan&returnTo=%2Fdashboard"
+            className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
           >
             Plan trip
           </Link>
           <Link
-            href="/trips?modal=log"
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
+            href="/trips?modal=log&returnTo=%2Fdashboard"
+            className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
             style={{ background: 'var(--gradient-green)' }}
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">

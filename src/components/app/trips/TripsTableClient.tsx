@@ -115,15 +115,16 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
     rawDrawerMode === 'plan' || rawDrawerMode === 'log' || rawDrawerMode === 'edit'
       ? rawDrawerMode
       : null
+  const returnTo = searchParams.get('returnTo') ?? '/trips'
 
   const atLimit = !isPro && trips.length >= FREE_TRIP_LIMIT
 
   useEffect(() => {
     if ((drawerMode === 'plan' || drawerMode === 'log') && atLimit) {
       setShowPaywall(true)
-      router.replace('/trips', { scroll: false })
+      router.replace(returnTo, { scroll: false })
     }
-  }, [drawerMode, atLimit, router])
+  }, [drawerMode, atLimit, router, returnTo])
 
   const drawerTripId = searchParams.get('tripId')
   const drawerInitialTrip = drawerTripId
@@ -271,7 +272,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
   return (
     <div>
       {/* Page header */}
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] tracking-tight">
             Trip Log
@@ -662,7 +663,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       <TripModal
         open={drawerOpen}
         mode={drawerMode ?? 'log'}
-        onClose={() => router.push('/trips', { scroll: false })}
+        onClose={() => router.push(returnTo, { scroll: false })}
         existingTrips={trips.map(toTripInput)}
         visaStartDate={visaStartDate}
         isPro={isPro}
