@@ -58,7 +58,7 @@ async function clickDay(page: Page, year: number, month: number, day: number) {
 
 async function goToStep2(page: Page, destination: string) {
   await page.getByLabel('Destination').fill(destination)
-  await page.keyboard.press('Escape')
+  await page.keyboard.press('Tab') // dismiss autocomplete without triggering modal's Escape handler
   await page.getByRole('button', { name: 'Next →' }).click()
   await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
 }
@@ -108,17 +108,15 @@ test.describe('Dashboard', () => {
     await expect(page.getByRole('progressbar').first()).toBeVisible({ timeout: 10_000 })
   })
 
-  test('"Plan a Trip" button navigates to plan modal', async ({ page }) => {
-    const btn = page.getByRole('link', { name: /plan a trip/i })
-      .or(page.getByRole('button', { name: /plan a trip/i }))
+  test('"Plan trip" button navigates to plan modal', async ({ page }) => {
+    const btn = page.getByRole('link', { name: /plan trip/i }).first()
     await expect(btn).toBeVisible()
     await btn.click()
     await expect(page).toHaveURL(/modal=plan/, { timeout: 5_000 })
   })
 
-  test('"Log a Past Trip" button navigates to log modal', async ({ page }) => {
-    const btn = page.getByRole('link', { name: /log a past trip/i })
-      .or(page.getByRole('button', { name: /log a past trip/i }))
+  test('"Log trip" button navigates to log modal', async ({ page }) => {
+    const btn = page.getByRole('link', { name: /log trip/i }).first()
     await expect(btn).toBeVisible()
     await btn.click()
     await expect(page).toHaveURL(/modal=log/, { timeout: 5_000 })
@@ -156,7 +154,7 @@ test.describe('Calculations — live CalcPanel', () => {
 
   test('TC3 — Crown Dependency (Jersey) → 0 absence days + info panel', async ({ page }) => {
     await page.getByLabel('Destination').fill('Jersey')
-    await page.keyboard.press('Escape')
+    await page.keyboard.press('Tab') // dismiss autocomplete without triggering modal's Escape handler
     await expect(
       page.getByText(/Crown Dependencies count as UK presence/i)
     ).toBeVisible({ timeout: 5_000 })
