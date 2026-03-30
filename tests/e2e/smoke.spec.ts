@@ -201,11 +201,9 @@ test.describe('DB roundtrip', () => {
     // Step 3 — save
     await page.getByRole('button', { name: 'Save trip' }).click()
 
-    // TripFlowClient redirects to /dashboard after save
-    await page.waitForURL('**/dashboard', { timeout: 15_000 })
+    // TripFlowClient redirects back to /trips after save (same-page return)
+    await page.waitForURL('**/trips', { timeout: 15_000 })
 
-    // Navigate to /trips to verify the trip is in the table
-    await page.goto('/trips')
     await expect(page.getByText(/Smoke Test Country/)).toBeVisible({ timeout: 10_000 })
   })
 })

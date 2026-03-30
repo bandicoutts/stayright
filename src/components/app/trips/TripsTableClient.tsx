@@ -704,6 +704,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
         isPro={isPro}
         tripCount={trips.length}
         initialTrip={drawerInitialTrip}
+        redirectTo={returnTo}
       />
     </div>
   )

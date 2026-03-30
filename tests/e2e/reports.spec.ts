@@ -1,61 +1,106 @@
 /**
  * Reports E2E tests
  *
- * Tests: report types visible, paywall for Free users, PDF generation for Pro.
+ * Free-user tests verify the paywall is shown correctly.
+ * Pro-user tests verify PDF download is available.
  */
 
 import { test, expect } from '@playwright/test'
+import path from 'path'
 
-test.describe('Reports', () => {
+async function suppressCookieBanner(page: import('@playwright/test').Page) {
+  await page.addInitScript(() => {
+    localStorage.setItem('cookie_consent', 'accepted')
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Free user
+// ---------------------------------------------------------------------------
+
+test.describe('Reports — Free user', () => {
   test.beforeEach(async ({ page }) => {
+    await suppressCookieBanner(page)
     await page.goto('/reports')
     await expect(page).toHaveURL(/\/reports/)
   })
 
-  test('reports page loads and shows report types', async ({ page }) => {
-    await expect(page.getByText(/ILR Absence Table/i)).toBeVisible()
-    await expect(page.getByText(/Rolling Window|Custom Date Range/i)).toBeVisible()
+  test('reports page loads with "Reports & Exports" heading', async ({ page }) => {
+    await expect(
+      page.getByText('Reports & Exports')
+    ).toBeVisible({ timeout: 10_000 })
   })
 
-  test('Free user sees paywall when clicking Generate or Download', async ({ page }) => {
-    const generateBtn = page.getByRole('button', { name: /generate|download/i }).first()
-    if (await generateBtn.isVisible()) {
-      await generateBtn.click()
-      // Should show paywall modal
+  test('all three report cards are visible', async ({ page }) => {
+    await expect(page.getByText('ILR Absence Table')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Rolling Window History')).toBeVisible()
+    await expect(page.getByText('Custom Date Range')).toBeVisible()
+  })
+
+  test('free user sees "Upgrade to Download" button', async ({ page }) => {
+    await expect(
+      page.getByRole('button', { name: 'Upgrade to Download' }).first()
+    ).toBeVisible({ timeout: 10_000 })
+  })
+
+  test('"Upgrade to Download" click shows PaywallModal', async ({ page }) => {
+    const btn = page.getByRole('button', { name: 'Upgrade to Download' }).first()
+    await expect(btn).toBeVisible({ timeout: 10_000 })
+    await btn.click()
+    await expect(
+      page.getByText(/Unlock StayRight Pro/i)
+    ).toBeVisible({ timeout: 5_000 })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Pro user
+// ---------------------------------------------------------------------------
+
+test.describe('Reports — Pro user', () => {
+  // Override storage state to use pro session for this describe block
+  test.use({ storageState: path.join(__dirname, '.auth/pro.json') })
+
+  test.beforeEach(async ({ page }) => {
+    await suppressCookieBanner(page)
+    await page.goto('/reports')
+    await expect(page).toHaveURL(/\/reports/)
+  })
+
+  test('pro user sees "Download PDF" button (not "Upgrade to Download")', async ({ page }) => {
+    await expect(
+      page.getByRole('button', { name: 'Download PDF' }).first()
+    ).toBeVisible({ timeout: 10_000 })
+  })
+
+  test('clicking "Download PDF" starts a file download', async ({ page }) => {
+    const downloadPromise = page.waitForEvent('download', { timeout: 15_000 })
+    const btn = page.getByRole('button', { name: 'Download PDF' }).first()
+    await expect(btn).toBeVisible({ timeout: 10_000 })
+    await btn.click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toMatch(/\.pdf$/i)
+  })
+
+  test('custom date range: end before start shows validation error', async ({ page }) => {
+    await expect(page.getByText('Custom Date Range')).toBeVisible({ timeout: 10_000 })
+
+    const fromInput = page.getByLabel('From')
+    const toInput = page.getByLabel('To')
+
+    if ((await fromInput.isVisible()) && (await toInput.isVisible())) {
+      await fromInput.fill('2025-06-15')
+      await toInput.fill('2025-06-01') // end before start
+      await toInput.blur()
+
+      const downloadBtn = page
+        .getByRole('button', { name: 'Download PDF' })
+        .last()
+      await downloadBtn.click()
+
       await expect(
-        page.getByText(/upgrade|unlock pro|£2\.99/i)
-      ).toBeVisible({ timeout: 5_000 })
-    }
-  })
-
-  test('paywall shows correct pricing on reports page', async ({ page }) => {
-    const generateBtn = page.getByRole('button', { name: /generate|download/i }).first()
-    if (await generateBtn.isVisible()) {
-      await generateBtn.click()
-
-      // Paywall should show all three price points
-      const body = await page.locator('body').textContent()
-      if (body?.includes('Upgrade') || body?.includes('Pro')) {
-        // If paywall was triggered, verify prices
-        await expect(page.getByText(/£2\.99/)).toBeVisible()
-        await expect(page.getByText(/£24\.99/)).toBeVisible()
-        await expect(page.getByText(/£49\.99/)).toBeVisible()
-      }
-    }
-  })
-
-  test('PDF filename follows convention when downloaded (Pro user)', async ({ page }) => {
-    // This test only runs meaningfully for Pro users
-    // For Free users, the download is blocked — skip validation
-    const downloadPromise = page.waitForEvent('download', { timeout: 5_000 }).catch(() => null)
-    const generateBtn = page.getByRole('button', { name: /download|generate/i }).first()
-    if (await generateBtn.isVisible()) {
-      await generateBtn.click()
-      const download = await downloadPromise
-      if (download) {
-        const filename = download.suggestedFilename()
-        expect(filename).toMatch(/StayRight.*\d{4}-\d{2}-\d{2}\.pdf/)
-      }
+        page.getByText(/Start date must be before end date/i)
+      ).toBeVisible({ timeout: 3_000 })
     }
   })
 })

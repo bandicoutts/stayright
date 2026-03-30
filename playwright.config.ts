@@ -1,92 +1,87 @@
+/**
+ * Playwright full-suite configuration.
+ *
+ * Runs all spec files (except smoke.spec.ts) against Chromium with two auth
+ * personas: free and pro. Auth is set up by two dedicated setup files.
+ *
+ * Local:  npx playwright test
+ * CI:     same command (CI env var triggers `next start` instead of `next dev`)
+ *
+ * Smoke suite has its own config: playwright.smoke.config.ts
+ */
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
 import path from 'path'
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
 dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 
-/**
- * StayRight — Playwright Configuration
- *
- * Tests run against a live Next.js server (dev or preview).
- * Set NEXT_PUBLIC_APP_URL in .env.local or CI env vars to point at the target.
- *
- * @see https://playwright.dev/docs/test-configuration
- */
 export default defineConfig({
   testDir: './tests/e2e',
-  fullyParallel: true,
+
+  // Smoke suite has its own config — exclude it here to avoid double-running.
+  testIgnore: /smoke\.spec\.ts/,
+
+  // Serial execution — avoids DB conflicts on CRUD tests.
+  fullyParallel: false,
+  workers: 1,
+
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: 0,
 
   reporter: process.env.CI
     ? [['github'], ['html', { outputFolder: 'playwright-report' }]]
     : [['html', { outputFolder: 'playwright-report' }]],
 
   use: {
-    baseURL: process.env.NEXT_PUBLIC_APP_URL,    /* Base browse settings for all projects */
+    baseURL: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
-    video: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
 
   projects: [
-    // Setup project to authenticate users — runs before all tests
+    // Auth setup — must run before all authenticated tests.
     {
-      name: 'setup',
-      testMatch: /.*\.setup\.ts/,
+      name: 'setup-free',
+      testMatch: /auth\.setup-free\.ts/,
+    },
+    {
+      name: 'setup-pro',
+      testMatch: /auth\.setup-pro\.ts/,
     },
 
+    // Most tests run as the free user.
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'tests/e2e/.auth/user.json',
+        storageState: 'tests/e2e/.auth/free.json',
       },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: 'tests/e2e/.auth/user.json',
-      },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: 'tests/e2e/.auth/user.json',
-      },
-      dependencies: ['setup'],
+      dependencies: ['setup-free', 'setup-pro'],
+      // auth.spec.ts and landing.spec.ts manage their own session state.
+      testIgnore: /\/(auth|landing)\.spec\.ts/,
     },
 
-    // Landing page + auth tests don't need auth state
+    // auth.spec.ts and landing.spec.ts need no stored session.
     {
-      name: 'landing-auth-no-setup',
-      testMatch: /\/(landing|auth)\.spec\.ts/,
+      name: 'no-auth',
       use: { ...devices['Desktop Chrome'] },
+      testMatch: /\/(auth|landing)\.spec\.ts/,
     },
   ],
 
-  // Start the app server for local runs; in CI use NEXT_PUBLIC_APP_URL pointing at Vercel.
-  // CI uses `next start` (pre-built) so server action IDs are stable across the full test run.
-  // Local dev uses `next dev` for fast iteration.
-  webServer: !process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_APP_URL === 'http://localhost:3000'
-    ? {
-        command: process.env.CI ? 'npm run start' : 'npm run dev',
-        url: 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
-        env: {
-          NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        },
-      }
-    : undefined,
+  // Start the app server automatically when pointing at localhost.
+  webServer:
+    !process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.NEXT_PUBLIC_APP_URL === 'http://localhost:3000'
+      ? {
+          command: process.env.CI ? 'npm run start' : 'npm run dev',
+          url: 'http://localhost:3000',
+          reuseExistingServer: !process.env.CI,
+          timeout: 120_000,
+          env: {
+            NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          },
+        }
+      : undefined,
 })

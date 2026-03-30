@@ -1,0 +1,107 @@
+name: E2E Full Suite (Nightly)
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # 2am UTC every day
+  workflow_dispatch:
+
+# Cancel any in-progress run for the same ref when manually triggered again.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-suite:
+    name: Playwright Full Suite (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # ── Supabase ────────────────────────────────────────────────────────────
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      # Remove the project-ref file so supabase start uses the local default
+      # JWT secret rather than pulling the production project's secret.
+      - name: Clear Supabase project link for CI
+        run: rm -f supabase/.temp/project-ref
+
+      - name: Start local Supabase
+        run: supabase start
+
+      # These well-known keys are published in Supabase's own docs and only
+      # work against localhost:54321.
+      - name: Set Supabase credentials
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRFA0NiK7kyqd9og3njVFQpUzCOB1Yn4GhC7lcQqzKk" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hj04zWl196z2-SB38" >> $GITHUB_ENV
+
+      # ── App env (non-Supabase) ───────────────────────────────────────────────
+      - name: Set remaining env vars
+        run: |
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_SECRET_KEY=sk_test_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_WEBHOOK_SECRET=whsec_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_PRICE_MONTHLY=price_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_PRICE_ANNUAL=price_placeholder" >> $GITHUB_ENV
+          echo "STRIPE_PRICE_LIFETIME=price_placeholder" >> $GITHUB_ENV
+          echo "RESEND_API_KEY=re_placeholder" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_POSTHOG_KEY=phc_placeholder" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com" >> $GITHUB_ENV
+          echo "CRON_SECRET=placeholder" >> $GITHUB_ENV
+          # Smoke suite user (unchanged)
+          echo "TEST_USER_EMAIL=testuser@stayright.test" >> $GITHUB_ENV
+          echo "TEST_USER_PASSWORD=TestPassword123!" >> $GITHUB_ENV
+          # Full suite personas
+          echo "TEST_FREE_USER_EMAIL=e2e-free@stayright.test" >> $GITHUB_ENV
+          echo "TEST_FREE_USER_PASSWORD=TestFree123!" >> $GITHUB_ENV
+          echo "TEST_PRO_USER_EMAIL=e2e-pro@stayright.test" >> $GITHUB_ENV
+          echo "TEST_PRO_USER_PASSWORD=TestPro123!" >> $GITHUB_ENV
+
+      # ── Build ────────────────────────────────────────────────────────────────
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**') }}
+          restore-keys: nextjs-${{ hashFiles('package-lock.json') }}-
+
+      - name: Build Next.js app
+        run: npm run build
+
+      # ── Test users ───────────────────────────────────────────────────────────
+      - name: Seed E2E test users
+        run: psql postgresql://postgres:postgres@localhost:54322/postgres -f supabase/seed.sql
+
+      # ── Playwright ───────────────────────────────────────────────────────────
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright (Chromium only)
+        run: npx playwright install chromium --with-deps
+
+      - name: Run full suite
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-full-report
+          path: playwright-report/
+          retention-days: 7
