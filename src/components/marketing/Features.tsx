@@ -45,7 +45,7 @@ export default function Features() {
     <section
       id="features"
       className="px-6 md:px-14"
-      style={{ background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)' }}
+      style={{ background: 'var(--color-surface)' }}
     >
       <div className="max-w-[1320px] mx-auto py-[90px]">
 
@@ -97,12 +97,10 @@ export default function Features() {
             aria-labelledby="feature-what-if-title"
             className="flex flex-col p-10 group relative overflow-hidden"
             style={{
-              background: 'var(--color-surface-dark)',
-              border: '1px solid transparent',
+              background: 'var(--color-surface)',
               borderRadius: 12,
-              borderTopColor: 'var(--color-green)',
-              borderTopWidth: 2,
-              boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+              borderTop: '2px solid var(--color-green)',
+              boxShadow: 'var(--shadow-card)',
             }}
           >
             {/* Icon */}

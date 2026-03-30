@@ -18,8 +18,6 @@ export default function TrustBar() {
     <div
       style={{
         background: 'var(--color-bg-tinted)',
-        borderTop: '1px solid var(--color-border)',
-        borderBottom: '1px solid var(--color-border)',
       }}
     >
       <div
@@ -27,14 +25,11 @@ export default function TrustBar() {
         role="list"
         aria-label="Trust signals"
       >
-        {trustCells.map((cell, i) => (
+        {trustCells.map((cell) => (
           <div
             key={cell.label}
             role="listitem"
-            className="flex flex-col gap-1 px-8 py-7"
-            style={{
-              borderRight: i < trustCells.length - 1 ? '1px solid var(--color-border)' : undefined,
-            }}
+            className="flex flex-col gap-1 px-12 py-7"
           >
             <span
               className="font-[family-name:var(--font-manrope)] font-bold leading-tight tracking-[-0.02em]"

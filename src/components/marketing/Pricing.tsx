@@ -11,7 +11,7 @@ export default function Pricing() {
     <section
       id="pricing"
       className="px-6 md:px-14"
-      style={{ background: 'var(--color-bg)', borderTop: '1px solid var(--color-border)' }}
+      style={{ background: 'var(--color-bg)' }}
     >
       <div className="max-w-[1320px] mx-auto py-[90px]">
 
@@ -25,6 +25,25 @@ export default function Pricing() {
               Pricing
             </span>
           </div>
+          <h2
+            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em] mt-3"
+            style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
+          >
+            Protect your path{' '}
+            <em
+              className="not-italic"
+              style={{
+                fontStyle: 'italic',
+                fontWeight: 300,
+                background: 'var(--gradient-green-text)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              to ILR.
+            </em>
+          </h2>
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4 max-w-[400px]"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
@@ -96,7 +115,6 @@ export default function Pricing() {
             className="flex flex-col p-8 md:p-10"
             style={{
               background: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
               borderRadius: 12,
               boxShadow: 'var(--shadow-card)',
             }}

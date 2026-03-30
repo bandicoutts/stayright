@@ -278,9 +278,9 @@ export default function Hero() {
           <div className="flex flex-wrap items-center gap-5 mb-10 animate-fade-up animate-fade-up-4">
             <Link
               href="/signup"
-              className="inline-flex items-center px-8 py-[14px] rounded-[6px] font-[family-name:var(--font-inter)] text-[15px] font-semibold text-white no-underline transition-all duration-200"
+              className="inline-flex items-center px-8 py-[14px] rounded-lg font-[family-name:var(--font-inter)] text-[15px] font-semibold text-white no-underline transition-all duration-200"
               style={{
-                background: 'var(--color-green)',
+                background: 'var(--gradient-green)',
                 boxShadow: 'var(--shadow-button)',
               }}
             >
