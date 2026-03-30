@@ -36,10 +36,10 @@ jobs:
 
       - name: Export Supabase credentials
         run: |
-          STATUS=$(supabase status --output json)
+          SUPABASE_ENV=$(supabase status --output env)
           echo "NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321" >> $GITHUB_ENV
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(echo "$STATUS" | jq -r '."anon key"')" >> $GITHUB_ENV
-          echo "SUPABASE_SERVICE_ROLE_KEY=$(echo "$STATUS" | jq -r '."service_role key"')" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$(echo "$SUPABASE_ENV" | grep '^ANON_KEY=' | cut -d= -f2-)" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=$(echo "$SUPABASE_ENV" | grep '^SERVICE_ROLE_KEY=' | cut -d= -f2-)" >> $GITHUB_ENV
 
       # ── App env (non-Supabase) ───────────────────────────────────────────────
       # Stripe/PostHog/Resend are not exercised by the smoke tests — placeholder
