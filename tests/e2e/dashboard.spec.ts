@@ -1,20 +1,19 @@
 /**
  * Dashboard E2E tests
  *
- * Covers: quota ring, progress bar, status chip, navigation CTAs,
- * compliance disclaimer, trip log section, and "return to dashboard"
- * behaviour when saving a trip from the dashboard modal.
+ * Persona split:
+ *   Free user — page load, quota ring, progress bar, status chip, CTAs,
+ *               disclaimer, trip log section. The free user has 10 trips
+ *               so the paywall triggers inside the modal, but URL tests
+ *               still pass (the link navigates regardless).
+ *   Pro user  — the "save trip and return to dashboard" test, because the
+ *               free user's trip modal immediately shows the paywall.
  */
 
 import { test, expect } from '@playwright/test'
-import dotenv from 'dotenv'
 import path from 'path'
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env.local') })
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+const PRO_AUTH = path.join(__dirname, '.auth/pro.json')
 
 async function suppressCookieBanner(page: import('@playwright/test').Page) {
   await page.addInitScript(() => {
@@ -76,7 +75,7 @@ async function goToStep2(
 }
 
 // ---------------------------------------------------------------------------
-// Tests
+// Free user tests — page-level content, no trip modal interaction
 // ---------------------------------------------------------------------------
 
 test.describe('Dashboard', () => {
@@ -127,19 +126,31 @@ test.describe('Dashboard', () => {
     await expect(page).toHaveURL(/modal=log/, { timeout: 5_000 })
   })
 
-  test('compliance disclaimer is visible', async ({ page }) => {
+  test('disclaimer visible — "consult an immigration adviser"', async ({ page }) => {
+    // Text lives in TripsClient DISCLAIMER constant
     await expect(
-      page.getByText(/Always verify with an immigration adviser/i)
-    ).toBeVisible()
+      page.getByText(/consult an immigration adviser/i)
+    ).toBeVisible({ timeout: 10_000 })
   })
 
   test('"Trip Log" section is visible', async ({ page }) => {
     await expect(
-      page.getByText('Trip Log').or(page.getByText('Your complete absence record.')).first()
+      page.getByText('Trip Log')
+        .or(page.getByText('Your complete absence record.'))
+        .first()
     ).toBeVisible({ timeout: 10_000 })
   })
+})
+
+// ---------------------------------------------------------------------------
+// Pro user — trip save (free user hits paywall, can't reach Step 1)
+// ---------------------------------------------------------------------------
+
+test.describe('Dashboard — trip save', () => {
+  test.use({ storageState: PRO_AUTH })
 
   test('saving a trip from dashboard → returns to /dashboard (not modal URL)', async ({ page }) => {
+    await suppressCookieBanner(page)
     await page.goto('/dashboard?modal=log')
     await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
 
@@ -152,7 +163,6 @@ test.describe('Dashboard', () => {
     await expect(page.getByText('Step 3 of 3')).toBeVisible({ timeout: 5_000 })
     await page.getByRole('button', { name: 'Save trip' }).click()
 
-    // After save, should return to /dashboard with no modal param
     await page.waitForURL('**/dashboard', { timeout: 15_000 })
     expect(page.url()).not.toContain('modal=')
   })

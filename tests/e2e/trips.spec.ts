@@ -1,15 +1,17 @@
 /**
  * Trips E2E tests
  *
- * Covers: calculation regression (TC1–TC5), trip CRUD, search,
- * delete confirmation, paywall, and "return to /trips" after save.
+ * Persona split:
+ *   Pro user  — all tests that open the trip modal (calculations, CRUD).
+ *               The pro user has no trip limit, so the modal always renders.
+ *   Free user — paywall tests only. The free user is seeded with exactly
+ *               FREE_TRIP_LIMIT (10) trips so the paywall triggers immediately.
  */
 
 import { test, expect, type Page } from '@playwright/test'
-import dotenv from 'dotenv'
 import path from 'path'
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env.local') })
+const PRO_AUTH = path.join(__dirname, '.auth/pro.json')
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -57,16 +59,18 @@ async function clickDay(page: Page, year: number, month: number, day: number) {
 
 async function goToStep2(page: Page, destination: string) {
   await page.getByLabel('Destination').fill(destination)
-  await page.keyboard.press('Tab') // dismiss autocomplete without triggering modal's Escape handler
+  await page.keyboard.press('Tab') // Tab, not Escape — Escape triggers the discard dialog
   await page.getByRole('button', { name: 'Next →' }).click()
   await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
 }
 
 // ---------------------------------------------------------------------------
-// 1. Calculations — live CalcPanel (no DB write)
+// 1. Calculations — pro user (no trip limit, modal always accessible)
 // ---------------------------------------------------------------------------
 
 test.describe('Calculations — live CalcPanel', () => {
+  test.use({ storageState: PRO_AUTH })
+
   test.beforeEach(async ({ page }) => {
     await suppressCookieBanner(page)
     await page.goto('/trips?modal=plan')
@@ -130,10 +134,12 @@ test.describe('Calculations — live CalcPanel', () => {
 })
 
 // ---------------------------------------------------------------------------
-// 2. Trip CRUD
+// 2. Trip CRUD — pro user (no trip limit, modal always accessible)
 // ---------------------------------------------------------------------------
 
 test.describe('Trip CRUD', () => {
+  test.use({ storageState: PRO_AUTH })
+
   test.beforeEach(async ({ page }) => {
     await suppressCookieBanner(page)
   })
@@ -177,7 +183,6 @@ test.describe('Trip CRUD', () => {
     await expect(searchInput).toBeVisible()
     await searchInput.fill('ZZZNOMATCH')
 
-    // Either shows "No trips logged yet" / "No trips match" or the list updates
     await page.waitForTimeout(500)
     const body = await page.locator('body').textContent()
     expect(body).toBeTruthy()
@@ -212,40 +217,28 @@ test.describe('Trip CRUD', () => {
 })
 
 // ---------------------------------------------------------------------------
-// 3. Paywall
+// 3. Paywall — free user (seeded with 10 trips = at limit)
 // ---------------------------------------------------------------------------
 
 test.describe('Paywall', () => {
+  // Uses the default free user from the chromium project storageState.
+
   test.beforeEach(async ({ page }) => {
     await suppressCookieBanner(page)
   })
 
-  test('free user can open trip modal (< 10 trips: Step 1 of 3 visible)', async ({ page }) => {
-    // The free user is seeded with exactly 10 trips — if the limit is 10
-    // the paywall will trigger immediately. This test verifies modal loads.
+  test('free user at trip limit sees PaywallModal on plan modal', async ({ page }) => {
     await page.goto('/trips?modal=plan')
-    // Either step 1 is shown (< limit) or paywall is shown (at limit)
-    const step1 = page.getByText('Step 1 of 3')
-    const paywall = page.getByText(/Unlock StayRight Pro/i)
-    await Promise.race([
-      step1.waitFor({ timeout: 10_000 }),
-      paywall.waitFor({ timeout: 10_000 }),
-    ])
-    // At least one must be visible
-    const step1Visible = await step1.isVisible().catch(() => false)
-    const paywallVisible = await paywall.isVisible().catch(() => false)
-    expect(step1Visible || paywallVisible).toBe(true)
+    await expect(
+      page.getByText(/Unlock StayRight Pro/i)
+    ).toBeVisible({ timeout: 10_000 })
   })
 
   test('PaywallModal shows prices £2.99 / £24.99 / £49.99', async ({ page }) => {
-    // The free user is seeded with 10 trips so the paywall triggers on plan modal
     await page.goto('/trips?modal=plan')
-    const paywall = page.getByText(/Unlock StayRight Pro/i)
-    const visible = await paywall.isVisible({ timeout: 10_000 }).catch(() => false)
-    if (!visible) {
-      test.skip() // User has < 10 trips — paywall won't trigger
-      return
-    }
+    await expect(
+      page.getByText(/Unlock StayRight Pro/i)
+    ).toBeVisible({ timeout: 10_000 })
     await expect(page.getByText('£2.99')).toBeVisible()
     await expect(page.getByText('£24.99')).toBeVisible()
     await expect(page.getByText('£49.99')).toBeVisible()
