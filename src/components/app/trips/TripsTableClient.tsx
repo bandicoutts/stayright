@@ -351,20 +351,18 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-nav-border)] shadow-sm overflow-hidden">
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-nav-border)]">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--color-text-faint)]" viewBox="0 0 16 16" fill="none">
-                <path d="M7 13A6 6 0 107 1a6 6 0 000 12zM13 13l-2-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search destinations…"
-                className="pl-8 pr-3 py-2 rounded-lg bg-[var(--color-surface-sunken)] border border-[var(--color-nav-border)] text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-faint)] outline-none focus:border-[var(--color-green)] transition-colors w-52"
-              />
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 py-3 gap-2 border-b border-[var(--color-nav-border)]">
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--color-text-faint)]" viewBox="0 0 16 16" fill="none">
+              <path d="M7 13A6 6 0 107 1a6 6 0 000 12zM13 13l-2-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search destinations…"
+              className="w-full sm:w-52 pl-8 pr-3 py-2 rounded-lg bg-[var(--color-surface-sunken)] border border-[var(--color-nav-border)] text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-faint)] outline-none focus:border-[var(--color-green)] transition-colors"
+            />
           </div>
           <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-text-faint)]">
             {activeTrips.length} trip{activeTrips.length !== 1 ? 's' : ''} · {totalDays} days abroad
