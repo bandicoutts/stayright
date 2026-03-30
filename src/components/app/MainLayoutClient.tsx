@@ -5,6 +5,7 @@ import { TopNav } from '@/components/app/TopNav'
 import { PostHogIdentify } from '@/components/app/PostHogIdentify'
 import { LoginTracker } from '@/components/app/LoginTracker'
 import { ReturnVisitTracker } from '@/components/ReturnVisitTracker'
+import { NavigationTracker } from '@/components/app/NavigationTracker'
 import { isPlanPro } from '@/lib/subscriptionUtils'
 
 interface Props {
@@ -38,6 +39,7 @@ export function MainLayoutClient({
       <PostHogIdentify userId={userId} />
       <LoginTracker />
       <ReturnVisitTracker />
+      <NavigationTracker />
 
       <TopNav
         userName={userName}

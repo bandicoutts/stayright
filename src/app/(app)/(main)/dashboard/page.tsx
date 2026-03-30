@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/auth'
 import { isPlanPro } from '@/lib/subscriptionUtils'
 import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
@@ -82,11 +83,10 @@ function PeakWindowCard({ peak }: { peak: RollingWindowResult }) {
 // ---------------------------------------------------------------------------
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) redirect('/login')
+
+  const supabase = await createClient()
 
   const { data: profile } = await supabase
     .from('profiles')

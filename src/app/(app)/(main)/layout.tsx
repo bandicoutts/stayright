@@ -1,34 +1,25 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/auth'
 import { MainLayoutClient } from '@/components/app/MainLayoutClient'
 import type { ReactNode } from 'react'
 
 export default async function MainLayout({ children }: { children: ReactNode }) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) redirect('/login')
 
+  const supabase = await createClient()
   const initial = user.email?.charAt(0).toUpperCase() ?? '?'
 
-  // Show payment failure banner if subscription is past_due or unpaid (PRD §4j)
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('status, plan')
-    .eq('user_id', user.id)
-    .single()
+  // Fetch profile and subscription in parallel (PRD §4a, §4j)
+  const [{ data: subscription }, { data: profile }] = await Promise.all([
+    supabase.from('subscriptions').select('status, plan').eq('user_id', user.id).single(),
+    supabase.from('profiles').select('first_name, last_name').eq('id', user.id).single(),
+  ])
 
   const isPaymentFailed =
     subscription?.plan !== 'free' &&
     (subscription?.status === 'past_due' || subscription?.status === 'unpaid')
-
-  // Fetch user profile for name (PRD §4a)
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('first_name, last_name')
-    .eq('id', user.id)
-    .single()
 
   const userName = profile ? `${profile.first_name} ${profile.last_name}`.trim() : 'Account'
 

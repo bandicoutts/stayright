@@ -4,6 +4,7 @@ import './globals.css';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import CookieBanner from '@/components/marketing/CookieBanner';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -73,6 +74,7 @@ export default function RootLayout({
           <PostHogProvider>{children}</PostHogProvider>
           <CookieBanner />
           <ServiceWorkerRegistration />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

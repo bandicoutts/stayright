@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getUser } from '@/lib/auth'
 import { isPlanPro } from '@/lib/subscriptionUtils'
 import { TripsTableClient } from '@/components/app/trips/TripsTableClient'
 import type { Metadata } from 'next'
@@ -7,11 +8,10 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = { title: 'Trip Log — StayRight' }
 
 export default async function TripsPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getUser()
   if (!user) redirect('/login')
+
+  const supabase = await createClient()
 
   const [{ data: rawTrips }, { data: profile }, { data: subscription }] = await Promise.all([
     supabase
