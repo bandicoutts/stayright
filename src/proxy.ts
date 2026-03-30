@@ -56,16 +56,6 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Redirect legacy /trips route to /dashboard after auth check
-  if (pathname.startsWith('/trips')) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    // Preserve modal intent if possible, or just go to dashboard
-    if (pathname.endsWith('/plan')) url.searchParams.set('modal', 'plan')
-    if (pathname.endsWith('/log')) url.searchParams.set('modal', 'log')
-    return NextResponse.redirect(url)
-  }
-
   // Already signed in — redirect away from auth pages
   // Note: /auth/callback and /auth/new-password are intentionally excluded:
   //   callback must be reachable to complete the session exchange,

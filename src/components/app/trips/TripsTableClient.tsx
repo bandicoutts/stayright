@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { Fragment, useState, useEffect, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   isCrownDependency,
@@ -422,8 +422,8 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                   }`
 
                   return (
-                    <>
-                      <tr key={trip.id} className={rowClass}>
+                    <Fragment key={trip.id}>
+                      <tr className={rowClass}>
                         {/* Checkbox */}
                         <td className="px-4 py-3.5">
                           <input
@@ -527,7 +527,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
 
                       {/* Expanded detail row */}
                       {isExpanded && (
-                        <tr key={`${trip.id}-expanded`} className="bg-[var(--color-surface-sunken)]">
+                        <tr className="bg-[var(--color-surface-sunken)]">
                           <td />
                           <td colSpan={6} className="px-4 pb-4 pt-1">
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
@@ -582,7 +582,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </Fragment>
                   )
                 })}
 

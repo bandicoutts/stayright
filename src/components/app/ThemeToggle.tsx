@@ -48,7 +48,7 @@ export function ThemeToggle() {
       </div>
       
       {/* Tooltip for desktop */}
-      <span className="absolute left-full ml-3 px-2 py-1 bg-[var(--color-surface-dark)] text-[var(--color-text-primary)] text-[10px] font-bold tracking-wider uppercase rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap border border-[var(--color-border)] shadow-xl hidden md:block">
+      <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-[var(--color-text-primary)] text-[var(--color-bg)] text-[10px] font-bold tracking-wider uppercase rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap shadow-xl hidden md:block">
         {isDark ? 'Switch to Light' : 'Switch to Dark'}
       </span>
     </button>
