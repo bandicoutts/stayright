@@ -272,20 +272,55 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
   return (
     <div>
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] tracking-tight">
-            Trip Log
-          </h1>
-          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Your complete absence record.</p>
+      <div className="mb-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] tracking-tight">
+              Trip Log
+            </h1>
+            <p className="text-sm text-[var(--color-text-muted)] mt-0.5">Your complete absence record.</p>
+          </div>
+          {/* Desktop buttons */}
+          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+            {selectedIds.length > 0 && (
+              <button
+                type="button"
+                onClick={handleBulkDelete}
+                disabled={deleting}
+                className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-[var(--color-danger-text)] border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+              >
+                <Trash className="w-4 h-4" weight="bold" />
+                Delete {selectedIds.length}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => openDrawer('plan')}
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+            >
+              Plan a trip
+            </button>
+            <button
+              type="button"
+              onClick={() => openDrawer('log')}
+              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer text-white"
+              style={{ background: 'var(--gradient-green)' }}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              Log trip
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2.5">
+        {/* Mobile buttons — below heading, full width */}
+        <div className="flex sm:hidden items-center gap-2.5 mt-4">
           {selectedIds.length > 0 && (
             <button
               type="button"
               onClick={handleBulkDelete}
               disabled={deleting}
-              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-[var(--color-danger-text)] border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-[var(--color-danger-text)] border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
             >
               <Trash className="w-4 h-4" weight="bold" />
               Delete {selectedIds.length}
@@ -294,14 +329,14 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
           <button
             type="button"
             onClick={() => openDrawer('plan')}
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
           >
             Plan a trip
           </button>
           <button
             type="button"
             onClick={() => openDrawer('log')}
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer text-white"
+            className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer text-white"
             style={{ background: 'var(--gradient-green)' }}
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
