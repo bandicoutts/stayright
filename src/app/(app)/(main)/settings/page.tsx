@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SettingsClient } from '@/components/app/settings/SettingsClient'
+import { isPlanPro } from '@/lib/subscriptionUtils'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Settings — StayRight' }
@@ -22,15 +23,18 @@ export default async function SettingsPage() {
 
   const { data: subscription } = await supabase
     .from('subscriptions')
-    .select('plan, current_period_end')
+    .select('plan, status, current_period_end')
     .eq('user_id', user.id)
     .single()
+
+  const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
   return (
     <SettingsClient
       profile={profile}
       subscription={subscription ?? null}
       userEmail={user.email ?? ''}
+      isPro={isPro}
     />
   )
 }

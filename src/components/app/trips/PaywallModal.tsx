@@ -101,119 +101,154 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
   }
 
   const content = (
-    <div className="relative bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-8 w-full max-w-md mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)]">
-            Audit Your Full 5-Year History
-          </h2>
-          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
-            Audit your full 5-year history and prevent ILR rejection.
-          </p>
-        </div>
-        {!inline && (
+    <div className="relative bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] w-full max-w-[560px] mx-auto overflow-hidden">
+      {/* Close button */}
+      {!inline && (
+        <div className="flex justify-end px-5 pt-4 pb-0">
           <button
             ref={closeRef}
             onClick={handleDismiss}
             aria-label="Close"
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer -mt-1 -mr-1 p-1 rounded-lg hover:bg-[var(--color-bg-tinted)]"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--color-bg-tinted)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-border)] transition-colors cursor-pointer"
           >
-            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none">
-              <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+              <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-          </button>
-        )}
-      </div>
-
-      {/* Benefit list */}
-      <ul className="space-y-2 mb-6">
-        {BENEFITS.map((benefit) => (
-          <li key={benefit} className="flex items-center gap-3 text-sm text-[var(--color-text-primary)]">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[var(--color-green-pale)] flex items-center justify-center">
-              <svg className="w-3 h-3 text-[var(--color-green)]" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            {benefit}
-          </li>
-        ))}
-      </ul>
-
-      {/* Plan selection */}
-      <div className="space-y-2 mb-6" role="radiogroup" aria-label="Select plan">
-        {PLANS.map((plan) => {
-          const isSelected = selectedPlan === plan.id
-          return (
-            <label
-              key={plan.id}
-              className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                isSelected
-                  ? 'border-[var(--color-green)] bg-[var(--color-green-pale)]/20'
-                  : 'border-[var(--color-border)] hover:border-[var(--color-green)]/35'
-              }`}
-            >
-              <input
-                type="radio"
-                name="plan"
-                value={plan.id}
-                checked={isSelected}
-                onChange={() => setSelectedPlan(plan.id)}
-                className="sr-only"
-              />
-              <div className="flex items-center gap-3">
-                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  isSelected ? 'border-[var(--color-green)]' : 'border-[var(--color-border-strong)]'
-                }`}>
-                  {isSelected && (
-                    <div className="w-2 h-2 rounded-full bg-[var(--color-green)]" />
-                  )}
-                </div>
-                <span className="text-sm font-medium text-[var(--color-text-primary)]">{plan.label}</span>
-                {plan.badge && (
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                    plan.badge === 'Save 30%'
-                      ? 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]'
-                      : 'bg-[var(--color-green-pale)] text-[var(--color-green)]'
-                  }`}>
-                    {plan.badge}
-                  </span>
-                )}
-              </div>
-              <span className="text-sm font-semibold text-[var(--color-text-primary)]">
-                {plan.price}
-                <span className="text-xs font-normal text-[var(--color-text-muted)]">{plan.period}</span>
-              </span>
-            </label>
-          )
-        })}
-      </div>
-
-      {/* CTA */}
-      <button
-        onClick={handleUpgrade}
-        disabled={loading}
-        className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-white"
-        style={{ background: 'var(--gradient-green)' }}
-      >
-        {loading ? 'Redirecting to checkout…' : `Unlock Pro — ${currentPlan.detail}`}
-      </button>
-
-      {error && (
-        <p className="mt-2 text-xs text-center text-[var(--color-danger-text)]">{error}</p>
-      )}
-
-      {/* Dismiss */}
-      {!inline && (
-        <div className="mt-4 text-center">
-          <button
-            onClick={handleDismiss}
-            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
-          >
-            Not now
           </button>
         </div>
       )}
+
+      {/* Hero */}
+      <div className="text-center px-6 pt-5 pb-6">
+        <div className="text-4xl mb-4" aria-hidden="true">👑</div>
+        <h2
+          id="paywall-title"
+          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.375rem] leading-tight tracking-tight text-[var(--color-text-primary)] mb-2"
+        >
+          Unlock StayRight Pro
+        </h2>
+        <p className="text-sm text-[var(--color-text-muted)] max-w-sm mx-auto leading-relaxed">
+          You&apos;ve reached the free plan limit. Upgrade to track unlimited trips and protect your ILR application.
+        </p>
+      </div>
+
+      {/* Free vs Pro comparison grid */}
+      <div className="grid grid-cols-2 gap-3 px-6 pb-6">
+        {/* Free column */}
+        <div className="bg-[var(--color-bg-tinted)] border border-[var(--color-border)] rounded-xl p-4">
+          <p className="font-[family-name:var(--font-manrope)] font-bold text-[15px] text-[var(--color-text-primary)] mb-1">Free</p>
+          <p className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)] mb-4">£0 / forever</p>
+          {[
+            { label: '10 trips', included: true },
+            { label: 'PDF export', included: false },
+            { label: 'Email alerts', included: false },
+            { label: 'What-if planner', included: true },
+            { label: 'Dashboard', included: true },
+          ].map(({ label, included }) => (
+            <div key={label} className="flex items-center gap-2 py-1">
+              <span className={`text-sm font-semibold w-4 shrink-0 ${included ? 'text-[var(--color-green-light)]' : 'text-[var(--color-text-faint)]'}`}>
+                {included ? '✓' : '✕'}
+              </span>
+              <span className={`text-[13px] ${included ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-faint)]'}`}>{label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Pro column */}
+        <div className="relative bg-[var(--color-surface)] border-2 border-[var(--color-green)] rounded-xl p-4" style={{ boxShadow: '0 0 0 1px var(--color-green), var(--shadow-card)' }}>
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span className="font-[family-name:var(--font-mono)] text-[9px] font-bold uppercase tracking-[1px] px-2.5 py-1 rounded-full bg-[var(--color-green)] text-white">
+              Recommended
+            </span>
+          </div>
+          <p className="font-[family-name:var(--font-manrope)] font-bold text-[15px] text-[var(--color-green-light)] mb-1">Pro</p>
+          <p className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)] mb-4">from £2.99/month</p>
+          {[
+            { label: 'Unlimited trips', included: true },
+            { label: 'PDF export', included: true },
+            { label: 'Email alerts', included: true },
+            { label: 'What-if planner', included: true },
+            { label: 'Dashboard', included: true },
+          ].map(({ label, included }) => (
+            <div key={label} className="flex items-center gap-2 py-1">
+              <span className="text-sm font-semibold w-4 shrink-0 text-[var(--color-green-light)]">✓</span>
+              <span className={`text-[13px] ${included ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-faint)]'}`}>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Plan selection + CTA */}
+      <div className="px-6 pb-6">
+        <div className="space-y-2 mb-4" role="radiogroup" aria-label="Select plan">
+          {PLANS.map((plan) => {
+            const isSelected = selectedPlan === plan.id
+            return (
+              <label
+                key={plan.id}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+                  isSelected
+                    ? 'border-[var(--color-green)] bg-[var(--color-green-pale)]/20'
+                    : 'border-[var(--color-border)] hover:border-[var(--color-green)]/40'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="plan"
+                  value={plan.id}
+                  checked={isSelected}
+                  onChange={() => setSelectedPlan(plan.id)}
+                  className="sr-only"
+                />
+                <div className="flex items-center gap-3">
+                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                    isSelected ? 'border-[var(--color-green)]' : 'border-[var(--color-border-strong)]'
+                  }`}>
+                    {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--color-green)]" />}
+                  </div>
+                  <span className="text-sm font-medium text-[var(--color-text-primary)]">{plan.label}</span>
+                  {plan.badge && (
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                      plan.badge === 'Save 30%'
+                        ? 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]'
+                        : 'bg-[var(--color-green-pale)] text-[var(--color-green)]'
+                    }`}>
+                      {plan.badge}
+                    </span>
+                  )}
+                </div>
+                <span className="font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-text-primary)]">
+                  {plan.price}
+                  <span className="text-xs font-normal text-[var(--color-text-muted)]">{plan.period}</span>
+                </span>
+              </label>
+            )
+          })}
+        </div>
+
+        <button
+          onClick={handleUpgrade}
+          disabled={loading}
+          className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-white"
+          style={{ background: 'var(--gradient-green)' }}
+        >
+          {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
+        </button>
+
+        {error && (
+          <p className="mt-2 text-xs text-center text-[var(--color-danger-text)]">{error}</p>
+        )}
+      </div>
+
+      {/* Fine print */}
+      <p className="text-center text-[11px] text-[var(--color-text-faint)] leading-relaxed px-6 pb-5">
+        Cancel anytime via Stripe billing portal.{' '}
+        {!inline && (
+          <button onClick={handleDismiss} className="underline hover:text-[var(--color-text-muted)] transition-colors cursor-pointer">
+            Not now
+          </button>
+        )}
+      </p>
     </div>
   )
 
