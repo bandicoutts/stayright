@@ -19,9 +19,9 @@ export default function PrivacyPolicyPage() {
 
           <div className="font-[family-name:var(--font-inter)] text-base text-[#3D4A42] leading-relaxed space-y-6">
             <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D] mt-10 mb-4">1. Who We Are</h2>
-            <p>StayRight ("we", "us", or "our") is the data controller for the personal information we collect about you.</p>
+            <p>StayRight (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is the data controller for the personal information we collect about you.</p>
             <ul className="list-disc pl-5 space-y-2">
-              <li><strong>Contact Email:</strong> [David's Contact Email or support@stayright.com]</li>
+              <li><strong>Contact Email:</strong> [David&apos;s Contact Email or support@stayright.com]</li>
             </ul>
             <p className="text-sm text-[#006948] bg-[#006948]/10 p-4 rounded-xl border border-[#006948]/20">
               [LEGAL REVIEW REQUIRED: Insert official company name, registered address, and physical contact point if different. We need to confirm ICO registration number once registered.]
@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
                 <br/><span className="text-[#3D4A42]/70 text-sm">Lawful Basis: Performance of a contract.</span>
               </li>
               <li>
-                <strong>Visa and Travel Data</strong> (Visa route, travel history, calculation dates): Used directly to power our 180-day tracker, simulator, and ILR timeline features. <strong>This data is highly sensitive but is not a "special category" under UK GDPR; however, we treat it with maximum security.</strong>
+                <strong>Visa and Travel Data</strong> (Visa route, travel history, calculation dates): Used directly to power our 180-day tracker, simulator, and ILR timeline features. <strong>This data is highly sensitive but is not a &quot;special category&quot; under UK GDPR; however, we treat it with maximum security.</strong>
                 <br/><span className="text-[#3D4A42]/70 text-sm">Lawful Basis: Performance of a contract (core product functionality).</span>
               </li>
               <li>
@@ -48,7 +48,7 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
             <p className="text-sm text-[#006948] bg-[#006948]/10 p-4 rounded-xl border border-[#006948]/20">
-              [LEGAL REVIEW REQUIRED: Ensure you are comfortable relying on "Performance of a contract" for the Visa/Travel data rather than "Explicit Consent", as immigration data is highly confidential.]
+              [LEGAL REVIEW REQUIRED: Ensure you are comfortable relying on &quot;Performance of a contract&quot; for the Visa/Travel data rather than &quot;Explicit Consent&quot;, as immigration data is highly confidential.]
             </p>
 
             <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D] mt-10 mb-4">3. Data Retention Policy</h2>
@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
             </ul>
 
             <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D] mt-10 mb-4">4. Data Processors (Who We Share Your Data With)</h2>
-            <p>We use trusted third-party service providers ("Data Processors") to run StayRight. We have Data Processing Agreements (DPAs) in place with them to protect your data.</p>
+            <p>We use trusted third-party service providers (&quot;Data Processors&quot;) to run StayRight. We have Data Processing Agreements (DPAs) in place with them to protect your data.</p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Supabase:</strong> Core database and hosting (Servers located in the UK).</li>
             </ul>
@@ -78,7 +78,7 @@ export default function PrivacyPolicyPage() {
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Access:</strong> Request a copy of the data we hold about you.</li>
               <li><strong>Rectification:</strong> Ask us to correct inaccurate or incomplete data.</li>
-              <li><strong>Erasure ("Right to be Forgotten"):</strong> Request that we delete your data (subject to certain exceptions, like tax records).</li>
+              <li><strong>Erasure (&quot;Right to be Forgotten&quot;):</strong> Request that we delete your data (subject to certain exceptions, like tax records).</li>
               <li><strong>Restriction of Processing:</strong> Ask us to limit how we use your data.</li>
               <li><strong>Data Portability:</strong> Request your data in a structured, commonly used format.</li>
               <li><strong>Objection:</strong> Object to our processing of your data based on legitimate interests.</li>
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
             </ul>
 
             <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D] mt-10 mb-4">6. How to Exercise Your Rights</h2>
-            <p>To exercise any of these rights, please contact us at [Contact Email]. We will respond to your request within one month. You can also view, edit, download, and delete your data directly within the application's account settings.</p>
+            <p>To exercise any of these rights, please contact us at [Contact Email]. We will respond to your request within one month. You can also view, edit, download, and delete your data directly within the application&apos;s account settings.</p>
 
             <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[#191C1D] mt-10 mb-4">7. How to Complain to the ICO</h2>
             <p>If you are unhappy with how we have handled your personal data, you have the right to complain to the Information Commissioner’s Office (ICO).</p>

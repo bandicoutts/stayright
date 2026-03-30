@@ -81,7 +81,6 @@ test.describe('Dashboard', () => {
 
   test('SAFE chip is visible when under 120 days', async ({ page }) => {
     // For a user with < 120 absence days, SAFE chip should be shown
-    const safeChip = page.getByText(/\bSAFE\b/).first()
     // This chip might or might not be visible depending on the test user's data
     // We verify the element exists in the DOM (may be hidden)
     await expect(page.locator('body')).toContainText(/SAFE|WARNING|DANGER|BREACH/)
@@ -89,7 +88,6 @@ test.describe('Dashboard', () => {
 
   test('empty state shows correct copy when no trips logged', async ({ page }) => {
     // If the user has no trips, an empty state message should appear in recent history
-    const emptyState = page.getByText(/no trips|get started|log your first/i)
     // We don't assert visibility here as it depends on data — just checking it exists
     // A user with trips will not see this
     expect(await page.locator('body').isVisible()).toBe(true)

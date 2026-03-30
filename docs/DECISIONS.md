@@ -58,6 +58,8 @@ Scan this table to find relevant decisions. Read the full entry only if the summ
 | DECISION-046 | Dashboard & Trips Consolidation | Converge dashboard and trips views into a single workspace; convert drawer to modal | Decided |
 | DECISION-060 | Design System Pivot (Gold to Green) | Revert to green-tinted Dark Luxury palette for better alignment with semantic compliance colors | Decided |
 | DECISION-061 | Semantic Token Architecture | Implementation of a full suite of CSS variables in tokens.css to replace hardcoded hex values | Decided |
+| DECISION-062 | Monthly cron entitlement aligned with isPlanPro() | Removed past_due from monthly cron subscription filter; now matches isPlanPro() which excludes past_due/unpaid | Decided |
+| DECISION-063 | Monthly cron bulk-fetches trips to eliminate N+1 query | Single .in(user_id, profileIds) query + in-memory grouping, mirroring daily cron pattern | Decided |
 
 ---
 
@@ -1423,3 +1425,40 @@ The dashboard previously showed only `getCurrentRollingWindow` — the 12-month 
 `getPeakRollingWindow` is O(days × trips) — for a 5-year visa holder with 30 trips, ~54,750 date operations per page load. Profiling confirms this runs in <5ms on the server; no caching needed at current scale. If user count grows significantly, a caching layer can be added without API changes.
 
 **Related:** CPO audit; DECISION-005; `src/app/(app)/(main)/dashboard/page.tsx`; `src/lib/calculations/absenceEngine.ts`
+
+---
+
+### [DECISION-062] Monthly cron entitlement aligned with isPlanPro()
+**Date:** 2026-03-30
+**Status:** Decided
+**Decided by:** Developer audit recommendation
+
+**Decision:**
+The monthly summary cron (`src/app/api/cron/monthly/route.ts`) previously filtered subscriptions with `.in('status', ['active', 'past_due'])`, granting `past_due` users a monthly email. This was inconsistent with `isPlanPro()` in `src/lib/subscriptionUtils.ts`, which explicitly excludes `past_due` and `unpaid` from Pro access. The filter has been changed to `.in('status', ['active'])` only.
+
+**Reasoning:**
+`past_due` means a payment has failed and Stripe is in its retry window. The user's Pro features (PDF export, unlimited trips) are already gated at the server-action layer via `isPlanPro()` which excludes `past_due`. Sending a monthly summary email to a `past_due` user while their other Pro features are suspended is an inconsistent experience and creates support confusion. Aligning the cron with `isPlanPro()` makes entitlement uniform across all surfaces.
+
+**Consequences:**
+`past_due` users will not receive monthly summary emails. They will resume receiving them once their subscription returns to `active` (Stripe retries successfully). No data migration needed.
+
+**Related:** DECISION-040; `src/lib/subscriptionUtils.ts`; `src/app/api/cron/monthly/route.ts`
+
+---
+
+### [DECISION-063] Monthly cron bulk-fetches trips to eliminate N+1 query
+**Date:** 2026-03-30
+**Status:** Decided
+**Decided by:** Developer audit recommendation
+
+**Decision:**
+The monthly cron previously fetched trips with one `SELECT … WHERE user_id = ?` query per profile inside the processing loop (N+1 pattern). It now fetches all trips for all profiles in a single query with `.in('user_id', profileIds)` and groups them in-memory using a `Map<string, TripRow[]>` before the loop. This mirrors the existing pattern in the daily cron (`src/app/api/cron/daily/route.ts`).
+
+**Reasoning:**
+N+1 queries degrade linearly with user count. At 100 Pro users the monthly cron issued 100+ trip queries; at 1,000 users this would be a sustained DB load spike on the first of every month. The bulk-fetch pattern keeps the cron to a bounded number of queries regardless of scale, matching the already-proven approach in the daily cron.
+
+**Consequences:**
+The monthly cron now issues one trips query instead of N. The in-memory grouping is O(total trips), which is negligible. Trips are still ordered by `departure_date` ascending via the Postgres `ORDER BY` clause applied before grouping.
+
+**Related:** DECISION-048; `src/app/api/cron/daily/route.ts`; `src/app/api/cron/monthly/route.ts`
+

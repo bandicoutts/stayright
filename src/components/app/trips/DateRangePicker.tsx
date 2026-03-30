@@ -370,7 +370,7 @@ export function DateRangePicker({
             role="switch"
             aria-checked="false"
           >
-            I'm leaving today
+            I&apos;m leaving today
           </button>
         )}
 
@@ -381,7 +381,7 @@ export function DateRangePicker({
             onClick={handleCurrentlyAbroad}
             className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:underline cursor-pointer"
           >
-            I'll log my return later →
+            I&apos;ll log my return later →
           </button>
         )}
 

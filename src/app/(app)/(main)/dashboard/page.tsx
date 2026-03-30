@@ -10,7 +10,6 @@ import {
   getCurrentRollingWindow,
   getPeakRollingWindow,
   getQualifyingPeriod,
-  calculateTripAbsenceDays,
   getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
 import { RISK_CONFIG } from '@/lib/riskConfig'
@@ -25,16 +24,13 @@ export const metadata: Metadata = { title: 'Dashboard — StayRight' }
 
 function PeakWindowCard({
   peak,
-  current,
 }: {
   peak: RollingWindowResult
-  current: RollingWindowResult
 }) {
   const fmt = (d: Date) =>
     d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
   const cfg = RISK_CONFIG[peak.status]
-  const isSameAsCurrent = peak.days === current.days
 
   return (
     <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6">
@@ -113,18 +109,6 @@ export default async function DashboardPage() {
 
   // Trip summary for right column
   const tripCount = trips.length
-  const totalDaysAbroad = trips
-    .filter((t) => t.return_date !== null)
-    .reduce(
-      (sum, t) =>
-        sum +
-        calculateTripAbsenceDays({
-          destination: t.destination,
-          departure_date: t.departure_date,
-          return_date: t.return_date as string,
-        }),
-      0
-    )
 
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
   const firstName = profile.first_name || user.email?.split('@')[0] || 'there'
@@ -185,8 +169,8 @@ export default async function DashboardPage() {
         <div className="mb-6 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-center gap-3">
           <span className="text-lg">✈️</span>
           <p className="text-sm text-[var(--color-text-primary)]">
-            <span className="font-semibold">You're currently abroad.</span> Return
-            date not yet logged — log your return when you're back in the UK.
+            <span className="font-semibold">You&apos;re currently abroad.</span> Return
+            date not yet logged — log your return when you&apos;re back in the UK.
           </p>
         </div>
       )}
@@ -211,7 +195,7 @@ export default async function DashboardPage() {
 
         {/* Historical peak */}
         {peakWindow && (
-          <PeakWindowCard peak={peakWindow} current={rollingWindow} />
+          <PeakWindowCard peak={peakWindow} />
         )}
 
         {/* Qualifying period */}

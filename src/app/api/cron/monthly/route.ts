@@ -47,12 +47,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch profiles' }, { status: 500 })
   }
 
-  // Only Pro users
+  // Only Pro users — status must be 'active' to match isPlanPro() which excludes
+  // past_due and unpaid. Including past_due here was inconsistent with the paywall
+  // gate and has been removed (see DECISION-062).
   const { data: subscriptions } = await supabase
     .from('subscriptions')
     .select('user_id')
     .in('plan', ['pro_monthly', 'pro_annual', 'pro_lifetime'])
-    .in('status', ['active', 'past_due'])
+    .in('status', ['active'])
 
   const proUserIds = new Set((subscriptions ?? []).map((s) => s.user_id))
 
@@ -69,6 +71,24 @@ export async function GET(request: NextRequest) {
   }
   const emailMap = new Map(allAuthUsers.map((u) => [u.id, u.email ?? '']))
 
+  // Bulk-fetch all trips for all profiles in a single query, then group by user_id
+  // in memory. This eliminates the N+1 per-user trip queries that previously ran
+  // inside the loop — mirrors the pattern used by the daily cron (DECISION-063).
+  const profileIds = profiles.map((p) => p.id)
+  type TripRow = { id: string; user_id: string; destination: string; departure_date: string; return_date: string | null }
+  const { data: allTrips } = await supabase
+    .from('trips')
+    .select('id, user_id, destination, departure_date, return_date')
+    .in('user_id', profileIds)
+    .order('departure_date', { ascending: true })
+
+  const tripsByUser = new Map<string, TripRow[]>()
+  for (const trip of (allTrips ?? []) as TripRow[]) {
+    const list = tripsByUser.get(trip.user_id) ?? []
+    list.push(trip)
+    tripsByUser.set(trip.user_id, list)
+  }
+
   let sent = 0
   let skipped = 0
 
@@ -82,14 +102,7 @@ export async function GET(request: NextRequest) {
       if (lastSent >= thisMonthStart) { skipped++; continue }
     }
 
-    // Fetch all trips for this user
-    const { data: trips } = await supabase
-      .from('trips')
-      .select('id, destination, departure_date, return_date')
-      .eq('user_id', profile.id)
-      .order('departure_date', { ascending: true })
-
-    const tripInputs: TripInput[] = (trips ?? []).map((t) => ({
+    const tripInputs: TripInput[] = (tripsByUser.get(profile.id) ?? []).map((t) => ({
       id: t.id,
       destination: t.destination,
       departure_date: t.departure_date,

@@ -36,8 +36,8 @@ async function run() {
       console.log(`>>> FCP:`, data.audits['first-contentful-paint'].displayValue);
       console.log(`>>> CLS:`, data.audits['cumulative-layout-shift'].displayValue);
       console.log(`>>> TBT:`, data.audits['total-blocking-time'].displayValue);
-    } catch (e: any) {
-      console.error(`Failed on ${url}`, e.message);
+    } catch (e: unknown) {
+      console.error(`Failed on ${url}`, (e as Error).message);
     }
   };
 

@@ -49,9 +49,17 @@ export async function POST(request: NextRequest) {
   }
 
   // Mark as successfully processed — subsequent replays will be no-ops.
-  await supabase
+  const { error: insertError } = await supabase
     .from('processed_webhook_events')
     .insert({ stripe_event_id: event.id })
+
+  if (insertError) {
+    // Insert failed — return 500 so Stripe retries. The event is NOT in the
+    // idempotency table, so the next retry will be treated as unprocessed and
+    // re-run the handler. This is safer than returning 200 and losing the record.
+    console.error(`[webhook] failed to record processed event ${event.id}:`, insertError)
+    return NextResponse.json({ error: 'Failed to record event' }, { status: 500 })
+  }
 
   return NextResponse.json({ received: true })
 }

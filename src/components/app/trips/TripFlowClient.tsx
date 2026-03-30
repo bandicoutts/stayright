@@ -15,7 +15,7 @@ import { DestinationAutocomplete } from './DestinationAutocomplete'
 import { DateRangePicker } from './DateRangePicker'
 import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
-import { formatDate, formatDateRange } from '@/lib/utils/dateFormatters'
+import { formatDateRange } from '@/lib/utils/dateFormatters'
 import { useDebounce } from '@/hooks/useDebounce'
 
 // ---------------------------------------------------------------------------
@@ -147,7 +147,6 @@ export function TripFlowClient({
   mode,
   existingTrips,
   visaStartDate,
-  isPro: _isPro,
   tripCount,
   initialTrip,
   redirectTo = '/dashboard',

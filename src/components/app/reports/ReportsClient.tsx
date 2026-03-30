@@ -85,7 +85,6 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
   // Fire reports_viewed once when the reports page mounts
   useEffect(() => {
     track('reports_viewed')
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleGenerate(type: ReportType) {

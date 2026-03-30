@@ -6,7 +6,7 @@
  *   TEST_USER_EMAIL    — a verified Supabase user
  *   TEST_USER_PASSWORD — their password
  */
-import { test as setup, expect } from '@playwright/test'
+import { test as setup } from '@playwright/test'
 import dotenv from 'dotenv'
 import path from 'path'
 

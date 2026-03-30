@@ -60,3 +60,5 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-047 | Engine window summation de-duplicated against overlapping trips | `getCurrentRollingWindow` and `getPeakRollingWindow` now merge intervals before counting; idempotent against dirty data | Decided |
 | DECISION-048 | Stripe webhook idempotency via processed_webhook_events table | Closes M-3; insert-after-success pattern ensures retries work and replays are no-ops | Decided |
 | DECISION-049 | Peak rolling window surfaced on dashboard | `getPeakRollingWindow` shown as PeakWindowCard; worst historical 12-month period now visible without navigating to Reports | Decided |
+| DECISION-062 | Monthly cron entitlement aligned with isPlanPro() | Removed past_due from monthly cron subscription filter; now matches isPlanPro() which excludes past_due/unpaid | Decided |
+| DECISION-063 | Monthly cron bulk-fetches trips to eliminate N+1 query | Single .in(user_id, profileIds) query + in-memory grouping, mirroring daily cron pattern | Decided |

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { TripFlowClient } from './TripFlowClient'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
 
@@ -54,9 +54,12 @@ export function TripModal({
   // Keep a ref so ESC handler always sees the latest isDirty value
   const requestCloseRef = useRef<() => void>(() => {})
 
-  // Reset dirty / confirm state when drawer opens or mode changes
+  // Reset dirty / confirm state when drawer opens or mode changes.
+  // setState calls here are intentional — we're synchronising component state
+  // with the incoming `open`/`mode` props when they change.
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsDirty(mode === 'edit')
       setShowConfirm(false)
     } else {
@@ -73,7 +76,11 @@ export function TripModal({
       onClose()
     }
   }
-  requestCloseRef.current = requestClose
+  // Use useLayoutEffect to sync the ref after every render without reading/writing
+  // during render itself (satisfies react-hooks/refs; runs synchronously post-commit).
+  useLayoutEffect(() => {
+    requestCloseRef.current = requestClose
+  })
 
   // ESC key — always routes through requestClose so the user gets the
   // confirmation dialog if they've started filling in the form
@@ -229,7 +236,7 @@ export function TripModal({
               Discard this trip?
             </h2>
             <p className="text-sm text-[var(--color-text-muted)] mb-5">
-              Any details you've entered will be lost.
+              Any details you&apos;ve entered will be lost.
             </p>
             <div className="flex gap-3">
               <button

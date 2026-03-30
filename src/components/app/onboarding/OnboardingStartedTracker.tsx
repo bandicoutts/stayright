@@ -12,7 +12,6 @@ import { track } from '@/lib/posthog'
 export function OnboardingStartedTracker() {
   useEffect(() => {
     track('onboarding_started')
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return null

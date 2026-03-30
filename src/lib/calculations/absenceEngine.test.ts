@@ -122,8 +122,7 @@ describe('Rolling window calculations', () => {
   it('TC10 (BUG-1 regression) — ongoing trip counts with today as provisional return', () => {
     // Depart 30 days ago, no return logged yet → expect 29 absence days
     const today = d('2025-06-30')
-    const departure = d('2025-05-31') // 30 days before today
-    const departureStr = '2025-05-31'
+    const departureStr = '2025-05-31' // 30 days before today
     const trips = [trip('a', 'Spain', departureStr, null)]
     const result = getCurrentRollingWindow(trips, today)
     // Absence: May 31+1=Jun 1 through Jun 29 (today-1) = 29 days

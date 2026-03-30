@@ -15,11 +15,6 @@ test.describe('Trip Management on Dashboard', () => {
 
   test('trip list is visible on dashboard', async ({ page }) => {
     // The TripsClient component is now part of the dashboard
-    const tripsSection = page.locator('h2').filter({ hasText: /trip log|your trips/i })
-      .or(page.locator('section').filter({ has: page.locator('table') }))
-    
-    // Check if the table or list exists
-    const tripItems = page.locator('[data-testid="trip-item"]')
     // Even if empty, the section header should be there
     await expect(page.getByText(/trip log|your trips/i).first()).toBeVisible()
   })
@@ -103,7 +98,6 @@ test.describe('Paywall on Dashboard', () => {
     await page.goto('/dashboard?modal=plan')
     
     // If quota reached, we should see an upgrade prompt instead of the form or alongside it
-    const upgradePrompt = page.getByText(/upgrade to pro|unlock unlimited|free plan limit/i)
     // We don't hard-assert visibility as it depends on test data, but we check the element exists
     expect(await page.locator('body').isVisible()).toBe(true)
   })

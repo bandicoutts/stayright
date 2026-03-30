@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { List } from '@/components/ui/Icons'
 
 interface Props {

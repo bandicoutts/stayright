@@ -10,6 +10,8 @@ export default function CookieBanner() {
   useEffect(() => {
     const consent = localStorage.getItem('cookie_consent');
     if (!consent) {
+      // Intentional: syncing state from localStorage (external system) on mount.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
     }
   }, []);

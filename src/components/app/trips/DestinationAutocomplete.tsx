@@ -55,13 +55,13 @@ export function DestinationAutocomplete({
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
   // Suppress re-opening the list immediately after the user picks a suggestion
-  const suppressRef = useRef(false)
+  const [suppress, setSuppress] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
   const listboxId = useId()
 
-  const suggestions = suppressRef.current ? [] : getSuggestions(value)
+  const suggestions = suppress ? [] : getSuggestions(value)
   const showDropdown = open && suggestions.length > 0
 
   // ---------------------------------------------------------------------------
@@ -69,14 +69,14 @@ export function DestinationAutocomplete({
   // ---------------------------------------------------------------------------
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    suppressRef.current = false
+    setSuppress(false)
     onChange(e.target.value)
     setActiveIndex(-1)
     setOpen(true)
   }
 
   function selectSuggestion(suggestion: string) {
-    suppressRef.current = true
+    setSuppress(true)
     onChange(suggestion)
     setOpen(false)
     setActiveIndex(-1)
@@ -86,7 +86,7 @@ export function DestinationAutocomplete({
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (!showDropdown) {
       if (e.key === 'ArrowDown' && getSuggestions(value).length > 0) {
-        suppressRef.current = false
+        setSuppress(false)
         setOpen(true)
         setActiveIndex(0)
         e.preventDefault()
@@ -132,7 +132,7 @@ export function DestinationAutocomplete({
   }
 
   function handleFocus() {
-    if (!suppressRef.current) setOpen(true)
+    if (!suppress) setOpen(true)
   }
 
   function handleBlur(e: React.FocusEvent) {

@@ -160,7 +160,7 @@ describe('addTripAction', () => {
       data: { plan: 'pro_monthly', status: 'active' },
       error: null,
     })
-    const insertQuery = buildQueryChain('single', { data: mockTrip, error: null })
+    buildQueryChain('single', { data: mockTrip, error: null })
     // insert chain needs: from → insert → select → single
     const insertChain: Record<string, unknown> = {}
     insertChain['insert'] = vi.fn(() => ({

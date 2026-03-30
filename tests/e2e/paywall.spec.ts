@@ -15,7 +15,6 @@ test.describe('Paywall', () => {
       await generateBtn.click()
     }
 
-    const paywallSection = page.getByText(/upgrade|unlock pro/i).first().locator('..').locator('../..')
     await expect(page.getByText(/£2\.99/)).toBeVisible({ timeout: 5_000 })
     await expect(page.getByText(/£24\.99/)).toBeVisible()
     await expect(page.getByText(/£49\.99/)).toBeVisible()

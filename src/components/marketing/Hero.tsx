@@ -247,7 +247,7 @@ export default function Hero() {
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
             style={{ fontSize: 'clamp(3rem, 5.5vw, 5.5rem)', color: 'var(--color-text-primary)' }}
           >
-            Don't risk your ILR{' '}
+            Don&apos;t risk your ILR{' '}
             <em
               className="not-italic block font-light"
               style={{
@@ -269,8 +269,8 @@ export default function Hero() {
             className="font-[family-name:var(--font-inter)] leading-[1.72] mb-11 max-w-[440px] animate-fade-up animate-fade-up-3"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
-            Precision tracking for the UK's 180-day rule. Automatically monitor
-            every rolling 12-month window and ensure you're fully compliant with
+            Precision tracking for the UK&apos;s 180-day rule. Automatically monitor
+            every rolling 12-month window and ensure you&apos;re fully compliant with
             Appendix Continuous Residence.
           </p>
 

@@ -48,7 +48,6 @@ export interface QualifyingPeriodResult {
 // Matching is: full-string OR last comma-separated component — prevents false positives
 // like "New Jersey" or "Jersey City" matching "jersey".
 const CROWN_DEPENDENCIES_EXACT = ['jersey', 'guernsey', 'isle of man']
-const MAX_ABSENCE_DAYS = 180
 
 // ---------------------------------------------------------------------------
 // Helpers

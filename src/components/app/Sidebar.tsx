@@ -18,7 +18,7 @@ interface Props {
   onClose?: () => void
 }
 
-export function Sidebar({ userName = 'Account', userEmail, userInitial = '?', isOpen, onClose }: Props) {
+export function Sidebar({ userName = 'Account', userEmail, isOpen, onClose }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const [isProfileOpen, setIsProfileOpen] = useState(false)

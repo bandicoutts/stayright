@@ -75,14 +75,14 @@ export default function Features() {
                 backgroundClip: 'text',
               }}
             >
-              'Any 12-Month' Rule.
+              &apos;Any 12-Month&apos; Rule.
             </em>
           </h2>
           <p
             className="font-[family-name:var(--font-inter)] leading-[1.6] mt-5 max-w-[480px]"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
-            The Home Office doesn't just look at the last year. They check every
+            The Home Office doesn&apos;t just look at the last year. They check every
             possible 12-month window in your 5-year history. StayRight does the
             math for you.
           </p>

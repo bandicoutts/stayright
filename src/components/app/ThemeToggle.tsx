@@ -5,11 +5,14 @@ import { useEffect, useState } from 'react'
 import { Sun, Moon } from '@/components/ui/Icons'
 
 export function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
-  // Avoid hydration mismatch
+  // Avoid hydration mismatch: this pattern is intentional. We set mounted after
+  // first render so the SSR output (mounted=false) matches the initial client
+  // render, preventing a hydration mismatch on the theme toggle.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
   }, [])
 

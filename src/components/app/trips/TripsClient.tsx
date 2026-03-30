@@ -59,8 +59,6 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
   const [showPaywall, setShowPaywall] = useState(false)
   const [optimisticDeletedIds, setOptimisticDeletedIds] = useState<string[]>([])
 
-  const selectedTrip = trips.find((t) => t.id === selectedId) ?? null
-
   // ---------------------------------------------------------------------------
   // Modal state — driven by ?modal=plan|log|edit&tripId=xxx URL params
   // ---------------------------------------------------------------------------
@@ -74,6 +72,10 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
 
   useEffect(() => {
     if ((drawerMode === 'plan' || drawerMode === 'log') && atLimit) {
+      // Intentional: showing paywall when URL params indicate modal was opened while at
+      // the Free tier limit (e.g. direct navigation to ?modal=plan). This effect
+      // synchronizes URL state (external) with paywall visibility.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowPaywall(true)
       router.replace('/dashboard', { scroll: false })
     }
