@@ -139,7 +139,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       setShowPaywall(true)
       return
     }
-    router.push(`?modal=${mode}`, { scroll: false })
+    router.push(`/trips?modal=${mode}`, { scroll: false })
   }
 
   // ---------------------------------------------------------------------------
@@ -504,7 +504,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
                               type="button"
-                              onClick={() => router.push(`?modal=edit&tripId=${trip.id}`, { scroll: false })}
+                              onClick={() => router.push(`/trips?modal=edit&tripId=${trip.id}`, { scroll: false })}
                               className="w-7 h-7 flex items-center justify-center rounded-lg bg-[var(--color-surface-sunken)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer text-sm"
                               aria-label={`Edit trip to ${name}`}
                               title="Edit"
@@ -563,7 +563,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                             <div className="flex gap-2">
                               <button
                                 type="button"
-                                onClick={() => router.push(`?modal=edit&tripId=${trip.id}`, { scroll: false })}
+                                onClick={() => router.push(`/trips?modal=edit&tripId=${trip.id}`, { scroll: false })}
                                 className="flex items-center gap-1.5 border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-xl px-3 py-2 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
                               >
                                 <svg className="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none">
