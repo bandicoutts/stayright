@@ -31,12 +31,18 @@ jobs:
         with:
           version: latest
 
+      # Remove the project-ref file so supabase start uses the local default
+      # JWT secret rather than pulling the production project's secret.
+      # Without this, tokens signed with the local default key are rejected.
+      - name: Clear Supabase project link for CI
+        run: rm -f supabase/.temp/project-ref
+
       - name: Start local Supabase
         run: supabase start
 
-      # Local Supabase always uses the same default keys (derived from the
-      # default JWT secret). These are published in Supabase's own docs and
-      # are not considered secrets — they only work against localhost:54321.
+      # With no project-ref, local Supabase uses the standard default JWT
+      # secret. These well-known keys are published in Supabase's own docs
+      # and only work against localhost:54321.
       - name: Set Supabase credentials
         run: |
           echo "NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321" >> $GITHUB_ENV
@@ -67,10 +73,9 @@ jobs:
         run: npm run build
 
       # ── Test user ────────────────────────────────────────────────────────────
-      # Creates a verified user + profile row in local Supabase so auth.setup.ts
-      # can log in successfully.
+      # Insert user directly via SQL — no JWT/admin API needed.
       - name: Create E2E test user
-        run: npm run test:create-user
+        run: psql postgresql://postgres:postgres@localhost:54322/postgres -f supabase/seed.sql
 
       # ── Playwright ───────────────────────────────────────────────────────────
       - name: Install Playwright (Chromium only)
