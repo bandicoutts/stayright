@@ -62,3 +62,4 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-049 | Peak rolling window surfaced on dashboard | `getPeakRollingWindow` shown as PeakWindowCard; worst historical 12-month period now visible without navigating to Reports | Decided |
 | DECISION-062 | Monthly cron entitlement aligned with isPlanPro() | Removed past_due from monthly cron subscription filter; now matches isPlanPro() which excludes past_due/unpaid | Decided |
 | DECISION-063 | Monthly cron bulk-fetches trips to eliminate N+1 query | Single .in(user_id, profileIds) query + in-memory grouping, mirroring daily cron pattern | Decided |
+| DECISION-064 | Two-tier E2E testing strategy — smoke on push, full suite nightly | Smoke (12 tests, every push) + full suite (~50 tests, nightly); 3 auth personas; axe-core removed from E2E (amends DECISION-043) | Decided |

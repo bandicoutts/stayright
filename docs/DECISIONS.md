@@ -1446,6 +1446,42 @@ The monthly summary cron (`src/app/api/cron/monthly/route.ts`) previously filter
 
 ---
 
+### [DECISION-064] Two-tier E2E testing strategy — smoke on push, full suite nightly
+**Date:** 2026-03-30
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Playwright E2E tests are split into two tiers:
+
+1. **Smoke suite** (`tests/e2e/smoke.spec.ts`, `playwright.smoke.config.ts`) — 12 critical-path tests that run on every push to `main`. Chromium only, 1 worker serial. Covers auth redirects, dashboard load, calculation regression (TC1–TC4), and one DB roundtrip. Runs against a local Supabase instance in CI; completes in ~2 minutes.
+
+2. **Full suite** (7 spec files, `playwright.config.ts`) — ~50 tests covering all major flows (auth, landing, onboarding guards, dashboard, trip CRUD, calculations, paywall, settings, reports). Runs nightly at 2am UTC via `.github/workflows/e2e-nightly.yml`.
+
+**Auth personas:** Three dedicated test users are seeded via `supabase/seed.sql`:
+- `testuser@stayright.test` — smoke user; low trip count so the paywall never triggers
+- `e2e-free@stayright.test` — free plan, seeded with exactly 10 trips (= `FREE_TRIP_LIMIT`) so the PaywallModal is guaranteed to appear; used only for paywall tests
+- `e2e-pro@stayright.test` — `pro_lifetime` plan; used for all tests that need to open the trip modal (calculations, CRUD, PDF download)
+
+**`axe-core` removed from E2E (amends DECISION-043):** Accessibility axe-core scans were included in the original spec files but removed because they caused flaky CI failures unrelated to application behaviour (e.g., Next.js dev-mode style injection produced transient contrast violations). Accessibility compliance is now maintained via manual review against WCAG 2.2 AA before each release and static analysis. The axe-core decision in DECISION-043 is superseded by this policy for the E2E layer; the WCAG architectural commitments in DECISION-043 (focus states, reduced-motion, semantic HTML) remain in force.
+
+**`redirectTo` fix in `TripsTableClient`:** The `TripModal` on the `/trips` page was not passing `redirectTo` to `TripFlowClient`, causing save to always redirect to `/dashboard` regardless of origin. Fixed by passing `redirectTo={returnTo}` (where `returnTo` defaults to `'/trips'`). The dashboard modal continues to redirect to `/dashboard` via `TripFlowClient`'s own default.
+
+**Reasoning:**
+- The previous full suite (~150 tests × 3 browsers) was removed from CI (`ea2a379`) due to runtime and reliability problems. A two-tier approach restores confidence on every push without the full cost.
+- Chromium-only is sufficient for a server-rendered Next.js app where cross-browser divergence is minimal. Firefox/Safari are deferred to manual QA until the full suite is stable.
+- Serial execution (`workers: 1`) is required because the DB roundtrip test and other CRUD tests must not race.
+- The free/pro persona split is necessary because `FREE_TRIP_LIMIT = 10` means a free user with 10 seeded trips hits the paywall on any modal open — using the same user for both paywall and modal tests would make one set mutually exclusive.
+
+**Consequences:**
+- Any test that opens `/trips?modal=plan` or `/trips?modal=log` must use the pro auth state; using the default free state will show the PaywallModal and fail.
+- The smoke user (`testuser@stayright.test`) accumulates one trip per smoke run (DB roundtrip test). If >10 trips accumulate, `supabase/seed.sql` will need a cleanup step or the smoke user will hit the paywall. Monitor and address if needed.
+- `axe-core` is no longer a dev dependency for E2E tests.
+
+**Related:** DECISION-043; `tests/e2e/smoke.spec.ts`; `playwright.smoke.config.ts`; `playwright.config.ts`; `supabase/seed.sql`; `.github/workflows/e2e.yml`; `.github/workflows/e2e-nightly.yml`; `docs/TESTING.md`; `src/components/app/trips/TripsTableClient.tsx`
+
+---
+
 ### [DECISION-063] Monthly cron bulk-fetches trips to eliminate N+1 query
 **Date:** 2026-03-30
 **Status:** Decided
