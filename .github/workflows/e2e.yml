@@ -69,6 +69,13 @@ jobs:
           echo "TEST_USER_PASSWORD=TestPassword123!" >> $GITHUB_ENV
 
       # ── Build ────────────────────────────────────────────────────────────────
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**') }}
+          restore-keys: nextjs-${{ hashFiles('package-lock.json') }}-
+
       - name: Build Next.js app
         run: npm run build
 
@@ -78,6 +85,12 @@ jobs:
         run: psql postgresql://postgres:postgres@localhost:54322/postgres -f supabase/seed.sql
 
       # ── Playwright ───────────────────────────────────────────────────────────
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright (Chromium only)
         run: npx playwright install chromium --with-deps
 
