@@ -35,17 +35,17 @@ export default defineConfig({
   },
 
   projects: [
-    // Auth setup — must run before the smoke tests.
-    // Reuses the free-user setup (saves to .auth/free.json).
+    // Auth setup — logs in as testuser@stayright.test (low trip count,
+    // paywall never triggers) and saves to .auth/smoke.json.
     {
       name: 'setup',
-      testMatch: /auth\.setup-free\.ts/,
+      testMatch: /auth\.setup-smoke\.ts/,
     },
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'tests/e2e/.auth/free.json',
+        storageState: 'tests/e2e/.auth/smoke.json',
       },
       dependencies: ['setup'],
     },
