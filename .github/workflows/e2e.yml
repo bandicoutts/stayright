@@ -1,8 +1,8 @@
 name: E2E Smoke Tests
 
-# Manual trigger only for now.
-# Promote to `on: push: branches: [main]` once the suite is confirmed stable.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 # Cancel any in-progress run for the same ref when manually triggered again.
