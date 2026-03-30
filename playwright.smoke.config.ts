@@ -35,16 +35,17 @@ export default defineConfig({
   },
 
   projects: [
-    // Auth setup — must run before the smoke tests
+    // Auth setup — must run before the smoke tests.
+    // Reuses the free-user setup (saves to .auth/free.json).
     {
       name: 'setup',
-      testMatch: /auth\.setup\.ts/,
+      testMatch: /auth\.setup-free\.ts/,
     },
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'tests/e2e/.auth/user.json',
+        storageState: 'tests/e2e/.auth/free.json',
       },
       dependencies: ['setup'],
     },

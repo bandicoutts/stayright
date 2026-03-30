@@ -67,6 +67,8 @@ jobs:
           echo "CRON_SECRET=placeholder" >> $GITHUB_ENV
           echo "TEST_USER_EMAIL=testuser@stayright.test" >> $GITHUB_ENV
           echo "TEST_USER_PASSWORD=TestPassword123!" >> $GITHUB_ENV
+          echo "TEST_FREE_USER_EMAIL=e2e-free@stayright.test" >> $GITHUB_ENV
+          echo "TEST_FREE_USER_PASSWORD=TestFree123!" >> $GITHUB_ENV
 
       # ── Build ────────────────────────────────────────────────────────────────
       - name: Cache Next.js build
