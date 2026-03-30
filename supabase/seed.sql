@@ -66,15 +66,12 @@ BEGIN
      WHERE id = v_user_id;
   END IF;
 
-  -- Upsert profile — marks onboarding complete so the user lands on /dashboard
-  INSERT INTO public.profiles (
-    id, first_name, visa_start_date, onboarding_completed
-  ) VALUES (
-    v_user_id, 'Test', '2023-01-14', true
-  )
-  ON CONFLICT (id) DO UPDATE
-    SET onboarding_completed = true,
-        visa_start_date      = EXCLUDED.visa_start_date,
-        first_name           = EXCLUDED.first_name;
+  -- Trigger already created profile + subscription rows on INSERT above.
+  -- Just update the fields we care about for testing.
+  UPDATE public.profiles
+     SET first_name           = 'Test',
+         visa_start_date      = '2023-01-14',
+         onboarding_completed = true
+   WHERE id = v_user_id;
 
 END $$;
