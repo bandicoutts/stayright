@@ -6,7 +6,7 @@ import posthog from 'posthog-js'
 
 export function NavigationTracker() {
   const pathname = usePathname()
-  const startRef = useRef<number>(performance.now())
+  const startRef = useRef<number>(0)
   const prevRef = useRef<string | null>(null)
 
   useEffect(() => {
