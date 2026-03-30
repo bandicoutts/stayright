@@ -49,3 +49,6 @@ lh-*.json
 
 # Claude Code worktrees
 .claude/worktrees/
+
+# Supabase CLI artifacts
+supabase/.temp/
