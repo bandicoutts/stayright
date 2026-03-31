@@ -21,7 +21,7 @@ const authFile = path.join(__dirname, '.auth/smoke.json')
 setup('authenticate smoke test user', async ({ page }) => {
   await page.goto('/login')
 
-  await page.locator('button[type="button"]:has-text("Sign in")').click()
+  // /login now defaults to the Sign in tab — no tab click needed.
 
   const email = process.env.TEST_USER_EMAIL!
   const pass = process.env.TEST_USER_PASSWORD!

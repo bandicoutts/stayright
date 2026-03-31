@@ -9,6 +9,7 @@ export function SetupNudge() {
   const [dismissed, setDismissed] = useState(true) // start hidden to avoid hydration flash
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDismissed(localStorage.getItem(DISMISSED_KEY) === '1')
   }, [])
 

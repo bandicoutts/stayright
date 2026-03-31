@@ -9,6 +9,7 @@ export function DashboardWelcome() {
 
   useEffect(() => {
     if (searchParams.get('onboarded') === '1') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShow(true)
       const url = new URL(window.location.href)
       url.searchParams.delete('onboarded')
