@@ -60,6 +60,11 @@ Scan this table to find relevant decisions. Read the full entry only if the summ
 | DECISION-061 | Semantic Token Architecture | Implementation of a full suite of CSS variables in tokens.css to replace hardcoded hex values | Decided |
 | DECISION-062 | Monthly cron entitlement aligned with isPlanPro() | Removed past_due from monthly cron subscription filter; now matches isPlanPro() which excludes past_due/unpaid | Decided |
 | DECISION-063 | Monthly cron bulk-fetches trips to eliminate N+1 query | Single .in(user_id, profileIds) query + in-memory grouping, mirroring daily cron pattern | Decided |
+| DECISION-064 | Two-tier E2E testing strategy — smoke on push, full suite nightly | Smoke (12 tests, every push) + full suite (~50 tests, nightly); 3 auth personas; axe-core removed from E2E (amends DECISION-043) | Decided |
+| DECISION-065 | Nav structure unified: edge-to-edge, 64px height, lg breakpoint for dashboard | Both navs share h-[64px], px-6 md:px-14, no max-width; dashboard hamburger shifts to lg to prevent overflow | Decided |
+| DECISION-066 | Dashboard stat card grid: no intermediate 2-column breakpoint | Cards go 1→3 at lg only; 2+1 split at md was semantically wrong and visually awkward | Decided |
+| DECISION-067 | Trips table: footer as single stat source; progressive column hiding | Toolbar stat removed (duplicated footer); Departure/Return hidden below md, Window below lg | Decided |
+| DECISION-068 | Typography normalisation: unified type scale and weight consistency | 8 corrections: font-black fix, not-italic conflict, tracking/line-height/eyebrow size unified | Decided |
 
 ---
 
@@ -1497,4 +1502,105 @@ N+1 queries degrade linearly with user count. At 100 Pro users the monthly cron 
 The monthly cron now issues one trips query instead of N. The in-memory grouping is O(total trips), which is negligible. Trips are still ordered by `departure_date` ascending via the Postgres `ORDER BY` clause applied before grouping.
 
 **Related:** DECISION-048; `src/app/api/cron/daily/route.ts`; `src/app/api/cron/monthly/route.ts`
+
+---
+
+### [DECISION-065] Nav structure unified: edge-to-edge, 64px height, lg breakpoint for dashboard
+**Date:** 2026-03-31
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Both the marketing `Nav` and the authenticated `TopNav` now share the same structural rules:
+- Height: `h-[64px]` (was 62px landing / 60px dashboard)
+- Horizontal padding: `px-6 md:px-14` inside the header element; no `max-width` container — content is always edge-to-edge so the logo stays pinned left and user controls pinned right at all viewport widths
+- Dashboard mobile breakpoint shifted from `md` (768px) to `lg` (1024px) — at 768px the dashboard nav carried too many items (4 links + plan badge + name + avatar) and cropped on screen
+
+**Reasoning:**
+The mismatch in height and padding caused a visible shift as users navigated from the landing page into the app. The no-max-width approach was preferred over a shared `max-w-[1320px]` container because users wanted the logo and controls to remain at the true edge rather than drifting toward the centre on large screens. The `lg` breakpoint for the dashboard hamburger was driven by the density of items in the authenticated nav, which the marketing nav does not share.
+
+**Alternatives considered:**
+- Shared `max-w-[1320px] mx-auto` container in both navs — rejected because on ultra-wide displays content drifted toward the centre, which felt inconsistent with the edge-pinned dashboard aesthetic
+- Keeping `md` breakpoint for dashboard — rejected because at 768px the full desktop nav cropped, cutting off the user identity pill
+
+**Consequences:**
+Both navs are now structurally identical except for their content and the mobile breakpoint. The mobile drawer top offset in `TopNav` updated from `top-[60px]` to `top-[64px]` to match. The dashboard logo text (`Stayright`) is now always visible, matching the landing page — previously it was hidden below the `sm` breakpoint.
+
+**Related:** `src/components/marketing/Nav.tsx`; `src/components/app/TopNav.tsx`
+
+---
+
+### [DECISION-066] Dashboard stat card grid: no intermediate 2-column breakpoint
+**Date:** 2026-03-31
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+The three stat cards (Current Window, Historical Peak, Qualifying Period) use `grid-cols-1 lg:grid-cols-3` with no `md:grid-cols-2` intermediate state. Below 1024px all three stack vertically; at 1024px+ they sit in a row.
+
+**Reasoning:**
+The `md:grid-cols-2` layout placed two cards side by side and the third alone below them — "Current Window" and "Historical Peak" next to each other and "Qualifying Period" orphaned on its own row. The three cards are conceptually a peer group (each is a different view of the same compliance data) and should appear together or not at all. Stacking until all three fit is cleaner than an awkward 2+1 split.
+
+**Alternatives considered:**
+- `md:grid-cols-2` with third card full-width — rejected because it created a false visual hierarchy (two cards "paired", one special) that does not reflect the data model
+- `sm:grid-cols-3` — rejected because the cards have enough content that at 640px they would be too narrow to be readable
+
+**Consequences:**
+At 768px–1023px (tablet) all three cards are stacked. This is more scrolling than the 2-column layout but is semantically correct and matches the decision to keep a single consistent `lg` breakpoint for the dashboard (DECISION-065).
+
+**Related:** `src/app/(app)/(main)/dashboard/page.tsx`; DECISION-049; DECISION-065
+
+---
+
+### [DECISION-067] Trips table: footer as single stat source; progressive column hiding
+**Date:** 2026-03-31
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Two related changes to the trips table information architecture:
+
+1. **Remove stat from toolbar**: The `{count} trips · {days} days abroad` line that appeared to the right of the search input was removed. This data is already present in the table footer ("Showing X of Y trips" and "Total days abroad: Z"). Duplicating it next to search was redundant and made the toolbar feel cramped.
+
+2. **Progressive column hiding**: The table columns are now responsive — Departure and Return columns are hidden below `md` (768px); the Window at Departure column is hidden below `lg` (1024px). Destination, Days, and Actions are always visible. The full data remains accessible via the expandable row detail panel.
+
+**Reasoning:**
+On narrow viewports (375–767px) the table's 7 columns caused the Return date cell to wrap to two lines and the Window column to be clipped entirely. Rather than making all columns fixed-width or adding horizontal scroll, progressive hiding was chosen because Destination + Days is the minimum useful reading of a trip row — the user can always expand a row to see dates and window data. The footer always-inline decision (no stacking) was made because the two footer strings are short enough to fit side by side even at 375px.
+
+**Alternatives considered:**
+- Horizontal scroll on the table — rejected because it obscures that the page has more content; scroll-jacking on mobile is a poor UX pattern for data tables in a compliance context
+- Fewer columns by default with a column chooser — rejected as over-engineering for a table that rarely exceeds 30 rows
+- Keeping toolbar stat — rejected because the same data in two places creates confusion when search is active (toolbar shows total, footer shows filtered count)
+
+**Consequences:**
+On mobile (< 768px), users see Destination and Days. All other data is one tap away via row expansion. The footer stat is the canonical summary of visible trips.
+
+**Related:** `src/components/app/trips/TripsTableClient.tsx`; DECISION-031
+
+---
+
+### [DECISION-068] Typography normalisation: unified type scale and weight consistency
+**Date:** 2026-03-31
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+Eight targeted corrections applied across the landing page and dashboard to establish a coherent type system:
+
+1. **`font-black` → `font-extrabold`** (`Hero.tsx`) — Manrope weight 900 is not loaded (only 300, 700, 800); browser was silently substituting 800. Corrected to explicitly use `font-extrabold` (800).
+2. **`not-italic` + inline `fontStyle: italic` conflict resolved** (`Hero.tsx`, `Features.tsx`, `Pricing.tsx`) — the `<em>` gradient spans had `className="not-italic"` overriding italic, then `style={{ fontStyle: 'italic' }}` re-applying it. Now uses `className="italic"` with no inline `fontStyle`, relying on CSS cascade correctly.
+3. **Heading letter-spacing unified to `-0.04em`** — dashboard `<h1>` ("Good afternoon…") used `-0.03em` while all marketing headings used `-0.04em`. Corrected to match.
+4. **Body line-height unified to `1.65`** — hero subheadline used `1.72`, pricing/features subheadlines used `1.6`. Standardised to `1.65` as the correct value for 17px Inter on dark backgrounds.
+5. **Eyebrow labels raised from `0.625rem` to `0.6875rem`** — "FEATURES" and "PRICING" section labels were 10px, below comfortable readability. Raised to 11px.
+6. **Peak ring number `font-bold` → `font-extrabold`** — the Historical Peak ring number used weight 700 while the Qualifying Period used 800. Both now use `font-extrabold` for consistency.
+7. **Hero mockup dates → `font-mono`** — date strings in the landing page mockup card used Inter; the real app renders all dates in JetBrains Mono. Mockup now matches.
+8. **Dashboard subtext explicit font family** — `"Here's your compliance status."` `<p>` had no `font-[...]` class, relying on inheritance. Now explicitly declares `font-[family-name:var(--font-inter)]`.
+
+**Reasoning:**
+These are corrections to existing intent, not changes to the typographic direction. The font pairing (Manrope / Inter / JetBrains Mono) and overall scale were correct; inconsistencies had accumulated from components being built at different times without cross-referencing each other.
+
+**Consequences:**
+No visual changes visible to users except subtle: slightly tighter body text rhythm (1.65 vs 1.72/1.6), slightly larger eyebrow labels, and the mockup dates now rendering in mono. The `not-italic` fix has no visible effect but removes a fragile CSS specificity dependency.
+
+**Related:** `src/components/marketing/Hero.tsx`; `src/components/marketing/Features.tsx`; `src/components/marketing/Pricing.tsx`; `src/app/(app)/(main)/dashboard/page.tsx`; DECISION-009; `.impeccable.md`
 

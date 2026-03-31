@@ -63,3 +63,7 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-062 | Monthly cron entitlement aligned with isPlanPro() | Removed past_due from monthly cron subscription filter; now matches isPlanPro() which excludes past_due/unpaid | Decided |
 | DECISION-063 | Monthly cron bulk-fetches trips to eliminate N+1 query | Single .in(user_id, profileIds) query + in-memory grouping, mirroring daily cron pattern | Decided |
 | DECISION-064 | Two-tier E2E testing strategy — smoke on push, full suite nightly | Smoke (12 tests, every push) + full suite (~50 tests, nightly); 3 auth personas; axe-core removed from E2E (amends DECISION-043) | Decided |
+| DECISION-065 | Nav structure unified: edge-to-edge, 64px height, lg breakpoint for dashboard | Both navs share h-[64px], px-6 md:px-14, no max-width; dashboard hamburger shifts to lg to prevent overflow | Decided |
+| DECISION-066 | Dashboard stat card grid: no intermediate 2-column breakpoint | Cards go 1→3 at lg only; 2+1 split at md was semantically wrong and visually awkward | Decided |
+| DECISION-067 | Trips table: footer as single stat source; progressive column hiding | Toolbar stat removed (duplicated footer); Departure/Return hidden below md, Window below lg | Decided |
+| DECISION-068 | Typography normalisation: unified type scale and weight consistency | 8 corrections: font-black fix, not-italic conflict, tracking/line-height/eyebrow size unified | Decided |
