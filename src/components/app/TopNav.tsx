@@ -81,7 +81,7 @@ export function TopNav({
           WebkitBackdropFilter: 'blur(20px) saturate(1.2)',
         }}
       >
-      <div className="max-w-[1320px] mx-auto px-6 md:px-14 h-full flex items-center">
+      <div className="px-6 md:px-14 h-full flex items-center">
         {/* Logo */}
         <Link
           href="/dashboard"
