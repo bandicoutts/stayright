@@ -11,5 +11,5 @@ interface Props {
 
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams
-  return <LoginForm initialError={params.error} />
+  return <LoginForm initialError={params.error} defaultTab="login" />
 }
