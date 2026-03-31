@@ -100,7 +100,7 @@ export function TopNav({
         </Link>
 
         {/* Desktop nav links */}
-        <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Main navigation">
+        <nav className="hidden lg:flex items-center gap-1 flex-1" aria-label="Main navigation">
           {NAV_ITEMS.map(({ href, label }) => {
             const active = isActive(href)
             return (
@@ -124,7 +124,7 @@ export function TopNav({
           <ThemeToggle />
 
           {/* User identity — desktop */}
-          <div ref={profileRef} className="hidden md:block relative">
+          <div ref={profileRef} className="hidden lg:block relative">
             <button
               type="button"
               onClick={() => setIsProfileOpen((v) => !v)}
@@ -193,7 +193,7 @@ export function TopNav({
           <button
             type="button"
             onClick={isMenuOpen ? onCloseMenu : onOpenMenu}
-            className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -mr-1 rounded-lg text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+            className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -mr-1 rounded-lg text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMenuOpen}
           >
@@ -210,7 +210,7 @@ export function TopNav({
       {/* Mobile drawer backdrop */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
           onClick={onCloseMenu}
           aria-hidden="true"
         />
@@ -218,7 +218,7 @@ export function TopNav({
 
       {/* Mobile drawer */}
       <div
-        className={`fixed top-[60px] left-0 right-0 z-30 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-xl md:hidden transition-all duration-200 ease-in-out ${
+        className={`fixed top-[64px] left-0 right-0 z-30 bg-[var(--color-surface)] border-b border-[var(--color-border)] shadow-xl lg:hidden transition-all duration-200 ease-in-out ${
           isMenuOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
         }`}
         aria-hidden={!isMenuOpen}
