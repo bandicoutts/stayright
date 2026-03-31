@@ -65,7 +65,7 @@ function PeakWindowCard({ peak }: { peak: RollingWindowResult }) {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-[family-name:var(--font-manrope)] font-bold text-3xl leading-none tracking-tight text-[var(--color-text-primary)]">
+            <span className="font-[family-name:var(--font-manrope)] font-extrabold text-3xl leading-none tracking-tight text-[var(--color-text-primary)]">
               {peak.days}
             </span>
             <span className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)] mt-1">/ 180</span>
@@ -173,10 +173,10 @@ export default async function DashboardPage() {
       <div className="mb-8">
         <div className="flex flex-wrap items-start justify-between gap-y-4">
           <div>
-            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
+            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.04em] text-[var(--color-text-primary)]">
               <DashboardGreeting firstName={firstName} />
             </h1>
-            <p className="text-sm text-[var(--color-text-muted)] mt-1">
+            <p className="font-[family-name:var(--font-inter)] text-sm text-[var(--color-text-muted)] mt-1">
               {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
             </p>
           </div>

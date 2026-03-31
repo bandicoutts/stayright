@@ -122,7 +122,7 @@ function QuotaRingMockup() {
             {/* Center text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span
-                className="font-[family-name:var(--font-manrope)] font-black leading-none tracking-[-0.04em]"
+                className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
                 style={{ fontSize: '3.5rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 42
@@ -156,7 +156,7 @@ function QuotaRingMockup() {
                     Portugal
                   </span>
                   <span
-                    className="font-[family-name:var(--font-inter)] mt-0.5"
+                    className="font-[family-name:var(--font-mono)] mt-0.5"
                     style={{ fontSize: '0.6875rem', color: 'var(--color-text-faint)' }}
                   >
                     Jan 8–22, 2026
@@ -194,7 +194,7 @@ function QuotaRingMockup() {
                     United States
                   </span>
                   <span
-                    className="font-[family-name:var(--font-inter)] mt-0.5"
+                    className="font-[family-name:var(--font-mono)] mt-0.5"
                     style={{ fontSize: '0.6875rem', color: 'var(--color-text-faint)' }}
                   >
                     Oct 3–17, 2025
@@ -249,9 +249,8 @@ export default function Hero() {
           >
             Don&apos;t risk your ILR{' '}
             <em
-              className="not-italic block font-light"
+              className="italic block font-light"
               style={{
-                fontStyle: 'italic',
                 fontWeight: 300,
                 fontSize: '105%',
                 background: 'var(--gradient-green-text)',
@@ -266,7 +265,7 @@ export default function Hero() {
 
           {/* Subheadline */}
           <p
-            className="font-[family-name:var(--font-inter)] leading-[1.72] mb-11 max-w-[440px] animate-fade-up animate-fade-up-3"
+            className="font-[family-name:var(--font-inter)] leading-[1.65] mb-11 max-w-[440px] animate-fade-up animate-fade-up-3"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             Precision tracking for the UK&apos;s 180-day rule. Automatically monitor

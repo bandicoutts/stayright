@@ -20,7 +20,7 @@ export default function Pricing() {
           <div className="mb-[14px]">
             <span
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
-              style={{ fontSize: '0.625rem', color: 'var(--color-green)' }}
+              style={{ fontSize: '0.6875rem', color: 'var(--color-green)' }}
             >
               Pricing
             </span>
@@ -31,9 +31,8 @@ export default function Pricing() {
           >
             Protect your path{' '}
             <em
-              className="not-italic"
+              className="italic"
               style={{
-                fontStyle: 'italic',
                 fontWeight: 300,
                 background: 'var(--gradient-green-text)',
                 WebkitBackgroundClip: 'text',
@@ -45,7 +44,7 @@ export default function Pricing() {
             </em>
           </h2>
           <p
-            className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4"
+            className="font-[family-name:var(--font-inter)] leading-[1.65] mt-4"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
           >
             Avoid the cost and stress of a rejected application.

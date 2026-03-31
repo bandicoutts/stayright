@@ -54,7 +54,7 @@ export default function Features() {
           <div className="mb-[14px]">
             <span
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
-              style={{ fontSize: '0.625rem', color: 'var(--color-green)' }}
+              style={{ fontSize: '0.6875rem', color: 'var(--color-green)' }}
             >
               Features
             </span>
@@ -65,9 +65,8 @@ export default function Features() {
           >
             Built for the{' '}
             <em
-              className="not-italic"
+              className="italic"
               style={{
-                fontStyle: 'italic',
                 fontWeight: 300,
                 background: 'var(--gradient-green-text)',
                 WebkitBackgroundClip: 'text',
@@ -79,7 +78,7 @@ export default function Features() {
             </em>
           </h2>
           <p
-            className="font-[family-name:var(--font-inter)] leading-[1.6] mt-5 max-w-[480px]"
+            className="font-[family-name:var(--font-inter)] leading-[1.65] mt-5 max-w-[480px]"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             The Home Office doesn&apos;t just look at the last year. They check every
