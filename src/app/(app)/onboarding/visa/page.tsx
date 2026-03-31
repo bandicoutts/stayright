@@ -5,7 +5,11 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Visa setup' }
 
-export default async function OnboardingVisaPage() {
+export default async function OnboardingVisaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ force?: string }>
+}) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -18,7 +22,8 @@ export default async function OnboardingVisaPage() {
     .eq('id', user.id)
     .single()
 
-  if (profile?.onboarding_completed) redirect('/dashboard')
+  const params = await searchParams
+  if (profile?.onboarding_completed && params.force !== '1') redirect('/dashboard')
 
   return (
     <VisaForm

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import {
   updateProfileAction,
   updateNotificationsAction,
@@ -463,8 +464,14 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
                       </p>
                     </div>
                   )}
-                  <div>
+                  <div className="flex items-center gap-4 flex-wrap">
                     <SaveButton saving={profileSaving} onClick={handleSaveProfile} />
+                    <Link
+                      href="/onboarding/visa?force=1"
+                      className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors underline underline-offset-2"
+                    >
+                      Redo visa setup
+                    </Link>
                     {profileStatus && <StatusMessage type={profileStatus.type} message={profileStatus.msg} />}
                   </div>
                 </div>

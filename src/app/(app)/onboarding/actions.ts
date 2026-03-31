@@ -57,7 +57,7 @@ export async function saveTripAction(data: {
   return_date: string
 }): Promise<
   | { trip: { id: string; destination: string; departure_date: string; return_date: string | null } }
-  | { error: string }
+  | { error: string; quota?: true }
 > {
   const supabase = await createClient()
   const {
@@ -89,7 +89,8 @@ export async function saveTripAction(data: {
   if (!isPlanPro(subscription?.plan, subscription?.status)) {
     if ((existingTrips ?? []).length >= FREE_TRIP_LIMIT) {
       return {
-        error: `Free plan is limited to ${FREE_TRIP_LIMIT} trips. Upgrade to Pro to add unlimited trips.`,
+        error: `You've added ${FREE_TRIP_LIMIT} trips — great start! You can add unlimited trips with Pro.`,
+        quota: true,
       }
     }
   }
@@ -154,5 +155,5 @@ export async function completeOnboardingAction() {
     .update({ onboarding_completed: true })
     .eq('id', user.id)
 
-  redirect('/dashboard')
+  redirect('/dashboard?onboarded=1')
 }

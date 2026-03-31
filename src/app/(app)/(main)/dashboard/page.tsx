@@ -8,6 +8,8 @@ import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
 import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytics'
 import { DashboardTripsPreview } from '@/components/app/dashboard/DashboardTripsPreview'
+import { SetupNudge } from '@/components/app/dashboard/SetupNudge'
+import { DashboardWelcome } from '@/components/app/dashboard/DashboardWelcome'
 import {
   getCurrentRollingWindow,
   getPeakRollingWindow,
@@ -217,6 +219,18 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      {/* Setup nudge — shown when user skipped onboarding without entering visa data */}
+      {!profile.visa_start_date && (
+        <Suspense fallback={null}>
+          <SetupNudge />
+        </Suspense>
+      )}
+
+      {/* First-visit welcome — shown once after completing onboarding (?onboarded=1) */}
+      <Suspense fallback={null}>
+        <DashboardWelcome />
+      </Suspense>
+
       {/* Currently abroad banner */}
       {isCurrentlyAbroad && (
         <div className="mb-6 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-center gap-3">
@@ -255,9 +269,14 @@ export default async function DashboardPage() {
         {peakWindow ? (
           <PeakWindowCard peak={peakWindow} />
         ) : (
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)] mb-3">Historical peak</h2>
-            <p className="text-sm text-[var(--color-text-muted)]">Available once you have a completed trip.</p>
+          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center gap-2" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">Historical peak</h2>
+            <div className="w-8 h-8 rounded-full bg-[var(--color-surface-sunken)] flex items-center justify-center">
+              <svg className="w-4 h-4 text-[var(--color-text-faint)]" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 12L6.5 7l3 3.5L12 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <p className="text-sm text-[var(--color-text-muted)]">Your peak will appear here after your first completed trip.</p>
           </div>
         )}
 

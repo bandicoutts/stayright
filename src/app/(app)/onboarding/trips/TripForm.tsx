@@ -37,6 +37,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
   const [addingTrip, setAddingTrip] = useState(false)
   const [completing, setCompleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [quotaReached, setQuotaReached] = useState(false)
 
   const debouncedDeparture = useDebounce(departureDate, 400)
   const debouncedReturn = useDebounce(returnDate, 400)
@@ -87,7 +88,12 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
     })
 
     if ('error' in result) {
-      setError(result.error)
+      if (result.quota) {
+        setQuotaReached(true)
+        setShowForm(false)
+      } else {
+        setError(result.error)
+      }
       setAddingTrip(false)
       return
     }
@@ -123,9 +129,9 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
     <div className="w-full max-w-lg">
       {/* Progress dots — all filled on step 3 */}
       <div className="flex justify-center gap-2 mb-8">
-        <div className="h-2 w-8 rounded-full bg-[#006948]" />
-        <div className="h-2 w-8 rounded-full bg-[#006948]" />
-        <div className="h-2 w-8 rounded-full bg-[#006948]" />
+        <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
+        <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
+        <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8">
@@ -140,7 +146,21 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
           later — this just helps you start with an accurate picture.
         </p>
 
-        {error && (
+        {quotaReached && (
+          <div className="mb-4 px-4 py-4 bg-[#F0FAF5] border border-[#006948]/20 rounded-xl flex items-start gap-3">
+            <span className="text-lg shrink-0" aria-hidden="true">🎉</span>
+            <div>
+              <p className="text-sm font-semibold text-[#191C1D]">
+                You&apos;ve added {trips.length} trips — great start!
+              </p>
+              <p className="text-sm text-[#3D4A42] mt-0.5">
+                Add unlimited trips with Pro, or continue to your dashboard now.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {error && !quotaReached && (
           <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
             {error}
           </div>
@@ -181,8 +201,8 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
           </div>
         )}
 
-        {/* Add trip form */}
-        {showForm ? (
+        {/* Add trip form — hidden once quota is reached */}
+        {!quotaReached && showForm ? (
           <form onSubmit={handleAddTrip} className="space-y-4 mb-5">
             {/* Destination with autocomplete */}
             <div>
@@ -253,7 +273,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
               )}
             </div>
           </form>
-        ) : (
+        ) : !quotaReached ? (
           <button
             type="button"
             onClick={() => setShowForm(true)}
@@ -262,7 +282,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
             <Plus className="w-4 h-4" />
             Add {trips.length > 0 ? 'another trip' : 'a trip'}
           </button>
-        )}
+        ) : null}
 
         {/* Complete button */}
         <button
