@@ -21,7 +21,7 @@ export default function TrustBar() {
       }}
     >
       <div
-        className="max-w-[1320px] mx-auto grid grid-cols-2 lg:grid-cols-3"
+        className="max-w-[1320px] mx-auto grid grid-cols-3"
         role="list"
         aria-label="Trust signals"
       >
@@ -29,7 +29,7 @@ export default function TrustBar() {
           <div
             key={cell.label}
             role="listitem"
-            className="flex flex-col gap-1 px-12 py-7"
+            className="flex flex-col gap-1 px-6 sm:px-10 lg:px-12 py-7"
           >
             <span
               className="font-[family-name:var(--font-manrope)] font-bold leading-tight tracking-[-0.02em]"

@@ -1,3 +1,4 @@
+import React from 'react'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -10,6 +11,7 @@ import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytic
 import { DashboardTripsPreview } from '@/components/app/dashboard/DashboardTripsPreview'
 import { SetupNudge } from '@/components/app/dashboard/SetupNudge'
 import { DashboardWelcome } from '@/components/app/dashboard/DashboardWelcome'
+import { DashboardGreeting } from '@/components/app/dashboard/DashboardGreeting'
 import {
   getCurrentRollingWindow,
   getPeakRollingWindow,
@@ -169,26 +171,25 @@ export default async function DashboardPage() {
 
       {/* Page header */}
       <div className="mb-8">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-y-4">
           <div>
             <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
-              Good {getGreeting()}, {firstName}
+              <DashboardGreeting firstName={firstName} />
             </h1>
             <p className="text-sm text-[var(--color-text-muted)] mt-1">
               {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
             </p>
           </div>
-          {/* Desktop buttons */}
-          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
             <Link
               href="/trips?modal=plan&returnTo=%2Fdashboard"
-              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
             >
               Plan trip
             </Link>
             <Link
               href="/trips?modal=log&returnTo=%2Fdashboard"
-              className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
               style={{ background: 'var(--gradient-green)' }}
             >
               <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
@@ -197,25 +198,6 @@ export default async function DashboardPage() {
               Log trip
             </Link>
           </div>
-        </div>
-        {/* Mobile buttons — below heading */}
-        <div className="flex sm:hidden items-center gap-2.5 mt-4">
-          <Link
-            href="/trips?modal=plan&returnTo=%2Fdashboard"
-            className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
-          >
-            Plan trip
-          </Link>
-          <Link
-            href="/trips?modal=log&returnTo=%2Fdashboard"
-            className="flex-1 flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
-            style={{ background: 'var(--gradient-green)' }}
-          >
-            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            Log trip
-          </Link>
         </div>
       </div>
 
@@ -236,10 +218,9 @@ export default async function DashboardPage() {
         <div className="mb-6 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-center gap-3">
           <span className="text-lg shrink-0">✈️</span>
           <p className="text-sm text-[var(--color-text-primary)]">
-            <span className="font-semibold">You&apos;re currently abroad.</span>{' '}
-            Return date not yet logged —{' '}
-            <Link href="/trips" className="underline font-medium">log your return</Link>{' '}
-            when you&apos;re back in the UK.
+            <span className="font-semibold">Your absence days are still counting.</span>{' '}
+            <Link href="/trips" className="underline font-medium">Log your return date</Link>{' '}
+            as soon as you&apos;re back in the UK to keep your compliance status accurate.
           </p>
         </div>
       )}
@@ -250,7 +231,7 @@ export default async function DashboardPage() {
       )}
 
       {/* Stat cards — three columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
 
         {/* Current window — hero ring */}
         <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
@@ -276,7 +257,7 @@ export default async function DashboardPage() {
                 <path d="M3 12L6.5 7l3 3.5L12 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <p className="text-sm text-[var(--color-text-muted)]">Your peak will appear here after your first completed trip.</p>
+            <p className="text-sm text-[var(--color-text-muted)]">Log your first trip and we&apos;ll track your peak rolling window here.</p>
           </div>
         )}
 
@@ -337,7 +318,7 @@ function AlertCard({
   days: number
   status: 'WARNING' | 'DANGER' | 'BREACH'
 }) {
-  const config = {
+  const config: Record<'WARNING' | 'DANGER' | 'BREACH', { bg: string; text: string; icon: string; message: React.ReactNode }> = {
     WARNING: {
       bg: 'bg-[var(--color-warning-bg)] border-[var(--color-warning-border)]',
       text: 'text-[var(--color-warning-text)]',
@@ -354,21 +335,29 @@ function AlertCard({
       bg: 'bg-[var(--color-danger-bg)] border-[var(--color-danger-border)]',
       text: 'text-[var(--color-danger-text)]',
       icon: '🚫',
-      message: `You have exceeded 180 days of absence (${days} days used). Seek immigration advice immediately.`,
+      message: (
+        <>
+          You have exceeded 180 days of absence ({days} days used). You should seek qualified immigration advice immediately.{' '}
+          <Link
+            href="https://solicitors.lawsociety.org.uk/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline font-semibold"
+          >
+            Find an immigration solicitor →
+          </Link>
+        </>
+      ),
     },
-  }[status]
+  }
+
+  const { bg, text, icon, message } = config[status]
 
   return (
-    <div className={`mb-6 px-4 py-4 border rounded-xl flex gap-3 ${config.bg}`} role="alert">
-      <span className="text-lg shrink-0">{config.icon}</span>
-      <p className={`text-sm font-medium ${config.text}`}>{config.message}</p>
+    <div className={`mb-6 px-4 py-4 border rounded-xl flex gap-3 ${bg}`} role="alert">
+      <span className="text-lg shrink-0">{icon}</span>
+      <p className={`text-sm font-medium ${text}`}>{message}</p>
     </div>
   )
 }
 
-function getGreeting() {
-  const h = new Date().getHours()
-  if (h < 12) return 'morning'
-  if (h < 17) return 'afternoon'
-  return 'evening'
-}

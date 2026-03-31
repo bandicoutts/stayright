@@ -106,24 +106,11 @@ export function TopNav({
               <Link
                 key={href}
                 href={href}
-                className="px-3.5 py-2 rounded-lg text-[13px] font-medium transition-colors no-underline"
-                style={
+                className={
                   active
-                    ? { background: 'var(--color-accent-subtle, rgba(0,168,116,0.1))', color: 'var(--color-green-light)' }
-                    : { color: 'var(--color-text-muted)' }
+                    ? 'px-3.5 py-2 rounded-lg text-[13px] font-medium transition-colors no-underline bg-[var(--color-accent-subtle,rgba(0,168,116,0.1))] text-[var(--color-green-light)]'
+                    : 'px-3.5 py-2 rounded-lg text-[13px] font-medium transition-colors no-underline text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] focus-visible:text-[var(--color-text-primary)] focus-visible:bg-[var(--color-bg-tinted)] focus-visible:outline-none'
                 }
-                onMouseEnter={(e) => {
-                  if (!active) {
-                    ;(e.currentTarget as HTMLElement).style.color = 'var(--color-text-primary)'
-                    ;(e.currentTarget as HTMLElement).style.background = 'var(--color-bg-tinted)'
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!active) {
-                    ;(e.currentTarget as HTMLElement).style.color = 'var(--color-text-muted)'
-                    ;(e.currentTarget as HTMLElement).style.background = 'transparent'
-                  }
-                }}
               >
                 {label}
               </Link>
@@ -205,7 +192,7 @@ export function TopNav({
           <button
             type="button"
             onClick={isMenuOpen ? onCloseMenu : onOpenMenu}
-            className="md:hidden p-2 -mr-1 rounded-lg text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+            className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -mr-1 rounded-lg text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMenuOpen}
           >

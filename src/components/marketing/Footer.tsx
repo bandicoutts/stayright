@@ -47,7 +47,7 @@ export default function Footer() {
       <div className="max-w-[1320px] mx-auto">
 
         {/* Top: brand + link columns */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 mb-12">
 
           {/* Brand column */}
           <div className="lg:col-span-1 flex flex-col gap-3">

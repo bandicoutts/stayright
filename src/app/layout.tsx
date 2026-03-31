@@ -8,7 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['700', '800'],
+  weight: ['300', '700', '800'],
   variable: '--font-manrope',
   display: 'swap',
 });

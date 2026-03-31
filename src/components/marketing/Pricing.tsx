@@ -16,7 +16,7 @@ export default function Pricing() {
       <div className="max-w-[1320px] mx-auto py-[90px]">
 
         {/* Section header */}
-        <div className="mb-12">
+        <div className="mb-12 text-center max-w-2xl mx-auto">
           <div className="mb-[14px]">
             <span
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
@@ -45,11 +45,12 @@ export default function Pricing() {
             </em>
           </h2>
           <p
-            className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4 max-w-[400px]"
+            className="font-[family-name:var(--font-inter)] leading-[1.6] mt-4"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
           >
-            Protect your path to ILR. Avoid the cost and stress of a rejected application.
+            Avoid the cost and stress of a rejected application.
           </p>
+
         </div>
 
         {/* Toggle */}

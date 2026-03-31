@@ -36,7 +36,7 @@ const features = [
     icon: FileArrowDown,
     title: 'Export ready',
     description:
-      'Generate absence tables formatted for your ILR or SET(O) application. One-click documentation.',
+      'Generate absence tables formatted for your ILR application (SET(O) form). One-click documentation.',
   },
 ];
 
@@ -142,7 +142,7 @@ export default function Features() {
                 {/* Destination Row */}
                 <div
                   className="flex items-center justify-between pb-4 mb-4"
-                  style={{ borderBottom: '1px solid #F5F0E6' }}
+                  style={{ borderBottom: '1px solid var(--color-border)' }}
                 >
                   <div className="flex items-center gap-[14px]">
                     <span className="text-[1.75rem] leading-none drop-shadow-sm">🇪🇸</span>

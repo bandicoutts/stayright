@@ -66,7 +66,7 @@ function QuotaRingMockup() {
               color: 'var(--color-safe-text)',
             }}
           >
-            ✓ Safe
+            Compliant
           </span>
         </div>
 
@@ -159,7 +159,7 @@ function QuotaRingMockup() {
                     className="font-[family-name:var(--font-inter)] mt-0.5"
                     style={{ fontSize: '0.6875rem', color: 'var(--color-text-faint)' }}
                   >
-                    Jan 8–22, 2025
+                    Jan 8–22, 2026
                   </span>
                 </div>
               </div>
@@ -197,7 +197,7 @@ function QuotaRingMockup() {
                     className="font-[family-name:var(--font-inter)] mt-0.5"
                     style={{ fontSize: '0.6875rem', color: 'var(--color-text-faint)' }}
                   >
-                    Oct 3–17, 2024
+                    Oct 3–17, 2025
                   </span>
                 </div>
               </div>
@@ -270,8 +270,8 @@ export default function Hero() {
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             Precision tracking for the UK&apos;s 180-day rule. Automatically monitor
-            every rolling 12-month window and ensure you&apos;re fully compliant with
-            Appendix Continuous Residence.
+            every rolling 12-month window and meet the continuous residence requirement
+            for your ILR application.
           </p>
 
           {/* CTAs */}
@@ -293,7 +293,8 @@ export default function Hero() {
             {[
               'Free to start',
               'No credit card',
-              'Built for Skilled Worker compliance',
+              'UK-based team',
+              'Cancel anytime',
             ].map((tag) => (
               <span
                 key={tag}

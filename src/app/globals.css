@@ -142,4 +142,9 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration:      0.01ms !important;
     transform:                none !important;
   }
+  /* Ensure fade-up elements are visible even with animations suppressed */
+  .animate-fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

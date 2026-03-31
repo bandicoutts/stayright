@@ -85,31 +85,13 @@ export default function Nav() {
         <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Marketing navigation">
           <a
             href="#features"
-            className="px-3.5 py-2 rounded-lg text-[13px] font-medium no-underline"
-            style={{ color: 'var(--color-text-muted)' }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-text-primary)';
-              (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-tinted)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-text-muted)';
-              (e.currentTarget as HTMLElement).style.background = 'transparent';
-            }}
+            className="px-3.5 py-2 rounded-lg text-[13px] font-medium no-underline text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] focus-visible:text-[var(--color-text-primary)] focus-visible:bg-[var(--color-bg-tinted)] focus-visible:outline-none transition-colors duration-150"
           >
             Features
           </a>
           <a
             href="#pricing"
-            className="px-3.5 py-2 rounded-lg text-[13px] font-medium no-underline"
-            style={{ color: 'var(--color-text-muted)' }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-text-primary)';
-              (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-tinted)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-text-muted)';
-              (e.currentTarget as HTMLElement).style.background = 'transparent';
-            }}
+            className="px-3.5 py-2 rounded-lg text-[13px] font-medium no-underline text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] focus-visible:text-[var(--color-text-primary)] focus-visible:bg-[var(--color-bg-tinted)] focus-visible:outline-none transition-colors duration-150"
           >
             Pricing
           </a>
@@ -144,7 +126,7 @@ export default function Nav() {
         {/* Mobile hamburger */}
         <button
           ref={btnRef}
-          className="md:hidden p-2 -mr-2 ml-auto text-[var(--color-text-primary)]"
+          className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2 ml-auto text-[var(--color-text-primary)]"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
