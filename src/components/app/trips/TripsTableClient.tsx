@@ -633,7 +633,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
 
         {/* Table footer */}
         {activeTrips.length > 0 && (
-          <div className="px-4 py-3 border-t border-[var(--color-nav-border)] flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div className="px-4 py-3 border-t border-[var(--color-nav-border)] flex flex-col gap-1 lg:flex-row lg:items-center lg:justify-between">
             <span className="text-xs text-[var(--color-text-faint)]">
               Showing {visibleTrips.filter((t) => !optimisticDeletedIds.includes(t.id)).length} of {activeTrips.length} trip{activeTrips.length !== 1 ? 's' : ''}
             </span>
