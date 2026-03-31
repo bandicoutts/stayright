@@ -531,7 +531,7 @@ export function TripsClient({ trips, visaStartDate, isPro }: TripsClientProps) {
         open={drawerOpen}
         mode={drawerMode ?? 'log'}
         onClose={() => router.push('/dashboard', { scroll: false })}
-        existingTrips={trips.map(toTripInput)}
+        existingTrips={trips.filter(t => !optimisticDeletedIds.includes(t.id)).map(toTripInput)}
         visaStartDate={visaStartDate}
         isPro={isPro}
         tripCount={trips.length}
