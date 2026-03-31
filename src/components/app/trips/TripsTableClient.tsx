@@ -416,16 +416,16 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                   <th className={thClass} onClick={() => handleSort('destination')}>
                     Destination <SortIcon col="destination" sortKey={sortKey} dir={sortDir} />
                   </th>
-                  <th className={thClass} onClick={() => handleSort('departure_date')}>
+                  <th className={`${thClass} hidden md:table-cell`} onClick={() => handleSort('departure_date')}>
                     Departure <SortIcon col="departure_date" sortKey={sortKey} dir={sortDir} />
                   </th>
-                  <th className={thClass} onClick={() => handleSort('return_date')}>
+                  <th className={`${thClass} hidden md:table-cell`} onClick={() => handleSort('return_date')}>
                     Return <SortIcon col="return_date" sortKey={sortKey} dir={sortDir} />
                   </th>
                   <th className={thClass} onClick={() => handleSort('days')}>
                     Days <SortIcon col="days" sortKey={sortKey} dir={sortDir} />
                   </th>
-                  <th className={thClass}>
+                  <th className={`${thClass} hidden lg:table-cell`}>
                     Window at departure
                   </th>
                   <th className={`${thClass} w-20 cursor-default`} />
@@ -489,14 +489,14 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                         </td>
 
                         {/* Departure */}
-                        <td className="px-4 py-3.5">
+                        <td className="px-4 py-3.5 hidden md:table-cell">
                           <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-text-muted)]">
                             {formatDate(trip.departure_date)}
                           </span>
                         </td>
 
                         {/* Return */}
-                        <td className="px-4 py-3.5">
+                        <td className="px-4 py-3.5 hidden md:table-cell">
                           <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-text-muted)]">
                             {trip.return_date ? formatDate(trip.return_date) : '—'}
                           </span>
@@ -520,7 +520,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                         </td>
 
                         {/* Window at departure */}
-                        <td className="px-4 py-3.5">
+                        <td className="px-4 py-3.5 hidden lg:table-cell">
                           <div className="flex items-center gap-2">
                             <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-text-muted)]">
                               {windowDays}/180
