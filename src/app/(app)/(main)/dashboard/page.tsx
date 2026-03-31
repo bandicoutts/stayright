@@ -231,7 +231,7 @@ export default async function DashboardPage() {
       )}
 
       {/* Stat cards — three columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
 
         {/* Current window — hero ring */}
         <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
