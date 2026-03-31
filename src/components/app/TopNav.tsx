@@ -73,7 +73,7 @@ export function TopNav({
     <>
       {/* Sticky top bar */}
       <header
-        className="sticky top-0 z-40 h-[60px] flex items-center px-4 sm:px-6 border-b"
+        className="sticky top-0 z-40 h-[64px] border-b"
         style={{
           background: 'var(--color-nav-bg)',
           borderColor: 'var(--color-nav-border)',
@@ -81,6 +81,7 @@ export function TopNav({
           WebkitBackdropFilter: 'blur(20px) saturate(1.2)',
         }}
       >
+      <div className="max-w-[1320px] mx-auto px-6 md:px-14 h-full flex items-center">
         {/* Logo */}
         <Link
           href="/dashboard"
@@ -93,7 +94,7 @@ export function TopNav({
           >
             S
           </div>
-          <span className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.0625rem] tracking-[-0.03em] text-[var(--color-text-primary)] hidden sm:block">
+          <span className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.0625rem] tracking-[-0.03em] text-[var(--color-text-primary)]">
             Stayright
           </span>
         </Link>
@@ -119,7 +120,7 @@ export function TopNav({
         </nav>
 
         {/* Right side */}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-3">
           <ThemeToggle />
 
           {/* User identity — desktop */}
@@ -203,6 +204,7 @@ export function TopNav({
             )}
           </button>
         </div>
+      </div>
       </header>
 
       {/* Mobile drawer backdrop */}

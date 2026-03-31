@@ -63,7 +63,7 @@ export default function Nav() {
         WebkitBackdropFilter: 'blur(20px) saturate(1.2)',
       } : {}}
     >
-      <div className="max-w-[1320px] mx-auto px-6 md:px-14 h-[62px] flex items-center">
+      <div className="max-w-[1320px] mx-auto px-6 md:px-14 h-[64px] flex items-center">
 
         {/* Logo */}
         <Link
