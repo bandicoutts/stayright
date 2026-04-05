@@ -239,8 +239,10 @@ test.describe('Paywall', () => {
     await expect(
       page.getByText(/Unlock StayRight Pro/i)
     ).toBeVisible({ timeout: 10_000 })
-    await expect(page.getByText('£2.99')).toBeVisible()
-    await expect(page.getByText('£24.99')).toBeVisible()
-    await expect(page.getByText('£49.99')).toBeVisible()
+    // Use .first() for £2.99 — it appears in three places (plan card, "from £2.99/month"
+    // paragraph, and the upgrade button label), causing a strict mode violation.
+    await expect(page.getByText('£2.99').first()).toBeVisible()
+    await expect(page.getByText('£24.99').first()).toBeVisible()
+    await expect(page.getByText('£49.99').first()).toBeVisible()
   })
 })

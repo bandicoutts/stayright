@@ -22,8 +22,10 @@ test.describe('Settings', () => {
 
   test('settings page loads with all three tabs visible', async ({ page }) => {
     await expect(page.getByText('Visa Details')).toBeVisible({ timeout: 10_000 })
-    await expect(page.getByText('Account')).toBeVisible()
-    await expect(page.getByText('Notifications')).toBeVisible()
+    // Use exact:true — without it, getByText('Account') also matches the description
+    // paragraph "Manage your visa profile, account, and notification preferences."
+    await expect(page.getByText('Account', { exact: true })).toBeVisible()
+    await expect(page.getByText('Notifications', { exact: true })).toBeVisible()
   })
 
   test('Visa Details: First name field is editable', async ({ page }) => {
