@@ -1604,3 +1604,30 @@ No visual changes visible to users except subtle: slightly tighter body text rhy
 
 **Related:** `src/components/marketing/Hero.tsx`; `src/components/marketing/Features.tsx`; `src/components/marketing/Pricing.tsx`; `src/app/(app)/(main)/dashboard/page.tsx`; DECISION-009; `.impeccable.md`
 
+
+
+---
+
+### [DECISION-069] signOut must always use scope:'local'
+**Date:** 2026-04-05
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+All calls to `supabase.auth.signOut()` in the codebase must pass `{ scope: 'local' }`. The default Supabase scope is `'global'`, which revokes every active session for that user across all devices.
+
+**Reasoning:**
+The default global scope caused a silent but severe bug in the E2E test suite: the `no-auth` Playwright project runs `auth.spec.ts`, which logs in as the free test user and then signs out. Because `signOut()` was called without a scope, Supabase revoked all sessions for that user — including the refresh token stored in `free.json` by the `setup-free` project. Every subsequent `[chromium]` project test using `free.json` was then redirected to `/login`, producing 21 unexplained failures.
+
+Beyond the test impact, global sign-out is wrong product behaviour: if a user has the app open in two tabs or on two devices, clicking "Sign out" in one should not silently sign them out everywhere without warning.
+
+**`scope: 'local'`** revokes only the current session's refresh token on the Supabase server and clears local storage. Other sessions remain unaffected.
+
+**Alternatives considered:**
+- `scope: 'global'` as a deliberate product choice (e.g. "sign out everywhere" button in Settings) — acceptable if explicitly labelled; the default sign-out button must remain `'local'`
+- `scope: 'others'` — signs out all other sessions but keeps current; not needed for a standard sign-out flow
+
+**Consequences:**
+Users who sign out on one device remain signed in on others. This is the expected behaviour for a standard "Sign out" action. A future "Sign out of all devices" option in Settings could use `scope: 'global'` explicitly.
+
+**Related:** `src/components/app/TopNav.tsx`; `src/components/app/Sidebar.tsx`; `docs/TESTING.md` (Auth session isolation section)

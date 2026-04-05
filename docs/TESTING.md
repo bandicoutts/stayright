@@ -14,6 +14,33 @@ page.locator('button[type="button"]:has-text("Sign in")')
 page.getByRole('tab', { name: 'Sign in' })
 ```
 
+**`getByText` also does substring matching by default.** Always pass `{ exact: true }` unless you genuinely want a substring match. Without it, `getByText('Account')` will also match a paragraph containing the word "account", triggering a strict-mode violation.
+
+```ts
+// Avoid — matches any element whose text contains "Account"
+page.getByText('Account')
+
+// Prefer
+page.getByText('Account', { exact: true })
+// or use role when applicable
+page.getByRole('button', { name: 'Account' })
+```
+
+---
+
+### Auth session isolation in the E2E suite
+
+The full-suite config has two project types that both touch the free test user:
+
+- **`setup-free`** — logs in as `e2e-free@stayright.test` and saves `free.json`
+- **`no-auth`** — runs `auth.spec.ts`, which includes a logout test that also logs in as the free user and signs out
+
+**The trap:** Supabase `signOut()` defaults to `scope: 'global'`, which revokes **all** sessions for that user across all devices. If the `no-auth` logout test runs before the `[chromium]` project consumes `free.json`, the refresh token inside `free.json` is invalidated and every `[chromium]` free-user test redirects to `/login`.
+
+**The fix (already applied):** `TopNav` and `Sidebar` call `supabase.auth.signOut({ scope: 'local' })`, which revokes only the current session's refresh token. The `free.json` session (a separate sign-in event with a different refresh token) remains valid regardless of when `no-auth` runs. See DECISION-069.
+
+**Rule:** Any code path in the app that calls `signOut()` must pass `{ scope: 'local' }`. Never use the default global scope.
+
 ---
 
 ## Automated E2E Suite
