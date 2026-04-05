@@ -36,7 +36,7 @@ export function Sidebar({ userName = 'Account', userEmail, isOpen, onClose }: Pr
 
   async function handleSignOut() {
     const supabase = createClient()
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: 'local' })
     router.push('/login')
     router.refresh()
   }
