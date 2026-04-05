@@ -23,7 +23,9 @@ async function suppressCookieBanner(page: import('@playwright/test').Page) {
 async function login(page: import('@playwright/test').Page) {
   await suppressCookieBanner(page)
   await page.goto('/login')
-  await page.locator('button[type="button"]:has-text("Sign in")').click()
+  // Use getByRole('tab') — :has-text() does substring matching and would also
+  // match the "Sign in with Google" OAuth button when on the login tab.
+  await page.getByRole('tab', { name: 'Sign in' }).click()
   await page.getByLabel(/email address/i).fill(process.env.TEST_FREE_USER_EMAIL!)
   await page.getByLabel(/^password$/i).fill(process.env.TEST_FREE_USER_PASSWORD!)
   await page.locator('button[type="submit"]').click()
@@ -69,10 +71,10 @@ test.describe('Auth flows', () => {
     await suppressCookieBanner(page)
     await page.goto('/login')
     await expect(
-      page.locator('button[type="button"]:has-text("Create account")')
+      page.getByRole('tab', { name: 'Create account' })
     ).toBeVisible()
     await expect(
-      page.locator('button[type="button"]:has-text("Sign in")')
+      page.getByRole('tab', { name: 'Sign in' })
     ).toBeVisible()
   })
 

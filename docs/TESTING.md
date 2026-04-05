@@ -2,6 +2,20 @@
 
 ---
 
+### Selector conventions
+
+Use `getByRole` for interactive elements rather than attribute+text combos (e.g. `locator('button[type="button"]:has-text(...)')`). The `:has-text()` selector does substring matching — it will match any element whose label *contains* the target string, which breaks as soon as labels evolve. Role-based selectors are unambiguous and resilient to styling changes.
+
+```ts
+// Avoid — substring match, fragile
+page.locator('button[type="button"]:has-text("Sign in")')
+
+// Prefer — exact role + accessible name
+page.getByRole('tab', { name: 'Sign in' })
+```
+
+---
+
 ## Automated E2E Suite
 
 Two tiers of Playwright tests run against a local Supabase instance in CI (Chromium only, 1 worker serial). See DECISION-064.

@@ -17,7 +17,9 @@ const authFile = path.join(__dirname, '.auth/pro.json')
 setup('authenticate pro test user', async ({ page }) => {
   await page.goto('/login')
 
-  await page.locator('button[type="button"]:has-text("Sign in")').click()
+  // Switch to the "Sign in" tab — use getByRole('tab') to avoid matching the
+  // Google OAuth button, whose label also contains "Sign in" (substring match).
+  await page.getByRole('tab', { name: 'Sign in' }).click()
 
   const email = process.env.TEST_PRO_USER_EMAIL!
   const pass = process.env.TEST_PRO_USER_PASSWORD!

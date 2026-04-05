@@ -17,8 +17,9 @@ const authFile = path.join(__dirname, '.auth/free.json')
 setup('authenticate free test user', async ({ page }) => {
   await page.goto('/login')
 
-  // Switch to the "Sign in" tab (type="button" to avoid matching the submit button)
-  await page.locator('button[type="button"]:has-text("Sign in")').click()
+  // Switch to the "Sign in" tab — use getByRole('tab') to avoid matching the
+  // Google OAuth button, whose label also contains "Sign in" (substring match).
+  await page.getByRole('tab', { name: 'Sign in' }).click()
 
   const email = process.env.TEST_FREE_USER_EMAIL!
   const pass = process.env.TEST_FREE_USER_PASSWORD!
