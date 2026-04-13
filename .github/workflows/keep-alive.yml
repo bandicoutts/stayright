@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '0 8 * * 1'   # Monday 08:00 UTC
     - cron: '0 8 * * 4'   # Thursday 08:00 UTC
-  workflow_dispatch:       # Manual trigger for initial testing
+  workflow_dispatch:
 
 jobs:
   ping:
@@ -13,38 +13,16 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check secrets are set
+      - name: Ping Supabase
         run: |
-          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
-            echo "ERROR: NEXT_PUBLIC_SUPABASE_URL secret is not set"
-            exit 1
-          fi
-          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" ]; then
-            echo "ERROR: NEXT_PUBLIC_SUPABASE_ANON_KEY secret is not set"
-            exit 1
-          fi
-          echo "URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}"
-          echo "Anon key length: ${#ANON_KEY}"
-        env:
-          ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-
-      - name: Ping REST API root
-        run: |
-          echo "Pinging Supabase REST root..."
-          RESPONSE=$(curl --silent \
-            --write-out "\nHTTP_STATUS:%{http_code}" \
+          HTTP_STATUS=$(curl --silent --output /dev/null \
+            --write-out "%{http_code}" \
             --max-time 15 \
             --header "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
             --header "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
             "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/trips?select=id&limit=1")
-          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
-          BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:")
-          echo "REST ping HTTP status: $HTTP_STATUS"
-          echo "Response body: $BODY"
+          echo "HTTP status: $HTTP_STATUS"
           if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
-            echo "ERROR: REST root returned non-2xx status $HTTP_STATUS"
+            echo "ERROR: ping returned non-2xx status $HTTP_STATUS"
             exit 1
           fi
-
-      - name: Done
-        run: echo "Both pings succeeded — Supabase project is active."
