@@ -13,6 +13,21 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Check secrets are set
+        run: |
+          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "ERROR: NEXT_PUBLIC_SUPABASE_URL secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" ]; then
+            echo "ERROR: NEXT_PUBLIC_SUPABASE_ANON_KEY secret is not set"
+            exit 1
+          fi
+          echo "URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}"
+          echo "Anon key length: ${#ANON_KEY}"
+        env:
+          ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
       - name: Ping REST API root
         run: |
           echo "Pinging Supabase REST root..."
