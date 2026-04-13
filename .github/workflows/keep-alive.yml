@@ -35,6 +35,7 @@ jobs:
             --write-out "%{http_code}" \
             --max-time 15 \
             --header "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+            --header "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
             "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/")
           echo "REST root HTTP status: $HTTP_STATUS"
           if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
