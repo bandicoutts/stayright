@@ -258,10 +258,19 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
   }
 
   // ---------------------------------------------------------------------------
-  // Summary stats
+  // Summary stats + pre-computed window snapshots
   // ---------------------------------------------------------------------------
 
-  const totalDays = trips.reduce((sum, t) => sum + (getAbsenceDays(t) ?? 0), 0)
+  // Pre-compute rolling window at departure for every trip once (avoids O(n²) in render).
+  const tripWindowMap = useMemo(
+    () => new Map(trips.map((t) => [t.id, getWindowAtDeparture(t, trips, visaStartDate)])),
+    [trips, visaStartDate]
+  )
+
+  const totalDays = useMemo(
+    () => trips.reduce((sum, t) => sum + (getAbsenceDays(t) ?? 0), 0),
+    [trips]
+  )
   const activeTrips = trips.filter((t) => !optimisticDeletedIds.includes(t.id))
 
   // ---------------------------------------------------------------------------
@@ -438,7 +447,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                   const { flag, name } = extractDestination(trip.destination)
                   const absenceDays = getAbsenceDays(trip)
                   const isCrownDep = isCrownDependency(trip.destination)
-                  const windowDays = getWindowAtDeparture(trip, trips, visaStartDate)
+                  const windowDays = tripWindowMap.get(trip.id) ?? 0
                   const windowStatus = getRiskStatus(windowDays)
                   const windowCfg = RISK_CONFIG[windowStatus]
                   const isExpanded = expandedId === trip.id

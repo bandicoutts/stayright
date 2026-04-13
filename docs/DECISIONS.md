@@ -1630,4 +1630,32 @@ Beyond the test impact, global sign-out is wrong product behaviour: if a user ha
 **Consequences:**
 Users who sign out on one device remain signed in on others. This is the expected behaviour for a standard "Sign out" action. A future "Sign out of all devices" option in Settings could use `scope: 'global'` explicitly.
 
+
+
+---
+
+### [DECISION-070] CSP: unsafe-eval removed; unsafe-inline retained as known gap
+**Date:** 2026-04-13
+**Status:** Decided
+**Decided by:** David Flynn-Coutts
+
+**Decision:**
+`'unsafe-eval'` has been removed from the `script-src` CSP directive. `'unsafe-inline'` is retained in both `script-src` and `style-src` as a known limitation.
+
+**Reasoning:**
+`'unsafe-eval'` permits `eval()` and `new Function()` — a genuine XSS escalation vector. Next.js production builds do not require it; only the dev HMR runtime does. Removing it eliminates a clear security red flag at no cost to production behaviour.
+
+`'unsafe-inline'` in `script-src` cannot be removed without implementing nonce-based CSP, which requires Next.js middleware injection of a per-request nonce into every inline script tag. This is a significant architectural change and is deferred. The risk is lower than `unsafe-eval` because inline scripts cannot be injected purely via XSS without also controlling HTML structure.
+
+`'unsafe-inline'` in `style-src` is standard for React-based apps that use inline styles and CSS-in-JS at render time.
+
+**Alternatives considered:**
+- Nonce-based CSP for `script-src` — closes the `unsafe-inline` gap entirely, but requires middleware nonce generation, passed through the React tree, and applied to every `<script>` tag including Next.js's own. Deferred to a future hardening pass.
+- Hash-based allowlisting — fragile under Next.js build hash changes; not practical.
+
+**Consequences:**
+Production CSP is materially stronger. `unsafe-eval` is gone. `unsafe-inline` remains as a documented, accepted limitation until nonce-based CSP is implemented.
+
+**Related:** `next.config.ts`; DECISION-035
+
 **Related:** `src/components/app/TopNav.tsx`; `src/components/app/Sidebar.tsx`; `docs/TESTING.md` (Auth session isolation section)

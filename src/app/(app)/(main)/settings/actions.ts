@@ -167,9 +167,23 @@ export async function deleteAccountAction(): Promise<
     .single()
 
   // 2. Delete user data (RLS DELETE policies allow own-row deletes)
-  await supabase.from('trips').delete().eq('user_id', user.id)
-  await supabase.from('subscriptions').delete().eq('user_id', user.id)
-  await supabase.from('profiles').delete().eq('id', user.id)
+  const { error: tripsErr } = await supabase.from('trips').delete().eq('user_id', user.id)
+  if (tripsErr) {
+    console.error('[delete-account] failed to delete trips:', tripsErr)
+    return { error: 'Failed to delete trips' }
+  }
+
+  const { error: subsErr } = await supabase.from('subscriptions').delete().eq('user_id', user.id)
+  if (subsErr) {
+    console.error('[delete-account] failed to delete subscriptions:', subsErr)
+    return { error: 'Failed to delete subscriptions' }
+  }
+
+  const { error: profileErr } = await supabase.from('profiles').delete().eq('id', user.id)
+  if (profileErr) {
+    console.error('[delete-account] failed to delete profile:', profileErr)
+    return { error: 'Failed to delete profile' }
+  }
 
   // 3. Delete Stripe customer — GDPR right to erasure requires removing
   //    all personal data including billing records held by Stripe.

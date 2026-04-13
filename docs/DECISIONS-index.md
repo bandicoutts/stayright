@@ -68,3 +68,4 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-067 | Trips table: footer as single stat source; progressive column hiding | Toolbar stat removed (duplicated footer); Departure/Return hidden below md, Window below lg | Decided |
 | DECISION-068 | Typography normalisation: unified type scale and weight consistency | 8 corrections: font-black fix, not-italic conflict, tracking/line-height/eyebrow size unified | Decided |
 | DECISION-069 | signOut must always use scope:'local' | Supabase default is global (revokes all sessions); local revokes only the current session | Decided |
+| DECISION-070 | CSP: unsafe-eval removed; unsafe-inline retained as known gap | unsafe-eval removed from script-src (not needed in prod); unsafe-inline remains pending nonce-based CSP | Decided |

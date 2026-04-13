@@ -18,6 +18,10 @@ import { isPlanPro } from '@/lib/subscriptionUtils'
 // ---------------------------------------------------------------------------
 
 export async function GET(request: NextRequest) {
+  if (!process.env.CRON_SECRET) {
+    console.error('[cron/daily] CRON_SECRET env var is not set')
+    return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 })
+  }
   const authHeader = request.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })

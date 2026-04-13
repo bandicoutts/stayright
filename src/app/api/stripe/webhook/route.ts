@@ -115,7 +115,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   if (session.mode === 'payment') {
     // Lifetime — one-time payment, no subscription object
-    await supabase.from('subscriptions').upsert(
+    const { error } = await supabase.from('subscriptions').upsert(
       {
         user_id: userId,
         plan: 'pro_lifetime',
@@ -126,9 +126,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       },
       { onConflict: 'user_id' }
     )
+    if (error) throw new Error(`[webhook] checkout upsert failed (lifetime): ${error.message}`)
   } else if (session.mode === 'subscription' && session.subscription) {
     const sub = await stripe.subscriptions.retrieve(session.subscription as string)
-    await supabase.from('subscriptions').upsert(
+    const { error } = await supabase.from('subscriptions').upsert(
       {
         user_id: userId,
         plan,
@@ -139,6 +140,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       },
       { onConflict: 'user_id' }
     )
+    if (error) throw new Error(`[webhook] checkout upsert failed (subscription): ${error.message}`)
   }
 
   console.log(`[webhook] checkout completed for user ${userId}, plan: ${plan}`)
@@ -157,7 +159,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   const userId = subscription.metadata?.user_id
   if (userId) {
-    await supabase.from('subscriptions').upsert(
+    const { error } = await supabase.from('subscriptions').upsert(
       {
         user_id: userId,
         plan,
@@ -168,12 +170,14 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       },
       { onConflict: 'user_id' }
     )
+    if (error) throw new Error(`[webhook] subscription upsert failed (user_id): ${error.message}`)
     console.log(`[webhook] subscription updated for user ${userId}: plan=${plan} status=${subscription.status}`)
   } else {
-    await supabase
+    const { error } = await supabase
       .from('subscriptions')
       .update({ plan, status: subscription.status, current_period_end: periodEnd })
       .eq('stripe_subscription_id', subscription.id)
+    if (error) throw new Error(`[webhook] subscription update failed (sub_id): ${error.message}`)
     console.log(`[webhook] subscription updated (by sub id): ${subscription.id}`)
   }
 }
@@ -196,13 +200,15 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 
   const userId = subscription.metadata?.user_id
   if (userId) {
-    await supabase.from('subscriptions').update(update).eq('user_id', userId)
+    const { error } = await supabase.from('subscriptions').update(update).eq('user_id', userId)
+    if (error) throw new Error(`[webhook] subscription delete update failed (user_id): ${error.message}`)
     console.log(`[webhook] subscription deleted for user ${userId} — reverted to free`)
   } else {
-    await supabase
+    const { error } = await supabase
       .from('subscriptions')
       .update(update)
       .eq('stripe_subscription_id', subscription.id)
+    if (error) throw new Error(`[webhook] subscription delete update failed (sub_id): ${error.message}`)
     console.log(`[webhook] subscription deleted (by sub id): ${subscription.id} — reverted to free`)
   }
 }
@@ -221,10 +227,11 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   if (!subscriptionId) return
 
   const supabase = createAdminClient()
-  await supabase
+  const { error } = await supabase
     .from('subscriptions')
     .update({ status: 'past_due' })
     .eq('stripe_subscription_id', subscriptionId)
+  if (error) throw new Error(`[webhook] payment failed update failed: ${error.message}`)
 
   console.log(`[webhook] payment failed for subscription: ${subscriptionId}`)
 }
