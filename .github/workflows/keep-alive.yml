@@ -13,19 +13,6 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Ping Auth health endpoint
-        run: |
-          echo "Pinging Supabase Auth health..."
-          HTTP_STATUS=$(curl --silent --output /dev/null \
-            --write-out "%{http_code}" \
-            --max-time 15 \
-            "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/auth/v1/health")
-          echo "Auth health HTTP status: $HTTP_STATUS"
-          if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
-            echo "ERROR: Auth health returned non-2xx status $HTTP_STATUS"
-            exit 1
-          fi
-
       - name: Ping REST API root
         run: |
           echo "Pinging Supabase REST root..."
