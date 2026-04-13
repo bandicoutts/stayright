@@ -36,10 +36,10 @@ jobs:
             --max-time 15 \
             --header "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
             --header "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
-            "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/")
+            "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/trips?select=id&limit=1")
           HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
           BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:")
-          echo "REST root HTTP status: $HTTP_STATUS"
+          echo "REST ping HTTP status: $HTTP_STATUS"
           echo "Response body: $BODY"
           if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
             echo "ERROR: REST root returned non-2xx status $HTTP_STATUS"
