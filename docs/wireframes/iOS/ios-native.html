@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StayRight iOS Wireframe — Native HIG</title>
+  <style>
+    :root { --bg:#f2f2f7; --card:#fff; --text:#111; --sub:#6b7280; --line:#e5e7eb; --blue:#007aff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif; background: var(--bg); color: var(--text); }
+    .row { display:flex; gap:24px; padding:24px; overflow-x:auto; }
+    .phone { width:375px; min-width:375px; height:812px; background:var(--bg); border:10px solid #1f2937; border-radius:42px; padding:12px; }
+    .screen { height:100%; background:var(--bg); border-radius:30px; overflow:hidden; border:1px solid #d1d5db; }
+    .nav { background:#fff; padding:14px 16px 10px; border-bottom:1px solid var(--line); font-weight:600; font-size:17px; }
+    .seg { margin:12px 16px; background:#e5e7eb; border-radius:10px; padding:2px; display:flex; }
+    .seg span { flex:1; text-align:center; padding:6px 0; font-size:13px; color:var(--sub); }
+    .seg .active { background:#fff; border-radius:8px; color:var(--text); font-weight:600; }
+    .content { padding:16px; }
+    .card { background:var(--card); border-radius:14px; padding:14px; margin-bottom:12px; box-shadow:0 1px 0 rgba(0,0,0,.04); }
+    .muted { color:var(--sub); font-size:13px; }
+    .big { font-size:34px; font-weight:700; margin:4px 0; }
+    .bar { height:8px; border-radius:999px; background:#dbeafe; overflow:hidden; margin-top:10px; }
+    .bar b { display:block; width:71%; height:100%; background:var(--blue); }
+    .label { font-size:12px; color:var(--sub); margin-bottom:6px; }
+    .field { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px; font-size:15px; margin-bottom:10px; }
+    .btn { background:var(--blue); color:#fff; border:none; border-radius:12px; width:100%; padding:12px; font-weight:600; margin-top:8px; }
+    .list { background:#fff; border-radius:12px; overflow:hidden; border:1px solid var(--line); }
+    .item { padding:12px 14px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; }
+    .item:last-child { border-bottom:none; }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <section class="phone"><div class="screen"><div class="nav">Dashboard</div><div class="seg"><span class="active">Rolling 12M</span><span>Qualifying</span></div><div class="content">
+      <div class="card"><div class="label">Days outside UK</div><div class="big">128</div><div class="muted">52 days remaining before 180 cap</div><div class="bar"><b></b></div></div>
+      <div class="card"><strong>ILR Risk</strong><p class="muted">Status: Warning • next threshold at 150 days</p></div>
+      <div class="card"><strong>Upcoming trip impact</strong><p class="muted">Spain trip would move you to 134 days.</p></div>
+    </div></div></section>
+
+    <section class="phone"><div class="screen"><div class="nav">Add Trip</div><div class="content">
+      <div class="field">Destination (e.g. 🇪🇸 Spain)</div>
+      <div class="field">Departure date • 14 May 2026</div>
+      <div class="field">Return date • 22 May 2026</div>
+      <div class="field">Reason for travel (optional)</div>
+      <div class="card"><div class="muted">Absence days for this trip</div><div class="big" style="font-size:26px">7 days</div></div>
+      <button class="btn">Save Trip</button>
+    </div></div></section>
+
+    <section class="phone"><div class="screen"><div class="nav">Trip History</div><div class="content">
+      <div class="list">
+        <div class="item"><div><strong>🇫🇷 France</strong><div class="muted">10 Apr – 18 Apr 2026</div></div><div>7d</div></div>
+        <div class="item"><div><strong>🇦🇪 UAE</strong><div class="muted">22 Feb – 01 Mar 2026</div></div><div>6d</div></div>
+        <div class="item"><div><strong>🇮🇳 India</strong><div class="muted">12 Dec – 03 Jan 2026</div></div><div>21d</div></div>
+        <div class="item"><div><strong>🇺🇸 USA</strong><div class="muted">15 Aug – 26 Aug 2025</div></div><div>10d</div></div>
+      </div>
+    </div></div></section>
+  </div>
+</body>
+</html>

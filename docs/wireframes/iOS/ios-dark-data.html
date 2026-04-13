@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StayRight iOS Wireframe — Dark Data</title>
+  <style>
+    :root{--bg:#0a0d14;--panel:#111827;--panel2:#0f172a;--line:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--cyan:#22d3ee;--amber:#f59e0b}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .row{display:flex;gap:24px;padding:24px;overflow-x:auto}.phone{width:375px;min-width:375px;height:812px;border:10px solid #020617;border-radius:40px;padding:12px;background:#000}
+    .screen{height:100%;border-radius:28px;background:linear-gradient(180deg,var(--panel2),var(--panel));overflow:hidden;border:1px solid #111827}
+    .nav{padding:14px 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .content{padding:14px}.block{border:1px solid var(--line);background:#0b1220;border-radius:10px;padding:12px;margin-bottom:10px}
+    .kpi{font-size:36px;font-weight:700;color:var(--cyan);margin:6px 0}.muted{font-size:12px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pill{padding:6px 8px;background:#0b1220;border:1px solid var(--line);border-radius:999px;font-size:11px}
+    .warn{color:var(--amber)} .field{padding:10px;border:1px solid var(--line);background:#020617;border-radius:8px;margin-bottom:8px;font-size:12px}
+    .btn{width:100%;padding:11px;border-radius:8px;border:1px solid #155e75;background:#083344;color:#67e8f9;font-weight:700;letter-spacing:.05em}
+    table{width:100%;border-collapse:collapse;font-size:12px} th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left} th{color:var(--muted);font-weight:500}
+  </style>
+</head>
+<body><div class="row">
+  <section class="phone"><div class="screen"><div class="nav">COMPLIANCE DASHBOARD</div><div class="content">
+    <div class="block"><div class="muted">ABSENCE_DAYS_ROLLING_365</div><div class="kpi">128</div><div class="muted">threshold_150: <span class="warn">22d remaining</span></div></div>
+    <div class="grid"><div class="block"><div class="muted">ILR_PROGRESS</div><div>71%</div></div><div class="block"><div class="muted">RISK_STATE</div><div class="warn">WARNING</div></div></div>
+    <div class="block"><div class="muted">flags</div><div class="pill">next_trip_impact +6d</div></div>
+  </div></div></section>
+
+  <section class="phone"><div class="screen"><div class="nav">TRIP ENTRY</div><div class="content">
+    <div class="field">destination_code: ESP / Spain</div><div class="field">departure_date: 2026-05-14</div><div class="field">return_date: 2026-05-22</div><div class="field">trip_reason: annual leave</div>
+    <div class="block"><div class="muted">derived_absence_days</div><div class="kpi" style="font-size:28px">7</div></div><button class="btn">COMMIT RECORD</button>
+  </div></div></section>
+
+  <section class="phone"><div class="screen"><div class="nav">TRIP HISTORY LOG</div><div class="content">
+    <div class="block"><table><thead><tr><th>DEST</th><th>RANGE</th><th>DAYS</th></tr></thead><tbody>
+      <tr><td>FRA</td><td>2026-04-10 → 2026-04-18</td><td>7</td></tr>
+      <tr><td>ARE</td><td>2026-02-22 → 2026-03-01</td><td>6</td></tr>
+      <tr><td>IND</td><td>2025-12-12 → 2026-01-03</td><td>21</td></tr>
+      <tr><td>USA</td><td>2025-08-15 → 2025-08-26</td><td>10</td></tr>
+    </tbody></table></div>
+  </div></div></section>
+</div></body></html>

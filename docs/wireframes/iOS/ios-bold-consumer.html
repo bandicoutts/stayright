@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StayRight iOS Wireframe — Bold Consumer</title>
+  <style>
+    :root{--bg:#f9fafb;--card:#fff;--ink:#0f172a;--muted:#64748b;--pink:#ec4899;--violet:#8b5cf6;--teal:#14b8a6}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#eef2ff,#fdf2f8);font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+    .row{display:flex;gap:24px;padding:24px;overflow-x:auto}.phone{width:375px;min-width:375px;height:812px;border-radius:42px;border:10px solid #334155;padding:12px;background:#fff}
+    .screen{height:100%;border-radius:30px;overflow:hidden;background:var(--bg);border:1px solid #e2e8f0}.top{padding:16px;color:#fff;background:linear-gradient(120deg,var(--violet),var(--pink));font-weight:700}
+    .content{padding:14px}.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 10px 24px rgba(15,23,42,.08)}
+    .badge{display:inline-block;background:#fce7f3;color:#be185d;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600}
+    .hero{font-size:36px;font-weight:800;margin:6px 0}.muted{color:var(--muted);font-size:13px}
+    .meter{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;width:71%;background:linear-gradient(90deg,var(--teal),var(--violet))}
+    .field{padding:12px;border-radius:14px;border:2px solid #e2e8f0;background:#fff;margin-bottom:10px}
+    .btn{width:100%;border:none;border-radius:14px;padding:12px;background:linear-gradient(120deg,var(--teal),var(--violet));color:#fff;font-weight:700}
+    .trip{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #e2e8f0}.trip:last-child{border-bottom:none}
+  </style>
+</head>
+<body><div class="row">
+  <section class="phone"><div class="screen"><div class="top">StayRight • Dashboard</div><div class="content">
+    <div class="card"><span class="badge">On track</span><div class="hero">128 days</div><div class="muted">You still have 52 days before the 180-day cap.</div><div class="meter"><i></i></div></div>
+    <div class="card"><strong>ILR timeline</strong><p class="muted">71% complete • estimated eligibility: 12 Jan 2029</p></div>
+  </div></div></section>
+
+  <section class="phone"><div class="screen"><div class="top">Add a Trip</div><div class="content">
+    <div class="field">🌍 Destination</div><div class="field">🛫 Departure date</div><div class="field">🛬 Return date</div><div class="field">📝 Notes (optional)</div>
+    <div class="card"><div class="muted">Trip impact</div><div class="hero" style="font-size:28px">+7 days</div></div><button class="btn">Save Trip</button>
+  </div></div></section>
+
+  <section class="phone"><div class="screen"><div class="top">Trip History</div><div class="content">
+    <div class="card">
+      <div class="trip"><div><strong>🇫🇷 France</strong><div class="muted">10–18 Apr 2026</div></div><span>7d</span></div>
+      <div class="trip"><div><strong>🇦🇪 UAE</strong><div class="muted">22 Feb–1 Mar 2026</div></div><span>6d</span></div>
+      <div class="trip"><div><strong>🇮🇳 India</strong><div class="muted">12 Dec–3 Jan</div></div><span>21d</span></div>
+      <div class="trip"><div><strong>🇺🇸 USA</strong><div class="muted">15–26 Aug 2025</div></div><span>10d</span></div>
+    </div>
+  </div></div></section>
+</div></body></html>

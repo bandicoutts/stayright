@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayRight Mobile — Home Screens</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/manrope@5/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/jetbrains-mono@5/index.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #1a1a1a; display: flex; flex-direction: column; align-items: center; padding: 32px 16px; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+
+/* Controls */
+.controls { display: flex; flex-direction: column; gap: 8px; align-items: center; margin-bottom: 20px; }
+.ctrl-row { display: flex; gap: 4px; }
+.tbtn { padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; border: 0.5px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); transition: all .12s; font-family: inherit; }
+.tbtn.on { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.25); font-weight: 500; }
+.tbtn:hover:not(.on) { background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.7); }
+
+/* Phone frame */
+.phone-wrap { display: flex; justify-content: center; }
+.phone { width: 390px; height: 844px; background: #101010; border-radius: 50px; overflow: hidden; flex-shrink: 0; box-shadow: 0 48px 120px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.07); }
+#scr { width: 100%; height: 100%; display: flex; flex-direction: column; }
+
+/* ── Dark tokens ── */
+.sr-dark {
+  --bg: #080B08; --surf: #111710; --surf-w: #161E17;
+  --tx1: #E8EDE9; --tx2: #CFD8D0; --tx3: #8FA893; --txf: #4A5E4D;
+  --gr: #006948; --grl: #00A874;
+  --brd: rgba(0,105,72,0.16); --brds: rgba(0,105,72,0.30);
+  --safe-bg: #9FF4CA; --safe-tx: #002114;
+  --wbg: rgba(217,119,6,0.12); --wbrd: rgba(217,119,6,0.25); --wtx: #FBBF24;
+  --wchip: rgba(217,119,6,0.22);
+  --nav-bg: rgba(8,11,8,0.96); --nav-brd: rgba(0,105,72,0.14);
+  --cs: 0 4px 24px rgba(0,0,0,0.50);
+  --ga: rgba(0,168,116,0.08); --gb: rgba(0,105,72,0.05);
+  --ta: rgba(0,168,116,0.14);
+  font-family: 'Manrope Variable', 'Manrope', -apple-system, sans-serif;
+}
+
+/* ── Light tokens ── */
+.sr-light {
+  --bg: #F5FAF7; --surf: #FFFFFF; --surf-w: #F0F7F3;
+  --tx1: #0D1B10; --tx2: #1A2B1D; --tx3: #4A6654; --txf: #5B7A63;
+  --gr: #006948; --grl: #006948;
+  --brd: rgba(0,105,72,0.20); --brds: rgba(0,105,72,0.35);
+  --safe-bg: #9FF4CA; --safe-tx: #002114;
+  --wbg: #FFFBEB; --wbrd: rgba(217,119,6,0.30); --wtx: #92400E;
+  --wchip: #FEF3C7;
+  --nav-bg: #EEF6F1; --nav-brd: rgba(0,105,72,0.22);
+  --cs: 0 2px 8px rgba(13,27,16,0.06), 0 12px 32px rgba(0,105,72,0.09);
+  --ga: rgba(0,168,116,0.06); --gb: rgba(0,105,72,0.04);
+  --ta: rgba(0,105,72,0.10);
+  font-family: 'Manrope Variable', 'Manrope', -apple-system, sans-serif;
+}
+
+.m { font-family: 'JetBrains Mono Variable', 'JetBrains Mono', 'SF Mono', monospace !important; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.pd { animation: pulse 1.5s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="ctrl-row">
+    <button class="tbtn on" id="bs-safe" onclick="setScreen('safe')">Safe (home)</button>
+    <button class="tbtn" id="bs-warning" onclick="setScreen('warning')">Warning</button>
+    <button class="tbtn" id="bs-abroad" onclick="setScreen('abroad')">Currently abroad</button>
+    <button class="tbtn" id="bs-trips" onclick="setScreen('trips')">Trip list</button>
+  </div>
+  <div class="ctrl-row">
+    <button class="tbtn" id="bt-dark" onclick="setTheme('dark')">Dark</button>
+    <button class="tbtn" id="bt-light" onclick="setTheme('light')">Light</button>
+  </div>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone">
+    <div id="scr"></div>
+  </div>
+</div>
+
+<script>
+let CS = 'safe', CT = 'dark';
+
+// ── Shared components ─────────────────────────────────────────────────────────
+
+function sb() {
+  return `<div style="height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;flex-shrink:0">
+<span style="font-size:13px;font-weight:600;letter-spacing:-.01em;color:var(--tx1)">9:41</span>
+<div style="display:flex;align-items:center;gap:5px">
+  <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="8" width="3" height="4" rx=".8" fill="var(--tx1)" opacity=".4"/><rect x="4.5" y="5" width="3" height="7" rx=".8" fill="var(--tx1)" opacity=".65"/><rect x="9" y="2" width="3" height="10" rx=".8" fill="var(--tx1)"/></svg>
+  <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M1 3.5C3.6 1 12.4 1 15 3.5" stroke="var(--tx1)" stroke-width="1.3" stroke-linecap="round" opacity=".4"/><path d="M3.5 6C5.3 4.3 10.7 4.3 12.5 6" stroke="var(--tx1)" stroke-width="1.3" stroke-linecap="round" opacity=".65"/><circle cx="8" cy="9.5" r="1.2" fill="var(--tx1)"/></svg>
+  <div style="display:flex;align-items:center;gap:1.5px">
+    <div style="width:24px;height:12px;border:1.5px solid var(--brds);border-radius:3.5px;padding:2px"><div style="width:72%;height:100%;background:var(--tx1);border-radius:1.5px"></div></div>
+    <div style="width:2px;height:6px;background:var(--brds);border-radius:0 1.5px 1.5px 0"></div>
+  </div>
+</div></div>`;
+}
+
+function appnav() {
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0 12px;flex-shrink:0">
+<div style="display:flex;align-items:center;gap:8px">
+  <div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#00A874,#006948);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5C4.5 3.5 2 5.5 2 8C2 10 4 11.5 6.5 11.5C9 11.5 11 10 11 8C11 5.5 8.5 3.5 6.5 1.5Z" fill="white" opacity=".92"/></svg>
+  </div>
+  <span style="font-size:17px;font-weight:800;letter-spacing:-.035em;color:var(--tx1)">StayRight</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+  <div style="width:36px;height:36px;border-radius:11px;background:var(--surf);border:.5px solid var(--brd);display:flex;align-items:center;justify-content:center">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 2.5a4.5 4.5 0 0 0-4.5 4.5v2.2L2.5 11.5h12L13 9.2V7a4.5 4.5 0 0 0-4.5-4.5z" stroke="var(--tx3)" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.75 13.5a1.75 1.75 0 0 0 3.5 0" stroke="var(--tx3)" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </div>
+  <div style="width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#004F35,#006948);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#9FF4CA;letter-spacing:-.01em">DC</div>
+</div></div>`;
+}
+
+function bnav(active) {
+  const defs = [
+    ['home','Home',16,'M2 6.5L8 1.5L14 6.5V14H10.5V10H5.5V14H2Z',true],
+    ['trips','Trips',17,'M8.5 2.5a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM5.5 8.5L7.5 10.5L11.5 6',false],
+    ['plan','Plan',18,'M9 2a7 7 0 1 0 0 14A7 7 0 0 0 9 2zM9 5.5V9M9 9H12.5M9 9H5.5M9 9V12.5',false],
+    ['reports','Reports',16,'M3 1.5h10a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5H3A1.5 1.5 0 0 1 1.5 15V3A1.5 1.5 0 0 1 3 1.5zM5.5 5.5H10.5M5.5 8H10.5M5.5 10.5H8',false],
+    ['settings','Settings',17,'M8.5 6a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM8.5 2V3.5M8.5 13.5V15M2 8.5H3.5M13.5 8.5H15M3.7 3.7L4.8 4.8M12.2 12.2L13.3 13.3M3.7 13.3L4.8 12.2M12.2 4.8L13.3 3.7',false]
+  ];
+  return `<div style="height:80px;background:var(--nav-bg);border-top:.5px solid var(--nav-brd);display:flex;align-items:center;justify-content:space-around;padding:0 8px 14px;flex-shrink:0">${
+    defs.map(([id,label,sz,d,fill])=>{
+      const a = id===active;
+      const c = a?'var(--grl)':'var(--txf)';
+      return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;cursor:pointer">
+        <div style="width:36px;height:30px;border-radius:10px;${a?'background:var(--ta);':''}display:flex;align-items:center;justify-content:center">
+          <svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" fill="none" stroke="${c}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="${d}" ${fill&&a?`fill="${c}" stroke="none"`:''}/></svg>
+        </div>
+        <span style="font-size:10px;${a?'font-weight:600;':''}color:${c}">${label}</span>
+      </div>`;
+    }).join('')
+  }</div>`;
+}
+
+function ilrCard() {
+  return `<div style="background:var(--surf);border:.5px solid var(--brd);border-radius:20px;padding:14px 18px;margin-bottom:10px;flex-shrink:0;box-shadow:var(--cs)">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+  <span style="font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--txf)">Qualifying period</span>
+  <div style="display:flex;align-items:baseline;gap:4px">
+    <span style="font-size:20px;font-weight:800;letter-spacing:-.04em;color:var(--tx1)">68%</span>
+    <span style="font-size:12px;color:var(--tx3)">complete</span>
+  </div>
+</div>
+<div style="height:5px;background:var(--brd);border-radius:9999px;overflow:hidden;margin-bottom:7px">
+  <div style="width:68%;height:100%;background:linear-gradient(90deg,#00A874,#006948);border-radius:9999px"></div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center">
+  <span class="m" style="font-size:10.5px;color:var(--txf)">3 Nov 2020</span>
+  <span style="font-size:12px;color:var(--tx3)">ILR in <span style="color:var(--grl);font-weight:600">582 days</span></span>
+  <span class="m" style="font-size:10.5px;color:var(--txf)">3 Nov 2025</span>
+</div></div>`;
+}
+
+function row(flag, dest, dates, badge, last) {
+  return `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;${last?'':'border-bottom:.5px solid var(--brd)'}">
+<span style="font-size:22px;width:30px;text-align:center;flex-shrink:0">${flag}</span>
+<div style="flex:1;min-width:0">
+  <p style="font-size:14px;font-weight:600;color:var(--tx1);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dest}</p>
+  <p class="m" style="font-size:10.5px;color:var(--tx3)">${dates}</p>
+</div>${badge}</div>`;
+}
+
+function safeBadge(d) {
+  return `<span class="m" style="font-size:10.5px;font-weight:700;background:var(--safe-bg);color:var(--safe-tx);padding:3px 9px;border-radius:9999px;flex-shrink:0">${d}</span>`;
+}
+function abroadBadge() {
+  return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--wbg);color:var(--wtx);padding:3px 9px;border-radius:9999px;flex-shrink:0;border:.5px solid var(--wbrd)"><span class="pd" style="width:5px;height:5px;border-radius:50%;background:var(--wtx)"></span>Abroad</span>`;
+}
+
+function ring(id, days, gradFrom, gradTo, total=180) {
+  const r = 58, circ = 2*Math.PI*r;
+  const offset = circ * (1 - days/total);
+  return `<div style="position:relative;width:140px;height:140px">
+<svg width="140" height="140" viewBox="0 0 140 140">
+  <defs><linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="${gradFrom}"/>
+    <stop offset="100%" stop-color="${gradTo}"/>
+  </linearGradient></defs>
+  <circle cx="70" cy="70" r="${r}" fill="none" stroke="var(--brd)" stroke-width="10"/>
+  <circle cx="70" cy="70" r="${r}" fill="none" stroke="url(#${id})" stroke-width="10" stroke-linecap="round" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" transform="rotate(-90 70 70)"/>
+</svg>
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+  <span style="font-size:42px;font-weight:800;letter-spacing:-.05em;color:var(--tx1);line-height:1">${days}</span>
+  <span class="m" style="font-size:11px;color:var(--tx3)">/ 180 days</span>
+</div></div>`;
+}
+
+function ringCard(ringHtml, chip, chipStyle, subtitle, subtitleColor, glowColor) {
+  return `<div style="background:var(--surf);border:.5px solid var(--brd);border-radius:24px;padding:16px 20px 18px;margin-bottom:10px;position:relative;overflow:hidden;flex-shrink:0;box-shadow:var(--cs)">
+<div style="position:absolute;top:-20px;right:-20px;width:180px;height:180px;background:radial-gradient(circle,${glowColor} 0%,transparent 65%);pointer-events:none"></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+  <span style="font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--txf)">Current window</span>
+  <span style="font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;${chipStyle};padding:3px 10px;border-radius:9999px">${chip}</span>
+</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+  ${ringHtml}
+  <p style="font-size:13px;color:${subtitleColor};text-align:center">${subtitle}</p>
+</div></div>`;
+}
+
+function greeting(title, sub, subColor) {
+  return `<div style="margin-bottom:12px;flex-shrink:0">
+<h1 style="font-size:26px;font-weight:800;letter-spacing:-.04em;color:var(--tx1);line-height:1.1;margin-bottom:4px">${title}</h1>
+<p style="font-size:14px;color:${subColor || 'var(--tx3)'}">${sub}</p>
+</div>`;
+}
+
+function alertBanner(icon, msg) {
+  return `<div style="background:var(--wbg);border:.5px solid var(--wbrd);border-radius:16px;padding:13px 15px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px;flex-shrink:0">
+${icon}<p style="font-size:13px;color:var(--wtx);line-height:1.45">${msg}</p>
+</div>`;
+}
+
+function recentTripsSection(rows) {
+  return `<div style="flex-shrink:0">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:0 2px;margin-bottom:9px">
+  <span style="font-size:15px;font-weight:700;letter-spacing:-.02em;color:var(--tx1)">Recent trips</span>
+  <span style="font-size:13px;font-weight:500;color:var(--grl)">View all →</span>
+</div>
+<div style="background:var(--surf);border:.5px solid var(--brd);border-radius:20px;overflow:hidden;box-shadow:var(--cs)">${rows}</div>
+</div>`;
+}
+
+// ── Screens ───────────────────────────────────────────────────────────────────
+
+const warningIcon = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M9 2L16.5 15H1.5L9 2Z" stroke="var(--wtx)" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 7V10.5" stroke="var(--wtx)" stroke-width="1.3" stroke-linecap="round"/><circle cx="9" cy="13" r=".9" fill="var(--wtx)"/></svg>`;
+const planeIcon = `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M3 14L15 14M10 5L14 8L6 10L5 13" stroke="var(--wtx)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 5C10 5 9 3 7.5 3.5C6 4 7 6 8 6.5" stroke="var(--wtx)" stroke-width="1.3" stroke-linecap="round"/></svg>`;
+
+function safeScreen() {
+  return sb() + `<div style="flex:1;overflow:hidden;padding:0 20px;display:flex;flex-direction:column">` + appnav() +
+    greeting("Good morning, David", "Here's your compliance status.") +
+    ringCard(
+      ring('rg-safe', 47, '#006948', '#00A874'),
+      'Compliant', 'background:var(--safe-bg);color:var(--safe-tx)',
+      '<span style="font-weight:700;color:var(--tx2)">133 days</span> remaining in current window',
+      'var(--tx3)', 'var(--ga)'
+    ) +
+    ilrCard() +
+    recentTripsSection(
+      row('🇵🇹','Portugal','15 Dec – 27 Dec 2024',safeBadge('11d'),false) +
+      row('🇮🇹','Italy','8 Oct – 16 Oct 2024',safeBadge('7d'),false) +
+      row('🇯🇵','Japan','2 Aug – 15 Aug 2024',safeBadge('12d'),true)
+    ) +
+    `</div>` + bnav('home');
+}
+
+function warningScreen() {
+  return sb() + `<div style="flex:1;overflow:hidden;padding:0 20px;display:flex;flex-direction:column">` + appnav() +
+    greeting("Good morning, David", "You're approaching your absence limit.", 'var(--wtx)') +
+    alertBanner(warningIcon, "You've used <strong>142 of 180 days</strong> in the current rolling window. <strong>38 days remaining.</strong>") +
+    ringCard(
+      ring('rg-warn', 142, '#B45309', '#D97706'),
+      'Approaching limit', 'background:var(--wchip);color:var(--wtx)',
+      '<span style="font-weight:700;color:var(--tx1)">38 days</span> remaining in current window',
+      'var(--wtx)', 'rgba(180,83,9,0.08)'
+    ) +
+    ilrCard() +
+    recentTripsSection(
+      row('🇵🇹','Portugal','15 Dec – 27 Dec 2024',safeBadge('11d'),false) +
+      row('🇮🇹','Italy','8 Oct – 16 Oct 2024',safeBadge('7d'),false) +
+      row('🇯🇵','Japan','2 Aug – 15 Aug 2024',safeBadge('12d'),true)
+    ) +
+    `</div>` + bnav('home');
+}
+
+function abroadScreen() {
+  return sb() + `<div style="flex:1;overflow:hidden;padding:0 20px;display:flex;flex-direction:column">` + appnav() +
+    greeting("Good morning, David", "You are currently abroad.") +
+    alertBanner(planeIcon, "Your absence days are <strong>still counting.</strong> Log your return date as soon as you're back in the UK.") +
+    ringCard(
+      ring('rg-abroad', 47, '#006948', '#00A874') +
+      `<div style="display:flex;align-items:center;gap:6px;margin-top:-6px">
+        <span class="pd" style="width:5px;height:5px;border-radius:50%;background:var(--wtx)"></span>
+        <p style="font-size:13px;color:var(--tx3)">Day 9 abroad · <span style="color:var(--tx2);font-weight:600">133 days</span> remaining</p>
+      </div>`,
+      'Compliant', 'background:var(--safe-bg);color:var(--safe-tx)',
+      '',
+      'var(--tx3)', 'var(--ga)'
+    ) +
+    ilrCard() +
+    recentTripsSection(
+      row('🇦🇺','Australia','28 Mar 2025 –',abroadBadge(),false) +
+      row('🇵🇹','Portugal','15 Dec – 27 Dec 2024',safeBadge('11d'),false) +
+      row('🇮🇹','Italy','8 Oct – 16 Oct 2024',safeBadge('7d'),true)
+    ) +
+    `</div>` + bnav('home');
+}
+
+function tripsScreen() {
+  function yr(y) {
+    return `<div style="padding:2px 2px 8px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--txf)">${y}</div>`;
+  }
+  return sb() + `<div style="flex:1;overflow:hidden;padding:0 20px;display:flex;flex-direction:column">` + appnav() +
+    `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-shrink:0">
+  <h1 style="font-size:26px;font-weight:800;letter-spacing:-.04em;color:var(--tx1)">Trips</h1>
+  <button style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:12px;background:linear-gradient(135deg,#00A874,#006948);border:none;color:white;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:-.01em;box-shadow:0 4px 14px rgba(0,105,72,0.35)">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1V6M6 6H11M6 6H1M6 6V11" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>Log trip
+  </button>
+</div>
+<div style="flex:1;overflow:hidden">
+  ${yr('2025')}
+  <div style="background:var(--surf);border:.5px solid var(--brd);border-radius:20px;overflow:hidden;box-shadow:var(--cs);margin-bottom:16px">
+    ${row('🇦🇺','Australia','28 Mar 2025 –',abroadBadge(),true)}
+  </div>
+  ${yr('2024')}
+  <div style="background:var(--surf);border:.5px solid var(--brd);border-radius:20px;overflow:hidden;box-shadow:var(--cs)">
+    ${row('🇵🇹','Portugal','15 Dec – 27 Dec',safeBadge('11d'),false)}
+    ${row('🇮🇹','Italy','8 Oct – 16 Oct',safeBadge('7d'),false)}
+    ${row('🇯🇵','Japan','2 Aug – 15 Aug',safeBadge('12d'),false)}
+    ${row('🇬🇷','Greece','3 May – 11 May',safeBadge('7d'),true)}
+  </div>
+</div>` + `</div>` + bnav('trips');
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  const scr = document.getElementById('scr');
+  scr.className = 'sr-' + CT;
+  scr.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;';
+  const screens = { safe: safeScreen, warning: warningScreen, abroad: abroadScreen, trips: tripsScreen };
+  scr.innerHTML = screens[CS]();
+}
+
+function setScreen(s) {
+  CS = s;
+  ['safe','warning','abroad','trips'].forEach(k => document.getElementById('bs-'+k).className = 'tbtn'+(k===s?' on':''));
+  render();
+}
+function setTheme(t) {
+  CT = t;
+  ['dark','light'].forEach(k => document.getElementById('bt-'+k).className = 'tbtn'+(k===t?' on':''));
+  render();
+}
+
+CT = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+setScreen('safe');
+setTheme(CT);
+['dark','light'].forEach(k => document.getElementById('bt-'+k).className = 'tbtn'+(k===CT?' on':''));
+</script>
+</body>
+</html>
