@@ -53,7 +53,7 @@ export function QuotaRing({ days, status }: Props) {
               <stop offset="100%" stopColor={gradient.end} />
             </linearGradient>
           </defs>
-          <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="var(--color-border)" strokeWidth={STROKE} />
+          <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="var(--color-track)" strokeWidth={STROKE} />
           <circle
             cx={CENTER} cy={CENTER} r={RADIUS} fill="none"
             stroke={`url(#ringGrad-${status})`} strokeWidth={STROKE} strokeLinecap="round"

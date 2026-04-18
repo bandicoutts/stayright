@@ -26,18 +26,18 @@ export default function Pricing() {
             </span>
           </div>
           <h2
-            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em] mt-3"
+            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.038em] mt-3"
             style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
             Protect your path{' '}
             <em
-              className="italic"
+              className="not-italic"
               style={{
-                fontWeight: 300,
-                background: 'var(--gradient-green-text)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontWeight: 400,
+                letterSpacing: '-0.015em',
+                color: 'var(--color-text-muted)',
               }}
             >
               to ILR.
@@ -187,10 +187,10 @@ export default function Pricing() {
             aria-labelledby="pro-plan-title"
             className="flex flex-col p-8 md:p-10 relative"
             style={{
-              background: 'linear-gradient(135deg, #006948 0%, #00A874 100%)',
+              background: 'var(--color-surface)',
               borderRadius: 12,
-              boxShadow: '0 16px 48px rgba(0, 105, 72, 0.25), 0 1px 0 rgba(255,255,255,0.15) inset',
-              border: '1px solid transparent',
+              boxShadow: 'var(--shadow-card)',
+              border: '2px solid var(--color-green)',
             }}
           >
             {/* Most Popular badge */}
@@ -199,9 +199,9 @@ export default function Pricing() {
                 className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-manrope)] font-bold tracking-[0.08em] uppercase whitespace-nowrap"
                 style={{
                   fontSize: '0.625rem',
-                  color: '#00A874',
-                  background: 'var(--color-surface-dark)',
-                  border: '1px solid rgba(0, 105, 72, 0.20)',
+                  color: 'var(--color-green)',
+                  background: 'var(--color-green-pale)',
+                  border: '1px solid var(--color-border-strong)',
                 }}
               >
                 Most Popular
@@ -210,7 +210,7 @@ export default function Pricing() {
 
             <div
               className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
-              style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.70)' }}
+              style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}
             >
               Pro
             </div>
@@ -219,21 +219,21 @@ export default function Pricing() {
               <span
                 id="pro-plan-title"
                 className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
-                style={{ fontSize: '2.75rem', color: 'white', fontVariantNumeric: 'tabular-nums' }}
+                style={{ fontSize: '2.75rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 {annual ? '£24.99' : '£2.99'}
               </span>
             </div>
             <div
               className="font-[family-name:var(--font-inter)] mb-7"
-              style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.70)' }}
+              style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}
             >
               {annual ? 'per year' : 'per month'}
             </div>
 
             <div
               className="mb-6"
-              style={{ height: 1, background: 'rgba(255,255,255,0.15)' }}
+              style={{ height: 1, background: 'var(--color-border-strong)' }}
             />
 
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
@@ -244,10 +244,10 @@ export default function Pricing() {
                 'Audit-ready PDF exports',
               ].map((text) => (
                 <li key={text} className="flex items-start gap-[10px]">
-                <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'white' }} weight="bold" />
+                  <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-green)' }} weight="bold" />
                   <span
                     className="font-[family-name:var(--font-inter)] leading-[1.4]"
-                    style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.90)' }}
+                    style={{ fontSize: '0.875rem', color: 'var(--color-text-2)' }}
                   >
                     {text}
                   </span>
@@ -257,11 +257,12 @@ export default function Pricing() {
 
             <Link
               href="/signup"
-              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-opacity duration-200 hover:opacity-90"
+              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-all duration-200"
               style={{
                 fontSize: '0.875rem',
-                color: 'white',
-                background: 'var(--color-surface-dark)',
+                color: '#fff',
+                background: 'var(--gradient-green)',
+                boxShadow: 'var(--shadow-button)',
                 border: 'none',
               }}
             >

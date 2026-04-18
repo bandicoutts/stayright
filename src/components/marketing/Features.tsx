@@ -60,21 +60,21 @@ export default function Features() {
             </span>
           </div>
           <h2
-            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.04em]"
+            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.038em]"
             style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
             Built for the{' '}
             <em
-              className="italic"
+              className="not-italic"
               style={{
-                fontWeight: 300,
-                background: 'var(--gradient-green-text)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontWeight: 400,
+                letterSpacing: '-0.015em',
+                color: 'var(--color-text-muted)',
               }}
             >
-              &apos;Any 12-Month&apos; Rule.
+              &apos;any 12-month&apos; rule.
             </em>
           </h2>
           <p
@@ -210,7 +210,7 @@ export default function Features() {
               >
                 <div
                   className="w-9 h-9 rounded-[8px] flex items-center justify-center mb-4 shrink-0"
-                  style={{ background: 'rgba(0,105,72,0.08)' }}
+                  style={{ background: 'var(--color-border)' }}
                   aria-hidden="true"
                 >
                   <Icon

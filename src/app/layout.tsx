@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Manrope, Inter, JetBrains_Mono } from 'next/font/google';
+import { Manrope, Inter, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
 import './globals.css';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
@@ -24,6 +24,14 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-mono',
+  display: 'swap',
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
   display: 'swap',
 });
 
@@ -52,7 +60,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${manrope.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${inter.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

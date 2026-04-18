@@ -1,0 +1,2035 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StayRight — Web Dashboard: 3 Visual Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gallery: #ECEAE6;
+    --label-ink: #2A2A28;
+    --label-muted: #7A7874;
+  }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--gallery);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--label-ink);
+    min-height: 100vh;
+  }
+
+  /* ─── Gallery wrapper ──────────────────────────────────────── */
+  .gallery {
+    padding: 56px 40px 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 56px;
+  }
+  .gallery-head {
+    width: 100%;
+    max-width: 1280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 4px;
+  }
+  .gallery-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--label-ink);
+  }
+  .gallery-meta {
+    font-size: 12px;
+    color: var(--label-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── Direction label above each browser ───────────────────── */
+  .direction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 1280px;
+  }
+  .dir-label {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 0 4px;
+  }
+  .dir-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--label-muted);
+    font-weight: 500;
+  }
+  .dir-name {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--label-ink);
+  }
+  .dir-sub {
+    font-size: 13px;
+    color: var(--label-muted);
+    margin-left: auto;
+    max-width: 560px;
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  /* ─── Browser chrome ──────────────────────────────────────── */
+  .browser {
+    width: 1280px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 30px 60px -20px rgba(0, 33, 20, 0.22),
+      0 12px 24px -12px rgba(0, 33, 20, 0.15);
+    background: #fff;
+  }
+  .titlebar {
+    height: 36px;
+    background: #E6E3DD;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 0 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .traffic {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .traffic i {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    display: block;
+  }
+  .tr-red { background: #FF5F57; }
+  .tr-amber { background: #FEBC2E; }
+  .tr-green { background: #28C840; }
+  .urlpill {
+    min-width: 320px;
+    max-width: 440px;
+    background: #F4F2ED;
+    border-radius: 8px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #65625D;
+    padding: 0 14px;
+  }
+  .urlpill .lock {
+    width: 10px; height: 10px;
+    opacity: 0.6;
+  }
+  .dashboard {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    height: 760px;
+  }
+
+  /* ============================================================
+     DIRECTION 1 — QUIET PAPER
+     ============================================================ */
+  .qp { background: #F8F7F4; color: #1A1A17; }
+
+  .qp-sb {
+    background: #F1EFEA;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .qp-brand {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.015em;
+    color: #1A1A17;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 10px;
+    margin-bottom: 28px;
+  }
+  .qp-brand .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #006948;
+  }
+  .qp-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .qp-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: #65625D;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    letter-spacing: -0.005em;
+  }
+  .qp-nav a.active {
+    background: rgba(0, 105, 72, 0.09);
+    color: #006948;
+    font-weight: 600;
+  }
+  .qp-nav a .ic { width: 15px; height: 15px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+  .qp-sb-spacer { flex: 1; }
+  .qp-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .qp-user .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #DCE4DD;
+    color: #006948;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    display: grid; place-items: center;
+  }
+  .qp-user .u-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1A1A17;
+    letter-spacing: -0.005em;
+  }
+  .qp-user .u-plan {
+    font-size: 11px;
+    color: #9A9894;
+  }
+
+  .qp-main {
+    padding: 40px 48px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .qp-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+  .qp-h {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #1A1A17;
+  }
+  .qp-h-sub {
+    font-size: 13px;
+    color: #9A9894;
+    margin-top: 4px;
+  }
+  .qp-cta {
+    background: #1A1A17;
+    color: #F8F7F4;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .qp-cta::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #9FF4CA;
+  }
+
+  .qp-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .qp-left-ring {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .qp-ring-wrap svg { display: block; }
+  .qp-ring-text { flex: 1; }
+  .qp-chip {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #006948;
+    background: rgba(0, 105, 72, 0.07);
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .qp-hero-num {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: #1A1A17;
+  }
+  .qp-hero-sub {
+    font-size: 13.5px;
+    color: #65625D;
+    margin-top: 10px;
+    letter-spacing: -0.005em;
+  }
+  .qp-window {
+    font-size: 12px;
+    color: #9A9894;
+    margin-top: 4px;
+  }
+
+  .qp-right-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9A9894;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .qp-right-title a {
+    color: #006948;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  .qp-trip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+  }
+  .qp-trip + .qp-trip {
+    border-top: 1px solid rgba(0,0,0,0.05);
+  }
+  .qp-trip-place {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1A1A17;
+    letter-spacing: -0.01em;
+  }
+  .qp-trip-dates {
+    font-size: 12.5px;
+    color: #9A9894;
+    margin-top: 3px;
+  }
+  .qp-trip-days {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1A1A17;
+    white-space: nowrap;
+  }
+  .qp-trip-days span {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: #9A9894;
+    margin-left: 3px;
+  }
+  .qp-divider-long {
+    height: 1px;
+    margin: 40px 0 32px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.07), transparent);
+  }
+  .qp-ilr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: center;
+  }
+  .qp-ilr-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1A1A17;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .qp-ilr-bar {
+    height: 3px;
+    background: rgba(0, 105, 72, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .qp-ilr-bar i {
+    display: block;
+    height: 100%;
+    width: 63.3%;
+    background: #006948;
+    border-radius: 999px;
+  }
+  .qp-ilr-meta {
+    font-size: 11.5px;
+    color: #9A9894;
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .qp-ilr-num {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: #1A1A17;
+    white-space: nowrap;
+  }
+  .qp-ilr-num small {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #9A9894;
+    margin-left: 4px;
+  }
+
+  /* ============================================================
+     DIRECTION 2 — OBSIDIAN GARDEN
+     ============================================================ */
+  .og { background: #080B08; color: #E8EDE9; }
+
+  .og-sb {
+    background: #0D1F17;
+    padding: 26px 18px;
+    display: flex;
+    flex-direction: column;
+  }
+  .og-brand {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #E8EDE9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px 10px;
+    margin-bottom: 30px;
+  }
+  .og-brand .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #00D68F;
+    box-shadow: 0 0 10px #00D68F;
+  }
+  .og-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .og-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #8FA893;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px;
+    letter-spacing: -0.005em;
+  }
+  .og-nav a.active {
+    background: rgba(0, 133, 93, 0.16);
+    color: #00D68F;
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px rgba(0, 214, 143, 0.18);
+  }
+  .og-nav a .ic { width: 15px; height: 15px; stroke: currentColor; stroke-width: 1.7; fill: none; }
+  .og-sb-spacer { flex: 1; }
+  .og-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+  }
+  .og-user .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #1A2B20;
+    color: #00D68F;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    display: grid; place-items: center;
+  }
+  .og-user .u-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #E8EDE9;
+  }
+  .og-user .u-plan {
+    font-size: 11px;
+    color: #4A5E4D;
+  }
+
+  .og-main {
+    padding: 32px 40px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .og-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .og-crumb {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #4A5E4D;
+    font-weight: 600;
+  }
+  .og-crumb .current { color: #CFD8D0; }
+  .og-topright {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .og-search {
+    background: #0D1F17;
+    border-radius: 8px;
+    padding: 7px 14px 7px 34px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #4A5E4D;
+    width: 240px;
+    position: relative;
+  }
+  .og-search::before {
+    content: '';
+    position: absolute;
+    left: 12px; top: 50%;
+    width: 12px; height: 12px;
+    transform: translateY(-50%);
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A5E4D' stroke-width='2'><circle cx='11' cy='11' r='7'/><line x1='16.5' y1='16.5' x2='21' y2='21'/></svg>") no-repeat center/contain;
+  }
+  .og-cta {
+    background: linear-gradient(135deg, #00A874, #006948);
+    color: #F0FAF5;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12.5px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 133, 93, 0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .og-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 18px;
+  }
+  .og-tile {
+    background: #0D1F17;
+    border-radius: 14px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .og-tile::after {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(0, 133, 93, 0.14), transparent 65%);
+    pointer-events: none;
+  }
+  .og-tile-label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #4A5E4D;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .og-ring-main {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .og-ring-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .og-ring-wrap svg { display: block; }
+  .og-ring-status {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .og-ring-status .n {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #E8EDE9;
+  }
+  .og-ring-status .u {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: #4A5E4D;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .og-ring-text { flex: 1; }
+  .og-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9FF4CA;
+    background: rgba(0, 133, 93, 0.16);
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .og-chip::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00D68F;
+    box-shadow: 0 0 8px #00D68F;
+  }
+  .og-hero {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 54px;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: #E8EDE9;
+  }
+  .og-hero small {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #8FA893;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+  .og-hero-lbl {
+    font-size: 12.5px;
+    color: #8FA893;
+    margin-top: 8px;
+    letter-spacing: 0;
+  }
+  .og-window-strip {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 18px;
+    margin-top: 24px;
+    border-top: 1px solid rgba(0, 133, 93, 0.12);
+    font-size: 11px;
+    color: #4A5E4D;
+    letter-spacing: 0.05em;
+  }
+  .og-window-strip b {
+    color: #CFD8D0;
+    font-weight: 500;
+    margin-left: 6px;
+  }
+
+  .og-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .og-section-hd {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+  }
+  .og-section-title {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #4A5E4D;
+    font-weight: 600;
+  }
+  .og-section-action {
+    font-size: 11px;
+    color: #00D68F;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .og-trip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .og-trip + .og-trip {
+    border-top: 1px solid rgba(0, 133, 93, 0.1);
+  }
+  .og-trip-place {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #E8EDE9;
+    letter-spacing: -0.01em;
+  }
+  .og-trip-dates {
+    font-size: 11.5px;
+    color: #8FA893;
+    margin-top: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .og-trip-days {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #00D68F;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .og-ilr-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .og-ilr-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #E8EDE9;
+    letter-spacing: -0.01em;
+  }
+  .og-ilr-percent {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #00D68F;
+  }
+  .og-ilr-bar {
+    height: 5px;
+    background: rgba(0, 133, 93, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .og-ilr-bar i {
+    display: block;
+    height: 100%;
+    width: 63.3%;
+    background: linear-gradient(90deg, #006948, #00D68F);
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(0, 214, 143, 0.45);
+  }
+  .og-ilr-meta {
+    font-size: 11px;
+    color: #4A5E4D;
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     DIRECTION 3 — SAGE & STONE
+     ============================================================ */
+  .ss { background: #F5F0EA; color: #1A3328; }
+
+  /* ── Sage & Stone — Dark Mode ────────────────────────────── */
+  .ss.dark { background: #141815; color: #E8EDE4; }
+  .ss.dark .ss-sb { background: #1C2420; }
+  .ss.dark .ss-brand { color: #E8EDE4; }
+  .ss.dark .ss-brand-mark { background: #E8EDE4; color: #141815; }
+  .ss.dark .ss-nav a { color: #8FA893; }
+  .ss.dark .ss-nav a.active { color: #E8EDE4; }
+  .ss.dark .ss-nav a.active::before { background: #C8D4BF; }
+  .ss.dark .ss-user .avatar { background: #2A352E; color: #C8D4BF; }
+  .ss.dark .ss-user .u-name { color: #E8EDE4; }
+  .ss.dark .ss-user .u-plan { color: #7A9E8E; }
+  .ss.dark .ss-pretitle { color: #7A9E8E; }
+  .ss.dark .ss-h { color: #E8EDE4; }
+  .ss.dark .ss-h em { border-bottom-color: #7A9E8E; }
+  .ss.dark .ss-cta { background: #E8EDE4; color: #141815; }
+  .ss.dark .ss-card { background: #1C2420; }
+  .ss.dark .ss-ring-wrap svg circle:first-child { stroke: #2A352E; }
+  .ss.dark .ss-ring-wrap svg circle:last-child { stroke: #C8D4BF; }
+  .ss.dark .ss-ring-center .n { color: #E8EDE4; }
+  .ss.dark .ss-ring-center .u { color: #7A9E8E; }
+  .ss.dark .ss-chip { background: rgba(200, 212, 191, 0.12); color: #C8D4BF; }
+  .ss.dark .ss-hero { color: #E8EDE4; }
+  .ss.dark .ss-hero-lbl { color: #8FA893; }
+  .ss.dark .ss-window { border-top-color: rgba(200, 212, 191, 0.14); color: #7A9E8E; }
+  .ss.dark .ss-window .lbl { color: #E8EDE4; }
+  .ss.dark .ss-card-title { color: #E8EDE4; }
+  .ss.dark .ss-card-action { color: #7A9E8E; }
+  .ss.dark .ss-trip + .ss-trip { border-top-color: rgba(200, 212, 191, 0.1); }
+  .ss.dark .ss-trip-dot { background: #7A9E8E; }
+  .ss.dark .ss-trip-place { color: #E8EDE4; }
+  .ss.dark .ss-trip-dates { color: #7A9E8E; }
+  .ss.dark .ss-trip-days { color: #E8EDE4; }
+  .ss.dark .ss-ilr-title { color: #E8EDE4; }
+  .ss.dark .ss-ilr-sub { color: #7A9E8E; }
+  .ss.dark .ss-ilr-num { color: #E8EDE4; }
+  .ss.dark .ss-ilr-num small { color: #7A9E8E; }
+  .ss.dark .ss-ilr-bar { background: rgba(200, 212, 191, 0.14); }
+  .ss.dark .ss-ilr-bar i { background: #C8D4BF; }
+  .ss.dark .ss-ilr-chapters { color: #7A9E8E; }
+
+  /* ── Responsive viewport simulator ───────────────────────── */
+  body.vp-sim .gallery { gap: 40px; padding-top: 40px; align-items: center; }
+  body.vp-sim .direction { align-items: center; max-width: none; width: auto; }
+  body.vp-sim .dir-label { max-width: 1000px; justify-content: center; flex-wrap: wrap; }
+  body.vp-sim .dir-sub { display: none; }
+
+  body.vp-sim .browser {
+    transform-origin: top center;
+    transition: width 0.25s ease;
+  }
+
+  /* Simulated viewport widths — the underlying dashboard is fixed 1280px,
+     so narrower viewports crop and show horizontal scroll (honest rendering). */
+  body.vp-1440 .browser { width: 1440px; }
+  body.vp-1280 .browser { width: 1280px; }
+  body.vp-1024 .browser { width: 1024px; }
+  body.vp-768  .browser { width: 768px;  }
+  body.vp-390  .browser { width: 390px;  }
+
+  body.vp-sim .dashboard {
+    min-width: 0;
+  }
+
+  /* ── Responsive behavior when simulating narrower viewports ── */
+
+  /* 1024px — Tablet landscape: sidebar collapses to 72px icon rail, main padding tightens */
+  body.vp-1024 .dashboard,
+  body.vp-768 .dashboard,
+  body.vp-390 .dashboard {
+    height: auto;
+    min-height: 760px;
+  }
+  body.vp-1024 .dashboard { grid-template-columns: 72px 1fr; }
+  body.vp-1024 .qp-sb,
+  body.vp-1024 .og-sb,
+  body.vp-1024 .ss-sb { padding: 20px 10px; }
+  body.vp-1024 .qp-brand span:not(.dot),
+  body.vp-1024 .og-brand,
+  body.vp-1024 .ss-brand { display: none; }
+  body.vp-1024 .qp-brand,
+  body.vp-1024 .ss-brand { justify-content: center; padding: 0; margin-bottom: 24px; }
+  body.vp-1024 .qp-brand .dot,
+  body.vp-1024 .ss-brand .ss-brand-mark { display: block; }
+  body.vp-1024 .og-sb::before { content: '●'; color: #00D68F; text-align: center; display: block; margin-bottom: 24px; text-shadow: 0 0 10px #00D68F; }
+  body.vp-1024 .qp-nav a,
+  body.vp-1024 .og-nav a,
+  body.vp-1024 .ss-nav a { justify-content: center; padding: 10px; font-size: 0; }
+  body.vp-1024 .qp-nav a .ic,
+  body.vp-1024 .og-nav a .ic,
+  body.vp-1024 .ss-nav a .ic { width: 18px; height: 18px; }
+  body.vp-1024 .ss-nav a.active::before { display: none; }
+  body.vp-1024 .qp-user,
+  body.vp-1024 .og-user,
+  body.vp-1024 .ss-user { justify-content: center; padding: 10px 0; gap: 0; }
+  body.vp-1024 .qp-user > div:last-child,
+  body.vp-1024 .og-user > div:last-child,
+  body.vp-1024 .ss-user > div:last-child { display: none; }
+  body.vp-1024 .qp-main,
+  body.vp-1024 .og-main,
+  body.vp-1024 .ss-main { padding: 28px 28px; }
+  body.vp-1024 .qp-grid,
+  body.vp-1024 .og-grid,
+  body.vp-1024 .ss-grid { grid-template-columns: 1fr; gap: 20px; }
+  body.vp-1024 .qp-left-ring { flex-wrap: wrap; justify-content: center; text-align: left; }
+  body.vp-1024 .qp-hero-num { font-size: 56px; }
+  body.vp-1024 .qp-ilr { grid-template-columns: 1fr; gap: 12px; }
+  body.vp-1024 .og-hero { font-size: 42px; }
+  body.vp-1024 .og-window-strip { flex-wrap: wrap; gap: 8px; }
+  body.vp-1024 .og-search { width: 180px; }
+  body.vp-1024 .ss-h { font-size: 24px; }
+  body.vp-1024 .ss-ring-card { flex-wrap: wrap; justify-content: center; gap: 20px; }
+
+  /* 768px — Tablet: sidebar becomes top bar with hamburger */
+  body.vp-768 .dashboard,
+  body.vp-390 .dashboard { grid-template-columns: 1fr; grid-template-rows: 56px 1fr; }
+  body.vp-768 .qp-sb,
+  body.vp-768 .og-sb,
+  body.vp-768 .ss-sb,
+  body.vp-390 .qp-sb,
+  body.vp-390 .og-sb,
+  body.vp-390 .ss-sb {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 16px;
+    height: 56px;
+    gap: 0;
+  }
+  body.vp-768 .qp-brand,
+  body.vp-768 .og-brand,
+  body.vp-768 .ss-brand,
+  body.vp-390 .qp-brand,
+  body.vp-390 .og-brand,
+  body.vp-390 .ss-brand {
+    margin-bottom: 0;
+    padding: 0;
+    font-size: 15px;
+    flex: 1;
+  }
+  body.vp-768 .qp-brand span:not(.dot),
+  body.vp-768 .og-brand,
+  body.vp-768 .ss-brand,
+  body.vp-390 .qp-brand span:not(.dot),
+  body.vp-390 .og-brand,
+  body.vp-390 .ss-brand { display: flex; }
+  body.vp-768 .qp-nav,
+  body.vp-768 .og-nav,
+  body.vp-768 .ss-nav,
+  body.vp-390 .qp-nav,
+  body.vp-390 .og-nav,
+  body.vp-390 .ss-nav { display: none; }
+  body.vp-768 .qp-sb-spacer,
+  body.vp-768 .og-sb-spacer,
+  body.vp-768 .ss-sb-spacer,
+  body.vp-390 .qp-sb-spacer,
+  body.vp-390 .og-sb-spacer,
+  body.vp-390 .ss-sb-spacer { display: none; }
+  body.vp-768 .qp-user,
+  body.vp-768 .og-user,
+  body.vp-768 .ss-user,
+  body.vp-390 .qp-user,
+  body.vp-390 .og-user,
+  body.vp-390 .ss-user {
+    padding: 6px;
+    gap: 0;
+  }
+  body.vp-768 .qp-user > div:last-child,
+  body.vp-768 .og-user > div:last-child,
+  body.vp-768 .ss-user > div:last-child,
+  body.vp-390 .qp-user > div:last-child,
+  body.vp-390 .og-user > div:last-child,
+  body.vp-390 .ss-user > div:last-child { display: none; }
+  /* hamburger */
+  body.vp-768 .qp-sb::after,
+  body.vp-768 .og-sb::after,
+  body.vp-768 .ss-sb::after,
+  body.vp-390 .qp-sb::after,
+  body.vp-390 .og-sb::after,
+  body.vp-390 .ss-sb::after {
+    content: '☰';
+    font-size: 18px;
+    margin-left: 12px;
+    color: currentColor;
+    opacity: 0.75;
+  }
+  body.vp-768 .qp-main,
+  body.vp-768 .og-main,
+  body.vp-768 .ss-main { padding: 24px 22px; }
+  body.vp-768 .qp-topbar,
+  body.vp-768 .og-topbar,
+  body.vp-768 .ss-topbar { flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+  body.vp-768 .qp-grid,
+  body.vp-768 .og-grid,
+  body.vp-768 .ss-grid { grid-template-columns: 1fr; gap: 16px; }
+  body.vp-768 .qp-left-ring { flex-direction: column; align-items: center; text-align: center; gap: 18px; }
+  body.vp-768 .qp-hero-num { font-size: 60px; }
+  body.vp-768 .qp-ilr { grid-template-columns: 1fr; gap: 12px; }
+  body.vp-768 .og-ring-main { flex-direction: column; align-items: flex-start; gap: 20px; }
+  body.vp-768 .og-hero { font-size: 44px; }
+  body.vp-768 .og-window-strip { flex-direction: column; gap: 6px; }
+  body.vp-768 .og-search { display: none; }
+  body.vp-768 .ss-ring-card { flex-direction: column; align-items: flex-start; gap: 20px; padding: 24px; }
+  body.vp-768 .ss-h { font-size: 26px; max-width: 100%; }
+  body.vp-768 .ss-card { padding: 22px; }
+
+  /* 390px — Mobile */
+  body.vp-390 .qp-main,
+  body.vp-390 .og-main,
+  body.vp-390 .ss-main { padding: 20px 16px; }
+  body.vp-390 .qp-topbar,
+  body.vp-390 .og-topbar,
+  body.vp-390 .ss-topbar { flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 18px; }
+  body.vp-390 .qp-topbar > div:first-child,
+  body.vp-390 .ss-topbar > div:first-child { width: 100%; }
+  body.vp-390 .qp-cta,
+  body.vp-390 .ss-cta { width: 100%; justify-content: center; }
+  body.vp-390 .og-topright { flex-wrap: wrap; width: 100%; }
+  body.vp-390 .og-search { display: none; }
+  body.vp-390 .og-cta { width: 100%; }
+  body.vp-390 .qp-grid,
+  body.vp-390 .og-grid,
+  body.vp-390 .ss-grid { grid-template-columns: 1fr; gap: 14px; }
+  body.vp-390 .qp-left-ring { flex-direction: column; text-align: center; align-items: center; gap: 14px; }
+  body.vp-390 .qp-hero-num { font-size: 54px; }
+  body.vp-390 .qp-ring-wrap svg { width: 160px; height: 160px; }
+  body.vp-390 .qp-trip { flex-wrap: wrap; gap: 8px; }
+  body.vp-390 .qp-ilr { grid-template-columns: 1fr; gap: 10px; }
+  body.vp-390 .og-tile { padding: 20px; }
+  body.vp-390 .og-ring-main { flex-direction: column; align-items: center; text-align: center; gap: 16px; }
+  body.vp-390 .og-ring-wrap svg { width: 130px; height: 130px; }
+  body.vp-390 .og-ring-status .n { font-size: 32px; }
+  body.vp-390 .og-hero { font-size: 38px; }
+  body.vp-390 .og-hero small { display: block; margin-left: 0; margin-top: 4px; font-size: 13px; }
+  body.vp-390 .og-window-strip { flex-direction: column; gap: 6px; padding-top: 14px; margin-top: 16px; }
+  body.vp-390 .og-topbar { flex-direction: column; align-items: stretch; gap: 12px; }
+  body.vp-390 .ss-ring-card,
+  body.vp-390 .ss-card { padding: 22px 20px; }
+  body.vp-390 .ss-ring-card { flex-direction: column; align-items: center; text-align: center; gap: 18px; }
+  body.vp-390 .ss-ring-wrap svg { width: 140px; height: 140px; }
+  body.vp-390 .ss-ring-center .n { font-size: 32px; }
+  body.vp-390 .ss-hero { font-size: 36px; }
+  body.vp-390 .ss-h { font-size: 22px; line-height: 1.3; }
+  body.vp-390 .ss-window { flex-direction: column; align-items: flex-start; gap: 4px; }
+  body.vp-390 .ss-ilr-top { flex-direction: column; align-items: flex-start; gap: 4px; }
+  body.vp-390 .ss-ilr-chapters { flex-wrap: wrap; gap: 6px; }
+  body.vp-390 .ss-trip-dates { font-size: 11px; }
+
+  /* Turn off horizontal scroll when responsive rules handle it */
+  body.vp-sim .dashboard { overflow-x: visible; }
+
+  /* Viewport badge (rendered outside each browser) */
+  .vp-badge {
+    display: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--label-muted);
+    font-weight: 500;
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .vp-badge strong {
+    color: var(--label-ink);
+    font-weight: 700;
+    margin-right: 8px;
+    letter-spacing: 0;
+  }
+  body.vp-sim .vp-badge { display: block; }
+
+  .vp-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .vp-opt {
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 11.5px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: #2A2A28;
+    background: #F1EFEA;
+    cursor: pointer;
+    border: none;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .vp-opt:hover { background: #E6E3DD; }
+  .vp-opt.active { background: #1A3328; color: #F5F0EA; }
+  .vp-opt .w { font-weight: 600; }
+  .vp-opt .lbl { color: #7A7874; font-size: 10.5px; }
+  .vp-opt.active .lbl { color: rgba(245,240,234,0.7); }
+
+  /* ── Tweaks panel ────────────────────────────────────────── */
+  .tweaks-panel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 280px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 33, 20, 0.18), 0 2px 6px rgba(0,0,0,0.05);
+    padding: 18px 18px 16px;
+    font-family: 'Inter', sans-serif;
+    z-index: 9999;
+    display: none;
+  }
+  .tweaks-panel.visible { display: block; }
+  .tweaks-hd {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #1A1A17;
+    margin-bottom: 14px;
+  }
+  .tweaks-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+  }
+  .tweaks-label {
+    font-size: 13px;
+    color: #2A2A28;
+    font-weight: 500;
+  }
+  .tweaks-sub {
+    font-size: 11px;
+    color: #7A7874;
+    margin-top: 2px;
+  }
+  .tweaks-toggle {
+    width: 40px;
+    height: 22px;
+    border-radius: 999px;
+    background: #D8D5CF;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .tweaks-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #FFF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+  .tweaks-toggle.on { background: #1A3328; }
+  .tweaks-toggle.on::after { transform: translateX(18px); }
+
+  .ss-sb {
+    background: #EBE5DD;
+    padding: 32px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .ss-brand {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: #1A3328;
+    padding: 2px 10px;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ss-brand-mark {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: #1A3328;
+    display: grid; place-items: center;
+    color: #F5F0EA;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+  }
+  .ss-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ss-nav a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    color: #7A9E8E;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 10px;
+    letter-spacing: -0.005em;
+  }
+  .ss-nav a.active {
+    color: #1A3328;
+    font-weight: 700;
+  }
+  .ss-nav a.active::before {
+    content: '';
+    width: 4px; height: 14px;
+    background: #1A3328;
+    border-radius: 2px;
+    margin-left: -18px;
+    margin-right: 0;
+  }
+  .ss-nav a .ic { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+  .ss-sb-spacer { flex: 1; }
+  .ss-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+  }
+  .ss-user .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #D4CDC1;
+    color: #1A3328;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    display: grid; place-items: center;
+  }
+  .ss-user .u-name {
+    font-family: 'Manrope', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1A3328;
+    letter-spacing: -0.005em;
+  }
+  .ss-user .u-plan {
+    font-size: 11px;
+    color: #7A9E8E;
+  }
+
+  .ss-main {
+    padding: 44px 56px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .ss-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 36px;
+  }
+  .ss-pretitle {
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    color: #7A9E8E;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  .ss-h {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: #1A3328;
+    margin-top: 6px;
+    max-width: 520px;
+    text-wrap: pretty;
+  }
+  .ss-h em {
+    font-style: normal;
+    border-bottom: 2px solid #7A9E8E;
+    padding-bottom: 1px;
+  }
+  .ss-cta {
+    background: #1A3328;
+    color: #F5F0EA;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .ss-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .ss-card {
+    background: #EEF0EB;
+    border-radius: 22px;
+    padding: 32px;
+  }
+  .ss-ring-card {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+  }
+  .ss-ring-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .ss-ring-wrap svg { display: block; }
+  .ss-ring-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .ss-ring-center .n {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #1A3328;
+  }
+  .ss-ring-center .u {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #7A9E8E;
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+  }
+  .ss-ring-side { flex: 1; }
+  .ss-chip {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1A3328;
+    background: rgba(122, 158, 142, 0.25);
+    padding: 5px 11px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .ss-hero {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #1A3328;
+  }
+  .ss-hero-lbl {
+    font-size: 13px;
+    color: #7A9E8E;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .ss-window {
+    font-size: 11.5px;
+    color: #7A9E8E;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(122, 158, 142, 0.2);
+    letter-spacing: 0.01em;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .ss-window .lbl {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    color: #1A3328;
+    font-size: 12px;
+  }
+
+  .ss-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+  }
+  .ss-card-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #1A3328;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .ss-card-action {
+    font-size: 12px;
+    color: #7A9E8E;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .ss-trip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+  }
+  .ss-trip + .ss-trip {
+    border-top: 1px solid rgba(122, 158, 142, 0.18);
+  }
+  .ss-trip-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #7A9E8E;
+    flex-shrink: 0;
+  }
+  .ss-trip-body { flex: 1; }
+  .ss-trip-place {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1A3328;
+    letter-spacing: -0.005em;
+  }
+  .ss-trip-dates {
+    font-size: 12px;
+    color: #7A9E8E;
+    margin-top: 2px;
+  }
+  .ss-trip-days {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: #1A3328;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ss-ilr {
+    margin-top: 24px;
+  }
+  .ss-ilr-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
+  .ss-ilr-top .left { flex: 1; }
+  .ss-ilr-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #1A3328;
+    letter-spacing: -0.01em;
+  }
+  .ss-ilr-sub {
+    font-size: 12px;
+    color: #7A9E8E;
+    margin-top: 4px;
+  }
+  .ss-ilr-num {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.025em;
+    color: #1A3328;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ss-ilr-num small {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #7A9E8E;
+    margin-left: 4px;
+  }
+  .ss-ilr-bar {
+    height: 6px;
+    background: rgba(122, 158, 142, 0.22);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .ss-ilr-bar i {
+    display: block;
+    height: 100%;
+    width: 63.3%;
+    background: #1A3328;
+    border-radius: 999px;
+  }
+  .ss-ilr-chapters {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #7A9E8E;
+    letter-spacing: 0.03em;
+  }
+
+  /* icons */
+  .ic { display: inline-block; }
+</style>
+</head>
+<body>
+
+<script>
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "sageStoneDark": true,
+    "viewport": "390"
+  }/*EDITMODE-END*/;
+
+  const tweakState = { ...TWEAK_DEFAULTS };
+
+  const VIEWPORT_LABELS = {
+    '1440': 'Desktop L',
+    '1280': 'Desktop',
+    '1024': 'Tablet landscape',
+    '768':  'Tablet portrait',
+    '390':  'Mobile'
+  };
+
+  function applyTweaks() {
+    document.querySelectorAll('.ss').forEach(el => {
+      el.classList.toggle('dark', tweakState.sageStoneDark);
+    });
+    const toggle = document.getElementById('tw-dark');
+    if (toggle) toggle.classList.toggle('on', tweakState.sageStoneDark);
+
+    // Viewport simulation
+    ['1440','1280','1024','768','390'].forEach(w => {
+      document.body.classList.remove('vp-' + w);
+    });
+    const vp = String(tweakState.viewport || '1280');
+    document.body.classList.add('vp-' + vp);
+    document.body.classList.toggle('vp-sim', vp !== '1280');
+
+    document.querySelectorAll('.vp-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.vp === vp);
+    });
+    document.querySelectorAll('.viewport-badge .vp-w').forEach(el => el.textContent = vp + 'px');
+    document.querySelectorAll('.viewport-badge .vp-name').forEach(el => el.textContent = VIEWPORT_LABELS[vp] || '');
+  }
+
+  window.addEventListener('message', (e) => {
+    if (!e.data || typeof e.data !== 'object') return;
+    if (e.data.type === '__activate_edit_mode') {
+      document.getElementById('tweaks-panel')?.classList.add('visible');
+    } else if (e.data.type === '__deactivate_edit_mode') {
+      document.getElementById('tweaks-panel')?.classList.remove('visible');
+    }
+  });
+
+  function setTweak(key, val) {
+    tweakState[key] = val;
+    applyTweaks();
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyTweaks();
+    document.getElementById('tw-dark')?.addEventListener('click', () => {
+      setTweak('sageStoneDark', !tweakState.sageStoneDark);
+    });
+    document.querySelectorAll('.vp-opt').forEach(btn => {
+      btn.addEventListener('click', () => setTweak('viewport', btn.dataset.vp));
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+  });
+</script>
+
+<div class="tweaks-panel" id="tweaks-panel">
+  <div class="tweaks-hd">Tweaks</div>
+  <div class="tweaks-row">
+    <div>
+      <div class="tweaks-label">Sage &amp; Stone dark mode</div>
+      <div class="tweaks-sub">Preview a dark variant of Direction 03</div>
+    </div>
+    <div class="tweaks-toggle" id="tw-dark"></div>
+  </div>
+  <div style="height:1px;background:rgba(0,0,0,0.06);margin:8px 0"></div>
+  <div>
+    <div class="tweaks-label">Viewport size</div>
+    <div class="tweaks-sub">Simulate common responsive breakpoints</div>
+    <div class="vp-options">
+      <button class="vp-opt" data-vp="1440"><span class="w">1440</span><span class="lbl">Desktop L</span></button>
+      <button class="vp-opt active" data-vp="1280"><span class="w">1280</span><span class="lbl">Desktop</span></button>
+      <button class="vp-opt" data-vp="1024"><span class="w">1024</span><span class="lbl">Tablet L</span></button>
+      <button class="vp-opt" data-vp="768"><span class="w">768</span><span class="lbl">Tablet</span></button>
+      <button class="vp-opt" data-vp="390"><span class="w">390</span><span class="lbl">Mobile</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="gallery">
+
+  <div class="gallery-head">
+    <div class="gallery-title">StayRight · Web Dashboard · Visual Directions</div>
+    <div class="gallery-meta">Desktop · 1280 wide · app.stayright.co</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- DIRECTION 1 — QUIET PAPER                                -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="direction">
+    <div class="dir-label">
+      <div>
+        <div class="dir-eyebrow">Direction 01</div>
+        <div class="dir-name">Quiet Paper</div>
+      </div>
+      <div class="dir-sub">Warm off-white canvas. Nearly invisible sidebar. A single botanical green, used sparingly. Feels like a premium editorial dashboard.</div>
+    </div>
+
+    <div class="browser">
+      <div class="titlebar">
+        <div class="traffic">
+          <i class="tr-red"></i><i class="tr-amber"></i><i class="tr-green"></i>
+        </div>
+        <div class="urlpill">
+          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          app.stayright.co/dashboard
+        </div>
+        <div></div>
+      </div>
+
+      <div class="dashboard qp">
+        <!-- Sidebar -->
+        <aside class="qp-sb">
+          <div class="qp-brand"><span class="dot"></span>StayRight</div>
+          <nav class="qp-nav">
+            <a class="active">
+              <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              Dashboard
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M3 7h18M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7l1 13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-13"/></svg>
+              Trips
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>
+              Plan a Trip
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M4 20V5a2 2 0 0 1 2-2h9l5 5v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v5h5"/><path d="M8 13h8M8 17h5"/></svg>
+              Reports
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </a>
+          </nav>
+          <div class="qp-sb-spacer"></div>
+          <div class="qp-user">
+            <div class="avatar">AO</div>
+            <div>
+              <div class="u-name">Amara Okafor</div>
+              <div class="u-plan">Pro · Renews Jun</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main -->
+        <section class="qp-main">
+          <div class="qp-topbar">
+            <div>
+              <div class="qp-h">Good morning, Amara</div>
+              <div class="qp-h-sub">Thursday, 18 April 2026</div>
+            </div>
+            <button class="qp-cta">Plan a trip</button>
+          </div>
+
+          <div class="qp-grid">
+            <!-- LEFT: quota ring -->
+            <div class="qp-left-ring">
+              <div class="qp-ring-wrap">
+                <svg width="208" height="208" viewBox="0 0 208 208">
+                  <circle cx="104" cy="104" r="94" fill="none" stroke="#E8E7E3" stroke-width="4"/>
+                  <circle cx="104" cy="104" r="94" fill="none" stroke="#006948" stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-dasharray="590.62"
+                    stroke-dashoffset="436.26"
+                    transform="rotate(-90 104 104)"/>
+                </svg>
+              </div>
+              <div class="qp-ring-text">
+                <div class="qp-chip">SAFE · ROLLING 12M</div>
+                <div class="qp-hero-num">133</div>
+                <div class="qp-hero-sub">days remaining before the 180-day cap</div>
+                <div class="qp-window">47 of 180 used · 18 Apr 2025 → 17 Apr 2026</div>
+              </div>
+            </div>
+
+            <!-- RIGHT: trips -->
+            <div>
+              <div class="qp-right-title">
+                <span>Recent absences</span>
+                <a href="#">View all trips →</a>
+              </div>
+              <div class="qp-trip">
+                <div>
+                  <div class="qp-trip-place">Lisbon, Portugal</div>
+                  <div class="qp-trip-dates">14 – 21 March 2026</div>
+                </div>
+                <div class="qp-trip-days">7<span>days</span></div>
+              </div>
+              <div class="qp-trip">
+                <div>
+                  <div class="qp-trip-place">Dubai, UAE</div>
+                  <div class="qp-trip-dates">2 – 9 February 2026</div>
+                </div>
+                <div class="qp-trip-days">7<span>days</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qp-divider-long"></div>
+
+          <div class="qp-ilr">
+            <div>
+              <div class="qp-ilr-title">ILR qualifying period</div>
+              <div class="qp-ilr-bar"><i></i></div>
+              <div class="qp-ilr-meta">
+                <span>Started February 2023</span>
+                <span>Eligible February 2028</span>
+              </div>
+            </div>
+            <div class="qp-ilr-num">3y 2m <small>/ 5y</small></div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="vp-badge"><strong><span class="vp-w">1280px</span></strong><span class="vp-name">Desktop</span> · Direction 01 · Quiet Paper</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- DIRECTION 2 — OBSIDIAN GARDEN                            -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="direction">
+    <div class="dir-label">
+      <div>
+        <div class="dir-eyebrow">Direction 02</div>
+        <div class="dir-name">Obsidian Garden</div>
+      </div>
+      <div class="dir-sub">True OLED black canvas with raised green-black tiles. A vivid, glowing arc. Trading terminal meets luxury hotel concierge.</div>
+    </div>
+
+    <div class="browser">
+      <div class="titlebar">
+        <div class="traffic">
+          <i class="tr-red"></i><i class="tr-amber"></i><i class="tr-green"></i>
+        </div>
+        <div class="urlpill">
+          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          app.stayright.co/dashboard
+        </div>
+        <div></div>
+      </div>
+
+      <div class="dashboard og">
+        <!-- Sidebar -->
+        <aside class="og-sb">
+          <div class="og-brand"><span class="dot"></span>Stayright</div>
+          <nav class="og-nav">
+            <a class="active">
+              <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              Dashboard
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M3 7h18M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7l1 13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-13"/></svg>
+              Trips
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>
+              Plan a Trip
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M4 20V5a2 2 0 0 1 2-2h9l5 5v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v5h5"/></svg>
+              Reports
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </a>
+          </nav>
+          <div class="og-sb-spacer"></div>
+          <div class="og-user">
+            <div class="avatar">AO</div>
+            <div>
+              <div class="u-name">A. Okafor</div>
+              <div class="u-plan">PRO · Signed in</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main -->
+        <section class="og-main">
+          <div class="og-topbar">
+            <div class="og-crumb">Workspace <span style="margin:0 8px">/</span> <span class="current">Dashboard</span></div>
+            <div class="og-topright">
+              <div class="og-search">Search trips, reports…</div>
+              <button class="og-cta">+ New trip</button>
+            </div>
+          </div>
+
+          <div class="og-grid">
+            <!-- Hero tile -->
+            <div class="og-tile">
+              <div class="og-tile-label">Rolling 12-month window</div>
+              <div class="og-ring-main">
+                <div class="og-ring-wrap">
+                  <svg width="156" height="156" viewBox="0 0 156 156" style="filter: drop-shadow(0 0 18px rgba(0,214,143,0.35));">
+                    <defs>
+                      <linearGradient id="ogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00A874"/>
+                        <stop offset="100%" stop-color="#00D68F"/>
+                      </linearGradient>
+                    </defs>
+                    <circle cx="78" cy="78" r="66" fill="none" stroke="#0A140E" stroke-width="10"/>
+                    <circle cx="78" cy="78" r="66" fill="none" stroke="url(#ogGrad)" stroke-width="10"
+                      stroke-linecap="round"
+                      stroke-dasharray="414.69"
+                      stroke-dashoffset="306.32"
+                      transform="rotate(-90 78 78)"/>
+                  </svg>
+                  <div class="og-ring-status">
+                    <div class="n">47</div>
+                    <div class="u">/ 180 days</div>
+                  </div>
+                </div>
+                <div class="og-ring-text">
+                  <div class="og-chip">SAFE</div>
+                  <div class="og-hero">133<small>days remaining</small></div>
+                  <div class="og-hero-lbl">Book confidently — you have 73 days of headroom before the amber threshold.</div>
+                </div>
+              </div>
+              <div class="og-window-strip">
+                <span>WINDOW START <b>18 Apr 2025</b></span>
+                <span>THRESHOLD AT <b>120 days</b></span>
+                <span>WINDOW END <b>17 Apr 2026</b></span>
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="og-right-col">
+              <div class="og-tile" style="padding: 22px 24px;">
+                <div class="og-section-hd">
+                  <div class="og-section-title">Recent absences</div>
+                  <div class="og-section-action">View all →</div>
+                </div>
+                <div class="og-trip">
+                  <div>
+                    <div class="og-trip-place">Lisbon, Portugal</div>
+                    <div class="og-trip-dates">14 Mar – 21 Mar 2026</div>
+                  </div>
+                  <div class="og-trip-days">7 d</div>
+                </div>
+                <div class="og-trip">
+                  <div>
+                    <div class="og-trip-place">Dubai, UAE</div>
+                    <div class="og-trip-dates">02 Feb – 09 Feb 2026</div>
+                  </div>
+                  <div class="og-trip-days">7 d</div>
+                </div>
+              </div>
+
+              <div class="og-tile" style="padding: 22px 24px;">
+                <div class="og-ilr-row">
+                  <div class="og-ilr-title">ILR qualifying</div>
+                  <div class="og-ilr-percent">63%</div>
+                </div>
+                <div class="og-ilr-bar"><i></i></div>
+                <div class="og-ilr-meta">
+                  <span>3y 2m completed</span>
+                  <span>1y 10m remaining</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="vp-badge"><strong><span class="vp-w">1280px</span></strong><span class="vp-name">Desktop</span> · Direction 02 · Obsidian Garden</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- DIRECTION 3 — SAGE & STONE                               -->
+  <!-- ════════════════════════════════════════════════════════ -->
+  <div class="direction">
+    <div class="dir-label">
+      <div>
+        <div class="dir-eyebrow">Direction 03</div>
+        <div class="dir-name">Sage &amp; Stone</div>
+      </div>
+      <div class="dir-sub">Warm taupe and sage-white. Deep forest text. The app feels like a trusted advisor — reassuring, not monitoring.</div>
+    </div>
+
+    <div class="browser">
+      <div class="titlebar">
+        <div class="traffic">
+          <i class="tr-red"></i><i class="tr-amber"></i><i class="tr-green"></i>
+        </div>
+        <div class="urlpill">
+          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          app.stayright.co/dashboard
+        </div>
+        <div></div>
+      </div>
+
+      <div class="dashboard ss">
+        <!-- Sidebar -->
+        <aside class="ss-sb">
+          <div class="ss-brand"><span class="ss-brand-mark">S</span>StayRight</div>
+          <nav class="ss-nav">
+            <a class="active">
+              <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+              Dashboard
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M3 7h18M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2M5 7l1 13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-13"/></svg>
+              Trips
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>
+              Plan a Trip
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><path d="M4 20V5a2 2 0 0 1 2-2h9l5 5v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v5h5"/><path d="M8 13h8M8 17h5"/></svg>
+              Reports
+            </a>
+            <a>
+              <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings
+            </a>
+          </nav>
+          <div class="ss-sb-spacer"></div>
+          <div class="ss-user">
+            <div class="avatar">AO</div>
+            <div>
+              <div class="u-name">Amara Okafor</div>
+              <div class="u-plan">Pro member</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main -->
+        <section class="ss-main">
+          <div class="ss-topbar">
+            <div>
+              <div class="ss-pretitle">This week</div>
+              <h1 class="ss-h">You're comfortably within your 180-day <em>rolling limit</em>.</h1>
+            </div>
+            <button class="ss-cta">Plan a trip</button>
+          </div>
+
+          <div class="ss-grid">
+            <!-- Ring card -->
+            <div class="ss-card ss-ring-card">
+              <div class="ss-ring-wrap">
+                <svg width="176" height="176" viewBox="0 0 176 176">
+                  <circle cx="88" cy="88" r="76" fill="none" stroke="#DDE3DC" stroke-width="6"/>
+                  <circle cx="88" cy="88" r="76" fill="none" stroke="#1A3328" stroke-width="6"
+                    stroke-linecap="round"
+                    stroke-dasharray="477.52"
+                    stroke-dashoffset="352.69"
+                    transform="rotate(-90 88 88)"/>
+                </svg>
+                <div class="ss-ring-center">
+                  <div class="n">47</div>
+                  <div class="u">of 180 days</div>
+                </div>
+              </div>
+              <div class="ss-ring-side">
+                <div class="ss-chip">Safe</div>
+                <div class="ss-hero">133 days</div>
+                <div class="ss-hero-lbl">still available in your current<br/>rolling 12-month window</div>
+                <div class="ss-window">
+                  <span class="lbl">Window</span>
+                  <span>18 Apr 2025 → 17 Apr 2026</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trips -->
+            <div class="ss-card">
+              <div class="ss-card-head">
+                <div class="ss-card-title">Recent absences</div>
+                <div class="ss-card-action">All trips →</div>
+              </div>
+              <div class="ss-trip">
+                <div class="ss-trip-dot"></div>
+                <div class="ss-trip-body">
+                  <div class="ss-trip-place">Lisbon, Portugal</div>
+                  <div class="ss-trip-dates">14 – 21 March 2026</div>
+                </div>
+                <div class="ss-trip-days">7 days</div>
+              </div>
+              <div class="ss-trip">
+                <div class="ss-trip-dot" style="background:#A8BDB2"></div>
+                <div class="ss-trip-body">
+                  <div class="ss-trip-place">Dubai, UAE</div>
+                  <div class="ss-trip-dates">2 – 9 February 2026</div>
+                </div>
+                <div class="ss-trip-days">7 days</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ILR tracker, chapter-style -->
+          <div class="ss-card ss-ilr">
+            <div class="ss-ilr-top">
+              <div class="left">
+                <div class="ss-ilr-title">Path to Indefinite Leave to Remain</div>
+                <div class="ss-ilr-sub">Chapter 3 of 5 · qualifying continuous residence</div>
+              </div>
+              <div class="ss-ilr-num">3y 2m<small>/ 5y</small></div>
+            </div>
+            <div class="ss-ilr-bar"><i></i></div>
+            <div class="ss-ilr-chapters">
+              <span>Feb 2023 · started</span>
+              <span>You are here</span>
+              <span>Feb 2028 · eligible</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="vp-badge"><strong><span class="vp-w">1280px</span></strong><span class="vp-name">Desktop</span> · Direction 03 · Sage &amp; Stone</div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,41 +1,41 @@
-/* StayRight Design Tokens — Dark Luxury Green */
+/* StayRight Design Tokens — Sage & Stone */
 
 :root {
-  /* ── Light Mode — Green Tinted ─────────────────── */
-  --color-bg:               #F5FAF7;   /* very light green-tinted white */
-  --color-bg-tinted:        #F0F7F3;   /* slightly darker green tint */
+  /* ── Light Mode — Warm Taupe ────────────────── */
+  --color-bg:               #F5F0EA;   /* warm taupe parchment */
+  --color-bg-tinted:        #EFEAE2;   /* slightly darker taupe */
 
   /* ── Surfaces ────────────────────────────────── */
-  --color-surface:          #FFFFFF;
-  --color-surface-warm:     #F0F7F3;   /* green-tinted white for cards */
-  --color-surface-dark:     #080B08;   /* obsidian — footer, sidebar, dark cards */
+  --color-surface:          #EEF0EB;   /* sage white — card bg */
+  --color-surface-warm:     #E6E9E1;   /* lifted sage — inner card */
+  --color-surface-dark:     #0F1F18;   /* deep forest — footer, sidebar dark */
 
   /* ── Text ────────────────────────────────────── */
-  --color-text-primary:     #0D1B10;   /* near-black with green warmth */
-  --color-text-2:           #1A2B1D;
-  --color-text-3:           #2C3E30;
+  --color-text-primary:     #1A3328;   /* deep forest green */
+  --color-text-2:           #2E463B;
+  --color-text-3:           #3A5448;
   --color-text-muted:       #4A6654;
-  --color-text-faint:       #8AA895;
+  --color-text-faint:       #7A9E8E;   /* muted sage */
 
   /* ── Green accent ────────────────────────────── */
   --color-green:            #006948;
   --color-green-dark:       #004F35;
   --color-green-light:      #00A874;
-  --color-green-pale:       #E8F5EE;   /* badge / chip backgrounds */
+  --color-green-pale:       #D4E5D8;   /* warm sage chip backgrounds */
 
   /* ── Borders ─────────────────────────────────── */
-  --color-border:           rgba(0, 105, 72, 0.15);
-  --color-border-strong:    rgba(0, 105, 72, 0.28);
-  --color-border-ink:       rgba(13, 27, 16, 0.10);
+  --color-border:           rgba(26, 51, 40, 0.09);
+  --color-border-strong:    rgba(26, 51, 40, 0.16);
+  --color-border-ink:       rgba(26, 51, 40, 0.12);
 
   /* ── Semantic — do not change ────────────────── */
-  --color-safe-bg:          #9FF4CA;   /* SAFE badge — immigration indicator */
-  --color-safe-text:        #002114;
+  --color-safe-bg:          #D4E5D8;   /* SAFE badge — warm sage green */
+  --color-safe-text:        #1A3328;
 
   /* ── Status — shared with dashboard ─────────── */
   --color-status-amber:     #D97706;
   --color-status-red:       #BA1A1A;
-  
+
   --color-warning-bg:       #FFFBEB;
   --color-warning-border:   #FEF3C7;
   --color-warning-text:     #92400E;
@@ -52,25 +52,28 @@
   --radius-full:            9999px;
 
   /* ── Shadows ─────────────────────────────────── */
-  --shadow-card:            0 1px 4px rgba(13, 27, 16, 0.04), 0 8px 24px rgba(0, 105, 72, 0.06);
-  --shadow-card-hover:      0 4px 16px rgba(13, 27, 16, 0.06), 0 16px 40px rgba(0, 105, 72, 0.10);
-  --shadow-ring-card:       0 2px 8px rgba(13, 27, 16, 0.04), 0 16px 48px rgba(0, 105, 72, 0.08), 0 1px 0 rgba(255, 255, 255, 0.90) inset;
-  --shadow-button:          0 4px 20px rgba(0, 105, 72, 0.25);
-  --shadow-button-hover:    0 8px 36px rgba(0, 105, 72, 0.40);
+  --shadow-card:            0 1px 3px rgba(26, 51, 40, 0.04), 0 12px 32px rgba(26, 51, 40, 0.06);
+  --shadow-card-hover:      0 4px 16px rgba(26, 51, 40, 0.06), 0 20px 48px rgba(26, 51, 40, 0.10);
+  --shadow-ring-card:       0 1px 3px rgba(26, 51, 40, 0.04), 0 16px 48px rgba(26, 51, 40, 0.08), 0 1px 0 rgba(255, 255, 255, 0.80) inset;
+  --shadow-button:          0 1px 0 rgba(255,255,255,0.12) inset, 0 8px 26px rgba(26, 51, 40, 0.20);
+  --shadow-button-hover:    0 1px 0 rgba(255,255,255,0.12) inset, 0 12px 36px rgba(26, 51, 40, 0.30);
 
   /* ── Gradients ───────────────────────────────── */
   --gradient-green:         linear-gradient(135deg, #00A874 0%, #006948 100%);
   --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #00A874 100%);
+
+  /* ── Ring track ──────────────────────────────── */
+  --color-track:            #D4E0D8;   /* pale sage ring progress track */
 
   /* ── Sidebar/Nav Specific ────────────────────── */
   --color-sidebar-bg:       var(--color-bg-tinted);
   --color-sidebar-border:   var(--color-border);
 
   /* ── Surface depth layers (for table rows, nav, raised panels) ── */
-  --color-surface-raised:   #F8FCF9;
-  --color-surface-sunken:   #EBF3EE;
-  --color-nav-bg:           rgba(245, 250, 247, 0.90);
-  --color-nav-border:       rgba(0, 105, 72, 0.12);
+  --color-surface-raised:   #F2EDE6;
+  --color-surface-sunken:   #E8E3DC;
+  --color-nav-bg:           rgba(245, 240, 234, 0.82);
+  --color-nav-border:       rgba(26, 51, 40, 0.09);
 }
 
 .dark {
@@ -78,34 +81,40 @@
   --color-sidebar-border:   transparent;
 
   /* ── Surface depth layers — dark mode ── */
-  --color-surface-raised:   #131a15;
-  --color-surface-sunken:   #060b08;
-  --color-nav-bg:           rgba(11, 16, 14, 0.88);
-  --color-nav-border:       rgba(0, 105, 72, 0.15);
-  --color-bg:             #080B08;   /* base bg — near-OLED */
-  --color-bg-tinted:      #0E1310;
-  
-  --color-surface:        #0E1310;   /* cards, panels */
-  --color-surface-warm:   #141A15;   /* elevated cards */
-  
-  --color-text-primary:   #E8EDE9;   /* near-white with green warmth */
-  --color-text-2:         #CFD8D0;
-  --color-text-3:         #A8B6AB;
-  --color-text-muted:     #8FA893;
-  --color-text-faint:     #4A5E4D;
-  
-  --color-border:         rgba(0, 105, 72, 0.18);
-  --color-border-strong:  rgba(0, 105, 72, 0.35);
-  
-  --shadow-card:          0 4px 24px rgba(0, 0, 0, 0.5);
-  --shadow-card-hover:    0 8px 32px rgba(0, 0, 0, 0.7);
+  --color-surface-raised:   #1C3228;
+  --color-surface-sunken:   #0A1710;
+  --color-nav-bg:           rgba(15, 31, 24, 0.78);
+  --color-nav-border:       rgba(234, 239, 230, 0.08);
+  --color-bg:               #0F1F18;   /* deep forest base */
+  --color-bg-tinted:        #14261E;
+
+  --color-surface:          #162A20;   /* cards, panels */
+  --color-surface-warm:     #1C3228;   /* elevated cards */
+
+  --color-text-primary:     #EEF0EB;   /* sage white */
+  --color-text-2:           #D4DFD6;
+  --color-text-3:           #B8CABb;
+  --color-text-muted:       #A8BDB1;
+  --color-text-faint:       #5A7566;
+
+  --color-border:           rgba(234, 239, 230, 0.08);
+  --color-border-strong:    rgba(234, 239, 230, 0.15);
+
+  --color-safe-bg:          rgba(122, 158, 142, 0.15);
+  --color-safe-text:        #A8BDB1;
+
+  --color-track:            #243B30;
+
+  --shadow-card:            0 1px 3px rgba(0, 0, 0, 0.30), 0 12px 32px rgba(0, 0, 0, 0.40);
+  --shadow-card-hover:      0 4px 16px rgba(0, 0, 0, 0.50), 0 20px 48px rgba(0, 0, 0, 0.60);
+  --shadow-button:          0 1px 0 rgba(255,255,255,0.10) inset, 0 6px 22px rgba(122, 158, 142, 0.30);
 
   /* Status Dark Mode */
-  --color-warning-bg:     rgba(217, 119, 6, 0.12);
-  --color-warning-border: rgba(217, 119, 6, 0.25);
-  --color-warning-text:   #FBBF24;
+  --color-warning-bg:       rgba(217, 119, 6, 0.12);
+  --color-warning-border:   rgba(217, 119, 6, 0.25);
+  --color-warning-text:     #FBBF24;
 
-  --color-danger-bg:      rgba(186, 26, 26, 0.15);
-  --color-danger-border:  rgba(186, 26, 26, 0.30);
-  --color-danger-text:    #F87171;
+  --color-danger-bg:        rgba(186, 26, 26, 0.15);
+  --color-danger-border:    rgba(186, 26, 26, 0.30);
+  --color-danger-text:      #F87171;
 }

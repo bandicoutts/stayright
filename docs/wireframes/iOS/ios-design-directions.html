@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StayRight — iOS Dashboard: 3 Visual Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gallery: #ECEAE6;
+    --label-ink: #2A2A28;
+    --label-muted: #7A7874;
+  }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--gallery);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--label-ink);
+    min-height: 100vh;
+  }
+
+  /* ─── Gallery wrapper ──────────────────────────────────────── */
+  .gallery {
+    padding: 64px 48px 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+  .gallery-head {
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 8px;
+  }
+  .gallery-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--label-ink);
+  }
+  .gallery-meta {
+    font-size: 12px;
+    color: var(--label-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .row {
+    display: flex;
+    gap: 56px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ─── Direction label above each phone ─────────────────────── */
+  .phone-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+  .dir-label {
+    text-align: center;
+    max-width: 393px;
+  }
+  .dir-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--label-muted);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .dir-name {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--label-ink);
+    margin-bottom: 6px;
+  }
+  .dir-sub {
+    font-size: 13px;
+    color: var(--label-muted);
+    line-height: 1.4;
+  }
+
+  /* ─── iPhone 15 Pro frame ──────────────────────────────────── */
+  .phone {
+    width: 417px;          /* 393 screen + 12px bezel each side */
+    height: 876px;         /* 852 screen + 12px bezel top/bottom */
+    border-radius: 52px;
+    padding: 12px;
+    background: #111;
+    position: relative;
+    box-shadow:
+      0 0 0 1.5px #3a3a3a,
+      0 2px 0 #000 inset,
+      0 30px 60px -20px rgba(0, 33, 20, 0.22),
+      0 12px 24px -12px rgba(0, 33, 20, 0.15);
+  }
+  /* titanium rim highlight */
+  .phone::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50px;
+    background: linear-gradient(180deg, #2a2a2a 0%, #111 20%, #111 80%, #2a2a2a 100%);
+    z-index: 0;
+  }
+  .screen {
+    position: relative;
+    width: 393px;
+    height: 852px;
+    border-radius: 42px;
+    overflow: hidden;
+    z-index: 1;
+  }
+  /* Dynamic Island */
+  .island {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 37px;
+    border-radius: 20px;
+    background: #000;
+    z-index: 10;
+  }
+  /* iOS status bar */
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 59px;
+    padding: 20px 34px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    z-index: 9;
+    pointer-events: none;
+  }
+  .status-bar .time { letter-spacing: -0.01em; }
+  .status-bar .status-right {
+    display: flex; gap: 6px; align-items: center;
+  }
+  .status-bar .bars, .status-bar .wifi, .status-bar .batt {
+    display: inline-block;
+  }
+
+  /* ============================================================
+     DIRECTION 1 — QUIET PAPER
+     warm off-white, single botanical green accent, light mode
+     ============================================================ */
+  .qp { background: #F8F7F4; color: #1A1A17; }
+  .qp .status-bar { color: #1A1A17; }
+  .qp .screen-inner {
+    padding: 72px 28px 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .qp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .qp-brand {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: #1A1A17;
+  }
+  .qp-brand-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #006948;
+    margin-right: 7px;
+    vertical-align: 1px;
+  }
+  .qp-menu {
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    color: #6B6B68;
+  }
+  .qp-ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8px 0 22px;
+  }
+  .qp-ring-wrap svg { display: block; }
+  .qp-chip {
+    margin-top: -6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #006948;
+    background: rgba(0, 105, 72, 0.07);
+    padding: 7px 14px;
+    border-radius: 999px;
+  }
+  .qp-hero {
+    font-family: 'Manrope', sans-serif;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .qp-hero-num {
+    font-weight: 700;
+    font-size: 68px;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: #1A1A17;
+  }
+  .qp-hero-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #6B6B68;
+    margin-top: 10px;
+    letter-spacing: -0.005em;
+  }
+  .qp-window {
+    text-align: center;
+    font-size: 11px;
+    color: #9A9894;
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+  .qp-divider {
+    height: 1px;
+    margin: 22px -4px 18px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+  }
+  .qp-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9A9894;
+    margin-bottom: 14px;
+  }
+  .qp-trip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .qp-trip + .qp-trip { margin-top: 2px; }
+  .qp-trip-place {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1A1A17;
+    letter-spacing: -0.01em;
+  }
+  .qp-trip-dates {
+    font-size: 12px;
+    color: #6B6B68;
+    margin-top: 3px;
+  }
+  .qp-trip-days {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1A1A17;
+  }
+  .qp-trip-days-unit {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: #9A9894;
+    margin-left: 2px;
+  }
+  .qp-ilr {
+    margin-top: 24px;
+  }
+  .qp-ilr-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .qp-ilr-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: #1A1A17;
+  }
+  .qp-ilr-meta {
+    font-size: 11px;
+    color: #9A9894;
+  }
+  .qp-ilr-bar {
+    height: 3px;
+    background: rgba(0, 105, 72, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .qp-ilr-bar i {
+    display: block;
+    height: 100%;
+    width: 63.3%;
+    background: #006948;
+    border-radius: 999px;
+  }
+  .qp-cta {
+    margin-top: auto;
+    padding-top: 20px;
+  }
+  .qp-cta button {
+    width: 100%;
+    border: none;
+    background: #1A1A17;
+    color: #F8F7F4;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 16px;
+    border-radius: 14px;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+  }
+  .qp-cta button span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #9FF4CA;
+    margin-right: 10px;
+    vertical-align: 2px;
+  }
+
+  /* ============================================================
+     DIRECTION 2 — OBSIDIAN GARDEN
+     true OLED black, glowing green arc, dark mode
+     ============================================================ */
+  .og { background: #080B08; color: #E8EDE9; }
+  .og .status-bar { color: #E8EDE9; }
+  .og .screen-inner {
+    padding: 72px 24px 36px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .og-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .og-brand {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8FA893;
+  }
+  .og-brand::before {
+    content: '';
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #00D68F;
+    box-shadow: 0 0 10px #00D68F;
+    margin-right: 9px;
+    vertical-align: 2px;
+  }
+  .og-time {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #4A5E4D;
+    letter-spacing: 0.06em;
+  }
+  .og-hero-card {
+    background: #0D1F17;
+    border-radius: 24px;
+    padding: 28px 22px 26px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .og-hero-card::after {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(0, 133, 93, 0.18), transparent 65%);
+    pointer-events: none;
+  }
+  .og-ring-row {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .og-ring-col {
+    position: relative;
+    z-index: 1;
+  }
+  .og-ring-col svg { display: block; }
+  .og-ring-status {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .og-ring-status .n {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #E8EDE9;
+  }
+  .og-ring-status .u {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: #4A5E4D;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+  .og-hero-text {
+    flex: 1;
+    z-index: 1;
+    position: relative;
+  }
+  .og-hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #9FF4CA;
+    background: rgba(0, 133, 93, 0.16);
+    padding: 5px 9px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .og-hero-chip::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00D68F;
+    box-shadow: 0 0 8px #00D68F;
+  }
+  .og-hero-remain {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    color: #E8EDE9;
+  }
+  .og-hero-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #8FA893;
+    margin-top: 8px;
+    letter-spacing: 0.01em;
+  }
+  .og-window {
+    padding: 14px 20px;
+    background: #0D1F17;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .og-window-label {
+    font-size: 10px;
+    color: #4A5E4D;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .og-window-val {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #CFD8D0;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+  .og-section {
+    background: #0D1F17;
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 10px;
+  }
+  .og-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .og-section-title {
+    font-size: 10px;
+    color: #4A5E4D;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .og-section-action {
+    font-size: 11px;
+    color: #00D68F;
+    font-weight: 500;
+  }
+  .og-trip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+  }
+  .og-trip-place {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #E8EDE9;
+    letter-spacing: -0.01em;
+  }
+  .og-trip-dates {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #8FA893;
+    margin-top: 2px;
+  }
+  .og-trip-days {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #00D68F;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .og-ilr-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .og-ilr-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: #E8EDE9;
+  }
+  .og-ilr-percent {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #00D68F;
+  }
+  .og-ilr-bar {
+    height: 4px;
+    background: rgba(0, 133, 93, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .og-ilr-bar i {
+    display: block;
+    height: 100%;
+    width: 63.3%;
+    background: linear-gradient(90deg, #006948, #00D68F);
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(0, 214, 143, 0.5);
+  }
+  .og-ilr-meta {
+    font-size: 11px;
+    color: #4A5E4D;
+  }
+  .og-cta {
+    margin-top: auto;
+    padding-top: 14px;
+  }
+  .og-cta button {
+    width: 100%;
+    border: none;
+    background: linear-gradient(135deg, #00A874, #006948);
+    color: #F0FAF5;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 16px;
+    border-radius: 14px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(0, 133, 93, 0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  /* ============================================================
+     DIRECTION 3 — SAGE & STONE
+     warm taupe, deep forest text, organic feel
+     ============================================================ */
+  .ss { background: #F5F0EA; color: #1A3328; }
+  .ss .status-bar { color: #1A3328; }
+  .ss .screen-inner {
+    padding: 72px 26px 36px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .ss-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .ss-greet {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #7A9E8E;
+    letter-spacing: -0.005em;
+  }
+  .ss-greet strong {
+    color: #1A3328;
+    font-weight: 600;
+  }
+  .ss-menu {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #EEF0EB;
+    display: grid; place-items: center;
+    color: #1A3328;
+  }
+  .ss-pretitle {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: #7A9E8E;
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+  .ss-hero {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: #1A3328;
+    margin: 4px 0 18px;
+    text-wrap: pretty;
+  }
+  .ss-hero em {
+    font-style: normal;
+    color: #1A3328;
+    border-bottom: 2px solid #7A9E8E;
+    padding-bottom: 1px;
+  }
+
+  .ss-ring-card {
+    background: #EEF0EB;
+    border-radius: 26px;
+    padding: 24px 22px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .ss-ring-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .ss-ring-wrap svg { display: block; }
+  .ss-ring-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .ss-ring-center .n {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: #1A3328;
+  }
+  .ss-ring-center .u {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: #7A9E8E;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+  .ss-ring-side {
+    flex: 1;
+  }
+  .ss-ring-chip {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #1A3328;
+    background: rgba(122, 158, 142, 0.25);
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .ss-ring-big {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: #1A3328;
+  }
+  .ss-ring-lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #7A9E8E;
+    margin-top: 6px;
+    line-height: 1.35;
+  }
+  .ss-window {
+    text-align: center;
+    font-size: 11px;
+    color: #7A9E8E;
+    margin: 2px 0 18px;
+    letter-spacing: 0.01em;
+  }
+  .ss-window .arrow {
+    display: inline-block;
+    margin: 0 6px;
+    color: #A8BDB2;
+  }
+
+  .ss-card {
+    background: #EEF0EB;
+    border-radius: 22px;
+    padding: 20px 22px;
+    margin-bottom: 12px;
+  }
+  .ss-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .ss-card-title {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1A3328;
+    letter-spacing: -0.005em;
+  }
+  .ss-card-action {
+    font-size: 11px;
+    color: #7A9E8E;
+    font-weight: 500;
+  }
+  .ss-trip {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 0;
+  }
+  .ss-trip-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #7A9E8E;
+    flex-shrink: 0;
+  }
+  .ss-trip-body { flex: 1; }
+  .ss-trip-place {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #1A3328;
+    letter-spacing: -0.005em;
+  }
+  .ss-trip-dates {
+    font-size: 11px;
+    color: #7A9E8E;
+    margin-top: 2px;
+  }
+  .ss-trip-days {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: #1A3328;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ss-ilr-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .ss-ilr-row .ss-card-title {
+    white-space: nowrap;
+  }
+  .ss-ilr-sub {
+    font-size: 11px;
+    color: #7A9E8E;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ss-ilr-bar {
+    height: 5px;
+    background: rgba(122, 158, 142, 0.22);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .ss-ilr-bar i {
+    display: block;
+    height: 100%;
+    width: 63.3%;
+    background: #1A3328;
+    border-radius: 999px;
+  }
+  .ss-ilr-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #7A9E8E;
+    letter-spacing: 0.04em;
+  }
+  .ss-cta {
+    margin-top: auto;
+    padding-top: 14px;
+  }
+  .ss-cta button {
+    width: 100%;
+    border: none;
+    background: #1A3328;
+    color: #F5F0EA;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 17px;
+    border-radius: 18px;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+  }
+
+  /* tiny icons */
+  .ic {
+    display: inline-block;
+    width: 16px; height: 16px;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    fill: none;
+  }
+
+  @media (max-width: 1400px) {
+    .row { gap: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gallery">
+
+  <div class="gallery-head">
+    <div class="gallery-title">StayRight · iOS Dashboard · Visual Directions</div>
+    <div class="gallery-meta">iPhone 15 Pro · 393 × 852</div>
+  </div>
+
+  <div class="row">
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!-- DIRECTION 1 — QUIET PAPER                                -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="phone-col">
+      <div class="dir-label">
+        <div class="dir-eyebrow">Direction 01</div>
+        <div class="dir-name">Quiet Paper</div>
+        <div class="dir-sub">Warm off-white. Generous breathing room. A single botanical green, used sparingly.</div>
+      </div>
+
+      <div class="phone">
+        <div class="screen qp">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-right">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="0.5"/><rect x="4.5" y="4" width="3" height="7" rx="0.5"/><rect x="9" y="2" width="3" height="9" rx="0.5"/><rect x="13.5" y="0" width="3" height="11" rx="0.5"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 1.5c2.2 0 4.3.8 5.9 2.3l1.4-1.4C13.3.4 10.7-.5 8-.5S2.7.4.7 2.4l1.4 1.4C3.7 2.3 5.8 1.5 8 1.5zm0 3c1.5 0 2.9.6 4 1.6l1.4-1.4C11.9 3.3 10 2.5 8 2.5s-3.9.8-5.4 2.2L4 6.1c1.1-1 2.5-1.6 4-1.6zm0 3c.8 0 1.5.3 2.1.8L8 10.5l-2.1-2.2c.6-.5 1.3-.8 2.1-.8z"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="1" width="21" height="10" rx="2.5"/><rect x="2" y="2.5" width="18" height="7" rx="1" fill="currentColor"/><rect x="22.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="screen-inner">
+            <div class="qp-header">
+              <div class="qp-brand"><span class="qp-brand-dot"></span>StayRight</div>
+              <div class="qp-menu">
+                <svg class="ic" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="19" cy="12" r="1.2" fill="currentColor"/></svg>
+              </div>
+            </div>
+
+            <div class="qp-ring-wrap">
+              <svg width="190" height="190" viewBox="0 0 190 190">
+                <circle cx="95" cy="95" r="86" fill="none" stroke="#E8E7E3" stroke-width="4"/>
+                <circle cx="95" cy="95" r="86" fill="none" stroke="#006948" stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-dasharray="540.35"
+                  stroke-dashoffset="399.16"
+                  transform="rotate(-90 95 95)"/>
+              </svg>
+            </div>
+            <div style="text-align:center;margin-top:-8px">
+              <span class="qp-chip">SAFE · ROLLING 12-MONTH</span>
+            </div>
+
+            <div class="qp-hero" style="margin-top:22px">
+              <div class="qp-hero-num">133</div>
+              <div class="qp-hero-sub">days remaining · 47 of 180 used</div>
+            </div>
+            <div class="qp-window">18 Apr 2025 &nbsp;—&nbsp; 17 Apr 2026</div>
+
+            <div class="qp-divider"></div>
+
+            <div class="qp-section-label">Recent absences</div>
+            <div class="qp-trip">
+              <div>
+                <div class="qp-trip-place">Lisbon, Portugal</div>
+                <div class="qp-trip-dates">14 – 21 Mar 2026</div>
+              </div>
+              <div class="qp-trip-days">7<span class="qp-trip-days-unit">d</span></div>
+            </div>
+            <div class="qp-trip">
+              <div>
+                <div class="qp-trip-place">Dubai, UAE</div>
+                <div class="qp-trip-dates">2 – 9 Feb 2026</div>
+              </div>
+              <div class="qp-trip-days">7<span class="qp-trip-days-unit">d</span></div>
+            </div>
+
+            <div class="qp-ilr">
+              <div class="qp-ilr-row">
+                <div class="qp-ilr-title">ILR qualifying period</div>
+                <div class="qp-ilr-meta">3y 2m of 5y</div>
+              </div>
+              <div class="qp-ilr-bar"><i></i></div>
+            </div>
+
+            <div class="qp-cta">
+              <button><span></span>Plan a trip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!-- DIRECTION 2 — OBSIDIAN GARDEN                            -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="phone-col">
+      <div class="dir-label">
+        <div class="dir-eyebrow">Direction 02</div>
+        <div class="dir-name">Obsidian Garden</div>
+        <div class="dir-sub">True OLED black. Raised green-black surfaces. A vivid, glowing arc.</div>
+      </div>
+
+      <div class="phone">
+        <div class="screen og">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-right">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="0.5"/><rect x="4.5" y="4" width="3" height="7" rx="0.5"/><rect x="9" y="2" width="3" height="9" rx="0.5"/><rect x="13.5" y="0" width="3" height="11" rx="0.5"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 1.5c2.2 0 4.3.8 5.9 2.3l1.4-1.4C13.3.4 10.7-.5 8-.5S2.7.4.7 2.4l1.4 1.4C3.7 2.3 5.8 1.5 8 1.5zm0 3c1.5 0 2.9.6 4 1.6l1.4-1.4C11.9 3.3 10 2.5 8 2.5s-3.9.8-5.4 2.2L4 6.1c1.1-1 2.5-1.6 4-1.6zm0 3c.8 0 1.5.3 2.1.8L8 10.5l-2.1-2.2c.6-.5 1.3-.8 2.1-.8z"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="1" width="21" height="10" rx="2.5"/><rect x="2" y="2.5" width="18" height="7" rx="1" fill="currentColor"/><rect x="22.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="screen-inner">
+            <div class="og-header">
+              <div class="og-brand">Stayright</div>
+              <div class="og-time">Rolling · 365d</div>
+            </div>
+
+            <div class="og-hero-card">
+              <div class="og-ring-row">
+                <div class="og-ring-col">
+                  <svg width="128" height="128" viewBox="0 0 128 128" style="filter: drop-shadow(0 0 14px rgba(0,214,143,0.35));">
+                    <defs>
+                      <linearGradient id="ogGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00A874"/>
+                        <stop offset="100%" stop-color="#00D68F"/>
+                      </linearGradient>
+                    </defs>
+                    <circle cx="64" cy="64" r="54" fill="none" stroke="#0A140E" stroke-width="9"/>
+                    <circle cx="64" cy="64" r="54" fill="none" stroke="url(#ogGrad)" stroke-width="9"
+                      stroke-linecap="round"
+                      stroke-dasharray="339.29"
+                      stroke-dashoffset="250.63"
+                      transform="rotate(-90 64 64)"/>
+                  </svg>
+                  <div class="og-ring-status">
+                    <div class="n">47</div>
+                    <div class="u">/ 180</div>
+                  </div>
+                </div>
+                <div class="og-hero-text">
+                  <div class="og-hero-chip">SAFE</div>
+                  <div class="og-hero-remain">133<span style="font-size:18px;color:#8FA893;font-weight:500;letter-spacing:0;margin-left:4px">d</span></div>
+                  <div class="og-hero-label">remaining in window</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="og-window">
+              <span class="og-window-label">Window</span>
+              <span class="og-window-val">18 Apr 25 → 17 Apr 26</span>
+            </div>
+
+            <div class="og-section">
+              <div class="og-section-header">
+                <span class="og-section-title">Recent absences</span>
+                <span class="og-section-action">View all</span>
+              </div>
+              <div class="og-trip">
+                <div>
+                  <div class="og-trip-place">Lisbon, Portugal</div>
+                  <div class="og-trip-dates">14 Mar – 21 Mar 2026</div>
+                </div>
+                <div class="og-trip-days">7 d</div>
+              </div>
+              <div class="og-trip">
+                <div>
+                  <div class="og-trip-place">Dubai, UAE</div>
+                  <div class="og-trip-dates">02 Feb – 09 Feb 2026</div>
+                </div>
+                <div class="og-trip-days">7 d</div>
+              </div>
+            </div>
+
+            <div class="og-section">
+              <div class="og-ilr-row">
+                <div class="og-ilr-title">ILR qualifying</div>
+                <div class="og-ilr-percent">63%</div>
+              </div>
+              <div class="og-ilr-bar"><i></i></div>
+              <div class="og-ilr-meta">3 years 2 months · 1y 10m to eligibility</div>
+            </div>
+
+            <div class="og-cta">
+              <button>Plan a trip →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!-- DIRECTION 3 — SAGE & STONE                               -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <div class="phone-col">
+      <div class="dir-label">
+        <div class="dir-eyebrow">Direction 03</div>
+        <div class="dir-name">Sage &amp; Stone</div>
+        <div class="dir-sub">Warm taupe and sage-white. Deep forest text. Reassuring — never monitoring.</div>
+      </div>
+
+      <div class="phone">
+        <div class="screen ss">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-right">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="0.5"/><rect x="4.5" y="4" width="3" height="7" rx="0.5"/><rect x="9" y="2" width="3" height="9" rx="0.5"/><rect x="13.5" y="0" width="3" height="11" rx="0.5"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 1.5c2.2 0 4.3.8 5.9 2.3l1.4-1.4C13.3.4 10.7-.5 8-.5S2.7.4.7 2.4l1.4 1.4C3.7 2.3 5.8 1.5 8 1.5zm0 3c1.5 0 2.9.6 4 1.6l1.4-1.4C11.9 3.3 10 2.5 8 2.5s-3.9.8-5.4 2.2L4 6.1c1.1-1 2.5-1.6 4-1.6zm0 3c.8 0 1.5.3 2.1.8L8 10.5l-2.1-2.2c.6-.5 1.3-.8 2.1-.8z"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="1" width="21" height="10" rx="2.5"/><rect x="2" y="2.5" width="18" height="7" rx="1" fill="currentColor"/><rect x="22.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="screen-inner">
+            <div class="ss-header">
+              <div class="ss-greet">Good morning, <strong>Amara</strong></div>
+              <div class="ss-menu">
+                <svg class="ic" viewBox="0 0 24 24" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5a6 6 0 0 1 11 0"/></svg>
+              </div>
+            </div>
+
+            <div class="ss-pretitle">This week</div>
+            <h1 class="ss-hero">You're comfortably within your 180-day <em>rolling limit</em>.</h1>
+
+            <div class="ss-ring-card">
+              <div class="ss-ring-wrap">
+                <svg width="116" height="116" viewBox="0 0 116 116">
+                  <circle cx="58" cy="58" r="48" fill="none" stroke="#DDE3DC" stroke-width="6"/>
+                  <circle cx="58" cy="58" r="48" fill="none" stroke="#1A3328" stroke-width="6"
+                    stroke-linecap="round"
+                    stroke-dasharray="301.59"
+                    stroke-dashoffset="222.76"
+                    transform="rotate(-90 58 58)"/>
+                </svg>
+                <div class="ss-ring-center">
+                  <div class="n">47</div>
+                  <div class="u">of 180</div>
+                </div>
+              </div>
+              <div class="ss-ring-side">
+                <div class="ss-ring-chip">Safe</div>
+                <div class="ss-ring-big">133 days</div>
+                <div class="ss-ring-lbl">still available in<br/>your current window</div>
+              </div>
+            </div>
+
+            <div class="ss-window">
+              18 Apr 2025 <span class="arrow">→</span> 17 Apr 2026
+            </div>
+
+            <div class="ss-card">
+              <div class="ss-card-head">
+                <div class="ss-card-title">Recent absences</div>
+                <div class="ss-card-action">All trips</div>
+              </div>
+              <div class="ss-trip">
+                <div class="ss-trip-dot"></div>
+                <div class="ss-trip-body">
+                  <div class="ss-trip-place">Lisbon, Portugal</div>
+                  <div class="ss-trip-dates">14 – 21 Mar 2026</div>
+                </div>
+                <div class="ss-trip-days">7 days</div>
+              </div>
+              <div class="ss-trip">
+                <div class="ss-trip-dot" style="background:#A8BDB2"></div>
+                <div class="ss-trip-body">
+                  <div class="ss-trip-place">Dubai, UAE</div>
+                  <div class="ss-trip-dates">2 – 9 Feb 2026</div>
+                </div>
+                <div class="ss-trip-days">7 days</div>
+              </div>
+            </div>
+
+            <div class="ss-card">
+              <div class="ss-ilr-row">
+                <div class="ss-card-title">Path to ILR</div>
+                <div class="ss-ilr-sub">3y 2m of 5y</div>
+              </div>
+              <div class="ss-ilr-bar"><i></i></div>
+              <div class="ss-ilr-meta">
+                <span>Started Feb 2023</span>
+                <span>Eligible 2028</span>
+              </div>
+            </div>
+
+            <div class="ss-cta">
+              <button>Plan a trip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

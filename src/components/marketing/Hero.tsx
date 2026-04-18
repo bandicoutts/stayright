@@ -100,7 +100,7 @@ function QuotaRingMockup() {
                 cy={center}
                 r={radius}
                 fill="none"
-                stroke="rgba(0,105,72,0.12)"
+                stroke="var(--color-track)"
                 strokeWidth={strokeWidth}
               />
               {/* Progress arc */}
@@ -244,19 +244,19 @@ export default function Hero() {
 
           {/* Headline */}
           <h1
-            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
+            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.038em] mb-6 animate-fade-up animate-fade-up-2"
             style={{ fontSize: 'clamp(3rem, 5.5vw, 5.5rem)', color: 'var(--color-text-primary)' }}
           >
             Don&apos;t risk your ILR{' '}
             <em
-              className="italic block font-light"
+              className="block not-italic"
               style={{
-                fontWeight: 300,
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontWeight: 400,
                 fontSize: '105%',
-                background: 'var(--gradient-green-text)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                letterSpacing: '-0.015em',
+                color: 'var(--color-text-muted)',
               }}
             >
               on a spreadsheet.
