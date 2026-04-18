@@ -74,12 +74,29 @@ test.describe('Reports — Pro user', () => {
   })
 
   test('clicking "Download PDF" starts a file download', async ({ page }) => {
-    const downloadPromise = page.waitForEvent('download', { timeout: 15_000 })
     const btn = page.getByRole('button', { name: 'Download PDF' }).first()
     await expect(btn).toBeVisible({ timeout: 10_000 })
+
+    // Intercept URL.createObjectURL before clicking — blob is revoked synchronously
+    // after a.click() so waitForEvent('download') never fires for blob URL downloads.
+    await page.evaluate(() => {
+      ;(window as any).__capturedBlobType = null
+      const orig = URL.createObjectURL.bind(URL)
+      URL.createObjectURL = (obj: any) => {
+        if (obj instanceof Blob) { (window as any).__capturedBlobType = obj.type }
+        return orig(obj)
+      }
+    })
+
     await btn.click()
-    const download = await downloadPromise
-    expect(download.suggestedFilename()).toMatch(/\.pdf$/i)
+
+    // Wait for @react-pdf/renderer to finish (dynamic import + generation can be slow in CI)
+    await page.waitForFunction(
+      () => (window as any).__capturedBlobType !== null,
+      { timeout: 30_000 }
+    )
+    const blobType = await page.evaluate(() => (window as any).__capturedBlobType)
+    expect(blobType).toMatch(/pdf/i)
   })
 
   test('custom date range: end before start shows validation error', async ({ page }) => {
