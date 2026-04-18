@@ -1,39 +1,756 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StayRight iOS Wireframe — Bold Consumer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StayRight · iOS Wireframe — Bold Consumer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#f9fafb;--card:#fff;--ink:#0f172a;--muted:#64748b;--pink:#ec4899;--violet:#8b5cf6;--teal:#14b8a6}
-    *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#eef2ff,#fdf2f8);font-family:Inter,system-ui,sans-serif;color:var(--ink)}
-    .row{display:flex;gap:24px;padding:24px;overflow-x:auto}.phone{width:375px;min-width:375px;height:812px;border-radius:42px;border:10px solid #334155;padding:12px;background:#fff}
-    .screen{height:100%;border-radius:30px;overflow:hidden;background:var(--bg);border:1px solid #e2e8f0}.top{padding:16px;color:#fff;background:linear-gradient(120deg,var(--violet),var(--pink));font-weight:700}
-    .content{padding:14px}.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 10px 24px rgba(15,23,42,.08)}
-    .badge{display:inline-block;background:#fce7f3;color:#be185d;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600}
-    .hero{font-size:36px;font-weight:800;margin:6px 0}.muted{color:var(--muted);font-size:13px}
-    .meter{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:8px}.meter i{display:block;height:100%;width:71%;background:linear-gradient(90deg,var(--teal),var(--violet))}
-    .field{padding:12px;border-radius:14px;border:2px solid #e2e8f0;background:#fff;margin-bottom:10px}
-    .btn{width:100%;border:none;border-radius:14px;padding:12px;background:linear-gradient(120deg,var(--teal),var(--violet));color:#fff;font-weight:700}
-    .trip{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #e2e8f0}.trip:last-child{border-bottom:none}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --page-bg:   #E4EEE8;
+      --green:     #006948;
+      --green-mid: #00A874;
+      --amber:     #D97706;
+      --red:       #BA1A1A;
+      --text:      #0D1B10;
+      --muted:     #4A6654;
+      --faint:     #8AA895;
+      --card:      #FFFFFF;
+      --screen-bg: #F5FAF7;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #D8EDE0 0%, #E8E0F0 100%);
+      font-family: 'Inter', -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 40px 64px;
+      gap: 28px;
+    }
+
+    .page-header { text-align: center; }
+    .page-title  { font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.4px; }
+    .page-sub    { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .phones-row { display: flex; gap: 36px; align-items: flex-start; }
+    .phone-col  { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+    .col-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+    }
+
+    /* ── Phone Frame ── */
+    .phone {
+      width: 393px;
+      background: #1C1C1E;
+      border-radius: 52px;
+      padding: 13px;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.09),
+        0 60px 120px rgba(0,0,0,0.3),
+        0 20px 40px rgba(0,105,72,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .phone::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 122px;
+      width: 4px;
+      height: 30px;
+      background: #2C2C2E;
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 46px 0 #2C2C2E, 0 82px 0 #2C2C2E;
+    }
+    .phone::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 158px;
+      width: 4px;
+      height: 64px;
+      background: #2C2C2E;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .screen {
+      width: 100%;
+      height: 826px;
+      border-radius: 39px;
+      background: var(--screen-bg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .di {
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 37px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 30;
+    }
+
+    /* ── Status Bar ── */
+    .sb {
+      height: 58px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 10px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 5;
+    }
+
+    .sb-time  { font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+    .sb-icons { display: flex; align-items: center; gap: 7px; }
+
+    /* ── Hero Header Card ── */
+    .hero-card {
+      flex-shrink: 0;
+      margin: 0 14px 0;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 33, 20, 0.16);
+    }
+
+    .hero-top {
+      background: linear-gradient(135deg, #00A874 0%, #006948 100%);
+      padding: 16px 18px 20px;
+    }
+
+    .hero-greeting {
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.02em;
+      margin-bottom: 2px;
+    }
+
+    .hero-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.4px;
+    }
+
+    .hero-body {
+      background: var(--card);
+      padding: 18px 18px 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .ring-wrap { position: relative; width: 128px; height: 128px; flex-shrink: 0; }
+    .ring-wrap svg { transform: rotate(-90deg); display: block; }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-n   { font-family: 'Manrope', sans-serif; font-size: 36px; font-weight: 800; color: var(--text); letter-spacing: -2px; line-height: 1; }
+    .ring-den { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+    .ring-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); margin-top: 3px; }
+
+    .hero-stats { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+    .hero-stat-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+    .hero-stat-val   { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .hero-stat-val.amber { color: var(--amber); }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-warn   { background: #FEF3C7; color: #92400E; }
+    .badge-safe   { background: #D1FAE5; color: #065F46; }
+    .badge-danger { background: #FEE2E2; color: #991B1B; }
+
+    /* ── Standard Card ── */
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: 0 8px 24px rgba(0, 33, 20, 0.07);
+    }
+
+    .card-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.2px;
+      margin-bottom: 10px;
+    }
+
+    /* ── ILR Progress Card ── */
+    .ilr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .ilr-name   { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); }
+    .ilr-pct    { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: var(--green); }
+
+    .pbar { height: 8px; background: #E8F0EB; border-radius: 999px; overflow: hidden; margin-bottom: 7px; }
+    .pfill { height: 100%; background: linear-gradient(90deg, var(--green-mid), var(--green)); border-radius: 999px; }
+
+    .pbar-sub { font-size: 12px; color: var(--muted); }
+
+    /* ── Scroll content ── */
+    .scroll { flex: 1; overflow: hidden; padding: 14px 14px 0; display: flex; flex-direction: column; gap: 12px; }
+
+    /* ── Trip List Rows ── */
+    .trip-list { background: var(--card); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,33,20,0.07); }
+
+    .trip-row {
+      display: flex;
+      align-items: center;
+      padding: 13px 16px;
+      gap: 12px;
+      border-bottom: 1px solid rgba(0,105,72,0.07);
+    }
+    .trip-row:last-child { border-bottom: none; }
+
+    .trip-flag { font-size: 26px; width: 34px; text-align: center; flex-shrink: 0; }
+    .trip-body { flex: 1; }
+
+    .trip-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+
+    .trip-dates { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .abs { padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .abs-s { background: #D1FAE5; color: #065F46; }
+    .abs-w { background: #FEF3C7; color: #92400E; }
+
+    .chevron { color: #C7C7CC; font-size: 14px; margin-left: 4px; }
+
+    /* ── Expanded trip ── */
+    .trip-exp-row {
+      border-bottom: 1px solid rgba(0,105,72,0.07);
+    }
+
+    .trip-exp-main {
+      display: flex;
+      align-items: center;
+      padding: 13px 16px;
+      gap: 12px;
+      border-bottom: 1px solid rgba(0,105,72,0.07);
+    }
+
+    .trip-exp-detail {
+      padding: 12px 16px;
+      background: #F0F7F3;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      border-bottom: 1px solid rgba(0,105,72,0.07);
+    }
+
+    .drow { display: flex; justify-content: space-between; }
+    .dk   { font-size: 12px; color: var(--muted); }
+    .dv   { font-size: 12px; font-weight: 600; color: var(--text); }
+
+    .trip-exp-actions { display: flex; padding: 10px 14px; gap: 8px; }
+    .ta { flex: 1; text-align: center; padding: 9px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+    .ta-edit   { background: rgba(0,105,72,0.08); color: var(--green); }
+    .ta-delete { background: rgba(186,26,26,0.07); color: var(--red); }
+
+    /* ── Form Screen ── */
+    .form-header {
+      flex-shrink: 0;
+      padding: 8px 18px 14px;
+      background: var(--screen-bg);
+    }
+
+    .form-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 16px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .save-btn {
+      font-size: 16px;
+      color: var(--green);
+      font-weight: 600;
+      opacity: 0.35;
+    }
+
+    .form-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.6px;
+    }
+
+    /* ── Form Fields ── */
+    .field-card { background: var(--card); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,33,20,0.06); }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      gap: 12px;
+      border-bottom: 1px solid rgba(0,105,72,0.07);
+    }
+    .field-row:last-child { border-bottom: none; }
+
+    .field-icon  { font-size: 18px; width: 24px; text-align: center; }
+    .field-label { font-size: 14px; font-weight: 600; color: var(--text); width: 80px; flex-shrink: 0; }
+    .field-value { flex: 1; font-size: 14px; color: var(--green); font-weight: 500; }
+    .field-ph    { flex: 1; font-size: 14px; color: var(--faint); }
+
+    /* ── Impact Card (consumer) ── */
+    .impact-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: 0 8px 24px rgba(0,33,20,0.07);
+      border: 1.5px solid rgba(217,119,6,0.2);
+    }
+
+    .impact-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .impact-dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+    .impact-lbl  { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--amber); }
+
+    .impact-nums {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .impact-big   { font-family: 'Manrope', sans-serif; font-size: 42px; font-weight: 800; color: var(--text); letter-spacing: -2px; line-height: 1; }
+    .impact-unit  { font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 2px; }
+    .impact-key   { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .impact-total { font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 700; color: var(--amber); letter-spacing: -0.5px; }
+
+    .impact-pbar  { height: 8px; background: rgba(217,119,6,0.1); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+    .impact-pfill { height: 100%; background: linear-gradient(90deg, var(--amber), #F97316); border-radius: 999px; }
+    .impact-sub   { font-size: 12px; color: var(--muted); }
+
+    /* ── CTA ── */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-mid), var(--green));
+      color: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: -0.2px;
+      box-shadow: 0 8px 24px rgba(0,105,72,0.3);
+    }
+
+    /* ── Tab Bar ── */
+    .tabbar {
+      height: 83px;
+      background: rgba(250,252,250,0.96);
+      border-top: 1px solid rgba(0,105,72,0.1);
+      display: flex;
+      align-items: flex-start;
+      padding-top: 10px;
+      flex-shrink: 0;
+    }
+
+    .tab      { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .tab-ico  { font-size: 24px; color: var(--faint); line-height: 1; }
+    .tab-name { font-size: 10px; color: var(--faint); font-weight: 500; }
+
+    .tab.on .tab-ico,
+    .tab.on .tab-name { color: var(--green); }
+    .tab.on .tab-name { font-weight: 700; }
+
+    /* ── FAB ── */
+    .fab {
+      position: absolute;
+      bottom: 96px;
+      right: 18px;
+      width: 54px;
+      height: 54px;
+      border-radius: 27px;
+      background: linear-gradient(135deg, var(--green-mid), var(--green));
+      color: #fff;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,105,72,0.4);
+      line-height: 1;
+    }
+
+    /* small utility */
+    .note { font-size: 12px; color: var(--muted); text-align: center; padding: 4px 8px; line-height: 1.5; }
   </style>
 </head>
-<body><div class="row">
-  <section class="phone"><div class="screen"><div class="top">StayRight • Dashboard</div><div class="content">
-    <div class="card"><span class="badge">On track</span><div class="hero">128 days</div><div class="muted">You still have 52 days before the 180-day cap.</div><div class="meter"><i></i></div></div>
-    <div class="card"><strong>ILR timeline</strong><p class="muted">71% complete • estimated eligibility: 12 Jan 2029</p></div>
-  </div></div></section>
+<body>
 
-  <section class="phone"><div class="screen"><div class="top">Add a Trip</div><div class="content">
-    <div class="field">🌍 Destination</div><div class="field">🛫 Departure date</div><div class="field">🛬 Return date</div><div class="field">📝 Notes (optional)</div>
-    <div class="card"><div class="muted">Trip impact</div><div class="hero" style="font-size:28px">+7 days</div></div><button class="btn">Save Trip</button>
-  </div></div></section>
+  <div class="page-header">
+    <div class="page-title">StayRight · Bold Consumer</div>
+    <div class="page-sub">Travel lifestyle feel · Manrope display type · Gradient cards</div>
+  </div>
 
-  <section class="phone"><div class="screen"><div class="top">Trip History</div><div class="content">
-    <div class="card">
-      <div class="trip"><div><strong>🇫🇷 France</strong><div class="muted">10–18 Apr 2026</div></div><span>7d</span></div>
-      <div class="trip"><div><strong>🇦🇪 UAE</strong><div class="muted">22 Feb–1 Mar 2026</div></div><span>6d</span></div>
-      <div class="trip"><div><strong>🇮🇳 India</strong><div class="muted">12 Dec–3 Jan</div></div><span>21d</span></div>
-      <div class="trip"><div><strong>🇺🇸 USA</strong><div class="muted">15–26 Aug 2025</div></div><span>10d</span></div>
+  <div class="phones-row">
+
+    <!-- ════════════════ Screen 1: Dashboard ════════════════ -->
+    <div class="phone-col">
+      <div class="col-label">Dashboard</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="di"></div>
+
+          <!-- Status Bar (light text on white bg) -->
+          <div class="sb" style="background:var(--screen-bg);">
+            <span class="sb-time" style="color:var(--text);">9:41</span>
+            <div class="sb-icons">
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                <rect x="0"  y="8"   width="3" height="5"    rx="1" fill="#4A6654"/>
+                <rect x="5"  y="5.5" width="3" height="7.5"  rx="1" fill="#4A6654"/>
+                <rect x="10" y="2.5" width="3" height="10.5" rx="1" fill="#4A6654"/>
+                <rect x="15" y="0"   width="3" height="13"   rx="1" fill="#4A6654"/>
+              </svg>
+              <svg width="17" height="13" viewBox="0 0 17 13" fill="none">
+                <circle cx="8.5" cy="11.5" r="1.5" fill="#4A6654"/>
+                <path d="M5 8c1-1 2.2-1.6 3.5-1.6S11 7 12 8" stroke="#4A6654" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <path d="M2 5C4 3 6.1 2 8.5 2S13 3 15 5" stroke="#4A6654" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              </svg>
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none">
+                <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#4A6654" stroke-opacity="0.5"/>
+                <rect x="23.5" y="4" width="3" height="5" rx="1.5" fill="#4A6654" fill-opacity="0.4"/>
+                <rect x="2" y="2" width="17" height="9" rx="2" fill="#006948"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Hero Card (gradient + ring) -->
+          <div class="hero-card">
+            <div class="hero-top">
+              <div class="hero-greeting">Good morning</div>
+              <div class="hero-name">Alex ✈️</div>
+            </div>
+            <div class="hero-body">
+              <div class="ring-wrap">
+                <svg width="128" height="128" viewBox="0 0 128 128">
+                  <!-- Track -->
+                  <circle cx="64" cy="64" r="50" stroke="#E8F0EB" stroke-width="12" fill="none"/>
+                  <!-- Progress: 128/180=71.11%, circ=314.16, offset=314.16*(1-0.7111)=90.77 -->
+                  <circle cx="64" cy="64" r="50"
+                    stroke="#D97706"
+                    stroke-width="12"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-dasharray="314.16"
+                    stroke-dashoffset="90.77"
+                    transform="rotate(-90 64 64)"
+                  />
+                </svg>
+                <div class="ring-center">
+                  <div class="ring-n">128</div>
+                  <div class="ring-den">/ 180 days</div>
+                  <div class="ring-lbl">outside UK</div>
+                </div>
+              </div>
+
+              <div class="hero-stats">
+                <div>
+                  <div class="hero-stat-label">Remaining</div>
+                  <div class="hero-stat-val amber">52 days</div>
+                </div>
+                <div>
+                  <div class="hero-stat-label">Status</div>
+                  <span class="hero-badge badge-warn">⚠ Warning</span>
+                </div>
+                <div>
+                  <div class="hero-stat-label">ILR eligible</div>
+                  <div class="hero-stat-val" style="font-size:15px;">Jan 2029</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scroll content -->
+          <div class="scroll" style="padding-top:12px;">
+
+            <!-- ILR -->
+            <div class="card">
+              <div class="ilr-header">
+                <span class="ilr-name">ILR Progress</span>
+                <span class="ilr-pct">71%</span>
+              </div>
+              <div class="pbar"><div class="pfill" style="width:71%;"></div></div>
+              <div class="pbar-sub">1,064 days remaining · eligible January 2029</div>
+            </div>
+
+            <!-- Recent trips -->
+            <div class="card-title" style="padding:0 4px;">Recent Trips</div>
+            <div class="trip-list">
+              <div class="trip-row">
+                <div class="trip-flag">🇫🇷</div>
+                <div class="trip-body">
+                  <div class="trip-name">France</div>
+                  <div class="trip-dates">10 Apr – 18 Apr 2026</div>
+                </div>
+                <span class="abs abs-s">7d</span>
+                <span class="chevron">›</span>
+              </div>
+              <div class="trip-row">
+                <div class="trip-flag">🇦🇪</div>
+                <div class="trip-body">
+                  <div class="trip-name">UAE</div>
+                  <div class="trip-dates">22 Feb – 1 Mar 2026</div>
+                </div>
+                <span class="abs abs-s">6d</span>
+                <span class="chevron">›</span>
+              </div>
+            </div>
+
+          </div><!-- /scroll -->
+
+          <div class="tabbar">
+            <div class="tab on"><div class="tab-ico">⌂</div><div class="tab-name">Home</div></div>
+            <div class="tab"><div class="tab-ico">≡</div><div class="tab-name">Log</div></div>
+            <div class="tab"><div class="tab-ico">◎</div><div class="tab-name">Plan</div></div>
+            <div class="tab"><div class="tab-ico">⚙</div><div class="tab-name">Settings</div></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div></div></section>
-</div></body></html>
+
+    <!-- ════════════════ Screen 2: Plan a Trip ════════════════ -->
+    <div class="phone-col">
+      <div class="col-label">Trip Entry</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="di"></div>
+
+          <div class="sb" style="background:var(--screen-bg);">
+            <span class="sb-time" style="color:var(--text);">9:41</span>
+            <div class="sb-icons">
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none"><rect x="0" y="8" width="3" height="5" rx="1" fill="#4A6654"/><rect x="5" y="5.5" width="3" height="7.5" rx="1" fill="#4A6654"/><rect x="10" y="2.5" width="3" height="10.5" rx="1" fill="#4A6654"/><rect x="15" y="0" width="3" height="13" rx="1" fill="#4A6654"/></svg>
+              <svg width="17" height="13" viewBox="0 0 17 13" fill="none"><circle cx="8.5" cy="11.5" r="1.5" fill="#4A6654"/><path d="M5 8c1-1 2.2-1.6 3.5-1.6S11 7 12 8" stroke="#4A6654" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M2 5C4 3 6.1 2 8.5 2S13 3 15 5" stroke="#4A6654" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#4A6654" stroke-opacity="0.5"/><rect x="23.5" y="4" width="3" height="5" rx="1.5" fill="#4A6654" fill-opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#006948"/></svg>
+            </div>
+          </div>
+
+          <!-- Form header -->
+          <div class="form-header">
+            <div class="form-nav">
+              <span class="back-btn">‹ Home</span>
+              <span class="save-btn">Save</span>
+            </div>
+            <div class="form-title">Plan a Trip ✈️</div>
+          </div>
+
+          <div class="scroll" style="padding-top:4px;">
+
+            <div class="field-card">
+              <div class="field-row">
+                <div class="field-icon">🌍</div>
+                <span class="field-label">Destination</span>
+                <span class="field-value">🇪🇸 Spain</span>
+              </div>
+              <div class="field-row">
+                <div class="field-icon">🛫</div>
+                <span class="field-label">Departure</span>
+                <span class="field-value">14 May 2026</span>
+              </div>
+              <div class="field-row">
+                <div class="field-icon">🛬</div>
+                <span class="field-label">Return</span>
+                <span class="field-value">22 May 2026</span>
+              </div>
+              <div class="field-row">
+                <div class="field-icon">📝</div>
+                <span class="field-label">Notes</span>
+                <span class="field-ph">Add a note…</span>
+              </div>
+            </div>
+
+            <!-- Impact -->
+            <div class="impact-card">
+              <div class="impact-top">
+                <div class="impact-dot"></div>
+                <div class="impact-lbl">Trip Impact — Warning</div>
+              </div>
+              <div class="impact-nums">
+                <div>
+                  <div class="impact-key">This trip</div>
+                  <div>
+                    <span class="impact-big">7</span>
+                    <span class="impact-unit">days</span>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="impact-key">Running total</div>
+                  <div class="impact-total">134 / 180</div>
+                </div>
+              </div>
+              <div class="impact-pbar">
+                <div class="impact-pfill" style="width:74.4%;"></div>
+              </div>
+              <div class="impact-sub">46 days remaining after this trip · threshold warning at 150</div>
+            </div>
+
+            <div class="btn-primary">Save Trip</div>
+
+            <div class="note">Crown Dependencies count as time in the UK</div>
+
+          </div><!-- /scroll -->
+
+          <div class="tabbar">
+            <div class="tab"><div class="tab-ico">⌂</div><div class="tab-name">Home</div></div>
+            <div class="tab"><div class="tab-ico">≡</div><div class="tab-name">Log</div></div>
+            <div class="tab on"><div class="tab-ico">◎</div><div class="tab-name">Plan</div></div>
+            <div class="tab"><div class="tab-ico">⚙</div><div class="tab-name">Settings</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ Screen 3: Trip History ════════════════ -->
+    <div class="phone-col">
+      <div class="col-label">Trip History</div>
+      <div class="phone">
+        <div class="screen" style="position:relative;">
+          <div class="di"></div>
+
+          <div class="sb" style="background:var(--screen-bg);">
+            <span class="sb-time" style="color:var(--text);">9:41</span>
+            <div class="sb-icons">
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none"><rect x="0" y="8" width="3" height="5" rx="1" fill="#4A6654"/><rect x="5" y="5.5" width="3" height="7.5" rx="1" fill="#4A6654"/><rect x="10" y="2.5" width="3" height="10.5" rx="1" fill="#4A6654"/><rect x="15" y="0" width="3" height="13" rx="1" fill="#4A6654"/></svg>
+              <svg width="17" height="13" viewBox="0 0 17 13" fill="none"><circle cx="8.5" cy="11.5" r="1.5" fill="#4A6654"/><path d="M5 8c1-1 2.2-1.6 3.5-1.6S11 7 12 8" stroke="#4A6654" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M2 5C4 3 6.1 2 8.5 2S13 3 15 5" stroke="#4A6654" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#4A6654" stroke-opacity="0.5"/><rect x="23.5" y="4" width="3" height="5" rx="1.5" fill="#4A6654" fill-opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#006948"/></svg>
+            </div>
+          </div>
+
+          <!-- Large title area -->
+          <div style="padding:6px 18px 14px; background:var(--screen-bg); flex-shrink:0;">
+            <div style="font-family:'Manrope',sans-serif; font-size:30px; font-weight:800; color:var(--text); letter-spacing:-0.6px;">Trip Log</div>
+            <div style="font-size:13px; color:var(--muted); margin-top:3px;">23 trips · 128 days outside UK</div>
+          </div>
+
+          <div class="scroll" style="padding-top:4px;">
+
+            <!-- Expanded first row -->
+            <div class="trip-list">
+              <div class="trip-exp-row">
+                <div class="trip-exp-main">
+                  <div class="trip-flag">🇫🇷</div>
+                  <div class="trip-body">
+                    <div class="trip-name">France</div>
+                    <div class="trip-dates">10 Apr – 18 Apr 2026</div>
+                  </div>
+                  <span class="abs abs-s" style="margin-right:6px;">7d</span>
+                  <span style="color:#C7C7CC;font-size:13px;">∨</span>
+                </div>
+                <div class="trip-exp-detail">
+                  <div class="drow"><span class="dk">Departed UK</span><span class="dv">10 Apr 2026</span></div>
+                  <div class="drow"><span class="dk">Returned</span><span class="dv">18 Apr 2026</span></div>
+                  <div class="drow"><span class="dk">Absence days</span><span class="dv" style="color:var(--green);">7 days</span></div>
+                  <div class="drow"><span class="dk">Window at departure</span><span class="dv">121 / 180</span></div>
+                </div>
+                <div class="trip-exp-actions">
+                  <div class="ta ta-edit">Edit</div>
+                  <div class="ta ta-delete">Delete</div>
+                </div>
+              </div>
+
+              <div class="trip-row">
+                <div class="trip-flag">🇦🇪</div>
+                <div class="trip-body">
+                  <div class="trip-name">UAE</div>
+                  <div class="trip-dates">22 Feb – 1 Mar 2026</div>
+                </div>
+                <span class="abs abs-s">6d</span>
+                <span class="chevron">›</span>
+              </div>
+              <div class="trip-row">
+                <div class="trip-flag">🇮🇳</div>
+                <div class="trip-body">
+                  <div class="trip-name">India</div>
+                  <div class="trip-dates">12 Dec 2025 – 3 Jan 2026</div>
+                </div>
+                <span class="abs abs-w">21d</span>
+                <span class="chevron">›</span>
+              </div>
+              <div class="trip-row">
+                <div class="trip-flag">🇺🇸</div>
+                <div class="trip-body">
+                  <div class="trip-name">USA</div>
+                  <div class="trip-dates">15 Aug – 26 Aug 2025</div>
+                </div>
+                <span class="abs abs-s">10d</span>
+                <span class="chevron">›</span>
+              </div>
+            </div>
+
+          </div><!-- /scroll -->
+
+          <!-- FAB -->
+          <div class="fab">+</div>
+
+          <div class="tabbar">
+            <div class="tab"><div class="tab-ico">⌂</div><div class="tab-name">Home</div></div>
+            <div class="tab on"><div class="tab-ico">≡</div><div class="tab-name">Log</div></div>
+            <div class="tab"><div class="tab-ico">◎</div><div class="tab-name">Plan</div></div>
+            <div class="tab"><div class="tab-ico">⚙</div><div class="tab-name">Settings</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phones-row -->
+
+</body>
+</html>

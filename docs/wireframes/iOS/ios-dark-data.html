@@ -1,40 +1,777 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StayRight iOS Wireframe — Dark Data</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StayRight · iOS Wireframe — Dark Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0a0d14;--panel:#111827;--panel2:#0f172a;--line:#1f2937;--text:#e5e7eb;--muted:#94a3b8;--cyan:#22d3ee;--amber:#f59e0b}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-    .row{display:flex;gap:24px;padding:24px;overflow-x:auto}.phone{width:375px;min-width:375px;height:812px;border:10px solid #020617;border-radius:40px;padding:12px;background:#000}
-    .screen{height:100%;border-radius:28px;background:linear-gradient(180deg,var(--panel2),var(--panel));overflow:hidden;border:1px solid #111827}
-    .nav{padding:14px 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-    .content{padding:14px}.block{border:1px solid var(--line);background:#0b1220;border-radius:10px;padding:12px;margin-bottom:10px}
-    .kpi{font-size:36px;font-weight:700;color:var(--cyan);margin:6px 0}.muted{font-size:12px;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pill{padding:6px 8px;background:#0b1220;border:1px solid var(--line);border-radius:999px;font-size:11px}
-    .warn{color:var(--amber)} .field{padding:10px;border:1px solid var(--line);background:#020617;border-radius:8px;margin-bottom:8px;font-size:12px}
-    .btn{width:100%;padding:11px;border-radius:8px;border:1px solid #155e75;background:#083344;color:#67e8f9;font-weight:700;letter-spacing:.05em}
-    table{width:100%;border-collapse:collapse;font-size:12px} th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left} th{color:var(--muted);font-weight:500}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080B08;
+      --surface:   #0D1B10;
+      --raised:    #132016;
+      --border:    rgba(0, 168, 116, 0.14);
+      --border-s:  rgba(0, 168, 116, 0.22);
+      --green:     #00A874;
+      --green-dim: rgba(0, 168, 116, 0.12);
+      --amber:     #F59E0B;
+      --amber-dim: rgba(245, 158, 11, 0.12);
+      --red:       #F87171;
+      --red-dim:   rgba(248, 113, 113, 0.10);
+      --text:      #E8EDE9;
+      --muted:     #7A9080;
+      --faint:     #3D5242;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #040604;
+      font-family: 'Inter', -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 40px 64px;
+      gap: 28px;
+    }
+
+    .page-header { text-align: center; }
+    .page-title  { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .page-sub    { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    .phones-row { display: flex; gap: 36px; align-items: flex-start; }
+
+    .phone-col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+    .col-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    /* ── Phone Frame ── */
+    .phone {
+      width: 393px;
+      background: #060806;
+      border-radius: 52px;
+      padding: 13px;
+      position: relative;
+      box-shadow:
+        0 0 0 1px rgba(0, 168, 116, 0.06),
+        0 60px 120px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .phone::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 122px;
+      width: 4px;
+      height: 30px;
+      background: #0F0F0F;
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 46px 0 #0F0F0F, 0 82px 0 #0F0F0F;
+    }
+    .phone::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 158px;
+      width: 4px;
+      height: 64px;
+      background: #0F0F0F;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .screen {
+      width: 100%;
+      height: 826px;
+      border-radius: 39px;
+      background: var(--bg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .di {
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 37px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 30;
+    }
+
+    /* ── Status Bar ── */
+    .sb {
+      height: 58px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 10px;
+      flex-shrink: 0;
+    }
+
+    .sb-time { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+    .sb-icons { display: flex; align-items: center; gap: 7px; }
+
+    /* ── Warning Banner ── */
+    .warn-banner {
+      background: rgba(245,158,11,0.10);
+      border-bottom: 1px solid rgba(245,158,11,0.20);
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .warn-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--amber);
+      flex-shrink: 0;
+    }
+
+    .warn-text { font-size: 12px; color: var(--amber); font-weight: 500; letter-spacing: 0.01em; }
+
+    /* ── Nav (terminal style) ── */
+    .nav-term {
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .nav-prefix { font-size: 11px; color: var(--green); font-family: ui-monospace, Menlo, monospace; font-weight: 600; }
+    .nav-cmd    { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+    .nav-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 18px;
+      background: var(--green);
+      border-radius: 1px;
+      margin-left: 3px;
+      opacity: 0.6;
+      vertical-align: middle;
+    }
+
+    .nav-back-term {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .back-arrow { color: var(--green); font-size: 18px; }
+    .back-label { font-size: 15px; color: var(--green); font-weight: 500; }
+    .nav-title-center { flex: 1; text-align: center; font-size: 17px; font-weight: 600; color: var(--text); margin-right: 60px; }
+
+    /* ── Scroll ── */
+    .scroll { flex: 1; overflow: hidden; padding: 14px 16px 0; display: flex; flex-direction: column; gap: 10px; }
+
+    /* ── Blocks ── */
+    .block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .block-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-family: ui-monospace, Menlo, monospace;
+    }
+
+    /* ── Ring Block ── */
+    .ring-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .ring-wrap { position: relative; width: 130px; height: 130px; flex-shrink: 0; }
+    .ring-wrap svg { transform: rotate(-90deg); display: block; }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-n   { font-size: 34px; font-weight: 700; color: var(--green); letter-spacing: -1.5px; line-height: 1; font-family: ui-monospace, Menlo, monospace; }
+    .ring-den { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: ui-monospace, Menlo, monospace; }
+
+    .ring-meta { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+    .meta-row { display: flex; flex-direction: column; gap: 2px; }
+    .meta-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: ui-monospace, Menlo, monospace; }
+    .meta-val { font-size: 16px; font-weight: 600; color: var(--text); }
+    .meta-val.amber { color: var(--amber); }
+    .meta-val.green { color: var(--green); }
+
+    /* ── Stat Grid ── */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .stat-cell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: ui-monospace, Menlo, monospace; margin-bottom: 4px; }
+    .stat-val { font-size: 20px; font-weight: 700; color: var(--text); font-family: ui-monospace, Menlo, monospace; }
+    .stat-val.green { color: var(--green); }
+    .stat-val.amber { color: var(--amber); }
+
+    /* ── Threshold bar ── */
+    .thresh-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .thresh-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .thresh-title  { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
+    .thresh-value  { font-size: 13px; font-weight: 600; color: var(--amber); font-family: ui-monospace, Menlo, monospace; }
+
+    .thresh-track {
+      height: 8px;
+      background: var(--green-dim);
+      border-radius: 999px;
+      position: relative;
+      overflow: visible;
+      margin-bottom: 8px;
+    }
+
+    .thresh-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+      border-radius: 999px;
+      width: 71.1%; /* 128/180 */
+    }
+
+    /* Threshold markers */
+    .thresh-markers { display: flex; justify-content: space-between; }
+    .thresh-mark    { font-size: 10px; color: var(--faint); font-family: ui-monospace, Menlo, monospace; }
+    .thresh-mark.warn { color: var(--amber); }
+
+    /* ── Form fields (dark) ── */
+    .form-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .frow {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+    }
+    .frow:last-child { border-bottom: none; }
+
+    .flabel { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); width: 90px; flex-shrink: 0; font-family: ui-monospace, Menlo, monospace; }
+    .fvalue { flex: 1; font-size: 15px; color: var(--text); font-weight: 500; }
+    .fph    { flex: 1; font-size: 14px; color: var(--faint); }
+
+    /* ── Impact block (dark) ── */
+    .impact-dark {
+      background: var(--amber-dim);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .impact-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .impact-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+    .impact-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--amber); font-weight: 700; font-family: ui-monospace, Menlo, monospace; }
+
+    .impact-nums { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+    .impact-big  { font-size: 36px; font-weight: 700; color: var(--amber); letter-spacing: -1.5px; line-height: 1; font-family: ui-monospace, Menlo, monospace; }
+    .impact-key  { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); opacity: 0.7; margin-bottom: 3px; font-family: ui-monospace, Menlo, monospace; }
+    .impact-total-n { font-size: 22px; font-weight: 700; color: var(--amber); font-family: ui-monospace, Menlo, monospace; }
+
+    .impact-pbar { height: 6px; background: rgba(245,158,11,0.15); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+    .impact-pfill { height: 100%; background: var(--amber); border-radius: 999px; }
+    .impact-sub { font-size: 12px; color: var(--amber); opacity: 0.8; }
+
+    /* ── CTA (dark) ── */
+    .btn-dark {
+      background: linear-gradient(135deg, #00A874, #006948);
+      color: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-family: ui-monospace, Menlo, monospace;
+    }
+
+    /* ── Data table ── */
+    .data-table {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .dt-head {
+      display: flex;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--raised);
+    }
+
+    .dt-th {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--muted);
+      font-family: ui-monospace, Menlo, monospace;
+    }
+
+    .dt-col-flag  { width: 36px; }
+    .dt-col-dest  { flex: 1.8; }
+    .dt-col-range { flex: 2.8; }
+    .dt-col-days  { width: 44px; text-align: right; }
+
+    .dt-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dt-row:last-child { border-bottom: none; }
+
+    .dt-td { font-size: 13px; color: var(--text); font-family: ui-monospace, Menlo, monospace; }
+    .dt-td.muted { color: var(--muted); font-size: 12px; }
+    .dt-td.right { text-align: right; }
+
+    .days-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: ui-monospace, Menlo, monospace;
+    }
+
+    .dp-safe   { background: rgba(0,168,116,0.12); color: var(--green); border: 1px solid rgba(0,168,116,0.25); }
+    .dp-warn   { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+
+    /* ── Tab Bar (dark) ── */
+    .tabbar {
+      height: 83px;
+      background: rgba(10, 18, 12, 0.96);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      padding-top: 10px;
+      flex-shrink: 0;
+    }
+
+    .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tab-ico  { font-size: 22px; color: var(--faint); line-height: 1; }
+    .tab-name { font-size: 10px; color: var(--faint); font-family: ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; }
+
+    .tab.on .tab-ico,
+    .tab.on .tab-name { color: var(--green); }
+
+    /* FAB */
+    .fab {
+      position: absolute;
+      bottom: 96px;
+      right: 18px;
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #00A874, #006948);
+      color: #fff;
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(0,168,116,0.35), 0 4px 12px rgba(0,0,0,0.5);
+      line-height: 1;
+    }
   </style>
 </head>
-<body><div class="row">
-  <section class="phone"><div class="screen"><div class="nav">COMPLIANCE DASHBOARD</div><div class="content">
-    <div class="block"><div class="muted">ABSENCE_DAYS_ROLLING_365</div><div class="kpi">128</div><div class="muted">threshold_150: <span class="warn">22d remaining</span></div></div>
-    <div class="grid"><div class="block"><div class="muted">ILR_PROGRESS</div><div>71%</div></div><div class="block"><div class="muted">RISK_STATE</div><div class="warn">WARNING</div></div></div>
-    <div class="block"><div class="muted">flags</div><div class="pill">next_trip_impact +6d</div></div>
-  </div></div></section>
+<body>
 
-  <section class="phone"><div class="screen"><div class="nav">TRIP ENTRY</div><div class="content">
-    <div class="field">destination_code: ESP / Spain</div><div class="field">departure_date: 2026-05-14</div><div class="field">return_date: 2026-05-22</div><div class="field">trip_reason: annual leave</div>
-    <div class="block"><div class="muted">derived_absence_days</div><div class="kpi" style="font-size:28px">7</div></div><button class="btn">COMMIT RECORD</button>
-  </div></div></section>
+  <div class="page-header">
+    <div class="page-title">StayRight · Dark Data</div>
+    <div class="page-sub">Compliance-focused · OLED dark · Monospace data display</div>
+  </div>
 
-  <section class="phone"><div class="screen"><div class="nav">TRIP HISTORY LOG</div><div class="content">
-    <div class="block"><table><thead><tr><th>DEST</th><th>RANGE</th><th>DAYS</th></tr></thead><tbody>
-      <tr><td>FRA</td><td>2026-04-10 → 2026-04-18</td><td>7</td></tr>
-      <tr><td>ARE</td><td>2026-02-22 → 2026-03-01</td><td>6</td></tr>
-      <tr><td>IND</td><td>2025-12-12 → 2026-01-03</td><td>21</td></tr>
-      <tr><td>USA</td><td>2025-08-15 → 2025-08-26</td><td>10</td></tr>
-    </tbody></table></div>
-  </div></div></section>
-</div></body></html>
+  <div class="phones-row">
+
+    <!-- ════════════════ Screen 1: Dashboard ════════════════ -->
+    <div class="phone-col">
+      <div class="col-label">Dashboard</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="di"></div>
+
+          <div class="sb">
+            <span class="sb-time">9:41</span>
+            <div class="sb-icons">
+              <!-- Signal -->
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                <rect x="0"  y="8"   width="3" height="5"    rx="1" fill="#7A9080"/>
+                <rect x="5"  y="5.5" width="3" height="7.5"  rx="1" fill="#7A9080"/>
+                <rect x="10" y="2.5" width="3" height="10.5" rx="1" fill="#7A9080"/>
+                <rect x="15" y="0"   width="3" height="13"   rx="1" fill="#7A9080"/>
+              </svg>
+              <!-- WiFi -->
+              <svg width="17" height="13" viewBox="0 0 17 13" fill="none">
+                <circle cx="8.5" cy="11.5" r="1.5" fill="#7A9080"/>
+                <path d="M5 8c1-1 2.2-1.6 3.5-1.6S11 7 12 8" stroke="#7A9080" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <path d="M2 5C4 3 6.1 2 8.5 2S13 3 15 5" stroke="#7A9080" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              </svg>
+              <!-- Battery -->
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none">
+                <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#7A9080" stroke-opacity="0.6"/>
+                <rect x="23.5" y="4" width="3" height="5" rx="1.5" fill="#7A9080" fill-opacity="0.5"/>
+                <rect x="2" y="2" width="17" height="9" rx="2" fill="#00A874"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Warning Banner -->
+          <div class="warn-banner">
+            <div class="warn-dot"></div>
+            <div class="warn-text">WARNING · 52 days remaining before 180-day threshold</div>
+          </div>
+
+          <!-- Terminal nav -->
+          <div class="nav-term">
+            <span class="nav-prefix">~/stayright$</span>
+            <span class="nav-cmd">dashboard</span>
+            <span class="nav-cursor"></span>
+          </div>
+
+          <div class="scroll">
+
+            <!-- Ring + meta -->
+            <div class="ring-block">
+              <div class="ring-wrap">
+                <svg width="130" height="130" viewBox="0 0 130 130">
+                  <defs>
+                    <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="3" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                  </defs>
+                  <!-- Track -->
+                  <circle cx="65" cy="65" r="50" stroke="rgba(0,168,116,0.12)" stroke-width="10" fill="none"/>
+                  <!-- Progress: 128/180=71.11%, circ=314.16, offset=314.16*(1-0.7111)=90.77 -->
+                  <circle cx="65" cy="65" r="50"
+                    stroke="#F59E0B"
+                    stroke-width="10"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-dasharray="314.16"
+                    stroke-dashoffset="90.77"
+                    transform="rotate(-90 65 65)"
+                    filter="url(#glow-green)"
+                  />
+                </svg>
+                <div class="ring-center">
+                  <div class="ring-n">128</div>
+                  <div class="ring-den">/ 180</div>
+                </div>
+              </div>
+
+              <div class="ring-meta">
+                <div class="meta-row">
+                  <span class="meta-lbl">Risk state</span>
+                  <span class="meta-val amber">WARNING</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-lbl">Days remaining</span>
+                  <span class="meta-val">52</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-lbl">Next threshold</span>
+                  <span class="meta-val amber">150 days</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stat Grid -->
+            <div class="stat-grid">
+              <div class="stat-cell">
+                <div class="stat-lbl">ILR progress</div>
+                <div class="stat-val green">71%</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-lbl">ILR eligible</div>
+                <div class="stat-val" style="font-size:14px;">Jan 2029</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-lbl">Total trips</div>
+                <div class="stat-val">23</div>
+              </div>
+              <div class="stat-cell">
+                <div class="stat-lbl">Next trip impact</div>
+                <div class="stat-val amber">+7d</div>
+              </div>
+            </div>
+
+            <!-- Threshold Bar -->
+            <div class="thresh-block">
+              <div class="thresh-header">
+                <span class="thresh-title">absence_days_rolling_365</span>
+                <span class="thresh-value">128 / 180</span>
+              </div>
+              <div class="thresh-track">
+                <div class="thresh-fill"></div>
+              </div>
+              <div class="thresh-markers">
+                <span class="thresh-mark">0</span>
+                <span class="thresh-mark warn">150 ⚠</span>
+                <span class="thresh-mark" style="color:var(--red);">180 ✕</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="tabbar">
+            <div class="tab on"><div class="tab-ico">⌂</div><div class="tab-name">Home</div></div>
+            <div class="tab"><div class="tab-ico">≡</div><div class="tab-name">Log</div></div>
+            <div class="tab"><div class="tab-ico">◎</div><div class="tab-name">Plan</div></div>
+            <div class="tab"><div class="tab-ico">⚙</div><div class="tab-name">Settings</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ Screen 2: Trip Entry ════════════════ -->
+    <div class="phone-col">
+      <div class="col-label">Trip Entry</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="di"></div>
+
+          <div class="sb">
+            <span class="sb-time">9:41</span>
+            <div class="sb-icons">
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none"><rect x="0" y="8" width="3" height="5" rx="1" fill="#7A9080"/><rect x="5" y="5.5" width="3" height="7.5" rx="1" fill="#7A9080"/><rect x="10" y="2.5" width="3" height="10.5" rx="1" fill="#7A9080"/><rect x="15" y="0" width="3" height="13" rx="1" fill="#7A9080"/></svg>
+              <svg width="17" height="13" viewBox="0 0 17 13" fill="none"><circle cx="8.5" cy="11.5" r="1.5" fill="#7A9080"/><path d="M5 8c1-1 2.2-1.6 3.5-1.6S11 7 12 8" stroke="#7A9080" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M2 5C4 3 6.1 2 8.5 2S13 3 15 5" stroke="#7A9080" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#7A9080" stroke-opacity="0.6"/><rect x="23.5" y="4" width="3" height="5" rx="1.5" fill="#7A9080" fill-opacity="0.5"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#00A874"/></svg>
+            </div>
+          </div>
+
+          <div class="nav-back-term">
+            <span class="back-arrow">←</span>
+            <span class="back-label">dashboard</span>
+            <span class="nav-title-center">plan_trip</span>
+          </div>
+
+          <div class="scroll" style="padding-top:18px;">
+
+            <div class="form-block">
+              <div class="frow">
+                <span class="flabel">dest</span>
+                <span class="fvalue">🇪🇸 Spain</span>
+              </div>
+              <div class="frow">
+                <span class="flabel">departure</span>
+                <span class="fvalue">2026-05-14</span>
+              </div>
+              <div class="frow">
+                <span class="flabel">return</span>
+                <span class="fvalue">2026-05-22</span>
+              </div>
+              <div class="frow">
+                <span class="flabel">notes</span>
+                <span class="fph">// optional</span>
+              </div>
+            </div>
+
+            <div class="impact-dark">
+              <div class="impact-header">
+                <div class="impact-dot"></div>
+                <div class="impact-title">computed_impact · warning_state</div>
+              </div>
+              <div class="impact-nums">
+                <div>
+                  <div class="impact-key">absence_days</div>
+                  <div class="impact-big">7</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="impact-key">new_total</div>
+                  <div class="impact-total-n">134 / 180</div>
+                </div>
+              </div>
+              <div class="impact-pbar">
+                <div class="impact-pfill" style="width:74.4%;"></div>
+              </div>
+              <div class="impact-sub">46 days remaining · next threshold: 150</div>
+            </div>
+
+            <div class="btn-dark">commit_trip()</div>
+
+            <div style="font-size:11px; color:var(--faint); text-align:center; padding:4px; font-family:ui-monospace,Menlo,monospace; line-height:1.6;">
+              // Crown Dependencies = 0 absence days
+            </div>
+
+          </div>
+
+          <div class="tabbar">
+            <div class="tab"><div class="tab-ico">⌂</div><div class="tab-name">Home</div></div>
+            <div class="tab"><div class="tab-ico">≡</div><div class="tab-name">Log</div></div>
+            <div class="tab on"><div class="tab-ico">◎</div><div class="tab-name">Plan</div></div>
+            <div class="tab"><div class="tab-ico">⚙</div><div class="tab-name">Settings</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ Screen 3: Trip Log ════════════════ -->
+    <div class="phone-col">
+      <div class="col-label">Trip History</div>
+      <div class="phone">
+        <div class="screen" style="position:relative;">
+          <div class="di"></div>
+
+          <div class="sb">
+            <span class="sb-time">9:41</span>
+            <div class="sb-icons">
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none"><rect x="0" y="8" width="3" height="5" rx="1" fill="#7A9080"/><rect x="5" y="5.5" width="3" height="7.5" rx="1" fill="#7A9080"/><rect x="10" y="2.5" width="3" height="10.5" rx="1" fill="#7A9080"/><rect x="15" y="0" width="3" height="13" rx="1" fill="#7A9080"/></svg>
+              <svg width="17" height="13" viewBox="0 0 17 13" fill="none"><circle cx="8.5" cy="11.5" r="1.5" fill="#7A9080"/><path d="M5 8c1-1 2.2-1.6 3.5-1.6S11 7 12 8" stroke="#7A9080" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M2 5C4 3 6.1 2 8.5 2S13 3 15 5" stroke="#7A9080" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#7A9080" stroke-opacity="0.6"/><rect x="23.5" y="4" width="3" height="5" rx="1.5" fill="#7A9080" fill-opacity="0.5"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#00A874"/></svg>
+            </div>
+          </div>
+
+          <!-- Terminal nav -->
+          <div class="nav-term">
+            <span class="nav-prefix">~/stayright$</span>
+            <span class="nav-cmd">trip_log</span>
+            <span style="font-size:11px; color:var(--muted); font-family:ui-monospace,Menlo,monospace; margin-left:8px;">23 records · 128d total</span>
+          </div>
+
+          <div class="scroll">
+
+            <div class="data-table">
+              <!-- Header -->
+              <div class="dt-head">
+                <div class="dt-th dt-col-flag"></div>
+                <div class="dt-th dt-col-dest">destination</div>
+                <div class="dt-th dt-col-range">date_range</div>
+                <div class="dt-th dt-col-days">days</div>
+              </div>
+              <!-- Rows -->
+              <div class="dt-row">
+                <div class="dt-td dt-col-flag">🇫🇷</div>
+                <div class="dt-td dt-col-dest">France</div>
+                <div class="dt-td dt-col-range muted">2026-04-10 → 04-18</div>
+                <div class="dt-td dt-col-days right"><span class="days-pill dp-safe">7d</span></div>
+              </div>
+              <div class="dt-row">
+                <div class="dt-td dt-col-flag">🇦🇪</div>
+                <div class="dt-td dt-col-dest">UAE</div>
+                <div class="dt-td dt-col-range muted">2026-02-22 → 03-01</div>
+                <div class="dt-td dt-col-days right"><span class="days-pill dp-safe">6d</span></div>
+              </div>
+              <div class="dt-row">
+                <div class="dt-td dt-col-flag">🇮🇳</div>
+                <div class="dt-td dt-col-dest">India</div>
+                <div class="dt-td dt-col-range muted">2025-12-12 → 26-01-03</div>
+                <div class="dt-td dt-col-days right"><span class="days-pill dp-warn">21d</span></div>
+              </div>
+              <div class="dt-row">
+                <div class="dt-td dt-col-flag">🇺🇸</div>
+                <div class="dt-td dt-col-dest">USA</div>
+                <div class="dt-td dt-col-range muted">2025-08-15 → 08-26</div>
+                <div class="dt-td dt-col-days right"><span class="days-pill dp-safe">10d</span></div>
+              </div>
+              <div class="dt-row">
+                <div class="dt-td dt-col-flag">🇩🇪</div>
+                <div class="dt-td dt-col-dest">Germany</div>
+                <div class="dt-td dt-col-range muted">2025-06-03 → 06-09</div>
+                <div class="dt-td dt-col-days right"><span class="days-pill dp-safe">5d</span></div>
+              </div>
+              <div class="dt-row">
+                <div class="dt-td dt-col-flag">🇿🇦</div>
+                <div class="dt-td dt-col-dest">South Africa</div>
+                <div class="dt-td dt-col-range muted">2025-03-20 → 04-04</div>
+                <div class="dt-td dt-col-days right"><span class="days-pill dp-warn">14d</span></div>
+              </div>
+            </div>
+
+            <!-- Summary block -->
+            <div class="block">
+              <div class="block-lbl">rolling_365_summary</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                <span style="font-size:13px; color:var(--muted); font-family:ui-monospace,Menlo,monospace;">absence total</span>
+                <span style="font-size:18px; font-weight:700; color:var(--amber); font-family:ui-monospace,Menlo,monospace;">128 days</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- FAB -->
+          <div class="fab">+</div>
+
+          <div class="tabbar">
+            <div class="tab"><div class="tab-ico">⌂</div><div class="tab-name">Home</div></div>
+            <div class="tab on"><div class="tab-ico">≡</div><div class="tab-name">Log</div></div>
+            <div class="tab"><div class="tab-ico">◎</div><div class="tab-name">Plan</div></div>
+            <div class="tab"><div class="tab-ico">⚙</div><div class="tab-name">Settings</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phones-row -->
+
+</body>
+</html>

@@ -7,6 +7,12 @@
       "runtimeArgs": ["run", "dev"],
       "port": 3000,
       "autoPort": false
+    },
+    {
+      "name": "wireframes",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "docs/wireframes/iOS", "-p", "4321"],
+      "port": 4321
     }
   ]
 }
