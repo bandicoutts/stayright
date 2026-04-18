@@ -3,15 +3,13 @@
 import { useState, useEffect } from 'react'
 import { PaywallModal } from '@/components/app/trips/PaywallModal'
 import { track } from '@/lib/posthog'
-import type { ReportProfile, ReportTrip } from '@/lib/pdf/reportDocuments'
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 interface ReportsClientProps {
-  profile: ReportProfile
-  trips: ReportTrip[]
+  hasTrips: boolean
   isPro: boolean
 }
 
@@ -25,21 +23,6 @@ function todayIso(): string {
   return new Date().toISOString().split('T')[0]
 }
 
-function formatDateForFilename(iso: string): string {
-  return iso // already YYYY-MM-DD
-}
-
-function triggerDownload(blob: Blob, filename: string) {
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
-}
-
 // ---------------------------------------------------------------------------
 // Report card config
 // ---------------------------------------------------------------------------
@@ -50,20 +33,17 @@ const REPORT_CARDS = [
     title: 'ILR Absence Table',
     description:
       'Complete absence record for the full ILR qualifying period. Matches the format requested by the Home Office on the SET(O) form.',
-    filename: (date: string) => `StayRight_ILR_Absence_Table_${date}.pdf`,
   },
   {
     id: 'rolling' as ReportType,
     title: 'Rolling Window History',
     description:
       'Month-by-month rolling window breakdown showing your 12-month absence count at the start of each month throughout your qualifying period.',
-    filename: (date: string) => `StayRight_Rolling_Window_History_${date}.pdf`,
   },
   {
     id: 'custom' as ReportType,
     title: 'Custom Date Range',
     description: 'Absence record filtered to a date range you specify. Useful for focused reporting or specific visa renewal periods.',
-    filename: (date: string) => `StayRight_Custom_Date_Range_${date}.pdf`,
     requiresDates: true,
   },
 ]
@@ -72,7 +52,7 @@ const REPORT_CARDS = [
 // Component
 // ---------------------------------------------------------------------------
 
-export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
+export function ReportsClient({ hasTrips, isPro }: ReportsClientProps) {
   const [showPaywall, setShowPaywall] = useState(false)
   const [generating, setGenerating] = useState<ReportType | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -80,7 +60,6 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
   const [customEnd, setCustomEnd] = useState(todayIso())
 
   const today = todayIso()
-  const hasTrips = trips.length > 0
 
   // Fire reports_viewed once when the reports page mounts
   useEffect(() => {
@@ -108,41 +87,20 @@ export function ReportsClient({ profile, trips, isPro }: ReportsClientProps) {
     setGenerating(type)
 
     try {
-      // Dynamic import — keeps @react-pdf/renderer out of the initial bundle
-      const { pdf } = await import('@react-pdf/renderer')
-      const docs = await import('@/lib/pdf/reportDocuments')
-
-      const generatedOn = new Date().toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      })
-
-      // Typed to match what pdf() expects from @react-pdf/renderer
-      type PdfArg = Parameters<typeof pdf>[0]
-      let element: PdfArg
-
-      if (type === 'ilr') {
-        element = docs.ILRAbsenceTableDocument({ trips, profile, generatedOn }) as unknown as PdfArg
-      } else if (type === 'rolling') {
-        element = docs.RollingWindowHistoryDocument({ trips, profile, generatedOn }) as unknown as PdfArg
-      } else {
-        element = docs.CustomDateRangeDocument({
-          trips,
-          profile,
-          generatedOn,
-          startDate: customStart,
-          endDate: customEnd,
-        }) as unknown as PdfArg
+      const params = new URLSearchParams({ type })
+      if (type === 'custom') {
+        params.set('start', customStart)
+        params.set('end', customEnd)
       }
-
-      const blob = await pdf(element).toBlob()
-      const card = REPORT_CARDS.find((c) => c.id === type)!
-      triggerDownload(blob, card.filename(formatDateForFilename(today)))
+      // Navigate to the server route — Content-Disposition: attachment means the
+      // browser treats it as a download and doesn't leave this page.
+      const a = document.createElement('a')
+      a.href = `/api/reports/pdf?${params}`
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
       track('pdf_generated', { report_type: type })
-    } catch (err) {
-      console.error('PDF generation error:', err)
-      setError('Failed to generate PDF. Please try again.')
     } finally {
       setGenerating(null)
     }

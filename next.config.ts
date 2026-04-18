@@ -7,6 +7,10 @@ const analyzer = withBundleAnalyzer({
 
 
 const nextConfig: NextConfig = {
+  // @react-pdf/renderer uses Node.js built-ins (fs, path) in its server build.
+  // Marking it external prevents webpack from bundling it and breaking those imports.
+  serverExternalPackages: ['@react-pdf/renderer'],
+
   async headers() {
     return [
       {

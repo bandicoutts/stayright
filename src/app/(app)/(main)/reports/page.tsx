@@ -15,42 +15,30 @@ export default async function ReportsPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('onboarding_completed, first_name, last_name, visa_route, visa_start_date')
+    .select('onboarding_completed')
     .eq('id', user.id)
     .single()
 
   if (!profile?.onboarding_completed) redirect('/onboarding')
 
-  const { data: rawTrips } = await supabase
-    .from('trips')
-    .select('id, destination, departure_date, return_date, notes')
-    .eq('user_id', user.id)
-    .order('departure_date', { ascending: true })
-
   // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('plan, status')
-    .eq('user_id', user.id)
-    .single()
+  const [{ data: subscription }, { count: tripCount }] = await Promise.all([
+    supabase
+      .from('subscriptions')
+      .select('plan, status')
+      .eq('user_id', user.id)
+      .single(),
+    supabase
+      .from('trips')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id),
+  ])
 
   const isPro = isPlanPro(subscription?.plan, subscription?.status)
 
   return (
     <ReportsClient
-      profile={{
-        firstName: profile.first_name,
-        lastName: profile.last_name,
-        visaRoute: profile.visa_route,
-        visaStartDate: profile.visa_start_date,
-      }}
-      trips={(rawTrips ?? []).map((t) => ({
-        id: t.id,
-        destination: t.destination,
-        departure_date: t.departure_date,
-        return_date: t.return_date,
-        notes: t.notes,
-      }))}
+      hasTrips={(tripCount ?? 0) > 0}
       isPro={isPro}
     />
   )
