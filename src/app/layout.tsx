@@ -1,3 +1,4 @@
+// diagnostics check
 import type { Metadata } from 'next';
 import { Manrope, Inter, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
 import './globals.css';
