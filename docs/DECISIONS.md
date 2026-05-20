@@ -160,7 +160,7 @@ A disclaimer must appear on the dashboard and in the PDF export: "Calculations f
 
 ### [DECISION-003] No native mobile app in v1
 **Date:** 2026-03-21
-**Status:** Decided
+**Status:** Superseded by DECISION-071 (2026-05-20)
 **Decided by:** David Flynn-Coutts (founder), recommended by PM review
 
 **Decision:**

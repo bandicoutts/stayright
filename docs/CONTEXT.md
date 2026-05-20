@@ -46,7 +46,7 @@ Neither departure nor return day counts as absence. **Never store calculated val
 - **Tailwind v4** — `@theme` blocks in CSS. No `tailwind.config.ts`
 - **Supabase SSR** — `createBrowserClient` (client components), `createServerClient` + `await cookies()` (server), `createAdminClient` (service role, server only)
 - **Server Actions** (`'use server'`) for all DB writes — no API routes for mutations
-- **TypeScript strict** — run `tsc --noEmit` before every commit
+- **TypeScript strict** — run `tsc --noEmit` before every commit (`supabase/functions/` is excluded — those are Deno TypeScript, not Node.js)
 
 ## Where things live
 
@@ -64,6 +64,7 @@ src/app/(app)/(main)/reports/           — PDF export
 src/app/(app)/(main)/settings/          — user settings
 src/app/api/stripe/                     — checkout, portal, webhook
 src/app/api/cron/                       — daily + monthly notification crons
+supabase/functions/calculate-absence/   — Deno Edge Function: 180-day engine for mobile clients
 docs/PRD.md                             — what to build
 docs/DECISIONS.md                       — why things are the way they are
 ```

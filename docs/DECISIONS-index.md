@@ -13,7 +13,7 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 |---|---|---|---|
 | DECISION-001 | Tech stack selection | Next.js + Supabase + Vercel + Stripe + Resend; TypeScript strict throughout | Decided |
 | DECISION-002 | Absence day counting formula | `absence = (return − departure) − 1`; neither departure nor return day counts | Decided |
-| DECISION-003 | No native mobile app in v1 | Web-only; PWA covers mobile use case | Decided |
+| DECISION-003 | No native mobile app in v1 | Web-only; PWA covers mobile use case | **Superseded by DECISION-071** |
 | DECISION-004 | Freemium model — free tier raised to 10 trips | Free up to 10 trips (raised from 3); Pro unlocks unlimited trips and PDF export | Decided |
 | DECISION-005 | Calculations never stored, always computed on read | DB stores raw trip dates only; engine always recalculates | Decided |
 | DECISION-006 | Design system source of truth | DESIGN.md + tokens.css are authoritative; wireframes are reference only | Decided |
