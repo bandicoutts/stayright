@@ -1659,3 +1659,48 @@ Production CSP is materially stronger. `unsafe-eval` is gone. `unsafe-inline` re
 **Related:** `next.config.ts`; DECISION-035
 
 **Related:** `src/components/app/TopNav.tsx`; `src/components/app/Sidebar.tsx`; `docs/TESTING.md` (Auth session isolation section)
+
+---
+
+### [DECISION-071] Mobile app architecture — Flutter + direct Supabase + Edge Function
+**Date:** 2026-05-20
+**Status:** Decided
+**Decided by:** David Flynn-Coutts (founder)
+
+**Decision:**
+Build a native mobile app (iOS + Android) using Flutter. The app communicates directly with Supabase via the official `supabase_flutter` SDK — no Next.js server involvement. The 180-day calculation engine is exposed as a new Supabase Edge Function (`calculate-absence`) that both the mobile app and any future clients can call. The web app is not changed; it continues to run its own local TypeScript copy of the engine.
+
+Key decisions within this scope:
+- **Flutter** — one codebase for iOS and Android; Dart tooling isolated in a separate GitHub repo (`stayright-mobile`)
+- **Direct Supabase** — Flutter SDK with the anon key + RLS; no new Next.js API routes
+- **Edge Function** — `supabase/functions/calculate-absence/index.ts` ports `absenceEngine.ts` (349 lines, zero deps) to Deno TypeScript; accepts optional `hypothetical_trips` and `projection_date` for the what-if simulator
+- **Web handoff for billing** — no in-app purchases; users tap "Manage account" → `url_launcher` opens `https://stayright.vercel.app/settings`; avoids Apple IAP requirement (App Store guideline 3.1.1)
+- **Separate repo** — `stayright-mobile`; Flutter tooling (pubspec.yaml, android/, ios/, .dart_tool/) does not pollute the Next.js repo
+- **State management** — Riverpod (StreamProvider wraps Supabase real-time streams)
+- **Navigation** — go_router (required for magic link deep link handling)
+
+Auth: email + password and magic link (email OTP) in v1. Google Sign-In deferred to v2.
+
+**Reasoning:**
+Flutter produces a single Dart codebase for both platforms with near-native performance and strong Supabase SDK support. Direct Supabase SDK access with RLS is the correct security boundary — the existing RLS policies on `trips`, `profiles`, and `subscriptions` already enforce per-user isolation. Adding Next.js REST API routes would create unnecessary infrastructure coupling; the mobile app should be independently deployable.
+
+The Edge Function is additive: the web app is not disrupted. Maintaining the engine in two places (TypeScript + Deno) is an accepted tradeoff — the 180-day Home Office formula rarely changes and the Deno port is a near-verbatim copy of the original.
+
+Web handoff for billing avoids the significant complexity of Apple In-App Purchase (30% platform commission, separate price management, App Store review requirements for IAP), while still allowing Pro users to manage their subscriptions. Pro status is read from the `subscriptions` table via the Flutter SDK, so users who subscribed on the web automatically see their Pro tier in the app.
+
+**Alternatives considered:**
+- React Native — rejected. Dart/Flutter is better supported by the Supabase Flutter SDK; stronger type safety for a compliance tool.
+- PWA only — already in place (DECISION-030); native app adds home-screen presence, push notifications in v2, and a more polished mobile experience for a compliance-critical product.
+- Next.js REST API layer for Flutter — rejected. Adds Next.js as a runtime dependency for the mobile app; RLS handles security at the DB level without additional server logic.
+- Monorepo — rejected. Flutter tooling (Android Gradle, CocoaPods, `.dart_tool/`) would pollute the Next.js project root with no shared code benefit.
+- In-app purchase — rejected. 30% commission on all Pro subscriptions; separate price management for Apple/Google vs web; significant additional review and approval complexity.
+
+**Consequences:**
+- `supabase/functions/calculate-absence/index.ts` — new Edge Function; must be kept in sync with `src/lib/calculations/absenceEngine.ts` if the Home Office formula ever changes
+- DECISION-003 ("no native mobile app in v1") is superseded by this decision
+- The Apple App Store submission must not show any in-app purchase UI; the billing section must use neutral language ("Manage your StayRight account") to avoid App Store review rejection under guideline 3.1.1
+- MVP feature set: dashboard (quota ring, ILR timeline), trip log (CRUD), what-if simulator, settings (visa profile, notification prefs, account)
+- Push notifications deferred to v2 (Firebase Cloud Messaging)
+- Google Sign-In deferred to v2
+
+**Related:** DECISION-002, DECISION-003 (superseded), DECISION-011, DECISION-018, DECISION-022, DECISION-042; `supabase/functions/calculate-absence/index.ts`; `src/lib/calculations/absenceEngine.ts`
