@@ -357,12 +357,21 @@ export function TripFlowClient({
 
   return (
     <div className="p-4 md:p-5">
-      <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6 md:p-8">
+      <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-5 md:p-6">
         <StepDots current={step} total={3} />
 
-        {/* ── Step 1: Destination ─────────────────────────────────────── */}
-        {step === 1 && (
-          <div>
+        {/* All steps rendered simultaneously in a CSS-grid stack.
+            The container height locks to the tallest step (Step 2) so the
+            modal never resizes as the user navigates between steps. */}
+        <div className="grid">
+
+          {/* ── Step 1: Destination ─────────────────────────────────────── */}
+          <div
+            className={step !== 1 ? 'invisible pointer-events-none' : undefined}
+            style={{ gridArea: '1 / 1' }}
+            aria-hidden={step !== 1 || undefined}
+            inert={step !== 1 || undefined}
+          >
             <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
               Step 1 of 3
             </p>
@@ -388,7 +397,6 @@ export function TripFlowClient({
               />
             </div>
 
-            {/* Crown Dependency panel */}
             {isCrownDep && (
               <div className="mb-4 px-4 py-3 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl flex items-start gap-3">
                 <span className="text-[var(--color-green)] text-sm font-semibold shrink-0">✓</span>
@@ -408,98 +416,113 @@ export function TripFlowClient({
               Next →
             </button>
           </div>
-        )}
 
-        {/* ── Step 2: Dates ───────────────────────────────────────────── */}
-        {step === 2 && (
-          <div>
+          {/* ── Step 2: Dates ───────────────────────────────────────────── */}
+          <div
+            className={step !== 2 ? 'invisible pointer-events-none' : undefined}
+            style={{ gridArea: '1 / 1' }}
+            aria-hidden={step !== 2 || undefined}
+            inert={step !== 2 || undefined}
+          >
             <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
               Step 2 of 3
             </p>
             <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-1">
               When are you travelling?
             </h2>
-            <p className="text-sm text-[var(--color-text-muted)] mb-5">
+            <p className="text-sm text-[var(--color-text-muted)] mb-4">
               <span className="font-medium text-[var(--color-text-primary)]">{destination}</span>
             </p>
 
-            {error && (
-              <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
-                {error}
+            {/* Two-column: date picker (left 3fr) + live compliance panel & buttons (right 2fr) */}
+            <div className="grid grid-cols-[3fr_2fr] gap-4">
+
+              {/* Left: inline calendar + inline validation */}
+              <div>
+                <DateRangePicker
+                  departureDate={departureDate}
+                  returnDate={returnDate}
+                  returnDateKnown={returnDateKnown}
+                  onDepartureChange={setDepartureDate}
+                  onReturnChange={setReturnDate}
+                  onReturnDateKnownChange={setReturnDateKnown}
+                />
+
+                {returnDateKnown && returnDate && departureDate && returnDate <= departureDate && (
+                  <p className="mt-2 text-sm text-[var(--color-danger-text)]">
+                    Departure date must be before the return date.
+                  </p>
+                )}
+
+                {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
+                  <div className="mt-3 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-start gap-3">
+                    <span className="shrink-0 text-base">⚠️</span>
+                    <p className="text-sm text-[var(--color-warning-text)]">
+                      These dates overlap with an existing trip. Adjust the dates or check
+                      your trip history before continuing.
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
 
-            {/* Date range calendar */}
-            <div className="mb-4">
-              <DateRangePicker
-                departureDate={departureDate}
-                returnDate={returnDate}
-                returnDateKnown={returnDateKnown}
-                onDepartureChange={setDepartureDate}
-                onReturnChange={setReturnDate}
-                onReturnDateKnownChange={setReturnDateKnown}
-              />
-            </div>
+              {/* Right: error / compliance panel / placeholder + navigation */}
+              <div className="flex flex-col">
+                {error && (
+                  <div className="mb-3 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
+                    {error}
+                  </div>
+                )}
 
-            {/* Live calculation panel */}
-            {isCrownDep && departureDate && (
-              <div className="mb-4 px-4 py-3 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl">
-                <p className="text-sm text-[var(--color-text-primary)]">
-                  <span className="font-semibold text-[var(--color-green)]">0 absence days.</span>{' '}
-                  Crown Dependencies count as UK presence.
-                </p>
+                {isCrownDep ? (
+                  <div className="flex-1 px-4 py-4 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl">
+                    <p className="text-sm text-[var(--color-text-primary)]">
+                      <span className="font-semibold text-[var(--color-green)]">0 absence days.</span>{' '}
+                      Crown Dependencies count as UK presence.
+                    </p>
+                  </div>
+                ) : calcResult ? (
+                  <CalcPanel
+                    result={calcResult.result}
+                    tripDays={calcResult.tripDays}
+                    windowEndDate={calcResult.windowEnd}
+                  />
+                ) : (
+                  <div className="flex-1 flex items-center justify-center px-4 py-6 bg-[var(--color-bg-tinted)] rounded-xl min-h-[120px]">
+                    <p className="text-sm text-center text-[var(--color-text-faint)]">
+                      Enter dates to see your compliance impact
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex gap-3 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => { setStep(1); setError(null) }}
+                    className="px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleStep2Next}
+                    className="flex-1 text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+                    style={{ background: 'var(--gradient-green)' }}
+                  >
+                    Next →
+                  </button>
+                </div>
               </div>
-            )}
 
-            {!isCrownDep && calcResult && (
-              <CalcPanel
-                result={calcResult.result}
-                tripDays={calcResult.tripDays}
-                windowEndDate={calcResult.windowEnd}
-              />
-            )}
-
-            {/* Validation error for date order */}
-            {returnDateKnown && returnDate && departureDate && returnDate <= departureDate && (
-              <p className="mt-3 text-sm text-[var(--color-danger-text)]">
-                Departure date must be before the return date.
-              </p>
-            )}
-
-            {/* Overlap warning — live, shown as soon as a collision is detected */}
-            {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
-              <div className="mt-4 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-start gap-3">
-                <span className="shrink-0 text-base">⚠️</span>
-                <p className="text-sm text-[var(--color-warning-text)]">
-                  These dates overlap with an existing trip. Adjust the dates or check
-                  your trip history before continuing.
-                </p>
-              </div>
-            )}
-
-            <div className="flex gap-3 mt-5">
-              <button
-                type="button"
-                onClick={() => { setStep(1); setError(null) }}
-                className="px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
-              >
-                ← Back
-              </button>
-              <button
-                type="button"
-                onClick={handleStep2Next}
-                className="flex-1 text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
-                style={{ background: 'var(--gradient-green)' }}
-              >
-                Next →
-              </button>
             </div>
           </div>
-        )}
 
-        {/* ── Step 3: Confirm ─────────────────────────────────────────── */}
-        {step === 3 && (
-          <div>
+          {/* ── Step 3: Confirm ─────────────────────────────────────────── */}
+          <div
+            className={step !== 3 ? 'invisible pointer-events-none' : undefined}
+            style={{ gridArea: '1 / 1' }}
+            aria-hidden={step !== 3 || undefined}
+            inert={step !== 3 || undefined}
+          >
             <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
               Step 3 of 3
             </p>
@@ -513,7 +536,6 @@ export function TripFlowClient({
               </div>
             )}
 
-            {/* Trip summary card */}
             <div className="bg-[var(--color-bg-tinted)] rounded-xl p-4 mb-4 space-y-2">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -546,7 +568,6 @@ export function TripFlowClient({
               )}
             </div>
 
-            {/* Rolling window impact */}
             {calcResult && (
               <div className="bg-[var(--color-bg-tinted)] rounded-xl p-4 mb-4">
                 <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-wider mb-2">
@@ -568,7 +589,6 @@ export function TripFlowClient({
               </div>
             )}
 
-            {/* Notes */}
             <div className="mb-5">
               <label htmlFor="notes" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
                 Notes <span className="text-[var(--color-text-muted)] font-normal">(optional)</span>
@@ -583,7 +603,6 @@ export function TripFlowClient({
               />
             </div>
 
-            {/* Action buttons */}
             <div className="space-y-2">
               <button
                 type="button"
@@ -623,7 +642,8 @@ export function TripFlowClient({
               </button>
             </div>
           </div>
-        )}
+
+        </div>
       </div>
     </div>
   )

@@ -71,3 +71,4 @@ Scan this table to find relevant decisions. Read the full entry in `DECISIONS.md
 | DECISION-070 | CSP: unsafe-eval removed; unsafe-inline retained as known gap | unsafe-eval removed from script-src (not needed in prod); unsafe-inline remains pending nonce-based CSP | Decided |
 | DECISION-071 | Mobile app architecture — Flutter + direct Supabase + Edge Function | Flutter (separate repo); direct Supabase SDK; calculation engine as Edge Function; web handoff for billing; supersedes DECISION-003 | Decided |
 | DECISION-072 | TripModal desktop width raised to 600px | Modal was 480px (too small at full-screen); raised to 600px; inner max-w-xl constraint removed | Decided |
+| DECISION-073 | TripModal stable height: 680px, CSS-grid stacking, two-column Step 2 | Width→680px; all steps always rendered in grid stack (height locked to Step 2); Step 2 gets two-column layout with always-visible CalcPanel; amends DECISION-072 | Decided |

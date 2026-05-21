@@ -108,7 +108,7 @@ export function TripModal({
           'select:not([disabled]), textarea:not([disabled]), ' +
           '[tabindex]:not([tabindex="-1"])'
         )
-      )
+      ).filter(el => !el.closest('[inert]'))
     }
 
     // Move focus into the drawer
@@ -176,7 +176,7 @@ export function TripModal({
         className={`
           fixed z-50 bg-[var(--color-surface)] shadow-2xl outline-none overflow-y-auto
           bottom-0 left-0 right-0 rounded-t-2xl max-h-[92dvh]
-          md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[600px] md:rounded-2xl md:max-h-[90vh]
+          md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[680px] md:rounded-2xl md:max-h-[92dvh]
           animate-drawer-mobile md:animate-in md:fade-in-0 md:zoom-in-95 md:slide-in-from-bottom-[5%] md:duration-500 md:ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:animate-none
         `}
         // Mark form as dirty on any input change so the user gets the

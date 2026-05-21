@@ -1721,3 +1721,32 @@ Web handoff for billing avoids the significant complexity of Apple In-App Purcha
 - Google Sign-In deferred to v2
 
 **Related:** DECISION-002, DECISION-003 (superseded), DECISION-011, DECISION-018, DECISION-022, DECISION-042; `supabase/functions/calculate-absence/index.ts`; `src/lib/calculations/absenceEngine.ts`
+
+---
+
+### [DECISION-073] TripModal stable height: 680px width, CSS-grid step stacking, two-column Step 2
+**Date:** 2026-05-21
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+Three coordinated changes to make TripModal stable-height across all steps:
+
+1. **Width 600→680px, max-h→92dvh.** 680px gives the two-column Step 2 layout enough room for a usable inline calendar (~346px at 3fr) while remaining comfortably within a 900px viewport. `max-h` raised from `90vh` to `92dvh` to use more vertical space on smaller screens. Amends DECISION-072.
+
+2. **CSS-grid step stacking.** All three steps are rendered simultaneously (`gridArea: '1 / 1'`). Inactive steps are hidden with `visibility: hidden`, `pointer-events: none`, `aria-hidden`, and `inert`. The container height locks to the tallest step (Step 2) and never changes as the user navigates — no modal resize, no layout shift. Focus trap in TripModal updated to filter out `inert` descendants.
+
+3. **Two-column Step 2.** `DateRangePicker` occupies the left column (3fr); a live compliance panel occupies the right column (2fr). The compliance panel is always rendered: it shows CalcPanel when dates are valid, a Crown Dependency notice for Crown Dep destinations, and a placeholder ("Enter dates to see your compliance impact") otherwise. Validation errors for Step 2 appear in the right column, above the panel, so they do not push the calendar out of view. Back/Next buttons sit below the right column.
+
+**Reasoning:**
+The old layout had two bugs: (a) the validation error banner in Step 1 pushed the Next button below the modal's visible area; (b) Step 2 stacked the inline calendar (~400px) and CalcPanel (~154px) vertically, making the modal ~856px tall — too tall for a 900px screen. The two-column layout reduces Step 2's height to ~500px total (the calendar height sets the row height; the right column is shorter), which fits on a 900px screen.
+
+Simply locking the modal to Step 2's old (tall) height was rejected: it would have overflowed a 900px screen. A compact date-input alternative was rejected as a UX regression. CSS-grid stacking was chosen over JS height measurement to avoid flicker and runtime dependency on DOM layout.
+
+The two-column layout also improves UX: users see the compliance panel placeholder immediately on arriving at Step 2, signalling that picking dates will show a live impact calculation.
+
+**Consequences:**
+- Inner card padding reduced from `p-6 md:p-8` to `p-5 md:p-6` to recover horizontal space for the two-column layout.
+- `TripModal.tsx` focus trap updated: `getFocusables()` now filters out elements inside `[inert]` containers so inactive steps' inputs are not included in the trap cycle.
+
+**Related:** DECISION-031, DECISION-046, DECISION-072
