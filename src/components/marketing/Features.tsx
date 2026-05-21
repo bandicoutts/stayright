@@ -36,7 +36,7 @@ const features = [
     icon: FileArrowDown,
     title: 'ILR export',
     description:
-      'Download your absence table formatted for the SET(O) form, ready to attach to your ILR application.',
+      'Download your absence table, ready to attach to your ILR application.',
   },
 ];
 
