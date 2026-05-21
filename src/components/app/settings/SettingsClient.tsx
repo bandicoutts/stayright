@@ -12,6 +12,7 @@ import {
   deleteAccountAction,
 } from '@/app/(app)/(main)/settings/actions'
 import { track } from '@/lib/posthog'
+import { Spinner } from '@/components/ui/Spinner'
 import type { Profile, Subscription } from '@/types/database'
 
 // ---------------------------------------------------------------------------
@@ -234,6 +235,9 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
   const [pwSaving, setPwSaving] = useState(false)
   const [pwStatus, setPwStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
 
+  // ---- Export data ----
+  const [exporting, setExporting] = useState(false)
+
   // ---- Delete account ----
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -334,20 +338,25 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
   }
 
   async function handleExportData() {
-    const result = await exportDataAction()
-    if ('error' in result) {
-      alert(`Export failed: ${result.error}`)
-      return
+    setExporting(true)
+    try {
+      const result = await exportDataAction()
+      if ('error' in result) {
+        alert(`Export failed: ${result.error}`)
+        return
+      }
+      const blob = new Blob([result.json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `StayRight_Export_${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } finally {
+      setExporting(false)
     }
-    const blob = new Blob([result.json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `StayRight_Export_${new Date().toISOString().split('T')[0]}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
   }
 
   async function handleDeleteAccount() {
@@ -586,7 +595,10 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
                       className="px-4 py-2 text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       style={{ background: 'var(--gradient-green)' }}
                     >
-                      {portalLoading ? 'Opening…' : 'Manage subscription'}
+                      <span className="flex items-center gap-2">
+                        {portalLoading && <Spinner />}
+                        {portalLoading ? 'Opening…' : 'Manage subscription'}
+                      </span>
                     </button>
                   )}
                 </div>
@@ -612,9 +624,13 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleExportData}
-                    className="px-4 py-2 bg-[var(--color-bg-tinted)] text-[var(--color-text-primary)] text-sm font-semibold rounded-xl hover:bg-[var(--color-surface-warm)] transition-colors border border-[var(--color-border)] cursor-pointer"
+                    disabled={exporting}
+                    className="px-4 py-2 bg-[var(--color-bg-tinted)] text-[var(--color-text-primary)] text-sm font-semibold rounded-xl hover:bg-[var(--color-surface-warm)] transition-colors border border-[var(--color-border)] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Export my data
+                    <span className="flex items-center gap-2">
+                      {exporting && <Spinner />}
+                      {exporting ? 'Exporting…' : 'Export my data'}
+                    </span>
                   </button>
                   <a href="/privacy-policy" className="text-sm text-[var(--color-green-light)] underline">Privacy policy</a>
                 </div>
@@ -675,7 +691,10 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
                         disabled={deleteConfirmText !== 'delete my account' || deleting}
                         className="px-4 py-2 bg-[var(--color-danger-text)] text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                       >
-                        {deleting ? 'Deleting…' : 'Delete my account'}
+                        <span className="flex items-center gap-2">
+                          {deleting && <Spinner />}
+                          {deleting ? 'Deleting…' : 'Delete my account'}
+                        </span>
                       </button>
                       <button
                         onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(''); setDeleteError(null) }}

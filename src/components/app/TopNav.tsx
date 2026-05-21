@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { List, X, Gear, SignOut } from '@/components/ui/Icons'
+import { Spinner } from '@/components/ui/Spinner'
 import { createClient } from '@/lib/supabase/client'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -37,6 +38,7 @@ export function TopNav({
   const pathname = usePathname()
   const router = useRouter()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
   // Close profile popover on outside click
@@ -57,6 +59,7 @@ export function TopNav({
   }, [pathname])
 
   async function handleSignOut() {
+    setSigningOut(true)
     setIsProfileOpen(false)
     onCloseMenu()
     const supabase = createClient()
@@ -178,11 +181,12 @@ export function TopNav({
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer text-left"
+                    disabled={signingOut}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer text-left disabled:opacity-50"
                     style={{ color: 'var(--color-status-red)' }}
                   >
-                    <SignOut className="w-4 h-4 shrink-0" weight="regular" />
-                    Sign out
+                    {signingOut ? <Spinner /> : <SignOut className="w-4 h-4 shrink-0" weight="regular" />}
+                    {signingOut ? 'Signing out…' : 'Sign out'}
                   </button>
                 </div>
               </div>
@@ -273,11 +277,12 @@ export function TopNav({
           <button
             type="button"
             onClick={handleSignOut}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[14px] font-medium cursor-pointer transition-colors hover:bg-[var(--color-danger-bg)]"
+            disabled={signingOut}
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[14px] font-medium cursor-pointer transition-colors hover:bg-[var(--color-danger-bg)] disabled:opacity-50"
             style={{ color: 'var(--color-status-red)' }}
           >
-            <SignOut className="w-4 h-4 shrink-0" weight="regular" />
-            Sign out
+            {signingOut ? <Spinner /> : <SignOut className="w-4 h-4 shrink-0" weight="regular" />}
+            {signingOut ? 'Signing out…' : 'Sign out'}
           </button>
         </div>
       </div>

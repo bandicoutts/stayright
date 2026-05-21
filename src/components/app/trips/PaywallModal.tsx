@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { track } from '@/lib/posthog'
+import { Spinner } from '@/components/ui/Spinner'
 
 interface Props {
   open: boolean
@@ -225,7 +226,10 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
           className="w-full rounded-xl px-6 py-3.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed text-white"
           style={{ background: 'var(--gradient-green)' }}
         >
-          {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
+          <span className="flex items-center justify-center gap-2">
+            {loading && <Spinner />}
+            {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
+          </span>
         </button>
 
         {error && (

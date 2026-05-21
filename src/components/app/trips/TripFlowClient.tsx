@@ -17,6 +17,7 @@ import { track } from '@/lib/posthog'
 import { RISK_CONFIG } from '@/lib/riskConfig'
 import { formatDateRange } from '@/lib/utils/dateFormatters'
 import { useDebounce } from '@/hooks/useDebounce'
+import { Spinner } from '@/components/ui/Spinner'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -175,6 +176,7 @@ export function TripFlowClient({
   const [notes, setNotes] = useState(initialTrip?.notes ?? '')
 
   const [saving, setSaving] = useState(false)
+  const [navigating, setNavigating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const isCrownDep = destination.trim().length > 0 && isCrownDependency(destination)
@@ -343,6 +345,7 @@ export function TripFlowClient({
   }
 
   function handleJustChecking() {
+    setNavigating(true)
     track('trip_plan_just_checking')
     router.push(redirectTo)
   }
@@ -611,23 +614,29 @@ export function TripFlowClient({
                 className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
                 style={{ background: 'var(--gradient-green)' }}
               >
-                {saving
-                  ? 'Saving…'
-                  : mode === 'plan'
-                  ? 'Save this trip'
-                  : mode === 'edit'
-                  ? 'Save changes'
-                  : 'Save trip'}
+                <span className="flex items-center justify-center gap-2">
+                  {saving && <Spinner />}
+                  {saving
+                    ? 'Saving…'
+                    : mode === 'plan'
+                    ? 'Save this trip'
+                    : mode === 'edit'
+                    ? 'Save changes'
+                    : 'Save trip'}
+                </span>
               </button>
 
               {mode === 'plan' && (
                 <button
                   type="button"
                   onClick={handleJustChecking}
-                  disabled={saving}
+                  disabled={saving || navigating}
                   className="w-full border border-[var(--color-border)] text-[var(--color-text-muted)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  Just checking
+                  <span className="flex items-center justify-center gap-2">
+                    {navigating && <Spinner />}
+                    {navigating ? 'Just a moment…' : 'Just checking'}
+                  </span>
                 </button>
               )}
             </div>
