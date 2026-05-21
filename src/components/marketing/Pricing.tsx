@@ -148,9 +148,9 @@ export default function Pricing() {
 
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
               {[
-                { text: 'Up to 10 trips logged', included: true },
-                { text: 'Basic rolling window tracker', included: true },
-                { text: 'Risk alerts', included: false },
+                { text: 'Up to 10 trips', included: true },
+                { text: 'Rolling window tracker', included: true },
+                { text: 'Limit alerts', included: false },
               ].map(({ text, included }) => (
                 <li key={text} className="flex items-start gap-[10px]" style={{ opacity: included ? 1 : 0.4 }}>
                   {included
@@ -238,10 +238,10 @@ export default function Pricing() {
 
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
               {[
-                'Unlimited trip logging',
-                'What-if planning simulator',
-                'Smart risk & breach alerts',
-                'Audit-ready PDF exports',
+                'Unlimited trips',
+                'Trip simulator',
+                'Limit & breach alerts',
+                'PDF export for your ILR application',
               ].map((text) => (
                 <li key={text} className="flex items-start gap-[10px]">
                   <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-green)' }} weight="bold" />

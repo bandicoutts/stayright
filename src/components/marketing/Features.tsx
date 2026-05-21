@@ -10,33 +10,33 @@ import {
 const features = [
   {
     icon: Calendar,
-    title: 'Continuous Residence Monitor',
+    title: '180-day tracker',
     description:
-      'Visual calendar and running total against the 180-day ILR limit. Never lose track of your window.',
+      'See your running total and every rolling window, all in one place. Always know how many days you have left.',
   },
   {
     icon: AirplaneTilt,
     title: 'Trip logging',
     description:
-      'Log departures and returns in seconds from any device. Precise tracking for every border crossing.',
+      'Log a trip in seconds, from any device. Every arrival and departure, always accurate.',
   },
   {
     icon: ShieldCheck,
-    title: 'Compliance Dashboard',
+    title: 'Compliance status',
     description:
-      'Green / amber / red compliance indicator at a glance. Instant peace of mind for your visa status.',
+      'Safe, approaching, or over — you\'ll know at a glance. No guesswork.',
   },
   {
     icon: Bell,
-    title: 'Breach Prevention Alerts',
+    title: 'Limit alerts',
     description:
-      "Email reminders before you approach your limit. We watch the clock so you don't have to.",
+      "Get an email before you reach your limit. We keep watch so you don't have to.",
   },
   {
     icon: FileArrowDown,
-    title: 'Export ready',
+    title: 'ILR export',
     description:
-      'Generate absence tables formatted for your ILR application (SET(O) form). One-click documentation.',
+      'Download your absence table formatted for the SET(O) form, ready to attach to your ILR application.',
   },
 ];
 
@@ -83,7 +83,7 @@ export default function Features() {
           >
             The Home Office doesn&apos;t just look at the last year. They check every
             possible 12-month window in your 5-year history. StayRight does the
-            math for you.
+            maths for you.
           </p>
         </div>
 

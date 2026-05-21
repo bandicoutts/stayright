@@ -4,12 +4,8 @@ const trustCells = [
     label: 'Built for Skilled Worker compliance',
   },
   {
-    value: 'Solicitor reviewed',
-    label: 'Immigration law verified',
-  },
-  {
     value: 'GDPR compliant',
-    label: 'UK-based data storage',
+    label: 'Your data stays in the UK',
   },
 ];
 
@@ -21,7 +17,7 @@ export default function TrustBar() {
       }}
     >
       <div
-        className="max-w-[1320px] mx-auto grid grid-cols-3"
+        className="max-w-[1320px] mx-auto grid grid-cols-2"
         role="list"
         aria-label="Trust signals"
       >
