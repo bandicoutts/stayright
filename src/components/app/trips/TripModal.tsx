@@ -190,7 +190,7 @@ export function TripModal({
 
         {/* Sticky drawer header with close button */}
         <div className="sticky top-0 z-10 bg-[var(--color-surface)]/95 backdrop-blur-sm border-b border-[var(--color-border)] px-5 py-4 flex items-center justify-between">
-          <p className="text-sm font-semibold text-[var(--color-text-primary)]">{drawerLabel}</p>
+          <p className="text-base font-semibold text-[var(--color-text-primary)]">{drawerLabel}</p>
           <button
             type="button"
             onClick={() => requestCloseRef.current()}

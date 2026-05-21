@@ -351,29 +351,12 @@ export function TripFlowClient({
   // Step labels
   // ---------------------------------------------------------------------------
 
-  const pageTitle =
-    mode === 'plan' ? 'Plan a trip' :
-    mode === 'log'  ? 'Log a trip' :
-                     'Edit trip'
-
-  const pageSubtitle =
-    mode === 'plan' ? 'See the impact on your 180-day window before you book.' :
-    mode === 'log'  ? "Add a trip you've already taken." :
-                     'Update the details for this trip.'
-
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="p-6 md:p-8">
-      <div className="mb-6">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)]">
-          {pageTitle}
-        </h1>
-        <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{pageSubtitle}</p>
-      </div>
-
+    <div className="p-4 md:p-5">
       <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-6 md:p-8">
         <StepDots current={step} total={3} />
 
