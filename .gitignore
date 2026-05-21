@@ -50,5 +50,8 @@ lh-*.json
 # Claude Code worktrees
 .claude/worktrees/
 
+# Claude Code local dev credentials (never commit)
+.claude/preview-auth.md
+
 # Supabase CLI artifacts
 supabase/.temp/
