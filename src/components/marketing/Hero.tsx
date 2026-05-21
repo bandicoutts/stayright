@@ -247,7 +247,7 @@ export default function Hero() {
             className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.04] tracking-[-0.038em] mb-6 animate-fade-up animate-fade-up-2"
             style={{ fontSize: 'clamp(3rem, 5.5vw, 5.5rem)', color: 'var(--color-text-primary)' }}
           >
-            Don&apos;t risk your permanent residence{' '}
+            Don&apos;t risk your right to stay{' '}
             <em
               className="block not-italic"
               style={{
