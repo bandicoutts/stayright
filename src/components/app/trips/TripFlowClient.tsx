@@ -366,7 +366,7 @@ export function TripFlowClient({
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="p-6 md:p-8 max-w-xl">
+    <div className="p-6 md:p-8">
       <div className="mb-6">
         <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)]">
           {pageTitle}

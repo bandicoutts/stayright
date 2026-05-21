@@ -1695,6 +1695,23 @@ Web handoff for billing avoids the significant complexity of Apple In-App Purcha
 - Monorepo — rejected. Flutter tooling (Android Gradle, CocoaPods, `.dart_tool/`) would pollute the Next.js project root with no shared code benefit.
 - In-app purchase — rejected. 30% commission on all Pro subscriptions; separate price management for Apple/Google vs web; significant additional review and approval complexity.
 
+---
+
+### [DECISION-072] TripModal desktop width raised to 600px
+**Date:** 2026-05-21
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`TripModal` desktop width increased from `w-[480px]` to `w-[600px]`. `md:max-h` raised from `85vh` to `90vh`. The `max-w-xl` constraint on the inner `TripFlowClient` wrapper div was removed — the modal itself controls the width; the inner constraint was redundant and would have clipped the wider modal's padding asymmetrically.
+
+**Reasoning:**
+480px is ~33% of a 1440px viewport. The modal appeared unusably small at full-screen. 600px (~42%) is the standard sweet spot for a focused multi-step form dialog — wide enough to be comfortable, narrow enough to stay focused. There is no case for making it wider than this; the 3-step form content does not benefit from extra width beyond 600px.
+
+**Alternatives considered:**
+- Responsive width (`min(90vw, 600px)`) — unnecessary; the mobile bottom-sheet already handles small screens via the existing `md:` breakpoint split.
+- Right-side panel (full-height drawer) — considered as part of DECISION-046; centred modal was chosen for focus. This decision does not revisit that choice.
+
 **Consequences:**
 - `supabase/functions/calculate-absence/index.ts` — new Edge Function; must be kept in sync with `src/lib/calculations/absenceEngine.ts` if the Home Office formula ever changes
 - DECISION-003 ("no native mobile app in v1") is superseded by this decision
