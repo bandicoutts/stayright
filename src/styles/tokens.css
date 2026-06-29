@@ -1,48 +1,54 @@
-/* StayRight Design Tokens — Sage & Stone */
+/* StayRight Design Tokens — Green-led / Obsidian (reskin) */
+/* Values remapped to the design prototype; token NAMES unchanged so all
+   components inherit. Green leads; teal is a secondary accent only;
+   status numbers are solid (never gradient-filled). */
 
 :root {
-  /* ── Light Mode — Warm Taupe ────────────────── */
-  --color-bg:               #F5F0EA;   /* warm taupe parchment */
-  --color-bg-tinted:        #EFEAE2;   /* slightly darker taupe */
+  /* ── Light Mode — Warm Beige ─────────────────── */
+  --color-bg:               #F4F0E8;   /* warm beige */
+  --color-bg-tinted:        #EFEAE0;   /* sidebar / lifted beige */
 
   /* ── Surfaces ────────────────────────────────── */
-  --color-surface:          #EEF0EB;   /* sage white — card bg */
-  --color-surface-warm:     #E6E9E1;   /* lifted sage — inner card */
-  --color-surface-dark:     #0F1F18;   /* deep forest — footer, sidebar dark */
+  --color-surface:          #FFFFFF;   /* card bg */
+  --color-surface-warm:     #FBF8F2;   /* lifted off-white — inner card */
+  --color-surface-dark:     #0C0E13;   /* obsidian — footer, dark sidebar */
 
   /* ── Text ────────────────────────────────────── */
-  --color-text-primary:     #1A3328;   /* deep forest green */
-  --color-text-2:           #2E463B;
-  --color-text-3:           #3A5448;
-  --color-text-muted:       #4A6654;
-  --color-text-faint:       #7A9E8E;   /* muted sage */
+  --color-text-primary:     #1C1F25;
+  --color-text-2:           #3A4049;
+  --color-text-3:           #4A5059;
+  --color-text-muted:       #5B616B;
+  --color-text-faint:       #7A808A;
 
-  /* ── Green accent ────────────────────────────── */
+  /* ── Green accent (leads) ────────────────────── */
   --color-green:            #006948;
   --color-green-dark:       #004F35;
-  --color-green-light:      #00A874;
-  --color-green-pale:       #D4E5D8;   /* warm sage chip backgrounds */
+  --color-green-light:      #0A7D54;
+  --color-green-pale:       #DCEBE2;   /* soft green chip backgrounds */
+
+  /* ── Teal (secondary accent ONLY — highlights, timeline, planned) ── */
+  --color-teal:             #0E7C8F;
 
   /* ── Borders ─────────────────────────────────── */
-  --color-border:           rgba(26, 51, 40, 0.09);
-  --color-border-strong:    rgba(26, 51, 40, 0.16);
-  --color-border-ink:       rgba(26, 51, 40, 0.12);
+  --color-border:           rgba(28, 26, 22, 0.10);
+  --color-border-strong:    rgba(28, 26, 22, 0.16);
+  --color-border-ink:       rgba(28, 26, 22, 0.12);
 
-  /* ── Semantic — do not change ────────────────── */
-  --color-safe-bg:          #D4E5D8;   /* SAFE badge — warm sage green */
-  --color-safe-text:        #1A3328;
+  /* ── Semantic — SAFE ─────────────────────────── */
+  --color-safe-bg:          #DCEBE2;
+  --color-safe-text:        #0A4D36;
 
-  /* ── Status — shared with dashboard ─────────── */
-  --color-status-amber:     #D97706;
-  --color-status-red:       #BA1A1A;
+  /* ── Status (solid; shared with dashboard) ───── */
+  --color-status-amber:     #A96209;
+  --color-status-red:       #C92A3A;
 
-  --color-warning-bg:       #FFFBEB;
-  --color-warning-border:   #FEF3C7;
-  --color-warning-text:     #92400E;
+  --color-warning-bg:       #FFF8EC;
+  --color-warning-border:   #F5E2BE;
+  --color-warning-text:     #7A4A08;
 
-  --color-danger-bg:        #FEF2F2;
-  --color-danger-border:    #FEE2E2;
-  --color-danger-text:      #991B1B;
+  --color-danger-bg:        #FDEFEF;
+  --color-danger-border:    #F6D6D6;
+  --color-danger-text:      #8F2230;
 
   /* ── Radius ──────────────────────────────────── */
   --radius-sm:              4px;
@@ -52,69 +58,89 @@
   --radius-full:            9999px;
 
   /* ── Shadows ─────────────────────────────────── */
-  --shadow-card:            0 1px 3px rgba(26, 51, 40, 0.04), 0 12px 32px rgba(26, 51, 40, 0.06);
-  --shadow-card-hover:      0 4px 16px rgba(26, 51, 40, 0.06), 0 20px 48px rgba(26, 51, 40, 0.10);
-  --shadow-ring-card:       0 1px 3px rgba(26, 51, 40, 0.04), 0 16px 48px rgba(26, 51, 40, 0.08), 0 1px 0 rgba(255, 255, 255, 0.80) inset;
-  --shadow-button:          0 1px 0 rgba(255,255,255,0.12) inset, 0 8px 26px rgba(26, 51, 40, 0.20);
-  --shadow-button-hover:    0 1px 0 rgba(255,255,255,0.12) inset, 0 12px 36px rgba(26, 51, 40, 0.30);
+  --shadow-card:            0 1px 3px rgba(28, 26, 22, 0.05), 0 12px 32px rgba(28, 26, 22, 0.07);
+  --shadow-card-hover:      0 4px 16px rgba(28, 26, 22, 0.07), 0 20px 48px rgba(28, 26, 22, 0.11);
+  --shadow-ring-card:       0 1px 3px rgba(28, 26, 22, 0.05), 0 16px 48px rgba(28, 26, 22, 0.09), 0 1px 0 rgba(255, 255, 255, 0.80) inset;
+  --shadow-button:          0 1px 0 rgba(255,255,255,0.14) inset, 0 8px 26px rgba(0, 105, 72, 0.22);
+  --shadow-button-hover:    0 1px 0 rgba(255,255,255,0.14) inset, 0 12px 36px rgba(0, 105, 72, 0.32);
 
-  /* ── Gradients ───────────────────────────────── */
-  --gradient-green:         linear-gradient(135deg, #00A874 0%, #006948 100%);
-  --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #00A874 100%);
+  /* ── Gradients (green-led, no blue→violet) ───── */
+  --gradient-green:         linear-gradient(100deg, #0A7D54 0%, #006948 100%);
+  --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #0A7D54 100%);
 
-  /* ── Ring track ──────────────────────────────── */
-  --color-track:            #D4E0D8;   /* pale sage ring progress track */
+  /* ── Ring track (legacy QuotaRing — retired in Phase 9) ── */
+  --color-track:            #D6E2DA;
 
-  /* ── Sidebar/Nav Specific ────────────────────── */
+  /* ── Sidebar / Nav ───────────────────────────── */
   --color-sidebar-bg:       var(--color-bg-tinted);
   --color-sidebar-border:   var(--color-border);
 
-  /* ── Surface depth layers (for table rows, nav, raised panels) ── */
-  --color-surface-raised:   #F2EDE6;
-  --color-surface-sunken:   #E8E3DC;
-  --color-nav-bg:           rgba(245, 240, 234, 0.82);
-  --color-nav-border:       rgba(26, 51, 40, 0.09);
+  /* ── Surface depth layers ────────────────────── */
+  --color-surface-raised:   #FBF8F2;
+  --color-surface-sunken:   #ECE6DC;
+  --color-nav-bg:           rgba(244, 240, 232, 0.82);
+  --color-nav-border:       rgba(28, 26, 22, 0.09);
 }
 
 .dark {
+  /* ── Dark Mode — Obsidian ────────────────────── */
+  --color-bg:               #08090C;
+  --color-bg-tinted:        #0C0E13;
+
+  --color-surface:          #101319;   /* card bg (solid approx of translucent prototype surface) */
+  --color-surface-warm:     #151922;   /* elevated card */
+
+  --color-text-primary:     #E9EBEF;
+  --color-text-2:           #AAB0BA;
+  --color-text-3:           #8A909A;
+  --color-text-muted:       #7A808A;
+  --color-text-faint:       #6B717B;
+
+  /* Green leads brighter on obsidian */
+  --color-green:            #1AA873;
+  --color-green-dark:       #0B7D50;
+  --color-green-light:      #2ED18F;
+  --color-green-pale:       rgba(46, 209, 143, 0.12);
+
+  --color-teal:             #46C7D1;
+
+  --color-border:           rgba(255, 255, 255, 0.08);
+  --color-border-strong:    rgba(255, 255, 255, 0.13);
+  --color-border-ink:       rgba(255, 255, 255, 0.10);
+
+  --color-safe-bg:          rgba(46, 209, 143, 0.12);
+  --color-safe-text:        #BFE6D4;
+
+  /* Status — brighter on dark (still solid) */
+  --color-status-amber:     #F6B94D;
+  --color-status-red:       #FB7185;
+
+  --color-warning-bg:       rgba(246, 185, 77, 0.12);
+  --color-warning-border:   rgba(246, 185, 77, 0.25);
+  --color-warning-text:     #F6B94D;
+
+  --color-danger-bg:        rgba(251, 113, 133, 0.12);
+  --color-danger-border:    rgba(251, 113, 133, 0.28);
+  --color-danger-text:      #FB7185;
+
+  --color-track:            #1C2A22;
+
+  --shadow-card:            0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 18px 40px -28px rgba(0, 0, 0, 0.70);
+  --shadow-card-hover:      0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -30px rgba(0, 0, 0, 0.80);
+  --shadow-ring-card:       0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 18px 48px -28px rgba(0, 0, 0, 0.70);
+  --shadow-button:          0 1px 0 rgba(255,255,255,0.10) inset, 0 8px 28px rgba(12, 140, 90, 0.30);
+  --shadow-button-hover:    0 1px 0 rgba(255,255,255,0.10) inset, 0 12px 36px rgba(12, 140, 90, 0.40);
+
+  --gradient-green:         linear-gradient(100deg, #1AA873 0%, #0B7D50 100%);
+  --gradient-green-text:    linear-gradient(135deg, #2ED18F 0%, #0B7D50 100%);
+
+  /* ── Sidebar / Nav ───────────────────────────── */
   --color-sidebar-bg:       var(--color-surface-dark);
   --color-sidebar-border:   transparent;
 
-  /* ── Surface depth layers — dark mode ── */
-  --color-surface-raised:   #1C3228;
-  --color-surface-sunken:   #0A1710;
-  --color-nav-bg:           rgba(15, 31, 24, 0.78);
-  --color-nav-border:       rgba(234, 239, 230, 0.08);
-  --color-bg:               #0F1F18;   /* deep forest base */
-  --color-bg-tinted:        #14261E;
-
-  --color-surface:          #162A20;   /* cards, panels */
-  --color-surface-warm:     #1C3228;   /* elevated cards */
-
-  --color-text-primary:     #EEF0EB;   /* sage white */
-  --color-text-2:           #D4DFD6;
-  --color-text-3:           #B8CABb;
-  --color-text-muted:       #A8BDB1;
-  --color-text-faint:       #5A7566;
-
-  --color-border:           rgba(234, 239, 230, 0.08);
-  --color-border-strong:    rgba(234, 239, 230, 0.15);
-
-  --color-safe-bg:          rgba(122, 158, 142, 0.15);
-  --color-safe-text:        #A8BDB1;
-
-  --color-track:            #243B30;
-
-  --shadow-card:            0 1px 3px rgba(0, 0, 0, 0.30), 0 12px 32px rgba(0, 0, 0, 0.40);
-  --shadow-card-hover:      0 4px 16px rgba(0, 0, 0, 0.50), 0 20px 48px rgba(0, 0, 0, 0.60);
-  --shadow-button:          0 1px 0 rgba(255,255,255,0.10) inset, 0 6px 22px rgba(122, 158, 142, 0.30);
-
-  /* Status Dark Mode */
-  --color-warning-bg:       rgba(217, 119, 6, 0.12);
-  --color-warning-border:   rgba(217, 119, 6, 0.25);
-  --color-warning-text:     #FBBF24;
-
-  --color-danger-bg:        rgba(186, 26, 26, 0.15);
-  --color-danger-border:    rgba(186, 26, 26, 0.30);
-  --color-danger-text:      #F87171;
+  /* ── Surface depth layers — dark ─────────────── */
+  --color-surface-raised:   #151922;
+  --color-surface-sunken:   #0A0B0E;
+  --color-nav-bg:           rgba(8, 9, 12, 0.78);
+  --color-nav-border:       rgba(255, 255, 255, 0.08);
 }

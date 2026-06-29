@@ -19,6 +19,7 @@
   /* Text */
   --color-text-primary:     var(--color-text-primary);
   --color-text-2:           var(--color-text-2);
+  --color-text-3:           var(--color-text-3);
   --color-text-muted:       var(--color-text-muted);
   --color-text-faint:       var(--color-text-faint);
 
@@ -27,6 +28,9 @@
   --color-green-dark:       var(--color-green-dark);
   --color-green-light:      var(--color-green-light);
   --color-green-pale:       var(--color-green-pale);
+
+  /* Teal — secondary accent only */
+  --color-teal:             var(--color-teal);
 
   /* Semantic */
   --color-safe-bg:          var(--color-safe-bg);

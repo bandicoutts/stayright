@@ -1750,3 +1750,27 @@ The two-column layout also improves UX: users see the compliance panel placehold
 - `TripModal.tsx` focus trap updated: `getFocusables()` now filters out elements inside `[inert]` containers so inactive steps' inputs are not included in the trap cycle.
 
 **Related:** DECISION-031, DECISION-046, DECISION-072
+
+---
+
+### [DECISION-074] Reskin foundation — green-led/obsidian palette remap + Bricolage/Hanken fonts
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+First phase of the prototype reskin (full plan: `docs/RESKIN-PLAN.md`). Three foundation changes, values only — token and CSS-variable **names are unchanged** so every existing component inherits without edits:
+
+1. **Palette remap (`src/styles/tokens.css`).** Retire the "Sage & Stone" taupe/forest values; adopt the prototype's green-led / obsidian palette: light bg `#F4F0E8`, dark bg `#08090C`; green leads (`#006948` light / `#1AA873` dark); status colours solid (amber/red per mode); green/status/safe tokens now overridden per theme in `.dark`. Added a new `--color-teal` token (`#0E7C8F` light / `#46C7D1` dark) — a **secondary accent only** (highlights, timeline, "planned").
+2. **Fonts (`src/app/layout.tsx`).** Manrope→**Bricolage Grotesque** (headings), Inter→**Hanken Grotesk** (body); JetBrains Mono + Instrument Serif unchanged. Loaded into the existing `--font-manrope` / `--font-inter` variable slots so the ~150 existing usages inherit; variables to be renamed `--font-heading`/`--font-body` in the reskin cleanup phase.
+3. **`globals.css`** exposes `--color-teal` (and the previously-missing `--color-text-3`) in the Tailwind `@theme` block.
+
+**Reasoning:**
+The prototype is the source of truth for look. Remapping token *values* (not names) lets the whole app re-skin by inheritance, keeping the diff small and reviewable. Verified: `tsc --noEmit` clean, ESLint clean, 124 unit tests pass, `next build` compiles and the new Google fonts resolve.
+
+**Consequences:**
+- `.impeccable.md` token table updated to match (was stale — described a `#F5FAF7` green-tint light bg never shipped).
+- The legacy `--font-manrope`/`--font-inter` variable names now point at non-Manrope/Inter fonts until the cleanup-phase rename.
+- The PDF engine (`src/lib/pdf/reportDocuments.tsx`) keeps its hardcoded print-targeted `#006948` — intentionally not token-driven.
+
+**Related:** DECISION-006, DECISION-008, DECISION-009; `docs/RESKIN-PLAN.md`
