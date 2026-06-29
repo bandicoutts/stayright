@@ -1774,3 +1774,28 @@ The prototype is the source of truth for look. Remapping token *values* (not nam
 - The PDF engine (`src/lib/pdf/reportDocuments.tsx`) keeps its hardcoded print-targeted `#006948` — intentionally not token-driven.
 
 **Related:** DECISION-006, DECISION-008, DECISION-009; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-075] Reskin Phase 1 — app shell migrated from TopNav to a persistent left sidebar
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+Realises DECISION-019 (the shell was a top bar in practice). The authenticated `(main)` shell is now a persistent **left sidebar** on desktop and a **bottom nav + FAB** on mobile (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- `AppSidebar.tsx` (new): fixed 260px left sidebar (`hidden lg:flex`) — logo, four nav items (Dashboard/Trips/Reports/Settings) with icons + active state, footer with `ThemeToggle` and an account card whose popover holds Settings + Sign out.
+- `AppMobileNav.tsx` (new): a slim sticky top bar (logo + theme + account menu) and a fixed bottom nav with a centered raised **FAB**. The FAB deep-links to `/trips?modal=log`, reusing TripsTableClient's existing `?modal=` URL-driven modal (no global modal needed).
+- `MainLayoutClient.tsx`: renders both shells responsively; content wrapper is offset `lg:pl-[260px]` and padded `pb-24` on mobile for the bottom nav. Analytics trackers + payment-failed banner preserved.
+- `TopNav.tsx` / `MobileNav.tsx` are now unused — retained until the Phase 9 cleanup to keep diffs reviewable.
+- Sign-out keeps `signOut({ scope: 'local' })`.
+
+**Reasoning:**
+The prototype's signature shell is a left sidebar; a bottom-nav + FAB is the standard mobile pattern and surfaces "Log trip" as the primary action. Reusing the `?modal=` deep link avoids a global modal/context. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 124 unit tests pass; `auth.spec.ts` logout selector updated (User menu → Account menu).
+
+**Consequences:**
+- E2E specs that drive nav by visible link text still work; only the account-menu label changed.
+- Browser screenshot verification deferred — the preview/Chrome MCP tooling disconnected during a session reset.
+
+**Related:** DECISION-019, DECISION-069 (signOut scope); DECISION-074; `docs/RESKIN-PLAN.md`
