@@ -89,7 +89,7 @@ export function AppMobileNav({
           >
             S
           </div>
-          <span className="font-[family-name:var(--font-manrope)] font-bold text-[1.15rem] tracking-[-0.02em] text-[var(--color-text-primary)]">
+          <span className="font-[family-name:var(--font-heading)] font-bold text-[1.15rem] tracking-[-0.02em] text-[var(--color-text-primary)]">
             Stayright
           </span>
         </Link>

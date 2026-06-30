@@ -1963,3 +1963,22 @@ Onboarding was the last unstyled surface — hardcoded light-only hex made it lo
 The wizard's step gating added friction the prototype's single form removes, and saving with no acknowledgement felt abrupt — the success state gives a clear "done, now what?" moment and a fast "Log another" loop. Keeping the calculation/action/event layer untouched means the recompose is presentational + navigational only. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green. E2E specs that drove the wizard (`trips.spec`, `smoke.spec`, `dashboard.spec`) were updated to the single-sheet + success-state selectors (Next/Step assertions removed; save → "Trip logged" → View in Trips/Done).
 
 **Related:** DECISION-022 (what-if projects to return date), DECISION-025 (notes → Reason for Travel), DECISION-073 (prior modal layout), DECISION-075 (FAB opens the modal), DECISION-077 (planned derived); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-083] Reskin Phase 9 — Cleanup: retire dead components, rename font variables, prune dead tokens
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+Final reskin pass — remove what the earlier phases superseded and finish the font-variable rename (reskin plan `docs/RESKIN-PLAN.md`, Phase 9).
+
+- **Deleted (confirmed no importers, no dynamic imports):** `QuotaRing.tsx` (retired from the dashboard in Phase 2), the legacy `TopNav.tsx` + `MobileNav.tsx` + `Sidebar.tsx` (replaced by `AppSidebar`/`AppMobileNav` in Phase 1), and the older `TripsClient.tsx` (superseded by `TripsTableClient`). `QuotaRingMockup` was already gone (Phase 6).
+- **Font variables renamed** `--font-manrope` → `--font-heading` and `--font-inter` → `--font-body` across all ~44 files (the next/font slots in `layout.tsx`, the `@theme` block + base styles in `globals.css`, and every `font-[family-name:var(...)]` usage). These were named for the old Manrope/Inter fonts; DECISION-074 loaded Bricolage/Hanken into those legacy slots and deferred the rename to here. Pure rename — no font or weight change.
+- **Pruned dead tokens** `--color-track` and `--shadow-ring-card` (light + dark) — only the deleted `QuotaRing` referenced them. Stale code comments in `riskConfig.ts` and `layout.tsx` updated.
+
+**Reasoning:**
+The legacy nav/ring/trips components were kept through Phases 1–3 to keep each diff reviewable; with the reskin shipped they are pure dead weight and were removed once a grep confirmed no references. The font-variable rename removes the last misleading legacy names (a reader seeing `--font-manrope` would expect Manrope, not Bricolage). Verified end-to-end: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green, no dangling imports of any deleted file. Note left for the owner: the auth screens (`(auth)/auth/*`) and `error.tsx`/`not-found.tsx` still carry a few hardcoded hex values (e.g. `#191C1D`) — they were never in the reskin phase list, so they were left untouched beyond the mechanical font rename.
+
+**Related:** DECISION-074 (loaded Bricolage/Hanken into the legacy slots), DECISION-075 (AppSidebar/AppMobileNav), DECISION-076 (QuotaRing retired), DECISION-077 (TripsClient superseded); `docs/RESKIN-PLAN.md`

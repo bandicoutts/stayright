@@ -28,13 +28,13 @@ export default function TrustBar() {
             className="flex flex-col gap-1 px-6 sm:px-10 lg:px-12 py-7"
           >
             <span
-              className="font-[family-name:var(--font-manrope)] font-bold leading-tight tracking-[-0.02em]"
+              className="font-[family-name:var(--font-heading)] font-bold leading-tight tracking-[-0.02em]"
               style={{ fontSize: '1.0625rem', color: 'var(--color-text-primary)' }}
             >
               {cell.value}
             </span>
             <span
-              className="font-[family-name:var(--font-inter)] leading-snug"
+              className="font-[family-name:var(--font-body)] leading-snug"
               style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}
             >
               {cell.label}

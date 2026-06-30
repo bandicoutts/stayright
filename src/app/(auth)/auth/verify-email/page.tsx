@@ -48,7 +48,7 @@ export default function VerifyEmailPage() {
           <Envelope className="w-7 h-7 text-[#006948]" />
         </div>
 
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">
+        <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl text-[#191C1D] mb-2">
           Check your email
         </h1>
         <p className="text-sm text-[#3D4A42] mb-6 leading-relaxed">

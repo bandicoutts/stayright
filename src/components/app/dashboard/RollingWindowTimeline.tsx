@@ -116,7 +116,7 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
           </div>
 
           <p
-            className="font-[family-name:var(--font-manrope)] font-extrabold tracking-[-0.03em] leading-[1.05] text-[clamp(2rem,3.6vw,2.85rem)]"
+            className="font-[family-name:var(--font-heading)] font-extrabold tracking-[-0.03em] leading-[1.05] text-[clamp(2rem,3.6vw,2.85rem)]"
             style={{ color: tone }}
           >
             {VERDICT[status]}

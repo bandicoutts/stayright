@@ -67,7 +67,7 @@ export default async function OnboardingWelcomePage({
 
         {visaStepDone ? (
           <>
-            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">
+            <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">
               Welcome back
             </h1>
             <p className="text-sm text-[var(--color-text-muted)] mb-8 leading-relaxed">
@@ -83,7 +83,7 @@ export default async function OnboardingWelcomePage({
           </>
         ) : (
           <>
-            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">
+            <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">
               Know exactly where you stand
             </h1>
             <p className="text-sm text-[var(--color-text-muted)] mb-8 leading-relaxed">

@@ -66,7 +66,7 @@ export default function CookieBanner() {
       className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--color-surface)] shadow-[0px_-4px_24px_rgba(0,0,0,0.1)] border-t border-[var(--color-border)] px-6 py-4"
     >
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
-        <p className="text-sm text-[var(--color-text-muted)] font-[family-name:var(--font-inter)] leading-relaxed max-w-xl">
+        <p className="text-sm text-[var(--color-text-muted)] font-[family-name:var(--font-body)] leading-relaxed max-w-xl">
           We use cookies to keep you logged in and to understand how StayRight
           is used. You can manage your preferences.{' '}
           <Link
@@ -80,13 +80,13 @@ export default function CookieBanner() {
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={necessary}
-            className="px-4 py-2 rounded-xl text-sm font-semibold text-[var(--color-text-primary)] bg-[var(--color-bg-tinted)] hover:bg-[var(--color-border)] transition-colors font-[family-name:var(--font-inter)]"
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-[var(--color-text-primary)] bg-[var(--color-bg-tinted)] hover:bg-[var(--color-border)] transition-colors font-[family-name:var(--font-body)]"
           >
             Necessary only
           </button>
           <button
             onClick={accept}
-            className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-[var(--gradient-green)] hover:opacity-90 transition-opacity font-[family-name:var(--font-inter)]"
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-[var(--gradient-green)] hover:opacity-90 transition-opacity font-[family-name:var(--font-body)]"
           >
             Accept all
           </button>

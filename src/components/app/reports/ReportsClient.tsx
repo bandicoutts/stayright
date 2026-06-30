@@ -149,7 +149,7 @@ export function ReportsClient({ hasTrips, isPro, trips, profile }: ReportsClient
 
   return (
     <div className="p-6 md:p-8">
-      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
+      <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
         ILR evidence pack
       </h1>
       <p className="text-sm text-[var(--color-text-muted)] mb-6 max-w-2xl">

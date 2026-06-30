@@ -87,7 +87,7 @@ export function PlanTripSimulator({ existingTrips, visaStartDate, currentDays }:
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
       <div className="flex items-center justify-between mb-1">
-        <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base tracking-tight text-[var(--color-text-primary)]">
+        <h2 className="font-[family-name:var(--font-heading)] font-bold text-base tracking-tight text-[var(--color-text-primary)]">
           Plan a trip
         </h2>
         <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-text-faint)]">

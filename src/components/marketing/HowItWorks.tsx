@@ -15,7 +15,7 @@ export default function HowItWorks() {
           how it works
         </div>
         <h2
-          className="font-[family-name:var(--font-manrope)] font-bold leading-[1.02] tracking-[-0.03em] mb-12 max-w-[720px]"
+          className="font-[family-name:var(--font-heading)] font-bold leading-[1.02] tracking-[-0.03em] mb-12 max-w-[720px]"
           style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: 'var(--color-text-primary)' }}
         >
           Three steps to total peace of mind.
@@ -38,13 +38,13 @@ export default function HowItWorks() {
                 {s.n}
               </div>
               <h3
-                className="font-[family-name:var(--font-manrope)] font-bold mb-2.5 tracking-[-0.01em]"
+                className="font-[family-name:var(--font-heading)] font-bold mb-2.5 tracking-[-0.01em]"
                 style={{ fontSize: '1.375rem', color: 'var(--color-text-primary)' }}
               >
                 {s.title}
               </h3>
               <p
-                className="font-[family-name:var(--font-inter)] leading-[1.5]"
+                className="font-[family-name:var(--font-body)] leading-[1.5]"
                 style={{ fontSize: '0.96rem', color: 'var(--color-text-muted)' }}
               >
                 {s.body}

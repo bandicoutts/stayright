@@ -31,7 +31,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="w-full max-w-md">
       <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-1">
+        <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl text-[#191C1D] mb-1">
           Reset your password
         </h1>
         <p className="text-sm text-[#3D4A42] mb-6">

@@ -19,14 +19,14 @@ export default function Pricing() {
         <div className="mb-12 text-center max-w-2xl mx-auto">
           <div className="mb-[14px]">
             <span
-              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.16em] uppercase"
+              className="font-[family-name:var(--font-body)] font-semibold tracking-[0.16em] uppercase"
               style={{ fontSize: '0.6875rem', color: 'var(--color-green)' }}
             >
               Pricing
             </span>
           </div>
           <h2
-            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[1.06] tracking-[-0.038em] mt-3"
+            className="font-[family-name:var(--font-heading)] font-extrabold leading-[1.06] tracking-[-0.038em] mt-3"
             style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
             Protect your path{' '}
@@ -44,7 +44,7 @@ export default function Pricing() {
             </em>
           </h2>
           <p
-            className="font-[family-name:var(--font-inter)] leading-[1.65] mt-4"
+            className="font-[family-name:var(--font-body)] leading-[1.65] mt-4"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
           >
             Avoid the cost and stress of a rejected application.
@@ -56,7 +56,7 @@ export default function Pricing() {
         <div className="flex items-center justify-center gap-3 mb-12 max-w-2xl mx-auto">
           <span
             id="monthly-label"
-            className="font-[family-name:var(--font-inter)] font-medium"
+            className="font-[family-name:var(--font-body)] font-medium"
             style={{ fontSize: '0.875rem', color: !annual ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}
           >
             Monthly
@@ -84,7 +84,7 @@ export default function Pricing() {
 
           <span
             id="annual-label"
-            className="font-[family-name:var(--font-inter)] font-medium"
+            className="font-[family-name:var(--font-body)] font-medium"
             style={{ fontSize: '0.875rem', color: annual ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}
           >
             Annual
@@ -92,7 +92,7 @@ export default function Pricing() {
 
           {annual && (
             <span
-              className="font-[family-name:var(--font-manrope)] font-semibold px-[10px] py-[3px] rounded-full"
+              className="font-[family-name:var(--font-heading)] font-semibold px-[10px] py-[3px] rounded-full"
               style={{
                 fontSize: '0.6875rem',
                 color: 'var(--color-green)',
@@ -120,7 +120,7 @@ export default function Pricing() {
             }}
           >
             <div
-              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
+              className="font-[family-name:var(--font-body)] font-semibold tracking-[0.10em] uppercase mb-3"
               style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}
             >
               Free
@@ -128,14 +128,14 @@ export default function Pricing() {
             <div className="flex items-baseline gap-1 mb-1">
               <span
                 id="free-plan-title"
-                className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
+                className="font-[family-name:var(--font-heading)] font-extrabold leading-none tracking-[-0.04em]"
                 style={{ fontSize: '2.75rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 £0
               </span>
             </div>
             <div
-              className="font-[family-name:var(--font-inter)] mb-7"
+              className="font-[family-name:var(--font-body)] mb-7"
               style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}
             >
               Forever free
@@ -158,7 +158,7 @@ export default function Pricing() {
                     : <X className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-text-primary)' }} weight="bold" />
                   }
                   <span
-                    className="font-[family-name:var(--font-inter)] leading-[1.4]"
+                    className="font-[family-name:var(--font-body)] leading-[1.4]"
                     style={{ fontSize: '0.875rem', color: 'var(--color-text-2)' }}
                   >
                     {text}
@@ -169,7 +169,7 @@ export default function Pricing() {
 
             <Link
               href="/signup"
-              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-all duration-200"
+              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-body)] font-semibold no-underline transition-all duration-200"
               style={{
                 fontSize: '0.875rem',
                 color: 'var(--color-text-primary)',
@@ -196,7 +196,7 @@ export default function Pricing() {
             {/* Most Popular badge */}
             <div className="absolute -top-[12px] left-1/2 -translate-x-1/2">
               <span
-                className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-manrope)] font-bold tracking-[0.08em] uppercase whitespace-nowrap text-white"
+                className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-heading)] font-bold tracking-[0.08em] uppercase whitespace-nowrap text-white"
                 style={{
                   fontSize: '0.625rem',
                   background: 'var(--gradient-green)',
@@ -208,7 +208,7 @@ export default function Pricing() {
             </div>
 
             <div
-              className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase mb-3"
+              className="font-[family-name:var(--font-body)] font-semibold tracking-[0.10em] uppercase mb-3"
               style={{ fontSize: '0.6875rem', color: 'var(--color-text-muted)' }}
             >
               Pro
@@ -217,14 +217,14 @@ export default function Pricing() {
             <div className="flex items-baseline gap-1 mb-1 transition-all duration-300">
               <span
                 id="pro-plan-title"
-                className="font-[family-name:var(--font-manrope)] font-extrabold leading-none tracking-[-0.04em]"
+                className="font-[family-name:var(--font-heading)] font-extrabold leading-none tracking-[-0.04em]"
                 style={{ fontSize: '2.75rem', color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 {annual ? '£24.99' : '£2.99'}
               </span>
             </div>
             <div
-              className="font-[family-name:var(--font-inter)] mb-7"
+              className="font-[family-name:var(--font-body)] mb-7"
               style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}
             >
               {annual ? 'per year' : 'per month'}
@@ -245,7 +245,7 @@ export default function Pricing() {
                 <li key={text} className="flex items-start gap-[10px]">
                   <Check className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--color-green)' }} weight="bold" />
                   <span
-                    className="font-[family-name:var(--font-inter)] leading-[1.4]"
+                    className="font-[family-name:var(--font-body)] leading-[1.4]"
                     style={{ fontSize: '0.875rem', color: 'var(--color-text-2)' }}
                   >
                     {text}
@@ -256,7 +256,7 @@ export default function Pricing() {
 
             <Link
               href="/signup"
-              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-inter)] font-semibold no-underline transition-all duration-200"
+              className="flex items-center justify-center w-full py-3 rounded-[6px] font-[family-name:var(--font-body)] font-semibold no-underline transition-all duration-200"
               style={{
                 fontSize: '0.875rem',
                 color: '#fff',
@@ -272,7 +272,7 @@ export default function Pricing() {
 
         {/* Lifetime note */}
         <p
-          className="font-[family-name:var(--font-inter)] mt-6 max-w-2xl mx-auto text-center"
+          className="font-[family-name:var(--font-body)] mt-6 max-w-2xl mx-auto text-center"
           style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}
         >
           Prefer to pay once?{' '}
@@ -287,7 +287,7 @@ export default function Pricing() {
 
         {/* Reassurance */}
         <p
-          className="font-[family-name:var(--font-inter)] mt-3 max-w-2xl mx-auto text-center"
+          className="font-[family-name:var(--font-body)] mt-3 max-w-2xl mx-auto text-center"
           style={{ fontSize: '0.75rem', color: 'var(--color-text-faint)' }}
         >
           Cancel anytime. No hidden fees. Prices in GBP.

@@ -60,16 +60,12 @@
   /* ── Shadows ─────────────────────────────────── */
   --shadow-card:            0 1px 3px rgba(28, 26, 22, 0.05), 0 12px 32px rgba(28, 26, 22, 0.07);
   --shadow-card-hover:      0 4px 16px rgba(28, 26, 22, 0.07), 0 20px 48px rgba(28, 26, 22, 0.11);
-  --shadow-ring-card:       0 1px 3px rgba(28, 26, 22, 0.05), 0 16px 48px rgba(28, 26, 22, 0.09), 0 1px 0 rgba(255, 255, 255, 0.80) inset;
   --shadow-button:          0 1px 0 rgba(255,255,255,0.14) inset, 0 8px 26px rgba(0, 105, 72, 0.22);
   --shadow-button-hover:    0 1px 0 rgba(255,255,255,0.14) inset, 0 12px 36px rgba(0, 105, 72, 0.32);
 
   /* ── Gradients (green-led, no blue→violet) ───── */
   --gradient-green:         linear-gradient(100deg, #0A7D54 0%, #006948 100%);
   --gradient-green-text:    linear-gradient(135deg, #004F35 0%, #0A7D54 100%);
-
-  /* ── Ring track (legacy QuotaRing — retired in Phase 9) ── */
-  --color-track:            #D6E2DA;
 
   /* ── Sidebar / Nav ───────────────────────────── */
   --color-sidebar-bg:       var(--color-bg-tinted);
@@ -123,11 +119,8 @@
   --color-danger-border:    rgba(251, 113, 133, 0.28);
   --color-danger-text:      #FB7185;
 
-  --color-track:            #1C2A22;
-
   --shadow-card:            0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 18px 40px -28px rgba(0, 0, 0, 0.70);
   --shadow-card-hover:      0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -30px rgba(0, 0, 0, 0.80);
-  --shadow-ring-card:       0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 18px 48px -28px rgba(0, 0, 0, 0.70);
   --shadow-button:          0 1px 0 rgba(255,255,255,0.10) inset, 0 8px 28px rgba(12, 140, 90, 0.30);
   --shadow-button-hover:    0 1px 0 rgba(255,255,255,0.10) inset, 0 12px 36px rgba(12, 140, 90, 0.40);
 

@@ -90,7 +90,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
         <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-text-faint)] mb-2">
           Step 1 of 2
         </p>
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-1">
+        <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-1">
           Tell us about your visa
         </h1>
         <p className="text-sm text-[var(--color-text-muted)] mb-6">

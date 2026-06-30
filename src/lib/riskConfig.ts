@@ -1,7 +1,7 @@
 import type { RiskStatus } from '@/lib/calculations/absenceEngine'
 
 // WCAG: colour + text label — colour alone fails WCAG AA
-// chip: Tailwind classes for status badge (shared across QuotaRing, PeakWindowCard, etc.)
+// chip: Tailwind classes for status badge (shared across the dashboard timeline, trips list, etc.)
 export const RISK_CONFIG: Record<RiskStatus, { bg: string; text: string; label: string; chip: string }> = {
   SAFE:    { bg: 'bg-[var(--color-safe-bg)]',    text: 'text-[var(--color-safe-text)]',    label: 'Compliant',        chip: 'bg-[var(--color-safe-bg)] text-[var(--color-safe-text)]'       },
   WARNING: { bg: 'bg-[var(--color-warning-bg)]', text: 'text-[var(--color-warning-text)]', label: 'Approaching Limit', chip: 'bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]' },

@@ -68,7 +68,7 @@ export default function Nav() {
         {/* Logo */}
         <Link
           href="/"
-          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.0625rem] tracking-[-0.03em] flex items-center gap-2.5 no-underline mr-6 shrink-0"
+          className="font-[family-name:var(--font-heading)] font-extrabold text-[1.0625rem] tracking-[-0.03em] flex items-center gap-2.5 no-underline mr-6 shrink-0"
           style={{ color: 'var(--color-text-primary)' }}
         >
           <div

@@ -54,10 +54,10 @@ export function ReportPreview({
       className="w-full max-w-[820px] rounded-lg overflow-hidden text-[#191C1D]"
       style={{ background: '#ffffff', boxShadow: 'var(--shadow-card)', border: '1px solid var(--color-border)' }}
     >
-      <div className="p-6 sm:p-10 font-[family-name:var(--font-inter)]">
+      <div className="p-6 sm:p-10 font-[family-name:var(--font-body)]">
         {/* Letterhead */}
         <div className="rounded-md px-5 py-4 mb-6" style={{ background: '#006948' }}>
-          <p className="font-[family-name:var(--font-manrope)] font-bold text-[18px] text-white leading-tight">
+          <p className="font-[family-name:var(--font-heading)] font-bold text-[18px] text-white leading-tight">
             StayRight · Absence History &amp; Compliance Record
           </p>
           <p className="text-[11px] mt-1" style={{ color: '#CCEDE3' }}>UK Skilled Worker Visa · 180-Day Absence Rule</p>
@@ -104,7 +104,7 @@ export function ReportPreview({
         </div>
 
         {/* Absence table */}
-        <p className="font-[family-name:var(--font-manrope)] font-bold text-[12px] text-[#006948] border-b border-[#006948] pb-1.5 mb-2">
+        <p className="font-[family-name:var(--font-heading)] font-bold text-[12px] text-[#006948] border-b border-[#006948] pb-1.5 mb-2">
           Absence record
         </p>
         <div className="overflow-hidden rounded-sm">

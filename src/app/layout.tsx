@@ -7,21 +7,20 @@ import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistratio
 import CookieBanner from '@/components/marketing/CookieBanner';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-// Reskin fonts (DECISION D6): Bricolage Grotesque (headings) + Hanken Grotesk
-// (body). The CSS variable names `--font-manrope` / `--font-inter` are kept as
-// legacy aliases so the ~150 existing `var(--font-manrope|inter)` usages inherit
-// with zero edits; rename to `--font-heading` / `--font-body` in Phase 9 cleanup.
+// Reskin fonts (DECISION-074): Bricolage Grotesque (headings) + Hanken Grotesk
+// (body), exposed as the semantic CSS variables `--font-heading` / `--font-body`
+// (renamed from the legacy `--font-manrope` / `--font-inter` slots in Phase 9).
 const heading = Bricolage_Grotesque({
   subsets: ['latin'],
   weight: ['500', '600', '700', '800'],
-  variable: '--font-manrope',
+  variable: '--font-heading',
   display: 'swap',
 });
 
 const body = Hanken_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-inter',
+  variable: '--font-body',
   display: 'swap',
 });
 

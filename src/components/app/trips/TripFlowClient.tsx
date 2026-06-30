@@ -357,7 +357,7 @@ export function TripFlowClient({
           <div className="w-16 h-16 rounded-full bg-[var(--color-green-pale)] flex items-center justify-center mb-5">
             <Check className="w-8 h-8 text-[var(--color-green)]" weight="bold" />
           </div>
-          <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl tracking-tight text-[var(--color-text-primary)] mb-1">
+          <h2 className="font-[family-name:var(--font-heading)] font-extrabold text-xl tracking-tight text-[var(--color-text-primary)] mb-1">
             {successHeading}
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] mb-5">

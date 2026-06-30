@@ -51,7 +51,7 @@ export default function Features() {
           everything the rule demands
         </div>
         <h2
-          className="font-[family-name:var(--font-manrope)] font-bold leading-[1.02] tracking-[-0.03em] mb-12 max-w-[720px]"
+          className="font-[family-name:var(--font-heading)] font-bold leading-[1.02] tracking-[-0.03em] mb-12 max-w-[720px]"
           style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: 'var(--color-text-primary)' }}
         >
           Six tools that keep your timeline airtight.
@@ -74,13 +74,13 @@ export default function Features() {
                   <Icon className="w-[18px] h-[18px]" weight="regular" style={{ color: 'var(--color-green)' }} />
                 </div>
                 <h3
-                  className="font-[family-name:var(--font-manrope)] font-bold leading-[1.25] tracking-[-0.01em] mb-2"
+                  className="font-[family-name:var(--font-heading)] font-bold leading-[1.25] tracking-[-0.01em] mb-2"
                   style={{ fontSize: '1.1875rem', color: 'var(--color-text-primary)' }}
                 >
                   {f.title}
                 </h3>
                 <p
-                  className="font-[family-name:var(--font-inter)] leading-[1.5]"
+                  className="font-[family-name:var(--font-body)] leading-[1.5]"
                   style={{ fontSize: '0.9375rem', color: 'var(--color-text-muted)' }}
                 >
                   {f.description}

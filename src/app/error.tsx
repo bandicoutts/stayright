@@ -17,10 +17,10 @@ export default function GlobalError({
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center px-6">
       <div className="text-center max-w-sm">
-        <p className="text-5xl font-[family-name:var(--font-manrope)] font-extrabold text-[#BA1A1A] mb-4">
+        <p className="text-5xl font-[family-name:var(--font-heading)] font-extrabold text-[#BA1A1A] mb-4">
           Oops
         </p>
-        <h1 className="text-xl font-[family-name:var(--font-manrope)] font-bold text-[#191C1D] mb-2">
+        <h1 className="text-xl font-[family-name:var(--font-heading)] font-bold text-[#191C1D] mb-2">
           Something went wrong
         </h1>
         <p className="text-sm text-[#3D4A42] mb-8">

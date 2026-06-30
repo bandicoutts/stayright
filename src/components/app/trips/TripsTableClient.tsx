@@ -244,7 +244,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] tracking-tight">
+          <h1 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] tracking-tight">
             Your travel history
           </h1>
           {/* Single header stat + meta chips */}
@@ -386,7 +386,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="font-[family-name:var(--font-manrope)] font-bold text-xl text-[var(--color-text-primary)] mb-2">No trips logged yet</h3>
+            <h3 className="font-[family-name:var(--font-heading)] font-bold text-xl text-[var(--color-text-primary)] mb-2">No trips logged yet</h3>
             <p className="text-sm text-[var(--color-text-muted)] max-w-xs mb-6">Log your travel history to track your 180-day compliance window.</p>
             <button
               type="button"
@@ -447,7 +447,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="delete-trip-title">
           <div className="bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-6 w-full max-w-sm">
-            <h2 id="delete-trip-title" className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-text-primary)] mb-2">Delete this trip?</h2>
+            <h2 id="delete-trip-title" className="font-[family-name:var(--font-heading)] font-bold text-lg text-[var(--color-text-primary)] mb-2">Delete this trip?</h2>
             <p className="text-sm text-[var(--color-text-muted)] mb-5">This will recalculate your absence record.</p>
             {deleteError && <p className="mb-4 text-sm text-[var(--color-danger-text)]">{deleteError}</p>}
             <div className="flex gap-3">
@@ -476,7 +476,7 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       {bulkConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="bulk-delete-title">
           <div className="bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-6 w-full max-w-sm">
-            <h2 id="bulk-delete-title" className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-text-primary)] mb-2">
+            <h2 id="bulk-delete-title" className="font-[family-name:var(--font-heading)] font-bold text-lg text-[var(--color-text-primary)] mb-2">
               Delete {selectedIds.length} trip{selectedIds.length !== 1 ? 's' : ''}?
             </h2>
             <p className="text-sm text-[var(--color-text-muted)] mb-5">This will recalculate your absence record.</p>

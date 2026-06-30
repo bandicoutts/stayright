@@ -114,7 +114,7 @@ function Card({ children, danger }: { children: React.ReactNode; danger?: boolea
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return <h2 className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-text-primary)] mb-4">{children}</h2>
+  return <h2 className="font-[family-name:var(--font-heading)] font-bold text-lg text-[var(--color-text-primary)] mb-4">{children}</h2>
 }
 
 function planLabel(plan: string | null | undefined): string {
@@ -323,7 +323,7 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
 
   return (
     <div className="p-6 md:p-8">
-      <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">Settings</h1>
+      <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">Settings</h1>
       <p className="text-sm text-[var(--color-text-muted)] mb-8">Manage your visa profile, account, billing, and preferences.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] gap-8 max-w-5xl">
@@ -377,7 +377,7 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
                 {ilrDate && (
                   <div className="px-3.5 py-3 bg-[var(--color-green-pale)] rounded-xl">
                     <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-green)] mb-0.5">ILR eligibility date</p>
-                    <p className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-green)]">{ilrDate}</p>
+                    <p className="font-[family-name:var(--font-heading)] font-bold text-lg text-[var(--color-green)]">{ilrDate}</p>
                     <p className="text-xs text-[var(--color-text-muted)] mt-0.5">5 years from your visa start date</p>
                   </div>
                 )}
@@ -474,7 +474,7 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
                         <span className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.08em] text-[var(--color-text-muted)]">{p.name}</span>
                         {'badge' in p && p.badge && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white" style={{ background: 'var(--gradient-green)' }}>{p.badge}</span>}
                       </div>
-                      <p className="mb-2"><span className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)]">{p.price}</span> <span className="text-xs text-[var(--color-text-muted)]">{p.period}</span></p>
+                      <p className="mb-2"><span className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)]">{p.price}</span> <span className="text-xs text-[var(--color-text-muted)]">{p.period}</span></p>
                       <ul className="flex flex-col gap-1.5 mb-4 flex-1">
                         {p.features.map((f) => (
                           <li key={f} className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)]">

@@ -30,7 +30,7 @@ export default function Hero() {
         {/* ── Left column ── */}
         <div className="flex flex-col max-w-xl">
           <h1
-            className="font-[family-name:var(--font-manrope)] font-extrabold leading-[0.98] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
+            className="font-[family-name:var(--font-heading)] font-extrabold leading-[0.98] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
             style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5rem)', color: 'var(--color-text-primary)' }}
           >
             Travel freely.<br />
@@ -39,7 +39,7 @@ export default function Hero() {
           </h1>
 
           <p
-            className="font-[family-name:var(--font-inter)] leading-[1.6] mb-10 max-w-[480px] animate-fade-up animate-fade-up-3"
+            className="font-[family-name:var(--font-body)] leading-[1.6] mb-10 max-w-[480px] animate-fade-up animate-fade-up-3"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             StayRight automatically tracks every rolling 12-month window of your visa
@@ -50,14 +50,14 @@ export default function Hero() {
           <div className="flex flex-wrap items-center gap-3.5 mb-10 animate-fade-up animate-fade-up-4">
             <Link
               href="/signup"
-              className="inline-flex items-center px-7 py-[14px] rounded-xl font-[family-name:var(--font-inter)] text-[15px] font-semibold text-white no-underline transition-all duration-200"
+              className="inline-flex items-center px-7 py-[14px] rounded-xl font-[family-name:var(--font-body)] text-[15px] font-semibold text-white no-underline transition-all duration-200"
               style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
             >
               Start tracking free
             </Link>
             <Link
               href="#how"
-              className="inline-flex items-center px-7 py-[14px] rounded-xl font-[family-name:var(--font-inter)] text-[15px] font-medium no-underline transition-colors duration-200"
+              className="inline-flex items-center px-7 py-[14px] rounded-xl font-[family-name:var(--font-body)] text-[15px] font-medium no-underline transition-colors duration-200"
               style={{ color: 'var(--color-text-2)', border: '1px solid var(--color-border-strong)' }}
             >
               See how it works →
@@ -68,7 +68,7 @@ export default function Hero() {
             {['Free to start', 'No credit card', 'UK-based team', 'Cancel anytime'].map((tag) => (
               <span
                 key={tag}
-                className="font-[family-name:var(--font-inter)] tracking-[0.02em]"
+                className="font-[family-name:var(--font-body)] tracking-[0.02em]"
                 style={{
                   fontSize: '0.75rem',
                   color: 'var(--color-text-faint)',

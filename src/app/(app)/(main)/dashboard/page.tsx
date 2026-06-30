@@ -160,10 +160,10 @@ export default async function DashboardPage() {
       {/* Page header */}
       <div className="mb-8 flex flex-wrap items-start justify-between gap-y-4">
         <div>
-          <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.04em] text-[var(--color-text-primary)]">
+          <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.04em] text-[var(--color-text-primary)]">
             <DashboardGreeting firstName={firstName} />
           </h1>
-          <p className="font-[family-name:var(--font-inter)] text-sm text-[var(--color-text-muted)] mt-1">
+          <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-text-muted)] mt-1">
             {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
           </p>
         </div>

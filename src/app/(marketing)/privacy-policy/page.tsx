@@ -12,13 +12,13 @@ export default function PrivacyPolicyPage() {
       <Nav />
       <main id="main-content" className="bg-[var(--color-bg)] pt-28 pb-20 px-6 min-h-screen">
         <div className="max-w-3xl mx-auto">
-          <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[3rem] leading-[1.1] tracking-[-0.02em] text-[var(--color-text-primary)] mb-4">
+          <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-[3rem] leading-[1.1] tracking-[-0.02em] text-[var(--color-text-primary)] mb-4">
             Privacy Policy
           </h1>
-          <p className="font-[family-name:var(--font-inter)] text-sm text-[var(--color-text-muted)] mb-10">Effective Date: [Date] [LEGAL REVIEW REQUIRED: Confirm effective date before publishing]</p>
+          <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-text-muted)] mb-10">Effective Date: [Date] [LEGAL REVIEW REQUIRED: Confirm effective date before publishing]</p>
 
-          <div className="font-[family-name:var(--font-inter)] text-base text-[var(--color-text-2)] leading-relaxed space-y-6">
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">1. Who We Are</h2>
+          <div className="font-[family-name:var(--font-body)] text-base text-[var(--color-text-2)] leading-relaxed space-y-6">
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">1. Who We Are</h2>
             <p>StayRight (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is the data controller for the personal information we collect about you.</p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Contact Email:</strong> [David&apos;s Contact Email or support@stayright.com]</li>
@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
               [LEGAL REVIEW REQUIRED: Insert official company name, registered address, and physical contact point if different. We need to confirm ICO registration number once registered.]
             </p>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">2. What Personal Data We Collect and Why (Lawful Basis)</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">2. What Personal Data We Collect and Why (Lawful Basis)</h2>
             <p>Under the UK General Data Protection Regulation (UK GDPR), we rely on the following lawful bases to process your personal data:</p>
             <ul className="list-disc pl-5 space-y-3">
               <li>
@@ -51,7 +51,7 @@ export default function PrivacyPolicyPage() {
               [LEGAL REVIEW REQUIRED: Ensure you are comfortable relying on &quot;Performance of a contract&quot; for the Visa/Travel data rather than &quot;Explicit Consent&quot;, as immigration data is highly confidential.]
             </p>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">3. Data Retention Policy</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">3. Data Retention Policy</h2>
             <p>We keep your data only for as long as needed to provide our services and fulfil legal obligations:</p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Active Account Data / Travel Data:</strong> Retained for as long as your account remains active.</li>
@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>Anonymised Analytics:</strong> Retained indefinitely to help us improve the service. This data cannot be linked back to you.</li>
             </ul>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">4. Data Processors (Who We Share Your Data With)</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">4. Data Processors (Who We Share Your Data With)</h2>
             <p>We use trusted third-party service providers (&quot;Data Processors&quot;) to run StayRight. We have Data Processing Agreements (DPAs) in place with them to protect your data.</p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Supabase:</strong> Core database and hosting (Servers located in the UK).</li>
@@ -73,7 +73,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>Resend:</strong> Email delivery and notifications.</li>
             </ul>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">5. Your Rights Under UK GDPR</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">5. Your Rights Under UK GDPR</h2>
             <p>You have the right to:</p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Access:</strong> Request a copy of the data we hold about you.</li>
@@ -85,20 +85,20 @@ export default function PrivacyPolicyPage() {
               <li><strong>Automated Decision Making:</strong> Not be subject to decisions based solely on automated processing. (Note: StayRight computes values based on formulas you input, but does not make legal decisions on your behalf).</li>
             </ul>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">6. How to Exercise Your Rights</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">6. How to Exercise Your Rights</h2>
             <p>To exercise any of these rights, please contact us at [Contact Email]. We will respond to your request within one month. You can also view, edit, download, and delete your data directly within the application&apos;s account settings.</p>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">7. How to Complain to the ICO</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">7. How to Complain to the ICO</h2>
             <p>If you are unhappy with how we have handled your personal data, you have the right to complain to the Information Commissioner’s Office (ICO).</p>
             <ul className="list-disc pl-5 space-y-2">
               <li><strong>Website:</strong> <a href="https://ico.org.uk/make-a-complaint/" className="text-[var(--color-green)] hover:underline">https://ico.org.uk/make-a-complaint/</a></li>
               <li><strong>Helpline:</strong> 0303 123 1113</li>
             </ul>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">8. Cookies</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">8. Cookies</h2>
             <p>We use cookies to keep you logged in and to remember your preferences. Please review our <a href="/cookie-policy" className="text-[var(--color-green)] hover:underline">Cookie Policy</a> for details.</p>
 
-            <h2 className="font-[family-name:var(--font-manrope)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">9. Changes to this Policy</h2>
+            <h2 className="font-[family-name:var(--font-heading)] font-bold text-2xl text-[var(--color-text-primary)] mt-10 mb-4">9. Changes to this Policy</h2>
             <p>We may update this policy periodically. We will notify you of any major changes by email or through a notice in the app.</p>
           </div>
         </div>

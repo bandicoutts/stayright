@@ -19,7 +19,7 @@ export default function OnboardingLayout({ children }: { children: ReactNode }) 
           className="inline-flex items-center gap-2 text-[var(--color-text-primary)] hover:text-[var(--color-green)] transition-colors"
         >
           <Shield className="w-5 h-5 text-[var(--color-green)]" weight="regular" />
-          <span className="font-[family-name:var(--font-manrope)] font-bold text-base tracking-tight">
+          <span className="font-[family-name:var(--font-heading)] font-bold text-base tracking-tight">
             StayRight
           </span>
         </Link>

@@ -232,7 +232,7 @@ export function TripModal({
           <div className="bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-6 w-full max-w-sm">
             <h2
               id="discard-dialog-title"
-              className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-text-primary)] mb-2"
+              className="font-[family-name:var(--font-heading)] font-bold text-lg text-[var(--color-text-primary)] mb-2"
             >
               Discard this trip?
             </h2>

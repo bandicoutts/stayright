@@ -27,13 +27,13 @@ export default function Comparison() {
           the old way vs StayRight
         </div>
         <h2
-          className="font-[family-name:var(--font-manrope)] font-bold leading-[1.02] tracking-[-0.03em] mb-3 max-w-[760px]"
+          className="font-[family-name:var(--font-heading)] font-bold leading-[1.02] tracking-[-0.03em] mb-3 max-w-[760px]"
           style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: 'var(--color-text-primary)' }}
         >
           A spreadsheet can&apos;t watch your back. StayRight can.
         </h2>
         <p
-          className="font-[family-name:var(--font-inter)] leading-[1.55] mb-11 max-w-[600px]"
+          className="font-[family-name:var(--font-body)] leading-[1.55] mb-11 max-w-[600px]"
           style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
         >
           One wrong formula and your ILR timeline is off, and you might not find out
@@ -56,7 +56,7 @@ export default function Comparison() {
               {SPREADSHEET.map((t) => (
                 <li key={t} className="flex gap-3" style={{ color: 'var(--color-text-muted)' }}>
                   <X className="w-4 h-4 mt-0.5 shrink-0" weight="bold" style={{ color: 'var(--color-status-red)' }} />
-                  <span className="font-[family-name:var(--font-inter)] text-[15px] leading-[1.45]">{t}</span>
+                  <span className="font-[family-name:var(--font-body)] text-[15px] leading-[1.45]">{t}</span>
                 </li>
               ))}
             </ul>
@@ -80,7 +80,7 @@ export default function Comparison() {
               {STAYRIGHT.map((t) => (
                 <li key={t} className="flex gap-3" style={{ color: 'var(--color-text-2)' }}>
                   <Check className="w-4 h-4 mt-0.5 shrink-0" weight="bold" style={{ color: 'var(--color-green)' }} />
-                  <span className="font-[family-name:var(--font-inter)] text-[15px] leading-[1.45]">{t}</span>
+                  <span className="font-[family-name:var(--font-body)] text-[15px] leading-[1.45]">{t}</span>
                 </li>
               ))}
             </ul>
