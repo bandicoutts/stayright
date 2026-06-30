@@ -74,46 +74,43 @@ export function AbsenceHeatmap({ trips, today }: Props) {
         </span>
       </div>
 
-      <div className="overflow-x-auto">
-        <div className="inline-block">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateRows: 'repeat(7, 11px)',
-              gridAutoFlow: 'column',
-              gridAutoColumns: '11px',
-              gap: '3px',
-            }}
+      {/* Fluid: columns flex to the card width; cells stay square. No scroll. */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${WEEKS}, minmax(0, 1fr))`,
+          gridTemplateRows: 'repeat(7, auto)',
+          gridAutoFlow: 'column',
+          gap: '2px',
+        }}
+      >
+        {columns.flatMap((col, c) =>
+          col.map((cell, r) => (
+            <div
+              key={`${c}-${r}`}
+              className="aspect-square w-full rounded-[2px]"
+              style={{
+                background: cell.future
+                  ? 'transparent'
+                  : cell.absent
+                    ? 'var(--color-green)'
+                    : 'var(--color-surface-sunken)',
+              }}
+              title={new Date(cell.ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (cell.absent ? ' · abroad' : '')}
+            />
+          ))
+        )}
+      </div>
+      <div className="relative h-3 mt-2">
+        {monthLabels.map((m, i) => (
+          <span
+            key={i}
+            className="absolute font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-faint)]"
+            style={{ left: `${(m.col / WEEKS) * 100}%` }}
           >
-            {columns.flatMap((col, c) =>
-              col.map((cell, r) => (
-                <div
-                  key={`${c}-${r}`}
-                  className="rounded-[2px]"
-                  style={{
-                    background: cell.future
-                      ? 'transparent'
-                      : cell.absent
-                        ? 'var(--color-green)'
-                        : 'var(--color-surface-sunken)',
-                  }}
-                  title={new Date(cell.ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (cell.absent ? ' · abroad' : '')}
-                />
-              ))
-            )}
-          </div>
-          <div className="relative h-3 mt-2" style={{ width: WEEKS * 14 }}>
-            {monthLabels.map((m, i) => (
-              <span
-                key={i}
-                className="absolute font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-faint)]"
-                style={{ left: `${m.col * 14}px` }}
-              >
-                {m.label}
-              </span>
-            ))}
-          </div>
-        </div>
+            {m.label}
+          </span>
+        ))}
       </div>
     </div>
   )
