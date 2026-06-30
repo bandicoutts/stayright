@@ -381,7 +381,7 @@ export function monthlySummaryEmail(params: MonthlySummaryParams): {
     : `<div style="background:#F3F4F5;border-radius:8px;padding:16px;margin:24px 0 0;">
         <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:${TEXT_SECONDARY};text-transform:uppercase;letter-spacing:0.5px;">Next logged trip</p>
         <p style="margin:0 0 4px;font-size:14px;color:${TEXT_SECONDARY};">No upcoming trips logged.</p>
-        <a href="${APP_URL}/trips/plan" style="font-size:13px;color:${PRIMARY};text-decoration:none;">Plan a trip →</a>
+        <a href="${APP_URL}/dashboard" style="font-size:13px;color:${PRIMARY};text-decoration:none;">Plan a trip →</a>
       </div>`
 
   const html = emailShell(`
