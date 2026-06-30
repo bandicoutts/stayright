@@ -1902,3 +1902,24 @@ A single scannable page with a jump nav matches the prototype and surfaces billi
 - Added `CreditCard` + `Palette` to the Icons re-export.
 
 **Related:** DECISION-017 (onboarding), DECISION-027 (Stripe checkout), DECISION-069 (signOut), DECISION-074 (pricing/plans), DECISION-078; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-080] Reskin Phase 6 — Marketing landing reskin (hero timeline + comparison + how-it-works)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The landing is reskinned to the marketing prototype (`StayRight.dc.html`; reskin plan `docs/RESKIN-PLAN.md`).
+
+- **Hero** (`Hero.tsx`): new headline "Travel freely. / Stay under 180. / Reach ILR." and the `QuotaRingMockup` is replaced with the app's **`RollingWindowTimeline`** as the signature graphic (consistent app↔marketing). It uses a **SAFE sample** (three sample trips → ~106/180, well under 120) so the verdict derives to a truthful green "You're safe"; watch lines render at **120 · 150** (the prototype's 160/170 corrected).
+- **`Comparison.tsx`** (new): "spreadsheet vs StayRight" two-column ✕/✓.
+- **`HowItWorks.tsx`** (new): three steps (Log your trips / We check every window / Know you're safe), anchored at `#how` for the hero's "See how it works".
+- Page order: Nav → Hero → Comparison → Features → How-it-works → Pricing → Trust → Footer.
+- **Features / Pricing / Nav / Footer / TrustBar kept** — they already inherit the Phase-0 palette/fonts and the pricing copy is already correct: Free shows "Up to 10 trips" (matches `FREE_TRIP_LIMIT`), all four plans are reachable (monthly/annual toggle + £49.99 lifetime), and there are no incorrect threshold numbers. No invented testimonials/credentials (`.impeccable.md` copy rule).
+
+**Reasoning:**
+The signature timeline is the brand's core graphic and now appears identically on marketing and in-app. The SAFE sample + 120/150 watch lines apply the reskin's "code wins" corrections to the marketing surface. The existing Features/Pricing were already on-brand and numerically correct, so they were left rather than rebuilt. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles; hero + comparison + features confirmed rendering; `landing.spec` (h1 / £2.99 / cookie banner) unaffected.
+
+**Related:** DECISION-002 (thresholds), DECISION-074 (palette/fonts), DECISION-076 (RollingWindowTimeline), DECISION-079; `docs/RESKIN-PLAN.md`
