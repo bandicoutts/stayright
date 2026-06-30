@@ -11,7 +11,7 @@ import {
 } from '@/lib/calculations/absenceEngine'
 import type { TripInput } from '@/lib/calculations/absenceEngine'
 import { Trash } from '@/components/ui/Icons'
-import { deleteTripAction } from '@/app/(app)/(main)/dashboard/actions'
+import { deleteTripAction, bulkDeleteTripsAction } from '@/app/(app)/(main)/dashboard/actions'
 import { PaywallModal } from './PaywallModal'
 import { TripModal } from './TripModal'
 import { TripsTimelineView, type TripClass } from './TripsTimelineView'
@@ -84,6 +84,8 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [optimisticDeletedIds, setOptimisticDeletedIds] = useState<string[]>([])
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [bulkConfirm, setBulkConfirm] = useState(false)
   const [showPaywall, setShowPaywall] = useState(() => {
     const mode = searchParams.get('modal')
     return (mode === 'plan' || mode === 'log') && !isPro && trips.length >= FREE_TRIP_LIMIT
@@ -193,6 +195,41 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
       router.refresh()
       setDeleting(false)
       setOptimisticDeletedIds((prev) => prev.filter((oid) => oid !== id))
+    }, 400)
+  }
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
+  }
+
+  function toggleSelectAll() {
+    const visibleIds = visibleTrips.map((t) => t.id)
+    setSelectedIds((prev) => (prev.length === visibleIds.length ? [] : visibleIds))
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.length === 0) return
+    setDeleting(true)
+    setDeleteError(null)
+    const ids = [...selectedIds]
+    setOptimisticDeletedIds((prev) => [...prev, ...ids])
+    setSelectedIds([])
+    setBulkConfirm(false)
+
+    const result = await bulkDeleteTripsAction(ids)
+    if ('error' in result) {
+      setDeleteError(result.error)
+      setOptimisticDeletedIds((prev) => prev.filter((oid) => !ids.includes(oid)))
+      setSelectedIds(ids)
+      setDeleting(false)
+      return
+    }
+
+    track('trips_bulk_deleted', { count: ids.length })
+    setTimeout(() => {
+      router.refresh()
+      setDeleting(false)
+      setOptimisticDeletedIds((prev) => prev.filter((oid) => !ids.includes(oid)))
     }, 400)
   }
 
@@ -307,6 +344,40 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
           </div>
         </div>
 
+        {/* Selection bar (list view) */}
+        {view === 'list' && selectedIds.length > 0 && (
+          <div className="px-4 py-2.5 border-b border-[var(--color-border)] bg-[var(--color-surface-sunken)] flex items-center justify-between gap-3">
+            <label className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] cursor-pointer">
+              <input
+                type="checkbox"
+                checked={visibleTrips.length > 0 && selectedIds.length === visibleTrips.length}
+                onChange={toggleSelectAll}
+                className="w-4 h-4 rounded border-[var(--color-border)] accent-[var(--color-green)] cursor-pointer"
+                aria-label="Select all trips"
+              />
+              {selectedIds.length} selected
+            </label>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedIds([])}
+                className="px-3 py-1.5 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+              >
+                Clear
+              </button>
+              <button
+                type="button"
+                onClick={() => setBulkConfirm(true)}
+                disabled={deleting}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-[var(--color-danger-text)] border border-[var(--color-danger-border)] bg-[var(--color-danger-bg)] hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50"
+              >
+                <Trash className="w-3.5 h-3.5" weight="bold" />
+                Delete {selectedIds.length}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Empty state */}
         {activeTrips.length === 0 && !deleting ? (
           <div className="py-24 flex flex-col items-center justify-center text-center px-6">
@@ -346,6 +417,9 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
                 isCrown={isCrownDependency(trip.destination)}
                 inPeak={inPeakWindow(trip)}
                 todayStr={todayStr}
+                selected={selectedIds.includes(trip.id)}
+                selectionActive={selectedIds.length > 0}
+                onToggleSelect={() => toggleSelect(trip.id)}
                 onEdit={() => openEdit(trip.id)}
                 onDelete={() => setDeleteTarget(trip.id)}
               />
@@ -398,6 +472,37 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
         </div>
       )}
 
+      {/* Bulk delete confirmation */}
+      {bulkConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="bulk-delete-title">
+          <div className="bg-[var(--color-surface)] rounded-2xl shadow-xl border border-[var(--color-border)] p-6 w-full max-w-sm">
+            <h2 id="bulk-delete-title" className="font-[family-name:var(--font-manrope)] font-bold text-lg text-[var(--color-text-primary)] mb-2">
+              Delete {selectedIds.length} trip{selectedIds.length !== 1 ? 's' : ''}?
+            </h2>
+            <p className="text-sm text-[var(--color-text-muted)] mb-5">This will recalculate your absence record.</p>
+            {deleteError && <p className="mb-4 text-sm text-[var(--color-danger-text)]">{deleteError}</p>}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setBulkConfirm(false)}
+                disabled={deleting}
+                className="flex-1 px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-tinted)] transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleBulkDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-3 text-sm font-semibold text-white bg-[var(--color-danger-text)] rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              >
+                {deleting ? 'Deleting…' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <PaywallModal open={showPaywall} onClose={() => setShowPaywall(false)} triggerReason="trip_limit" />
 
       <TripModal
@@ -425,6 +530,9 @@ function TripListRow({
   isCrown,
   inPeak,
   todayStr,
+  selected,
+  selectionActive,
+  onToggleSelect,
   onEdit,
   onDelete,
 }: {
@@ -433,6 +541,9 @@ function TripListRow({
   isCrown: boolean
   inPeak: boolean
   todayStr: string
+  selected: boolean
+  selectionActive: boolean
+  onToggleSelect: () => void
   onEdit: () => void
   onDelete: () => void
 }) {
@@ -465,9 +576,20 @@ function TripListRow({
 
   return (
     <li
-      className="group flex items-center gap-4 px-4 py-3.5 hover:bg-[var(--color-surface-raised)] transition-colors"
+      className="group flex items-center gap-3 px-4 py-3.5 hover:bg-[var(--color-surface-raised)] transition-colors"
       style={inPeak ? { borderLeft: '3px solid var(--color-status-amber)' } : undefined}
     >
+      {/* Select checkbox — revealed on hover, persistent once selecting */}
+      <input
+        type="checkbox"
+        checked={selected}
+        onChange={onToggleSelect}
+        aria-label={`Select trip to ${name}`}
+        className={`w-4 h-4 shrink-0 rounded border-[var(--color-border)] accent-[var(--color-green)] cursor-pointer transition-opacity ${
+          selected || selectionActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 focus:opacity-100'
+        }`}
+      />
+
       {/* Flag tile */}
       <div
         className="w-10 h-10 shrink-0 rounded-xl border border-[var(--color-border)] flex items-center justify-center text-xl"
