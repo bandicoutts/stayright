@@ -1851,3 +1851,27 @@ The prototype's list reads more like a travel record than a data grid, and surfa
 - `trips.spec.ts` heading assertions updated ("Trip Log" → "Your travel history"); search + delete-dialog assertions unchanged.
 
 **Related:** DECISION-005 (compute don't store), DECISION-011 (Crown Dependencies), DECISION-031 (trip modal), DECISION-074, DECISION-076; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-078] Reskin Phase 4 — Reports restyled to an evidence pack (period selector + A4 live preview)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`ReportsClient` is recomposed from three download cards into the prototype's evidence-pack (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- Two-column layout: a left panel with a **period selector** (presets: Full qualifying period / Last 12 months / Calendar year / Custom range), a compliance chip, and the export controls; a right **A4 live preview** (`ReportPreview.tsx`).
+- The live preview is an on-screen **mirror** of the `@react-pdf` absence record — letterhead, applicant + period meta, compliance statement, a 4-up summary (total days absent /180, rolling-window peak, days in period, compliance), the absence table, and footer. It derives the same figures from `absenceEngine` (not a second source of truth).
+- **Same engine + route + Pro-gating preserved.** Presets map onto the existing report types: Full → `type=ilr`; Last 12 months / Calendar year / Custom → `type=custom` with computed `start`/`end`. The rolling-window history report is preserved as a secondary "Also export rolling-window history" action (`type=rolling`).
+- **No "Previous reports" list** (D3 / DECISION-024 — reports are on-demand, no storage).
+- `reports/page.tsx` now passes trips + profile (name, visa route, visa start) so the preview can render; `/api/reports/pdf` and `reportDocuments.tsx` are unchanged.
+
+**Reasoning:**
+A live A4 preview lets the user see exactly what they'll hand to the Home Office before exporting, which the three opaque download buttons did not. Reusing the existing PDF engine keeps a single export path and avoids divergence. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 129 unit tests pass; confirmed visually at desktop width.
+
+**Consequences:**
+- `reports.spec.ts` rewritten for the new UI (heading "ILR evidence pack"; presets; "Upgrade to export" / "Export PDF"; custom-range validation). Paywall + download-event assertions preserved.
+
+**Related:** DECISION-023 (client PDF), DECISION-024 (no export history), DECISION-025 (notes → reason), DECISION-074; `docs/RESKIN-PLAN.md`
