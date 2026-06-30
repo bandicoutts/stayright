@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { isCrownDependency, type RiskStatus, type TripInput } from '@/lib/calculations/absenceEngine'
-import { RISK_CONFIG } from '@/lib/riskConfig'
 
 // Verdict word derives from the engine's risk status (DECISION-002 thresholds:
 // ≤120 SAFE / 121–150 WARNING / 151–180 DANGER / >180 BREACH). Never hard-code
@@ -97,7 +96,6 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
   }, [days])
 
   const tone = TONE[status]
-  const cfg = RISK_CONFIG[status]
   const breached = days > LIMIT
   const spare = LIMIT - days
   const spans = tripSpans(trips, windowStart, windowEnd)
@@ -111,12 +109,9 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
       <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-6 lg:gap-10 items-center">
         {/* Verdict */}
         <div>
-          <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="mb-3">
             <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)]">
               Current 12-month window
-            </span>
-            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase ${cfg.chip}`}>
-              {cfg.label}
             </span>
           </div>
 

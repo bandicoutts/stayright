@@ -1810,7 +1810,7 @@ The prototype's signature shell is a left sidebar; a bottom-nav + FAB is the sta
 **Decision:**
 The dashboard is recomposed around the signature rolling-window timeline and a trimmed bento (reskin plan: `docs/RESKIN-PLAN.md`). The circular QuotaRing is retired as the hero.
 
-- **`RollingWindowTimeline.tsx`** (new): hero verdict whose word + colour **derive from `getRiskStatus`** (so 124 days reads WARNING/amber, never a green "you're safe"); a 0–180 track with **watch lines at 120 and 150** (the prototype's 160/170 corrected to the real thresholds); a trailing-12-month trip span strip with a "today" marker.
+- **`RollingWindowTimeline.tsx`** (new): hero verdict whose word + colour **derive from `getRiskStatus`** (so 124 days reads WARNING/amber, never a green "you're safe"); a 0–180 track with **watch lines at 120 and 150** (the prototype's 160/170 corrected to the real thresholds); a trailing-12-month trip span strip with a "today" marker. The verdict word carries the status — there is no separate "Compliant/Approaching" status chip in the window header (removed as redundant).
 - **`AbsenceHeatmap.tsx`** (new): GitHub-style 7×52 daily-absence grid over the trailing year.
 - **`PeakTrajectoryChart.tsx`** (new): SVG sparkline of the rolling-window value across the qualifying span with a dashed 180 line and the peak marked. Backed by a new pure engine helper **`getRollingWindowSeries`** (additive; 5 unit tests; existing exports unchanged).
 - **`PlanTripSimulator.tsx`** (new): inline what-if reusing `calculateWhatIf` (projected to the trip's return date per DECISION-022) with **Save as planned** via the existing `addTripAction` (planned = future-dated trip, the derive approach from the reskin schema decision).

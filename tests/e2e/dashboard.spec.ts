@@ -118,11 +118,10 @@ test.describe('Dashboard', () => {
   test('verdict reflects a valid risk state', async ({ page }) => {
     await page.getByText(/\/ 180 days/i).first().waitFor({ timeout: 10_000 })
     const body = await page.locator('body').textContent()
-    // Verdict words derive from getRiskStatus; the status chip uses RISK_CONFIG labels.
-    const valid = [
-      "You're safe", 'Getting close', 'Very close', 'Over the limit',
-      'Compliant', 'Approaching Limit', 'Near Breach', 'Breach',
-    ].some((s) => body?.includes(s))
+    // Verdict word derives from getRiskStatus (no redundant status chip).
+    const valid = ["You're safe", 'Getting close', 'Very close', 'Over the limit'].some(
+      (s) => body?.includes(s)
+    )
     expect(valid).toBe(true)
   })
 
