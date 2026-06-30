@@ -326,10 +326,10 @@ export function SettingsClient({ profile, subscription, userEmail, isPro }: Sett
       <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">Settings</h1>
       <p className="text-sm text-[var(--color-text-muted)] mb-8">Manage your visa profile, account, billing, and preferences.</p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[212px_minmax(0,1fr)] gap-8 max-w-5xl">
+      <div className="grid grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)] gap-8 max-w-5xl">
         {/* Jump nav */}
-        <aside className="lg:sticky lg:top-6 self-start">
-          <nav className="flex lg:flex-col gap-1 overflow-x-auto" aria-label="Settings sections">
+        <aside className="md:sticky md:top-6 self-start">
+          <nav className="flex flex-wrap md:flex-col gap-1.5 md:gap-1" aria-label="Settings sections">
             {SECTIONS.map(({ id, label, Icon }) => {
               const active = activeSection === id
               return (
