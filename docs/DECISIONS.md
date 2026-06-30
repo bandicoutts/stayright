@@ -1824,3 +1824,30 @@ The timeline is the brand's signature graphic and shows where absences fall agai
 - `dashboard.spec.ts` updated: ring tests → timeline/verdict; the "Plan trip" modal-link test → inline-simulator presence; "Log trip" + save round-trip unchanged.
 
 **Related:** DECISION-002 (thresholds), DECISION-005 (compute don't store), DECISION-022 (what-if to return date), DECISION-074, DECISION-075; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-077] Reskin Phase 3 — Trips recomposed to a list with badges, Crown chip, peak span + List/Timeline toggle
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`TripsTableClient` is recomposed from a sortable table into the prototype's list (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- Header "Your travel history" with a **single header stat** (current rolling window N/180) plus mono meta chips (X abroad, Y planned).
+- **Conditional row badges**, derived (no schema change, per the reskin schema decision): "Abroad now" (departed, no return — amber dashed), "Planned" (`departure_date > today` — teal dashed), "Crown Dependency" (neutral chip + tooltip).
+- **Crown chip** shows the day count as `0d` with a "doesn't count" sub-label, value from `isCrownDependency`.
+- **Peak-window-as-a-span**: an explainer banner (amber left edge) names the tightest 12-month window from `getPeakRollingWindow`; rows overlapping that window get an amber left edge.
+- **List / Timeline toggle** — the Timeline is a NEW Gantt view (`TripsTimelineView.tsx`) plotting trips on a shared time axis with a today marker.
+- Preserved: search, single delete (with the "Delete this trip?" dialog), edit, the trip modal, paywall, `?modal=` deep links, optimistic delete, and PostHog events.
+- **Dropped** (not in the prototype, not covered by tests): multi-select bulk delete, sortable column headers, and the "window at departure" column. Single-trip delete remains; bulk delete can be re-added if wanted.
+
+**Reasoning:**
+The prototype's list reads more like a travel record than a data grid, and surfaces the compliance-relevant signals (badges, peak window, day counts) directly. Planned/abroad/taken are derived from dates, keeping the `trips` schema frozen. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 129 unit tests pass; confirmed both views visually.
+
+**Consequences:**
+- `trips.spec.ts` heading assertions updated ("Trip Log" → "Your travel history"); search + delete-dialog assertions unchanged.
+- Bulk delete UI removed — flagged for owner review.
+
+**Related:** DECISION-005 (compute don't store), DECISION-011 (Crown Dependencies), DECISION-031 (trip modal), DECISION-074, DECISION-076; `docs/RESKIN-PLAN.md`

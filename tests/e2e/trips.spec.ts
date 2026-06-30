@@ -144,9 +144,9 @@ test.describe('Trip CRUD', () => {
     await suppressCookieBanner(page)
   })
 
-  test('trips page loads with "Trip Log" heading', async ({ page }) => {
+  test('trips page loads with "Your travel history" heading', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
   })
 
   test('trip modal Step 1 shows "Where are you going?"', async ({ page }) => {
@@ -177,7 +177,7 @@ test.describe('Trip CRUD', () => {
 
   test('search input filters trip list', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
 
     const searchInput = page.getByPlaceholder('Search destinations…')
     await expect(searchInput).toBeVisible()
@@ -190,7 +190,7 @@ test.describe('Trip CRUD', () => {
 
   test('delete trip shows confirmation dialog', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
 
     const deleteBtn = page.getByRole('button', { name: 'Delete' }).first()
     if (await deleteBtn.isVisible({ timeout: 3_000 })) {
@@ -203,7 +203,7 @@ test.describe('Trip CRUD', () => {
 
   test('cancel delete dismisses the confirmation dialog', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
 
     const deleteBtn = page.getByRole('button', { name: 'Delete' }).first()
     if (await deleteBtn.isVisible({ timeout: 3_000 })) {
