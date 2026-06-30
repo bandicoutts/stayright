@@ -11,7 +11,7 @@ import { DashboardTripsPreview } from '@/components/app/dashboard/DashboardTrips
 import { SetupNudge } from '@/components/app/dashboard/SetupNudge'
 import { DashboardWelcome } from '@/components/app/dashboard/DashboardWelcome'
 import { DashboardGreeting } from '@/components/app/dashboard/DashboardGreeting'
-import { RollingWindowTimeline } from '@/components/app/dashboard/RollingWindowTimeline'
+import { WindowSpeedometer } from '@/components/app/dashboard/WindowSpeedometer'
 import { AbsenceHeatmap } from '@/components/app/dashboard/AbsenceHeatmap'
 import { PeakTrajectoryChart } from '@/components/app/dashboard/PeakTrajectoryChart'
 import { PlanTripSimulator } from '@/components/app/dashboard/PlanTripSimulator'
@@ -210,8 +210,8 @@ export default async function DashboardPage() {
 
       {/* Bento */}
       <div className="flex flex-col gap-5">
-        {/* Hero — signature rolling-window timeline */}
-        <RollingWindowTimeline
+        {/* Hero — signature window speedometer */}
+        <WindowSpeedometer
           days={rollingWindow.days}
           status={rollingWindow.status}
           windowStart={rollingWindow.windowStart}

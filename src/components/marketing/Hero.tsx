@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { RollingWindowTimeline } from '@/components/app/dashboard/RollingWindowTimeline';
+import { WindowSpeedometer } from '@/components/app/dashboard/WindowSpeedometer';
 import { getCurrentRollingWindow, type TripInput } from '@/lib/calculations/absenceEngine';
 
 // Sample data for the hero — a SAFE story (well under the 120-day watch line),
-// so the verdict derives to a truthful green "You're safe" (reskin D5).
+// so the verdict derives to a truthful green "Safe" with the needle in the green zone (reskin D5).
 function isoDaysAgo(n: number): string {
   const d = new Date();
   d.setDate(d.getDate() - n);
@@ -84,12 +84,12 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ── Right column — signature window timeline ── */}
+        {/* ── Right column — signature window speedometer ── */}
         <div
           className="animate-fade-up"
           style={{ animationDelay: '200ms', animationFillMode: 'both' }}
         >
-          <RollingWindowTimeline
+          <WindowSpeedometer
             days={window.days}
             status={window.status}
             windowStart={window.windowStart}

@@ -111,10 +111,10 @@ test.describe('Dashboard', () => {
   })
 
   test('verdict reflects a valid risk state', async ({ page }) => {
-    await page.getByText(/\/ 180 days/i).first().waitFor({ timeout: 10_000 })
+    await page.getByText(/\/ 180/).first().waitFor({ timeout: 10_000 })
     const body = await page.locator('body').textContent()
-    // Verdict word derives from getRiskStatus (no redundant status chip).
-    const valid = ["You're safe", 'Getting close', 'Very close', 'Over the limit'].some(
+    // Verdict word derives from getRiskStatus (WindowSpeedometer status pill).
+    const valid = ['Safe', 'Approaching', 'Close to limit', 'Over limit'].some(
       (s) => body?.includes(s)
     )
     expect(valid).toBe(true)

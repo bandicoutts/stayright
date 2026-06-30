@@ -2068,3 +2068,26 @@ The dashboard's signature tile (`RollingWindowTimeline`) is recomposed for clean
 The tile "didn't look well put together": competing big numbers broke "one hero metric per screen" (`.impeccable.md` §5), centred alignment looked wonky against the taller column, and the dense axis collided on the narrow right column. All changes are presentational — the props, `tripSpans`, animated fill, watch lines (120/150), today marker, and verdict-derives-from-status contract (DECISION-002) are unchanged, so the marketing Hero that reuses this component inherits the improvement. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
 
 **Related:** DECISION-076 (introduced the timeline), DECISION-002 (thresholds the verdict derives from), DECISION-080 (marketing Hero reuses it); `.impeccable.md` (one-hero-metric principle)
+
+---
+
+### [DECISION-089] Speedometer gauge replaces the rolling-window timeline as the signature graphic
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The dashboard + marketing-Hero signature graphic becomes a **270° speedometer gauge** (`WindowSpeedometer`, per the owner's "Window — 2A Spec"), replacing `RollingWindowTimeline` (deleted). One component is used in both places (`dashboard/page.tsx`, marketing `Hero.tsx`).
+
+- **Gauge (CSS, no SVG):** a `conic-gradient` zone ring (green/amber/red) `from 225deg` over a 270° arc with a 90° gap at the bottom; an inner hole punches it to a ~22px band; a needle pivots from the hub to `225 + days/180·270` deg (animated in on mount, reduced-motion safe). Zone breaks sit at `120/180·270 = 180°` and `150/180·270 = 225°`. Below: a `{days} / 180` readout and a status pill. Right column: zone legend, the trailing-12-months track (reused `tripSpans` logic + quarterly axis), and a two-cell stat strip.
+- **Code wins on logic:** colour + word still derive from the engine's `RiskStatus` (DECISION-002), not the spec's `>=` JS — so the 120/150 boundaries match `getRiskStatus`. The needle clamps to `[0,180]`; the readout shows the real (possibly >180) number.
+- **Adaptations from the spec (look reconciled to our system):**
+  - **Themed, not dark-only.** Every spec hex maps to a semantic token (status → `--color-green-light`/`--color-status-amber`/`--color-status-red`; surfaces/text/borders → tokens), with `color-mix()` for the zone tints and pill bg/border, so it works light + dark (DECISION-D8).
+  - **Fonts:** kept our JetBrains Mono (`--font-mono`, light weight) for the readout/values rather than adding Space Grotesk — avoids a 4th webfont outside the DECISION-074 type system. (Switchable if we later want the exact spec face.)
+  - **Status copy** adopts the spec's single words (Safe / Approaching / Close to limit / Over limit) — drops the old "You're safe".
+  - **Second stat is adaptive** (next of 120 → 150 → 180 → "over"), so it stays truthful past 120 (the spec's fixed "until 120" would read 0 at 140 days).
+
+**Reasoning:**
+The owner prefers the speedometer to the timeline/ring; a gauge reads the at-a-glance "how close am I" faster than a linear bar and keeps "one hero metric." Reusing one component keeps app↔marketing consistency (the `.impeccable.md` signature-graphic note now means the gauge). Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green; geometry hand-checked against the spec's sanity values (days=9 → needle 238.5°, z1 180°, z2 225°). `dashboard.spec` updated (readout `/ 180`, new status words; gauge carries `role="progressbar"`). Live visual check still pending — the dev port was held by the owner's server.
+
+**Related:** DECISION-002 (thresholds), DECISION-076/080/088 (the timeline this supersedes), DECISION-074 (type system), DECISION-061 (tokens); `Stayright Window - 2A Spec.md`
