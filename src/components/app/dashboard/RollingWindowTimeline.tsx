@@ -103,36 +103,36 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
 
   return (
     <div
-      className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 md:p-7"
+      className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-7 md:p-8"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-6 lg:gap-10 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center">
         {/* Verdict */}
         <div>
-          <div className="mb-3">
-            <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)]">
+          <div className="mb-5">
+            <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.14em] uppercase text-[var(--color-text-faint)]">
               Current 12-month window
             </span>
           </div>
 
           <p
-            className="font-[family-name:var(--font-manrope)] font-extrabold tracking-[-0.03em] leading-[1.02] text-[clamp(1.75rem,3vw,2.4rem)]"
+            className="font-[family-name:var(--font-manrope)] font-extrabold tracking-[-0.03em] leading-[1.05] text-[clamp(2rem,3.6vw,2.85rem)]"
             style={{ color: tone }}
           >
             {VERDICT[status]}
           </p>
 
-          <div className="flex items-baseline gap-2.5 mt-2">
+          <div className="flex items-baseline gap-3 mt-3">
             <span
-              className="font-[family-name:var(--font-mono)] font-semibold leading-[0.85] tracking-[-0.04em] text-[clamp(3.5rem,7vw,5.5rem)]"
+              className="font-[family-name:var(--font-mono)] font-semibold leading-[0.82] tracking-[-0.04em] text-[clamp(3.75rem,8.5vw,6.25rem)]"
               style={{ color: tone }}
             >
               {days}
             </span>
-            <span className="text-base font-semibold text-[var(--color-text-muted)]">/ {LIMIT} days abroad</span>
+            <span className="text-[17px] font-semibold text-[var(--color-text-muted)]">/ {LIMIT} days abroad</span>
           </div>
 
-          <p className="text-sm text-[var(--color-text-muted)] mt-2">
+          <p className="text-sm text-[var(--color-text-muted)] mt-4">
             {breached ? (
               <><span className="font-semibold" style={{ color: tone }}>{Math.abs(spare)} days over</span> the 180-day limit</>
             ) : (

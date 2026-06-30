@@ -75,28 +75,34 @@ export function AbsenceHeatmap({ trips, today }: Props) {
       </div>
 
       <div className="overflow-x-auto">
-        <div className="inline-flex flex-col gap-1.5 min-w-full">
-          <div className="flex gap-[3px]">
-            {columns.map((col, c) => (
-              <div key={c} className="flex flex-col gap-[3px]">
-                {col.map((cell, r) => (
-                  <div
-                    key={r}
-                    className="w-[11px] h-[11px] rounded-[2px]"
-                    style={{
-                      background: cell.future
-                        ? 'transparent'
-                        : cell.absent
-                          ? 'var(--color-green)'
-                          : 'var(--color-surface-sunken)',
-                    }}
-                    title={new Date(cell.ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (cell.absent ? ' · abroad' : '')}
-                  />
-                ))}
-              </div>
-            ))}
+        <div className="inline-block">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateRows: 'repeat(7, 11px)',
+              gridAutoFlow: 'column',
+              gridAutoColumns: '11px',
+              gap: '3px',
+            }}
+          >
+            {columns.flatMap((col, c) =>
+              col.map((cell, r) => (
+                <div
+                  key={`${c}-${r}`}
+                  className="rounded-[2px]"
+                  style={{
+                    background: cell.future
+                      ? 'transparent'
+                      : cell.absent
+                        ? 'var(--color-green)'
+                        : 'var(--color-surface-sunken)',
+                  }}
+                  title={new Date(cell.ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (cell.absent ? ' · abroad' : '')}
+                />
+              ))
+            )}
           </div>
-          <div className="relative h-3">
+          <div className="relative h-3 mt-2" style={{ width: WEEKS * 14 }}>
             {monthLabels.map((m, i) => (
               <span
                 key={i}
