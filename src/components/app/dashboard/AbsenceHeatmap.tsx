@@ -42,6 +42,7 @@ export function AbsenceHeatmap({ trips, today }: Props) {
   const columns: { ts: number; absent: boolean; future: boolean }[][] = []
   const monthLabels: { col: number; label: string }[] = []
   let lastMonth = -1
+  let monthChanges = 0
 
   for (let c = 0; c < WEEKS; c++) {
     const colStart = firstColStart + c * 7 * DAY
@@ -53,7 +54,11 @@ export function AbsenceHeatmap({ trips, today }: Props) {
     columns.push(col)
     const month = new Date(colStart).getUTCMonth()
     if (month !== lastMonth) {
-      monthLabels.push({ col: c, label: new Date(colStart).toLocaleDateString('en-GB', { month: 'short' }) })
+      // Label every other month so labels don't overlap on a narrow tile.
+      if (monthChanges % 2 === 0) {
+        monthLabels.push({ col: c, label: new Date(colStart).toLocaleDateString('en-GB', { month: 'short' }) })
+      }
+      monthChanges++
       lastMonth = month
     }
   }
