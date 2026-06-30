@@ -2001,3 +2001,21 @@ The trip-modal calendar (`DateRangePicker`) is reworked for touch and for fast n
 The 36px centred targets were the mobile pain point the owner flagged ("easy to select the right date, unlikely to select the wrong one"), and stepping one month at a time made back-dated trips tedious. Both are pure interaction/layout changes — selection logic, the departure/return state machine, the "log return later" (null-return) path, and the `onDeparture/onReturn/onReturnDateKnown` contract are unchanged, so `TripFlowClient` and onboarding's `TripForm` consume it without edits. The three E2E calendar helpers (`trips`/`smoke`/`dashboard`) were repointed to read the month label from the new "Choose month and year" button (the month-stepping path is unchanged). Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
 
 **Related:** DECISION-082 (single-sheet modal that hosts the picker), DECISION-043 (WCAG/touch); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-085] Auth + error screens migrated to semantic tokens (completes the DECISION-083 deferral)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The screens DECISION-083 left on hardcoded hex are migrated to the semantic token system (DECISION-061) so they theme light+dark like the rest of the app.
+
+- Files: `error.tsx`, `not-found.tsx`, and the auth screens `auth/check-email`, `auth/verify-email`, `auth/new-password`, `auth/reset-password`. Replacements: `#F8F9FA`→`--color-bg`, `bg-white`→`--color-surface`, `#191C1D`→`--color-text-primary`, `#191C1D/8`→`--color-border`, `#191C1D/15`→`--color-border-strong`, `#3D4A42`→`--color-text-muted`, `#3D4A42/40`→`--color-text-faint`, `#006948`→`--color-green`, `#006948/10`→`--color-green-pale`, `#BA1A1A`→`--color-danger-text`, `bg-red-50/border-red-200`→`--color-danger-bg/-border`, and the `from-[#006948] to-[#00855D]` solid/gradient buttons → `var(--gradient-green)` + `var(--shadow-button)`. Cards adopt the shared `var(--shadow-card)` idiom.
+- **Deliberately kept hardcoded:** the Google logo SVG fills in `LoginForm` (`#4285F4/#34A853/#FBBC05/#EA4335` — brand-mandated, like the PDF brand colours) and the `#fff` wordmark text on the green logo badge in `(auth)/layout.tsx` (white-on-green, correct in both themes).
+
+**Reasoning:**
+These were pre-existing light-only screens, not part of the original reskin phase list, so DECISION-083 flagged rather than touched them; the owner then asked for them done. Pure token swap — no copy, logic, or auth-flow change. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
+
+**Related:** DECISION-061 (semantic token architecture), DECISION-081 (onboarding token migration, same idiom), DECISION-083 (flagged these files); `docs/RESKIN-PLAN.md`
