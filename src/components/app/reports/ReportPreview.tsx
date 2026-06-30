@@ -98,9 +98,9 @@ export function ReportPreview({
         {/* 4-up summary */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           <SummaryCell label="Total days absent" value={`${totalDays}`} sub="/ 180" />
-          <SummaryCell label="Rolling window peak" value={`${peakDays}`} sub="/ 180" tone={VERDICT[getRiskStatus(peakDays)].tone} />
+          <SummaryCell label="Rolling window peak" value={`${peakDays}`} sub="/ 180" tone={verdict.tone} />
+          <SummaryCell label="Days to spare" value={`${Math.max(0, 180 - peakDays)}`} sub="days" />
           <SummaryCell label="Days in period" value={`${periodDays}`} sub="days" />
-          <SummaryCell label="Compliance" value={verdict.label} tone={verdict.tone} small />
         </div>
 
         {/* Absence table */}

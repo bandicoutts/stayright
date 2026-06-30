@@ -196,12 +196,11 @@ export default function Pricing() {
             {/* Most Popular badge */}
             <div className="absolute -top-[12px] left-1/2 -translate-x-1/2">
               <span
-                className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-manrope)] font-bold tracking-[0.08em] uppercase whitespace-nowrap"
+                className="inline-flex items-center px-[14px] py-[5px] rounded-full font-[family-name:var(--font-manrope)] font-bold tracking-[0.08em] uppercase whitespace-nowrap text-white"
                 style={{
                   fontSize: '0.625rem',
-                  color: 'var(--color-green)',
-                  background: 'var(--color-green-pale)',
-                  border: '1px solid var(--color-border-strong)',
+                  background: 'var(--gradient-green)',
+                  boxShadow: 'var(--shadow-button)',
                 }}
               >
                 Most Popular
