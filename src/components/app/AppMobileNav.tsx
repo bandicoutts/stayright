@@ -165,7 +165,7 @@ export function AppMobileNav({
         }}
         aria-label="Mobile navigation"
       >
-        <div className="relative grid grid-cols-5 items-center h-[60px]">
+        <div className="relative grid grid-cols-5 h-[62px]">
           {NAV_ITEMS.slice(0, 2).map(({ href, label, Icon }) => (
             <BottomItem key={href} href={href} label={label} Icon={Icon} active={isActive(href)} />
           ))}
@@ -213,8 +213,8 @@ function BottomItem({
       className="flex flex-col items-center justify-center gap-1 h-full no-underline"
       style={{ color: active ? 'var(--color-green)' : 'var(--color-text-faint)' }}
     >
-      <Icon className="w-[22px] h-[22px]" weight={active ? 'fill' : 'regular'} />
-      <span className="text-[10px] font-medium">{label}</span>
+      <Icon className="w-[22px] h-[22px] shrink-0" weight={active ? 'fill' : 'regular'} />
+      <span className="text-[10px] font-medium leading-none whitespace-nowrap">{label}</span>
     </Link>
   )
 }
