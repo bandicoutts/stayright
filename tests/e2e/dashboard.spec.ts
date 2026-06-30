@@ -43,11 +43,7 @@ async function navigateCalendarToMonth(
   targetYear: number,
   targetMonth: number
 ) {
-  const headingLocator = page
-    .locator('[aria-label="Next month"]')
-    .locator('..')
-    .locator('p')
-    .first()
+  const headingLocator = page.getByRole('button', { name: 'Choose month and year' })
 
   for (let i = 0; i < 36; i++) {
     const text = await headingLocator.textContent()

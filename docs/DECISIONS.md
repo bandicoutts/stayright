@@ -1982,3 +1982,22 @@ Final reskin pass — remove what the earlier phases superseded and finish the f
 The legacy nav/ring/trips components were kept through Phases 1–3 to keep each diff reviewable; with the reskin shipped they are pure dead weight and were removed once a grep confirmed no references. The font-variable rename removes the last misleading legacy names (a reader seeing `--font-manrope` would expect Manrope, not Bricolage). Verified end-to-end: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green, no dangling imports of any deleted file. Note left for the owner: the auth screens (`(auth)/auth/*`) and `error.tsx`/`not-found.tsx` still carry a few hardcoded hex values (e.g. `#191C1D`) — they were never in the reskin phase list, so they were left untouched beyond the mechanical font rename.
 
 **Related:** DECISION-074 (loaded Bricolage/Hanken into the legacy slots), DECISION-075 (AppSidebar/AppMobileNav), DECISION-076 (QuotaRing retired), DECISION-077 (TripsClient superseded); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-084] DateRangePicker — full-cell tap targets + month/year jump picker
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The trip-modal calendar (`DateRangePicker`) is reworked for touch and for fast navigation to distant months (impeccable `adapt`: 44×44px touch targets, no hover-dependence for core actions).
+
+- **Tap targets:** each day's hit area is now the **full grid column at 44px tall** (`w-full h-11`) instead of a 36px centred circle with dead gaps — so on a phone it's hard to mis-tap an adjacent day. The circular brand visual is kept as a centred 36px inner `<span>`; the range band sits behind it. Month/year nav chevrons bumped 32px → 44px.
+- **Month/year jump:** the centre "Month Year" label is now a button that toggles an in-card picker — a year stepper (◄ year ►) plus a 3×4 month grid. Logging a 2023 trip from 2026 is ~3 taps (year ◄×3 → month) instead of stepping back 36 months. Selecting a month closes the picker and jumps the calendar; the ±1-month chevrons remain for fine adjustment (disabled while the picker is open).
+- **Touch-safe:** hover-preview of the range end stays as a pointer-only enhancement; the core flow is tap-departure → tap-return, no hover required.
+
+**Reasoning:**
+The 36px centred targets were the mobile pain point the owner flagged ("easy to select the right date, unlikely to select the wrong one"), and stepping one month at a time made back-dated trips tedious. Both are pure interaction/layout changes — selection logic, the departure/return state machine, the "log return later" (null-return) path, and the `onDeparture/onReturn/onReturnDateKnown` contract are unchanged, so `TripFlowClient` and onboarding's `TripForm` consume it without edits. The three E2E calendar helpers (`trips`/`smoke`/`dashboard`) were repointed to read the month label from the new "Choose month and year" button (the month-stepping path is unchanged). Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
+
+**Related:** DECISION-082 (single-sheet modal that hosts the picker), DECISION-043 (WCAG/touch); `docs/RESKIN-PLAN.md`
