@@ -1942,3 +1942,24 @@ The existing 2-step onboarding flow is restyled to the reskin tokens/idioms; the
 Onboarding was the last unstyled surface — hardcoded light-only hex made it look off-brand once the rest of the app moved to the green-led/obsidian palette. A token-only restyle brings it in line (and adds dark mode for free) without touching the verified flow logic. Verified: `tsc --noEmit` clean, ESLint clean on all four files, `next build` compiles, `vitest` 129/129 green. `onboarding.spec` only asserts the redirect guards (no form-internal selectors), so it is unaffected.
 
 **Related:** DECISION-017 (onboarding_completed gating), DECISION-074 (palette/fonts), DECISION-075 (shell), DECISION-076 (PlanTripSimulator idiom); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-082] Reskin Phase 8 — Trip modal recomposed to a single-sheet form + success state
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`TripFlowClient` is recomposed from a 3-step wizard (destination → dates → confirm) into a **single scrolling sheet**, and a **success state** replaces the save-then-navigate behaviour (reskin plan `docs/RESKIN-PLAN.md`, Phase 8).
+
+- **Single sheet:** destination (combobox + inline "Counts as 0 days" Crown hint), travel dates (`DateRangePicker`, including the "I'll log my return later" → null-return path), the live `CalcPanel` compliance impact, and the reason-for-travel field are all visible at once. The step indicator and the Next/Back gating are gone; validation runs once on submit (`validate()` consolidates the former per-step checks: destination required, departure required, return after departure, overlap blocks).
+- **Success state:** after a successful save the sheet shows a green check + "Trip logged" / "Changes saved" + the trip summary, with **View in Trips / Log another / Done** actions (Log another resets the form; Done → `redirectTo`/`returnTo`). Previously the flow navigated away immediately. `TripModal` now passes `onSaved` so the success screen does not trip the unsaved-changes guard.
+- **Notes → "Reason for travel"** (DECISION-025): the field is relabelled and annotated ("Appears as 'Reason for travel' in your ILR export").
+- **Planned is still derived (D2 / DECISION-077):** the prototype's "Mark as a planned trip" checkbox is rendered as a **derived, read-only "Planned" chip** shown when `departure_date > today` — no `trips.status` column, no persisted flag. A non-functional checkbox would have implied stored state we deliberately don't have.
+- **Logic preserved verbatim:** `addTripAction`/`updateTripAction`, edit-mode prefill + self-exclusion from the what-if base, `calculateWhatIf` projected to the return date (DECISION-022), Crown-Dependency 0-day handling, overlap detection, and every PostHog event (`trip_plan_opened`, `trip_plan_completed`, `trip_logged`, `trip_edited`, `trip_count_milestone`, `trip_plan_just_checking`). `TripModal` chrome and the already-tokenized `DateRangePicker`/`DestinationAutocomplete`/`PaywallModal` are unchanged apart from the `onSaved` wire-up.
+
+**Reasoning:**
+The wizard's step gating added friction the prototype's single form removes, and saving with no acknowledgement felt abrupt — the success state gives a clear "done, now what?" moment and a fast "Log another" loop. Keeping the calculation/action/event layer untouched means the recompose is presentational + navigational only. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green. E2E specs that drove the wizard (`trips.spec`, `smoke.spec`, `dashboard.spec`) were updated to the single-sheet + success-state selectors (Next/Step assertions removed; save → "Trip logged" → View in Trips/Done).
+
+**Related:** DECISION-022 (what-if projects to return date), DECISION-025 (notes → Reason for Travel), DECISION-073 (prior modal layout), DECISION-075 (FAB opens the modal), DECISION-077 (planned derived); `docs/RESKIN-PLAN.md`

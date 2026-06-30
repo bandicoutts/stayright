@@ -76,14 +76,13 @@ async function clickDay(
   await page.getByRole('button', { name: label, exact: true }).click()
 }
 
-async function goToStep2(
+// Single-sheet modal (reskin Phase 8): destination + dates on one form.
+async function fillDestination(
   page: import('@playwright/test').Page,
   destination: string
 ) {
   await page.getByLabel('Destination').fill(destination)
   await page.keyboard.press('Tab')
-  await page.getByRole('button', { name: 'Next →' }).click()
-  await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
 }
 
 // ---------------------------------------------------------------------------
@@ -165,18 +164,18 @@ test.describe('Dashboard — pro user', () => {
     // The dashboard "Log trip" button is a <Link href="/trips?modal=log&returnTo=/dashboard">.
     // Navigate directly to that URL to simulate the click and verify the returnTo flow.
     await page.goto('/trips?modal=log&returnTo=%2Fdashboard')
-    await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Destination')).toBeVisible({ timeout: 10_000 })
 
-    await goToStep2(page, 'Dashboard Return Test')
+    await fillDestination(page, 'Dashboard Return Test')
     await navigateCalendarToMonth(page, 2024, 2) // March 2024
     await clickDay(page, 2024, 2, 5)
     await clickDay(page, 2024, 2, 10)
 
-    await page.getByRole('button', { name: 'Next →' }).click()
-    await expect(page.getByText('Step 3 of 3')).toBeVisible({ timeout: 5_000 })
-    await page.getByRole('button', { name: 'Save trip' }).click()
+    await page.getByRole('button', { name: 'Log trip' }).click()
 
-    // TripFlowClient reads returnTo from the URL and calls router.push('/dashboard')
+    // Success state appears; "Done" reads returnTo from the URL → router.push('/dashboard')
+    await expect(page.getByText('Trip logged')).toBeVisible({ timeout: 15_000 })
+    await page.getByRole('button', { name: 'Done' }).click()
     await page.waitForURL('**/dashboard', { timeout: 15_000 })
     expect(page.url()).not.toContain('modal=')
   })

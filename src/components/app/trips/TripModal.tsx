@@ -217,6 +217,7 @@ export function TripModal({
           tripCount={tripCount}
           initialTrip={initialTrip}
           redirectTo={redirectTo}
+          onSaved={() => setIsDirty(false)}
         />
       </div>
 

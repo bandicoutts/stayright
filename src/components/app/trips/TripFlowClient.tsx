@@ -18,6 +18,7 @@ import { RISK_CONFIG } from '@/lib/riskConfig'
 import { formatDateRange } from '@/lib/utils/dateFormatters'
 import { useDebounce } from '@/hooks/useDebounce'
 import { Spinner } from '@/components/ui/Spinner'
+import { Check } from '@/components/ui/Icons'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -40,30 +41,8 @@ interface TripFlowClientProps {
   initialTrip?: InitialTrip
   /** Where to navigate after a successful save or "Just checking". Defaults to '/dashboard'. */
   redirectTo?: string
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-
-// ---------------------------------------------------------------------------
-// Step indicator
-// ---------------------------------------------------------------------------
-
-function StepDots({ current, total }: { current: number; total: number }) {
-  return (
-    <div className="flex items-center gap-2 mb-8">
-      {Array.from({ length: total }).map((_, i) => (
-        <div
-          key={i}
-          className={`h-1.5 rounded-full transition-all ${
-            i < current ? 'w-8 bg-[var(--color-green)]' : i === current - 1 ? 'w-8 bg-[var(--color-green)]' : 'w-8 bg-[var(--color-border)]'
-          }`}
-        />
-      ))}
-    </div>
-  )
+  /** Called once after a successful save so the host modal can drop its "discard?" guard. */
+  onSaved?: () => void
 }
 
 // ---------------------------------------------------------------------------
@@ -84,21 +63,21 @@ function CalcPanel({
   const barPct = Math.min(100, (result.days / 180) * 100)
 
   return (
-    <div aria-live="polite" className="mt-4 p-4 bg-[var(--color-bg-tinted)] rounded-xl space-y-3">
+    <div aria-live="polite" className="p-4 bg-[var(--color-bg-tinted)] rounded-xl space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm text-[var(--color-text-muted)]">This trip</span>
-        <span className="text-sm font-semibold text-[var(--color-text-primary)]">{tripDays} {tripDays === 1 ? 'day' : 'days'}</span>
+        <span className="font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-text-primary)]">{tripDays} {tripDays === 1 ? 'day' : 'days'}</span>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-sm text-[var(--color-text-muted)]">Days remaining after</span>
-        <span className="text-sm font-semibold text-[var(--color-text-primary)]">{remaining} days</span>
+        <span className="font-[family-name:var(--font-mono)] text-sm font-semibold text-[var(--color-text-primary)]">{remaining} days</span>
       </div>
 
       {/* Progress bar */}
       <div>
         <div className="flex justify-between text-xs text-[var(--color-text-muted)] mb-1">
-          <span>{result.days} / 180 days used</span>
-          <span>Rolling window to {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</span>
+          <span className="font-[family-name:var(--font-mono)]">{result.days} / 180 days used</span>
+          <span>to {windowEndDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</span>
         </div>
         <div className="w-full h-2 bg-[var(--color-text-primary)]/8 rounded-full overflow-hidden" role="progressbar" aria-valuenow={result.days} aria-valuemin={0} aria-valuemax={180}>
           <div
@@ -141,7 +120,7 @@ function CalcPanel({
 }
 
 // ---------------------------------------------------------------------------
-// Main component
+// Main component — single-sheet form + success state (reskin Phase 8)
 // ---------------------------------------------------------------------------
 
 export function TripFlowClient({
@@ -151,6 +130,7 @@ export function TripFlowClient({
   tripCount,
   initialTrip,
   redirectTo = '/dashboard',
+  onSaved,
 }: TripFlowClientProps) {
   const router = useRouter()
 
@@ -162,9 +142,6 @@ export function TripFlowClient({
     }
     return existingTrips
   }, [mode, initialTrip, existingTrips])
-
-  // Step state
-  const [step, setStep] = useState<1 | 2 | 3>(1)
 
   // Form values — pre-fill for edit mode
   const [destination, setDestination] = useState(initialTrip?.destination ?? '')
@@ -178,8 +155,16 @@ export function TripFlowClient({
   const [saving, setSaving] = useState(false)
   const [navigating, setNavigating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Success state — shown after a save instead of navigating straight away
+  const [saved, setSaved] = useState<{ destination: string; range: string } | null>(null)
 
   const isCrownDep = destination.trim().length > 0 && isCrownDependency(destination)
+
+  // Today (UTC ISO) — used to derive whether this is a planned (future) trip
+  const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), [])
+  // Planned is DERIVED from the dates (D2 / DECISION-077): a future departure shows
+  // as "Planned" until the day passes. There is no stored status column.
+  const isPlanned = !!departureDate && departureDate > todayISO
 
   // Fire trip_plan_opened once when the plan mode component mounts
   useEffect(() => {
@@ -193,7 +178,7 @@ export function TripFlowClient({
   const debouncedReturn = useDebounce(returnDate, 400)
 
   // ---------------------------------------------------------------------------
-  // Live calculation (Step 2)
+  // Live calculation
   // ---------------------------------------------------------------------------
 
   const calcResult = useMemo<{ result: RollingWindowResult; tripDays: number; windowEnd: Date } | null>(() => {
@@ -240,8 +225,8 @@ export function TripFlowClient({
     return hasOverlappingTrip(baseTrips, debouncedDeparture, retDate)
   }, [debouncedDeparture, debouncedReturn, returnDateKnown, baseTrips])
 
-  // Risk status for confirm step summary
-  const confirmRisk = useMemo(() => {
+  // Risk status for the summary chip
+  const summaryRisk = useMemo(() => {
     if (!returnDate || !returnDateKnown) return null
     if (isCrownDep) return 'SAFE' as const
     if (!departureDate || returnDate <= departureDate) return null
@@ -253,44 +238,34 @@ export function TripFlowClient({
     return getRiskStatus(days)
   }, [destination, departureDate, returnDate, returnDateKnown, isCrownDep])
 
+  const tripAbsenceDays = useMemo(() => {
+    if (!returnDateKnown || !returnDate || !departureDate || returnDate <= departureDate) return null
+    if (isCrownDep) return 0
+    return calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate })
+  }, [destination, departureDate, returnDate, returnDateKnown, isCrownDep])
+
   // ---------------------------------------------------------------------------
   // Handlers
   // ---------------------------------------------------------------------------
 
-  function handleStep1Next() {
-    if (!destination.trim()) {
-      setError('Please enter a destination.')
-      return
-    }
-    setError(null)
-    setStep(2)
-  }
-
-  function handleStep2Next() {
-    if (!departureDate) {
-      setError('Please enter a departure date.')
-      return
-    }
+  function validate(): string | null {
+    if (!destination.trim()) return 'Please enter a destination.'
+    if (!departureDate) return 'Please enter a departure date.'
     if (returnDateKnown) {
-      if (!returnDate) {
-        setError("Please enter a return date, or choose \"I'll log my return later\".")
-        return
-      }
-      if (returnDate <= departureDate) {
-        setError('Departure date must be before the return date.')
-        return
-      }
+      if (!returnDate) return "Please enter a return date, or choose \"I'll log my return later\"."
+      if (returnDate <= departureDate) return 'Departure date must be before the return date.'
     }
-    // Block if the new dates collide with an existing trip
-    if (overlapWarning) {
-      setError('These dates overlap with an existing trip. Please check your trip history.')
-      return
-    }
-    setError(null)
-    setStep(3)
+    if (overlapWarning) return 'These dates overlap with an existing trip. Please check your trip history.'
+    return null
   }
 
   async function handleSave() {
+    const validationError = validate()
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
     setSaving(true)
     setError(null)
 
@@ -336,12 +311,17 @@ export function TripFlowClient({
       }
     }
 
-    // Bust the client-side router cache so the dashboard quota ring
-    // reflects the new trip immediately when navigated to.
-    // revalidatePath (in the server action) handles the server cache;
+    // Bust the client-side router cache so the dashboard / trips list reflect the
+    // new trip immediately. revalidatePath (server action) handles the server cache;
     // router.refresh() handles the client prefetch cache.
     router.refresh()
-    router.push(redirectTo)
+    // Let the host modal drop its unsaved-changes guard, then show the success state.
+    onSaved?.()
+    setSaved({
+      destination: data.destination,
+      range: formatDateRange(data.departure_date, data.return_date),
+    })
+    setSaving(false)
   }
 
   function handleJustChecking() {
@@ -350,309 +330,228 @@ export function TripFlowClient({
     router.push(redirectTo)
   }
 
-  // ---------------------------------------------------------------------------
-  // Step labels
-  // ---------------------------------------------------------------------------
+  function handleLogAnother() {
+    setSaved(null)
+    setDestination('')
+    setDepartureDate('')
+    setReturnDate('')
+    setReturnDateKnown(true)
+    setNotes('')
+    setError(null)
+  }
+
+  const saveLabel =
+    mode === 'plan' ? 'Save this trip' :
+    mode === 'edit' ? 'Save changes' :
+                      'Log trip'
 
   // ---------------------------------------------------------------------------
-  // Render
+  // Success state
+  // ---------------------------------------------------------------------------
+
+  if (saved) {
+    const successHeading = mode === 'edit' ? 'Changes saved' : 'Trip logged'
+    return (
+      <div className="p-5 md:p-6">
+        <div className="flex flex-col items-center text-center py-6">
+          <div className="w-16 h-16 rounded-full bg-[var(--color-green-pale)] flex items-center justify-center mb-5">
+            <Check className="w-8 h-8 text-[var(--color-green)]" weight="bold" />
+          </div>
+          <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl tracking-tight text-[var(--color-text-primary)] mb-1">
+            {successHeading}
+          </h2>
+          <p className="text-sm text-[var(--color-text-muted)] mb-5">
+            <span className="font-medium text-[var(--color-text-primary)]">{saved.destination}</span>
+            {' · '}
+            <span className="font-[family-name:var(--font-mono)]">{saved.range}</span>
+          </p>
+
+          <div className="w-full space-y-2">
+            <button
+              type="button"
+              onClick={() => router.push('/trips')}
+              className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+              style={{ background: 'var(--gradient-green)' }}
+            >
+              View in Trips
+            </button>
+            {mode !== 'edit' && (
+              <button
+                type="button"
+                onClick={handleLogAnother}
+                className="w-full border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
+              >
+                Log another
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => router.push(redirectTo)}
+              className="w-full text-[var(--color-text-muted)] rounded-xl px-4 py-2.5 text-sm font-medium hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ---------------------------------------------------------------------------
+  // Form (single sheet)
   // ---------------------------------------------------------------------------
 
   return (
     <div className="p-4 md:p-5">
-      <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-5 md:p-6">
-        <StepDots current={step} total={3} />
+      <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] shadow-sm p-5 md:p-6 space-y-5">
 
-        {/* All steps rendered simultaneously in a CSS-grid stack.
-            The container height locks to the tallest step (Step 2) so the
-            modal never resizes as the user navigates between steps. */}
-        <div className="grid">
-
-          {/* ── Step 1: Destination ─────────────────────────────────────── */}
-          <div
-            className={step !== 1 ? 'invisible pointer-events-none' : undefined}
-            style={{ gridArea: '1 / 1' }}
-            aria-hidden={step !== 1 || undefined}
-            inert={step !== 1 || undefined}
-          >
-            <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
-              Step 1 of 3
-            </p>
-            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-5">
-              Where are you going?
-            </h2>
-
-            {error && (
-              <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
-                {error}
-              </div>
-            )}
-
-            <div className="mb-4">
-              <label htmlFor="destination" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
-                Destination
-              </label>
-              <DestinationAutocomplete
-                id="destination"
-                value={destination}
-                onChange={setDestination}
-                autoFocus
-              />
+        {/* ── Destination ─────────────────────────────────────────────── */}
+        <div>
+          <label htmlFor="destination" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
+            Destination
+          </label>
+          <DestinationAutocomplete
+            id="destination"
+            value={destination}
+            onChange={setDestination}
+            autoFocus={mode !== 'edit'}
+          />
+          {isCrownDep && (
+            <div className="mt-2 px-3 py-2 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-lg flex items-start gap-2">
+              <span className="text-[var(--color-green)] text-sm font-semibold shrink-0">✓</span>
+              <p className="text-xs text-[var(--color-text-primary)]">
+                <span className="font-semibold">Counts as 0 days.</span>{' '}
+                Crown Dependencies count as UK presence.
+              </p>
             </div>
+          )}
+        </div>
 
-            {isCrownDep && (
-              <div className="mb-4 px-4 py-3 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl flex items-start gap-3">
-                <span className="text-[var(--color-green)] text-sm font-semibold shrink-0">✓</span>
-                <p className="text-sm text-[var(--color-text-primary)]">
-                  <span className="font-semibold">Crown Dependencies count as UK presence.</span>{' '}
-                  This trip will not affect your absence record.
-                </p>
-              </div>
+        {/* ── Dates ───────────────────────────────────────────────────── */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-sm font-medium text-[var(--color-text-primary)]">Travel dates</span>
+            {isPlanned && (
+              <span className="inline-flex items-center gap-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] px-2 py-0.5 rounded-full border border-dashed border-[var(--color-teal)]/50 text-[var(--color-teal)]">
+                Planned
+              </span>
             )}
+          </div>
+          <DateRangePicker
+            departureDate={departureDate}
+            returnDate={returnDate}
+            returnDateKnown={returnDateKnown}
+            onDepartureChange={setDepartureDate}
+            onReturnChange={setReturnDate}
+            onReturnDateKnownChange={setReturnDateKnown}
+          />
 
+          {returnDateKnown && returnDate && departureDate && returnDate <= departureDate && (
+            <p className="mt-2 text-sm text-[var(--color-danger-text)]">
+              Departure date must be before the return date.
+            </p>
+          )}
+
+          {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
+            <div className="mt-3 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-start gap-3">
+              <span className="shrink-0 text-base">⚠️</span>
+              <p className="text-sm text-[var(--color-warning-text)]">
+                These dates overlap with an existing trip. Adjust the dates or check
+                your trip history before continuing.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Live compliance impact ──────────────────────────────────── */}
+        {isCrownDep && departureDate ? (
+          <div className="px-4 py-4 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl">
+            <p className="text-sm text-[var(--color-text-primary)]">
+              <span className="font-semibold text-[var(--color-green)]">0 absence days.</span>{' '}
+              Crown Dependencies count as UK presence.
+            </p>
+          </div>
+        ) : calcResult ? (
+          <CalcPanel
+            result={calcResult.result}
+            tripDays={calcResult.tripDays}
+            windowEndDate={calcResult.windowEnd}
+          />
+        ) : null}
+
+        {/* ── Reason for travel (DECISION-025: maps to the ILR PDF) ───── */}
+        <div>
+          <label htmlFor="notes" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
+            Reason for travel <span className="text-[var(--color-text-muted)] font-normal">(optional)</span>
+          </label>
+          <textarea
+            id="notes"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="e.g. Family visit · Dubai → Bangkok → London (multi-leg)"
+            rows={2}
+            className="w-full border border-[var(--color-border)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30 focus:border-[var(--color-green)]/50 transition-shadow resize-none bg-[var(--color-surface)]"
+          />
+          <p className="mt-1 text-xs text-[var(--color-text-faint)]">Appears as &quot;Reason for travel&quot; in your ILR export.</p>
+        </div>
+
+        {/* ── Error ───────────────────────────────────────────────────── */}
+        {error && (
+          <div className="px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
+            {error}
+          </div>
+        )}
+
+        {/* ── Actions ─────────────────────────────────────────────────── */}
+        <div className="space-y-2 pt-1">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+            style={{ background: 'var(--gradient-green)' }}
+          >
+            <span className="flex items-center justify-center gap-2">
+              {saving && <Spinner />}
+              {saving ? 'Saving…' : saveLabel}
+            </span>
+          </button>
+
+          {mode === 'plan' && (
             <button
               type="button"
-              onClick={handleStep1Next}
-              className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
-              style={{ background: 'var(--gradient-green)' }}
+              onClick={handleJustChecking}
+              disabled={saving || navigating}
+              className="w-full border border-[var(--color-border)] text-[var(--color-text-muted)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors disabled:opacity-50 cursor-pointer"
             >
-              Next →
+              <span className="flex items-center justify-center gap-2">
+                {navigating && <Spinner />}
+                {navigating ? 'Just a moment…' : 'Just checking'}
+              </span>
             </button>
-          </div>
-
-          {/* ── Step 2: Dates ───────────────────────────────────────────── */}
-          <div
-            className={step !== 2 ? 'invisible pointer-events-none' : undefined}
-            style={{ gridArea: '1 / 1' }}
-            aria-hidden={step !== 2 || undefined}
-            inert={step !== 2 || undefined}
-          >
-            <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
-              Step 2 of 3
-            </p>
-            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-1">
-              When are you travelling?
-            </h2>
-            <p className="text-sm text-[var(--color-text-muted)] mb-4">
-              <span className="font-medium text-[var(--color-text-primary)]">{destination}</span>
-            </p>
-
-            {/* Two-column: date picker (left 3fr) + live compliance panel & buttons (right 2fr) */}
-            <div className="grid grid-cols-[3fr_2fr] gap-4">
-
-              {/* Left: inline calendar + inline validation */}
-              <div>
-                <DateRangePicker
-                  departureDate={departureDate}
-                  returnDate={returnDate}
-                  returnDateKnown={returnDateKnown}
-                  onDepartureChange={setDepartureDate}
-                  onReturnChange={setReturnDate}
-                  onReturnDateKnownChange={setReturnDateKnown}
-                />
-
-                {returnDateKnown && returnDate && departureDate && returnDate <= departureDate && (
-                  <p className="mt-2 text-sm text-[var(--color-danger-text)]">
-                    Departure date must be before the return date.
-                  </p>
-                )}
-
-                {overlapWarning && !(returnDateKnown && returnDate && returnDate <= departureDate) && (
-                  <div className="mt-3 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-start gap-3">
-                    <span className="shrink-0 text-base">⚠️</span>
-                    <p className="text-sm text-[var(--color-warning-text)]">
-                      These dates overlap with an existing trip. Adjust the dates or check
-                      your trip history before continuing.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Right: error / compliance panel / placeholder + navigation */}
-              <div className="flex flex-col">
-                {error && (
-                  <div className="mb-3 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
-                    {error}
-                  </div>
-                )}
-
-                {isCrownDep ? (
-                  <div className="flex-1 px-4 py-4 bg-[var(--color-green-pale)]/50 border border-[var(--color-green)]/20 rounded-xl">
-                    <p className="text-sm text-[var(--color-text-primary)]">
-                      <span className="font-semibold text-[var(--color-green)]">0 absence days.</span>{' '}
-                      Crown Dependencies count as UK presence.
-                    </p>
-                  </div>
-                ) : calcResult ? (
-                  <CalcPanel
-                    result={calcResult.result}
-                    tripDays={calcResult.tripDays}
-                    windowEndDate={calcResult.windowEnd}
-                  />
-                ) : (
-                  <div className="flex-1 flex items-center justify-center px-4 py-6 bg-[var(--color-bg-tinted)] rounded-xl min-h-[120px]">
-                    <p className="text-sm text-center text-[var(--color-text-faint)]">
-                      Enter dates to see your compliance impact
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex gap-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => { setStep(1); setError(null) }}
-                    className="px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border)] rounded-xl hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
-                  >
-                    ← Back
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleStep2Next}
-                    className="flex-1 text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
-                    style={{ background: 'var(--gradient-green)' }}
-                  >
-                    Next →
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* ── Step 3: Confirm ─────────────────────────────────────────── */}
-          <div
-            className={step !== 3 ? 'invisible pointer-events-none' : undefined}
-            style={{ gridArea: '1 / 1' }}
-            aria-hidden={step !== 3 || undefined}
-            inert={step !== 3 || undefined}
-          >
-            <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-widest mb-1">
-              Step 3 of 3
-            </p>
-            <h2 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl text-[var(--color-text-primary)] mb-5">
-              {mode === 'plan' ? 'Review your trip' : 'Confirm and save'}
-            </h2>
-
-            {error && (
-              <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
-                {error}
-              </div>
-            )}
-
-            <div className="bg-[var(--color-bg-tinted)] rounded-xl p-4 mb-4 space-y-2">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold text-[var(--color-text-primary)]">{destination}</p>
-                  <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
-                    {formatDateRange(departureDate, returnDateKnown && returnDate ? returnDate : null)}
-                  </p>
-                </div>
-                {confirmRisk && (
-                  <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${RISK_CONFIG[confirmRisk].bg} ${RISK_CONFIG[confirmRisk].text}`}>
-                    {RISK_CONFIG[confirmRisk].label}
-                  </span>
-                )}
-                {!returnDateKnown && (
-                  <span className="shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
-                    Currently abroad
-                  </span>
-                )}
-              </div>
-
-              {returnDateKnown && returnDate && !isCrownDep && (
-                <p className="text-xs text-[var(--color-text-muted)]">
-                  {calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate })} absence {calculateTripAbsenceDays({ destination, departure_date: departureDate, return_date: returnDate }) === 1 ? 'day' : 'days'}
-                </p>
-              )}
-              {isCrownDep && (
-                <p className="text-xs text-[var(--color-green)] font-medium">
-                  Crown Dependency: 0 absence days
-                </p>
-              )}
-            </div>
-
-            {calcResult && (
-              <div className="bg-[var(--color-bg-tinted)] rounded-xl p-4 mb-4">
-                <p className="text-xs font-semibold text-[var(--color-text-faint)] uppercase tracking-wider mb-2">
-                  Rolling window impact
-                </p>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-[var(--color-text-muted)]">Days used (after this trip)</span>
-                  <span className="font-semibold text-[var(--color-text-primary)]">{calcResult.result.days} / 180</span>
-                </div>
-                <div className="w-full h-1.5 bg-[var(--color-text-primary)]/8 rounded-full overflow-hidden mt-2" role="progressbar" aria-valuenow={calcResult.result.days} aria-valuemin={0} aria-valuemax={180}>
-                  <div
-                    className={`h-full rounded-full ${
-                      calcResult.result.status === 'SAFE' ? 'bg-[var(--color-green)]' :
-                      calcResult.result.status === 'WARNING' ? 'bg-[var(--color-status-amber)]' : 'bg-[var(--color-status-red)]'
-                    }`}
-                    style={{ width: `${Math.min(100, (calcResult.result.days / 180) * 100)}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="mb-5">
-              <label htmlFor="notes" className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5">
-                Notes <span className="text-[var(--color-text-muted)] font-normal">(optional)</span>
-              </label>
-              <textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. Dubai → Bangkok → London (multi-leg)"
-                rows={2}
-                className="w-full border border-[var(--color-border)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)]/30 focus:border-[var(--color-green)]/50 transition-shadow resize-none bg-[var(--color-surface)]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={saving}
-                className="w-full text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
-                style={{ background: 'var(--gradient-green)' }}
-              >
-                <span className="flex items-center justify-center gap-2">
-                  {saving && <Spinner />}
-                  {saving
-                    ? 'Saving…'
-                    : mode === 'plan'
-                    ? 'Save this trip'
-                    : mode === 'edit'
-                    ? 'Save changes'
-                    : 'Save trip'}
-                </span>
-              </button>
-
-              {mode === 'plan' && (
-                <button
-                  type="button"
-                  onClick={handleJustChecking}
-                  disabled={saving || navigating}
-                  className="w-full border border-[var(--color-border)] text-[var(--color-text-muted)] rounded-xl px-4 py-3 text-sm font-medium hover:bg-[var(--color-bg-tinted)] transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    {navigating && <Spinner />}
-                    {navigating ? 'Just a moment…' : 'Just checking'}
-                  </span>
-                </button>
-              )}
-            </div>
-
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => { setStep(2); setError(null) }}
-                className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors cursor-pointer"
-              >
-                ← Back
-              </button>
-            </div>
-          </div>
-
+          )}
         </div>
+
+        {/* Trip summary line — gives the single sheet a confirm-step read */}
+        {(summaryRisk || tripAbsenceDays !== null) && departureDate && (
+          <div className="flex items-center justify-between gap-3 pt-1 text-xs text-[var(--color-text-muted)]">
+            <span className="font-[family-name:var(--font-mono)]">
+              {formatDateRange(departureDate, returnDateKnown && returnDate ? returnDate : null)}
+              {tripAbsenceDays !== null && ` · ${tripAbsenceDays} ${tripAbsenceDays === 1 ? 'day' : 'days'}`}
+            </span>
+            {summaryRisk && (
+              <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold ${RISK_CONFIG[summaryRisk].bg} ${RISK_CONFIG[summaryRisk].text}`}>
+                {RISK_CONFIG[summaryRisk].label}
+              </span>
+            )}
+            {!returnDateKnown && (
+              <span className="shrink-0 inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[var(--color-warning-bg)] text-[var(--color-warning-text)]">
+                Currently abroad
+              </span>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
   )
