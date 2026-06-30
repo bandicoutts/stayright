@@ -268,13 +268,6 @@ export function TripsTableClient({ trips, visaStartDate, isPro }: Props) {
         <div className="flex items-center gap-2.5 shrink-0">
           <button
             type="button"
-            onClick={() => openDrawer('plan')}
-            className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors cursor-pointer"
-          >
-            Plan a trip
-          </button>
-          <button
-            type="button"
             onClick={() => openDrawer('log')}
             className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer text-white"
             style={{ background: 'var(--gradient-green)' }}

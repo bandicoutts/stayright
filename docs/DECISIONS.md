@@ -2034,3 +2034,18 @@ These were pre-existing light-only screens, not part of the original reskin phas
 ADRs and design docs quote `className` snippets in prose. Tailwind v4 auto-scans the whole project tree, and a quoted arbitrary-value class with a placeholder (the ADR-083 entry contained a `font-family` arbitrary-value class written with a literal `...` placeholder) was extracted and compiled to `font-family: var(...)`, which is invalid CSS and broke the dev server / build with a PostCSS parse error. Markdown never legitimately supplies utility classes, so excluding it is safe and prevents the whole class of regression. The offending prose was also reworded to drop the literal bracket-class token (belt-and-suspenders). Verified: `next build` compiles clean.
 
 **Related:** DECISION-008 (Tailwind v4 CSS-based config), DECISION-083 (the ADR whose snippet triggered this)
+
+---
+
+### [DECISION-087] Remove the "Plan a trip" button from the Trips page header
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The outline "Plan a trip" button in the Trips page header (`TripsTableClient`) is removed; only the primary "Log trip" action remains.
+
+**Reasoning:**
+Planning now happens through the inline what-if simulator on the dashboard (DECISION-076; `.impeccable.md` principle 6 — "planning happens through simulation, not a separate button"). A second "Plan a trip" entry point on the Trips page duplicated that and competed with "Log trip". The modal's `plan` mode is left intact and still reachable via `/trips?modal=plan` (the calculation E2E specs open the modal that way), so no behaviour or test changes are needed — this only drops the redundant header button. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles.
+
+**Related:** DECISION-076 (inline dashboard simulator owns planning), DECISION-082 (single-sheet modal); `docs/RESKIN-PLAN.md`
