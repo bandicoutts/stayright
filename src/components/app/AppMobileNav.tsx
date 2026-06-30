@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
-  SquaresFour,
+  House,
   AirplaneTilt,
   FileText,
   Gear,
@@ -16,10 +16,10 @@ import { createClient } from '@/lib/supabase/client'
 import { ThemeToggle } from './ThemeToggle'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', Icon: SquaresFour },
-  { href: '/trips',     label: 'Trips',     Icon: AirplaneTilt },
-  { href: '/reports',   label: 'Reports',   Icon: FileText },
-  { href: '/settings',  label: 'Settings',  Icon: Gear },
+  { href: '/dashboard', label: 'Home',     Icon: House },
+  { href: '/trips',     label: 'Trips',    Icon: AirplaneTilt },
+  { href: '/reports',   label: 'Reports',  Icon: FileText },
+  { href: '/settings',  label: 'Settings', Icon: Gear },
 ] as const
 
 interface Props {
@@ -203,7 +203,7 @@ function BottomItem({
 }: {
   href: string
   label: string
-  Icon: typeof SquaresFour
+  Icon: typeof House
   active: boolean
 }) {
   return (
@@ -214,7 +214,7 @@ function BottomItem({
       style={{ color: active ? 'var(--color-green)' : 'var(--color-text-faint)' }}
     >
       <Icon className="w-[22px] h-[22px] shrink-0" weight={active ? 'fill' : 'regular'} />
-      <span className="text-[9px] font-medium leading-none whitespace-nowrap">{label}</span>
+      <span className="text-[10px] font-medium leading-none whitespace-nowrap">{label}</span>
     </Link>
   )
 }

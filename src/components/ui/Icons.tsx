@@ -7,6 +7,7 @@
  */
 
 export {
+  House,
   Shield,
   ShieldCheck,
   Envelope,
