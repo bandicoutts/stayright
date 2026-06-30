@@ -21,6 +21,15 @@ const TONE: Record<RiskStatus, string> = {
   BREACH: 'var(--color-status-red)',
 }
 
+// Soft status tint behind the verdict pill (keeps the verdict calm, not a
+// second competing big number).
+const TINT: Record<RiskStatus, string> = {
+  SAFE: 'var(--color-safe-bg)',
+  WARNING: 'var(--color-warning-bg)',
+  DANGER: 'var(--color-danger-bg)',
+  BREACH: 'var(--color-danger-bg)',
+}
+
 const LIMIT = 180
 const WATCH_LOW = 120 // notification + watch line
 const WATCH_HIGH = 150 // notification + watch line
@@ -83,7 +92,7 @@ function monthTicks(windowStart: Date, windowEnd: Date): { label: string; leftPc
       label: cursor.toLocaleDateString('en-GB', { month: 'short' }),
       leftPct: ((cursor.getTime() - wStart) / total) * 100,
     })
-    cursor.setUTCMonth(cursor.getUTCMonth() + 2) // every other month to avoid crowding
+    cursor.setUTCMonth(cursor.getUTCMonth() + 3) // quarterly — ~4 labels, never collide
   }
   return ticks
 }
@@ -106,33 +115,34 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
       className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-7 md:p-8"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-center">
-        {/* Verdict */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-12 items-start">
+        {/* Verdict — single hero number, calm status pill, tidy supporting line */}
         <div>
-          <div className="mb-5">
-            <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.14em] uppercase text-[var(--color-text-faint)]">
-              Current 12-month window
+          <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.14em] uppercase text-[var(--color-text-faint)]">
+            Current 12-month window
+          </span>
+
+          <div className="mt-4">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] font-semibold"
+              style={{ background: TINT[status], color: tone }}
+            >
+              <span className="w-2 h-2 rounded-full" style={{ background: tone }} />
+              {VERDICT[status]}
             </span>
           </div>
 
-          <p
-            className="font-[family-name:var(--font-heading)] font-extrabold tracking-[-0.03em] leading-[1.05] text-[clamp(2rem,3.6vw,2.85rem)]"
-            style={{ color: tone }}
-          >
-            {VERDICT[status]}
-          </p>
-
-          <div className="flex items-baseline gap-3 mt-3">
+          <div className="flex items-baseline gap-2.5 mt-5">
             <span
-              className="font-[family-name:var(--font-mono)] font-semibold leading-[0.82] tracking-[-0.04em] text-[clamp(3.75rem,8.5vw,6.25rem)]"
+              className="font-[family-name:var(--font-mono)] font-semibold leading-none tracking-[-0.04em] text-[clamp(3.25rem,7.5vw,5rem)]"
               style={{ color: tone }}
             >
               {days}
             </span>
-            <span className="text-[17px] font-semibold text-[var(--color-text-muted)]">/ {LIMIT} days abroad</span>
+            <span className="text-base font-semibold text-[var(--color-text-muted)]">/ {LIMIT} days abroad</span>
           </div>
 
-          <p className="text-sm text-[var(--color-text-muted)] mt-4">
+          <p className="text-sm text-[var(--color-text-muted)] mt-3">
             {breached ? (
               <><span className="font-semibold" style={{ color: tone }}>{Math.abs(spare)} days over</span> the 180-day limit</>
             ) : (
@@ -142,8 +152,9 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
         </div>
 
         {/* Track + trailing strip */}
-        <div>
-          {/* 0–180 progress with watch lines */}
+        <div className="space-y-6">
+          {/* Quota gauge — 0–180 with watch lines */}
+          <div>
           <div className="flex items-baseline justify-between mb-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)]">
             <span className="tracking-[0.08em] uppercase">Days abroad</span>
             <span className="text-[var(--color-text-2)]"><span className="font-semibold" style={{ color: tone }}>{days}</span> / {LIMIT}</span>
@@ -165,7 +176,7 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
             <div className="absolute inset-y-0 w-px" style={{ left: `${(WATCH_LOW / LIMIT) * 100}%`, background: 'var(--color-status-amber)', opacity: 0.9 }} />
             <div className="absolute inset-y-0 w-px" style={{ left: `${(WATCH_HIGH / LIMIT) * 100}%`, background: 'var(--color-status-red)', opacity: 0.9 }} />
           </div>
-          <div className="flex justify-between mt-1.5 font-[family-name:var(--font-mono)] text-[9.5px] text-[var(--color-text-faint)]">
+          <div className="flex justify-between mt-2 font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)]">
             <span>
               <span style={{ color: 'var(--color-status-amber)' }}>{WATCH_LOW}</span>
               {' · '}
@@ -174,9 +185,10 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
             </span>
             <span>{LIMIT}-day limit</span>
           </div>
+          </div>
 
           {/* Trailing 12 months — trips as a span */}
-          <div className="mt-5">
+          <div>
             <div className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-text-faint)] mb-2">
               Trailing 12 months
             </div>
@@ -198,18 +210,18 @@ export function RollingWindowTimeline({ days, status, windowStart, windowEnd, tr
               {/* Today marker (right edge) */}
               <div className="absolute -top-0.5 -bottom-0.5 right-0 border-l border-dashed" style={{ borderColor: 'var(--color-text-faint)' }} />
             </div>
-            <div className="relative h-3.5 mt-1.5">
+            <div className="relative h-4 mt-2">
               {ticks.map((t, i) => (
                 <span
                   key={i}
-                  className="absolute font-[family-name:var(--font-mono)] text-[9.5px] text-[var(--color-text-faint)] -translate-x-1/2"
-                  style={{ left: `${Math.min(98, Math.max(2, t.leftPct))}%` }}
+                  className="absolute font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)] -translate-x-1/2"
+                  style={{ left: `${Math.min(96, Math.max(4, t.leftPct))}%` }}
                 >
                   {t.label}
                 </span>
               ))}
             </div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2.5 text-[11px] text-[var(--color-text-faint)]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-[11px] text-[var(--color-text-muted)]">
               <span className="inline-flex items-center gap-1.5">
                 <span className="w-3 h-2 rounded-[2px]" style={{ background: 'var(--color-green)' }} />
                 Logged absence

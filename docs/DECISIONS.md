@@ -2049,3 +2049,22 @@ The outline "Plan a trip" button in the Trips page header (`TripsTableClient`) i
 Planning now happens through the inline what-if simulator on the dashboard (DECISION-076; `.impeccable.md` principle 6 — "planning happens through simulation, not a separate button"). A second "Plan a trip" entry point on the Trips page duplicated that and competed with "Log trip". The modal's `plan` mode is left intact and still reachable via `/trips?modal=plan` (the calculation E2E specs open the modal that way), so no behaviour or test changes are needed — this only drops the redundant header button. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles.
 
 **Related:** DECISION-076 (inline dashboard simulator owns planning), DECISION-082 (single-sheet modal); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-088] RollingWindowTimeline — recompose for hierarchy and a non-colliding axis
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The dashboard's signature tile (`RollingWindowTimeline`) is recomposed for cleaner hierarchy and spacing (impeccable `arrange` + `adapt`); no data or calculation change.
+
+- **Verdict block (left):** previously two large elements competed — a ~2.85rem verdict heading *and* a ~6.25rem number, with the number baseline-aligned (`leading-[0.82]`) to a 17px unit so a lone digit floated with dead space. Now there is **one hero** (the number, `clamp(3.25rem,7.5vw,5rem)`, `leading-none`, tightly baseline-aligned to a `text-base` unit), the verdict is a **calm status pill** (soft `--color-*-bg` tint + tone text + dot) above it, and a single supporting "N days to spare/over" line. Even vertical rhythm (eyebrow → pill → number → support).
+- **Track block (right):** the two metrics are wrapped into two groups separated by one consistent `space-y-6`, each keeping its own tight internal spacing; the scattered micro-labels (9.5/10/11px) are unified. The month axis stepped **every 2 months (6 ticks) → every 3 (≈4 ticks)** and edge-clamping widened, fixing the collision the owner saw (`JulSeptNovJanMarMay`).
+- **Alignment:** the grid is `items-start` (was `items-center`), so the shorter verdict column top-aligns with the taller track column instead of floating centred.
+
+**Reasoning:**
+The tile "didn't look well put together": competing big numbers broke "one hero metric per screen" (`.impeccable.md` §5), centred alignment looked wonky against the taller column, and the dense axis collided on the narrow right column. All changes are presentational — the props, `tripSpans`, animated fill, watch lines (120/150), today marker, and verdict-derives-from-status contract (DECISION-002) are unchanged, so the marketing Hero that reuses this component inherits the improvement. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
+
+**Related:** DECISION-076 (introduced the timeline), DECISION-002 (thresholds the verdict derives from), DECISION-080 (marketing Hero reuses it); `.impeccable.md` (one-hero-metric principle)
