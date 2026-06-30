@@ -20,6 +20,10 @@ interface Props {
   defaultStartDate: string
 }
 
+// Token-driven input style — mirrors the reskin form idiom (PlanTripSimulator).
+const inputCls =
+  'w-full rounded-xl border border-[var(--color-border-strong)] bg-[var(--color-surface-warm)] px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)] focus:border-transparent transition-shadow'
+
 export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: Props) {
   const [firstName, setFirstName] = useState(defaultFirstName)
   const [visaRoute, setVisaRoute] = useState(defaultRoute)
@@ -76,22 +80,29 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
       <div className="flex justify-center gap-2 mb-8">
         <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
         <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
-        <div className="h-2 w-2 rounded-full bg-[#191C1D]/15" />
+        <div className="h-2 w-2 rounded-full bg-[var(--color-border-strong)]" />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8">
-        <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+      <div
+        className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-8"
+        style={{ boxShadow: 'var(--shadow-card)' }}
+      >
+        <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-text-faint)] mb-2">
           Step 1 of 2
         </p>
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-1">
+        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-1">
           Tell us about your visa
         </h1>
-        <p className="text-sm text-[#3D4A42] mb-6">
+        <p className="text-sm text-[var(--color-text-muted)] mb-6">
           This lets us calculate your qualifying period and ILR eligibility date.
         </p>
 
         {error && (
-          <div role="alert" aria-live="assertive" className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-4 px-4 py-3 rounded-xl text-sm text-[var(--color-danger-text)] bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)]"
+          >
             {error}
           </div>
         )}
@@ -101,7 +112,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
           <div>
             <label
               htmlFor="first_name"
-              className="block text-sm font-medium text-[#191C1D] mb-1.5"
+              className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5"
             >
               First name
             </label>
@@ -115,7 +126,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="e.g. Priya"
-              className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              className={inputCls}
             />
           </div>
 
@@ -123,7 +134,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
           <div>
             <label
               htmlFor="visa_route"
-              className="block text-sm font-medium text-[#191C1D] mb-1.5"
+              className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5"
             >
               Visa route
             </label>
@@ -132,7 +143,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
               name="visa_route"
               value={visaRoute}
               onChange={(e) => setVisaRoute(e.target.value)}
-              className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] bg-white focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              className={inputCls}
             >
               <optgroup label="Available Routes">
                 {VISA_ROUTES.map((route) => (
@@ -148,7 +159,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
           <div>
             <label
               htmlFor="visa_start_date"
-              className="block text-sm font-medium text-[#191C1D] mb-1.5"
+              className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5"
             >
               Visa start date
             </label>
@@ -161,23 +172,23 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
               max={today}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              className={`${inputCls} font-[family-name:var(--font-mono)]`}
             />
-            <p className="mt-1.5 text-xs text-[#3D4A42]">
+            <p className="mt-1.5 text-xs text-[var(--color-text-muted)]">
               Check the vignette sticker, BRP, or eVisa if you&apos;re unsure.
             </p>
           </div>
 
           {/* Auto-calculated ILR info */}
           {ilrDate && (
-            <div className="border-l-4 border-[#006948] bg-[#006948]/5 rounded-r-xl px-4 py-3">
-              <p className="text-xs text-[#3D4A42]">
+            <div className="border-l-2 border-[var(--color-green)] bg-[var(--color-green-pale)] rounded-r-xl px-4 py-3">
+              <p className="text-xs text-[var(--color-text-muted)]">
                 Based on your route, your qualifying period is{' '}
-                <strong className="text-[#191C1D]">5 years</strong>.
+                <strong className="text-[var(--color-text-primary)]">5 years</strong>.
               </p>
-              <p className="text-xs text-[#3D4A42] mt-0.5">
+              <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                 ILR eligibility:{' '}
-                <strong className="text-[#191C1D]">{ilrDate}</strong>
+                <strong className="text-[var(--color-text-primary)]">{ilrDate}</strong>
               </p>
             </div>
           )}
@@ -185,7 +196,8 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
           <button
             type="submit"
             disabled={pending}
-            className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+            className="w-full text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+            style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
           >
             {pending ? 'Saving…' : 'Continue →'}
           </button>
@@ -194,7 +206,7 @@ export function VisaForm({ defaultFirstName, defaultRoute, defaultStartDate }: P
         <div className="mt-4 text-center">
           <Link
             href="/onboarding"
-            className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors"
+            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors"
           >
             ← Back
           </Link>

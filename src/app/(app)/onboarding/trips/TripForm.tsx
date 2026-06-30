@@ -134,26 +134,29 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
         <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8">
-        <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-widest mb-1">
+      <div
+        className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-8"
+        style={{ boxShadow: 'var(--shadow-card)' }}
+      >
+        <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-text-faint)] mb-2">
           Step 2 of 2
         </p>
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-1">
+        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-1">
           Add your travel history
         </h1>
-        <p className="text-sm text-[#3D4A42] mb-6">
+        <p className="text-sm text-[var(--color-text-muted)] mb-6">
           Add trips you&apos;ve taken outside the UK. You can always add more
           later — this just helps you start with an accurate picture.
         </p>
 
         {quotaReached && (
-          <div className="mb-4 px-4 py-4 bg-[#F0FAF5] border border-[#006948]/20 rounded-xl flex items-start gap-3">
+          <div className="mb-4 px-4 py-4 bg-[var(--color-green-pale)] border border-[var(--color-green)]/20 rounded-xl flex items-start gap-3">
             <span className="text-lg shrink-0" aria-hidden="true">🎉</span>
             <div>
-              <p className="text-sm font-semibold text-[#191C1D]">
+              <p className="text-sm font-semibold text-[var(--color-text-primary)]">
                 You&apos;ve added {trips.length} trips — great start!
               </p>
-              <p className="text-sm text-[#3D4A42] mt-0.5">
+              <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
                 Add unlimited trips with Pro, or continue to your dashboard now.
               </p>
             </div>
@@ -161,7 +164,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
         )}
 
         {error && !quotaReached && (
-          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+          <div className="mb-4 px-4 py-3 rounded-xl text-sm text-[var(--color-danger-text)] bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)]">
             {error}
           </div>
         )}
@@ -169,20 +172,20 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
         {/* Saved trips list */}
         {trips.length > 0 && (
           <div className="mb-5">
-            <p className="text-xs font-semibold text-[#3D4A42] uppercase tracking-wider mb-2">
+            <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em] uppercase text-[var(--color-text-faint)] mb-2">
               {trips.length} {trips.length === 1 ? 'trip' : 'trips'} added
             </p>
             <div className="space-y-2">
               {trips.map((trip) => (
                 <div
                   key={trip.id}
-                  className="flex items-center justify-between bg-[#F8F9FA] rounded-xl px-4 py-3 gap-3"
+                  className="flex items-center justify-between bg-[var(--color-surface-warm)] border border-[var(--color-border)] rounded-xl px-4 py-3 gap-3"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-[#191C1D] truncate">
+                    <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">
                       {trip.destination}
                     </p>
-                    <p className="text-xs text-[#3D4A42]">
+                    <p className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-text-muted)]">
                       {formatDate(trip.departure_date)} →{' '}
                       {trip.return_date ? formatDate(trip.return_date) : 'ongoing'}
                     </p>
@@ -190,7 +193,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
                   <button
                     type="button"
                     onClick={() => handleDeleteTrip(trip.id)}
-                    className="text-[#3D4A42] hover:text-[#BA1A1A] transition-colors shrink-0 cursor-pointer"
+                    className="text-[var(--color-text-muted)] hover:text-[var(--color-danger-text)] transition-colors shrink-0 cursor-pointer"
                     aria-label={`Remove ${trip.destination}`}
                   >
                     <Trash className="w-4 h-4" />
@@ -208,7 +211,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
             <div>
               <label
                 htmlFor="destination"
-                className="block text-sm font-medium text-[#191C1D] mb-1.5"
+                className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5"
               >
                 Destination
               </label>
@@ -234,9 +237,9 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
 
             {/* Overlap warning */}
             {overlapWarning && (
-              <div className="px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+              <div className="px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-start gap-3">
                 <span className="shrink-0 text-base leading-5">⚠️</span>
-                <p className="text-sm text-[#D97706]">
+                <p className="text-sm text-[var(--color-warning-text)]">
                   These dates overlap with a trip you&apos;ve already added.
                   Check the dates and try again.
                 </p>
@@ -245,7 +248,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
 
             {/* Pre-visa trip note */}
             {isPreVisa && !overlapWarning && (
-              <p className="text-xs text-[#D97706] bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+              <p className="text-xs text-[var(--color-warning-text)] bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl px-3 py-2">
                 This trip predates your visa start date. It will be stored but
                 won&apos;t count toward your 180-day window.
               </p>
@@ -255,7 +258,8 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
               <button
                 type="submit"
                 disabled={addingTrip}
-                className="flex-1 bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                className="flex-1 text-white rounded-xl px-4 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
               >
                 {addingTrip ? 'Saving…' : 'Add trip'}
               </button>
@@ -266,7 +270,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
                     setShowForm(false)
                     setError(null)
                   }}
-                  className="px-4 py-3 text-sm text-[#3D4A42] border border-[#191C1D]/15 rounded-xl hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+                  className="px-4 py-3 text-sm text-[var(--color-text-muted)] border border-[var(--color-border-strong)] rounded-xl hover:bg-[var(--color-surface-warm)] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -277,7 +281,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="w-full flex items-center justify-center gap-2 border border-dashed border-[#191C1D]/20 rounded-xl px-4 py-3 text-sm text-[#3D4A42] hover:border-[#006948] hover:text-[#006948] transition-colors cursor-pointer mb-5"
+            className="w-full flex items-center justify-center gap-2 border border-dashed border-[var(--color-border-strong)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-muted)] hover:border-[var(--color-green)] hover:text-[var(--color-green)] transition-colors cursor-pointer mb-5"
           >
             <Plus className="w-4 h-4" />
             Add {trips.length > 0 ? 'another trip' : 'a trip'}
@@ -289,7 +293,8 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
           type="button"
           onClick={handleComplete}
           disabled={completing || addingTrip}
-          className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+          className="w-full text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+          style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
         >
           {completing
             ? 'Setting up your dashboard…'
@@ -301,7 +306,7 @@ export function TripForm({ initialTrips, visaStartDate }: Props) {
         <div className="mt-4 text-center">
           <Link
             href="/onboarding/visa"
-            className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors"
+            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors"
           >
             ← Back
           </Link>

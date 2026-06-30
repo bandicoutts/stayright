@@ -1923,3 +1923,22 @@ The landing is reskinned to the marketing prototype (`StayRight.dc.html`; reskin
 The signature timeline is the brand's core graphic and now appears identically on marketing and in-app. The SAFE sample + 120/150 watch lines apply the reskin's "code wins" corrections to the marketing surface. The existing Features/Pricing were already on-brand and numerically correct, so they were left rather than rebuilt. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles; hero + comparison + features confirmed rendering; `landing.spec` (h1 / £2.99 / cookie banner) unaffected.
 
 **Related:** DECISION-002 (thresholds), DECISION-074 (palette/fonts), DECISION-076 (RollingWindowTimeline), DECISION-079; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-081] Reskin Phase 7 — Onboarding restyled to the new design system (flow unchanged)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The existing 2-step onboarding flow is restyled to the reskin tokens/idioms; the flow, server actions, and analytics are untouched (reskin plan `docs/RESKIN-PLAN.md`, D4).
+
+- Files restyled: `onboarding/layout.tsx`, `onboarding/page.tsx` (welcome), `onboarding/visa/VisaForm.tsx`, `onboarding/trips/TripForm.tsx`. All hardcoded hex (`#F8F9FA`, `#191C1D`, `#3D4A42`, `#006948`, `#00855D`, `bg-white`, `red-50`/`amber-50`, etc.) replaced with semantic tokens (`--color-bg`, `--color-surface`, `--color-text-*`, `--gradient-green`, `--color-danger-*`, `--color-warning-*`, `--color-green-pale`). The flow was previously light-only; it now **themes** (light + dark) like the rest of the app.
+- Cards use the shared idiom (`bg-[var(--color-surface)] rounded-2xl border + var(--shadow-card)`); primary buttons use `var(--gradient-green)` + `var(--shadow-button)`; inputs use the surface-warm/border-strong field style; step labels and trip date ranges adopt the JetBrains-Mono eyebrow/data voice.
+- **No flow change:** 2-step structure, progress dots, `saveVisaProfileAction`/`saveTripAction`/`deleteTripAction`/`completeOnboardingAction`, the `FREE_TRIP_LIMIT` quota guard, overlap detection, pre-visa note, mid-flow resume, and every PostHog event (`onboarding_visa_setup_completed`, `onboarding_trips_added`, `onboarding_skipped`, `signup_completed`) are unchanged. Copy is unchanged (restyle only).
+
+**Reasoning:**
+Onboarding was the last unstyled surface — hardcoded light-only hex made it look off-brand once the rest of the app moved to the green-led/obsidian palette. A token-only restyle brings it in line (and adds dark mode for free) without touching the verified flow logic. Verified: `tsc --noEmit` clean, ESLint clean on all four files, `next build` compiles, `vitest` 129/129 green. `onboarding.spec` only asserts the redirect guards (no form-internal selectors), so it is unaffected.
+
+**Related:** DECISION-017 (onboarding_completed gating), DECISION-074 (palette/fonts), DECISION-075 (shell), DECISION-076 (PlanTripSimulator idiom); `docs/RESKIN-PLAN.md`
