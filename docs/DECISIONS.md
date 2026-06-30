@@ -1799,3 +1799,28 @@ The prototype's signature shell is a left sidebar; a bottom-nav + FAB is the sta
 - Browser screenshot verification deferred — the preview/Chrome MCP tooling disconnected during a session reset.
 
 **Related:** DECISION-019, DECISION-069 (signOut scope); DECISION-074; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-076] Reskin Phase 2 — dashboard recompose: rolling-window timeline + bento
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The dashboard is recomposed around the signature rolling-window timeline and a trimmed bento (reskin plan: `docs/RESKIN-PLAN.md`). The circular QuotaRing is retired as the hero.
+
+- **`RollingWindowTimeline.tsx`** (new): hero verdict whose word + colour **derive from `getRiskStatus`** (so 124 days reads WARNING/amber, never a green "you're safe"); a 0–180 track with **watch lines at 120 and 150** (the prototype's 160/170 corrected to the real thresholds); a trailing-12-month trip span strip with a "today" marker.
+- **`AbsenceHeatmap.tsx`** (new): GitHub-style 7×52 daily-absence grid over the trailing year.
+- **`PeakTrajectoryChart.tsx`** (new): SVG sparkline of the rolling-window value across the qualifying span with a dashed 180 line and the peak marked. Backed by a new pure engine helper **`getRollingWindowSeries`** (additive; 5 unit tests; existing exports unchanged).
+- **`PlanTripSimulator.tsx`** (new): inline what-if reusing `calculateWhatIf` (projected to the trip's return date per DECISION-022) with **Save as planned** via the existing `addTripAction` (planned = future-dated trip, the derive approach from the reskin schema decision).
+- Page bento: hero timeline → simulator → (heatmap + ILR countdown) → trajectory → recent trips. The header's "Plan trip" button is removed (the simulator covers planning); "Log trip" stays.
+
+**Reasoning:**
+The timeline is the brand's signature graphic and shows where absences fall against the limit — far more than a generic gauge. Deriving the verdict from `getRiskStatus` closes the prototype's incorrect "124 = safe/green" framing. The simulator reuses existing pure calculations and the existing server action, so no business logic changes. Verified: `tsc --noEmit` clean, ESLint clean, **129 unit tests pass**, `next build` compiles.
+
+**Consequences:**
+- `QuotaRing.tsx` / `PeakWindowCard` no longer referenced on the dashboard — retained until the Phase 9 cleanup.
+- `dashboard.spec.ts` updated: ring tests → timeline/verdict; the "Plan trip" modal-link test → inline-simulator presence; "Log trip" + save round-trip unchanged.
+
+**Related:** DECISION-002 (thresholds), DECISION-005 (compute don't store), DECISION-022 (what-if to return date), DECISION-074, DECISION-075; `docs/RESKIN-PLAN.md`

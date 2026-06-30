@@ -2,21 +2,18 @@
  * Dashboard E2E tests
  *
  * Persona split:
- *   Free user  — page-level content only (quota ring, progress bar, status chip,
- *                "Recent trips" section). The free user has 10 seeded trips and is
- *                at the free-tier limit; any attempt to open the trip modal from the
- *                dashboard redirects back to /dashboard (TripsTableClient useEffect),
- *                so those URL assertions belong in the pro block instead.
- *   Pro user   — CTA link URL assertions ("Plan trip" / "Log trip") and the
- *                trip-save round-trip test. The pro user has no trip limit, so the
- *                modal opens normally and the URL stays as expected.
+ *   Free user  — page-level content only (rolling-window timeline, progress bar,
+ *                verdict/status, inline "Plan a trip" simulator, "Recent trips").
+ *                The free user has 10 seeded trips and is at the free-tier limit.
+ *   Pro user   — the "Log trip" CTA link URL assertion, the inline simulator, and
+ *                the trip-save round-trip test. The pro user has no trip limit, so
+ *                the modal opens normally and the URL stays as expected.
  *
- * Note on "Plan trip" / "Log trip" links:
- *   These are <Link href="/trips?modal=plan&returnTo=%2Fdashboard"> elements on the
- *   dashboard page. When a free user (at limit) follows the link, TripsTableClient's
- *   useEffect immediately calls router.replace(returnTo), stripping the modal param
- *   before the URL assertion can reliably catch it. The pro user has no limit so the
- *   modal stays open and the URL is stable.
+ * Note on the "Log trip" link:
+ *   The dashboard header "Log trip" button is a
+ *   <Link href="/trips?modal=log&returnTo=%2Fdashboard">. Planning moved to the
+ *   inline what-if simulator on the dashboard (DECISION-076), so there is no longer
+ *   a "Plan trip" modal deep link on this page.
  *
  * Note on "Trip Log" / disclaimer:
  *   The dashboard renders DashboardTripsPreview (a read-only preview), NOT the full
@@ -100,30 +97,32 @@ test.describe('Dashboard', () => {
     await expect(page).toHaveURL(/\/dashboard/)
   })
 
-  test('loads and shows quota ring (/ 180 days)', async ({ page }) => {
+  test('loads and shows the rolling-window timeline (/ 180 days)', async ({ page }) => {
     await expect(
       page.getByText(/\/ 180 days/i).first()
     ).toBeVisible({ timeout: 10_000 })
   })
 
-  test('quota ring centre shows a valid integer ≥ 0', async ({ page }) => {
+  test('timeline shows a valid integer ≥ 0', async ({ page }) => {
     const el = page.getByText(/^\d+$/).first()
     const text = await el.textContent()
     expect(parseInt(text ?? '-1', 10)).toBeGreaterThanOrEqual(0)
   })
 
-  test('qualifying period progress bar is visible', async ({ page }) => {
+  test('progress bar is visible', async ({ page }) => {
     await expect(
       page.getByRole('progressbar').first()
     ).toBeVisible({ timeout: 10_000 })
   })
 
-  test('status chip is one of SAFE / WARNING / DANGER / BREACH', async ({ page }) => {
+  test('verdict reflects a valid risk state', async ({ page }) => {
     await page.getByText(/\/ 180 days/i).first().waitFor({ timeout: 10_000 })
     const body = await page.locator('body').textContent()
-    const valid = ['SAFE', 'WARNING', 'DANGER', 'BREACH'].some((s) =>
-      body?.includes(s)
-    )
+    // Verdict words derive from getRiskStatus; the status chip uses RISK_CONFIG labels.
+    const valid = [
+      "You're safe", 'Getting close', 'Very close', 'Over the limit',
+      'Compliant', 'Approaching Limit', 'Near Breach', 'Breach',
+    ].some((s) => body?.includes(s))
     expect(valid).toBe(true)
   })
 
@@ -149,14 +148,11 @@ test.describe('Dashboard — pro user', () => {
     await expect(page).toHaveURL(/\/dashboard/)
   })
 
-  test('"Plan trip" link → URL has ?modal=plan', async ({ page }) => {
-    // The link href is /trips?modal=plan&returnTo=%2Fdashboard.
-    // Pro user is not at the trip limit, so TripsTableClient does NOT redirect
-    // back — the URL stays stable with modal=plan.
-    const btn = page.getByRole('link', { name: /plan trip/i }).first()
-    await expect(btn).toBeVisible()
-    await btn.click()
-    await expect(page).toHaveURL(/modal=plan/, { timeout: 5_000 })
+  test('inline "Plan a trip" simulator is present (replaces the old Plan trip modal link)', async ({ page }) => {
+    // Planning now happens via the inline what-if simulator on the dashboard
+    // (DECISION-076), not a ?modal=plan deep link.
+    await expect(page.getByText('Plan a trip')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('button', { name: /save as planned/i })).toBeVisible()
   })
 
   test('"Log trip" link → URL has ?modal=log', async ({ page }) => {

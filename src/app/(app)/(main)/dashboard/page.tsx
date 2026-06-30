@@ -5,77 +5,68 @@ import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { getUser } from '@/lib/auth'
 import { isPlanPro } from '@/lib/subscriptionUtils'
-import { QuotaRing } from '@/components/app/QuotaRing'
 import { UpgradeTracker } from '@/components/app/dashboard/UpgradeTracker'
 import { DashboardAnalytics } from '@/components/app/dashboard/DashboardAnalytics'
 import { DashboardTripsPreview } from '@/components/app/dashboard/DashboardTripsPreview'
 import { SetupNudge } from '@/components/app/dashboard/SetupNudge'
 import { DashboardWelcome } from '@/components/app/dashboard/DashboardWelcome'
 import { DashboardGreeting } from '@/components/app/dashboard/DashboardGreeting'
+import { RollingWindowTimeline } from '@/components/app/dashboard/RollingWindowTimeline'
+import { AbsenceHeatmap } from '@/components/app/dashboard/AbsenceHeatmap'
+import { PeakTrajectoryChart } from '@/components/app/dashboard/PeakTrajectoryChart'
+import { PlanTripSimulator } from '@/components/app/dashboard/PlanTripSimulator'
 import {
   getCurrentRollingWindow,
   getPeakRollingWindow,
   getQualifyingPeriod,
+  getRollingWindowSeries,
   getRiskStatus,
 } from '@/lib/calculations/absenceEngine'
-import { RISK_CONFIG } from '@/lib/riskConfig'
 import type { Metadata } from 'next'
-import type { TripInput, RollingWindowResult } from '@/lib/calculations/absenceEngine'
+import type { TripInput, QualifyingPeriodResult } from '@/lib/calculations/absenceEngine'
 
 export const metadata: Metadata = { title: 'Dashboard — StayRight' }
 
 // ---------------------------------------------------------------------------
-// Sub-components
+// ILR countdown module
 // ---------------------------------------------------------------------------
 
-function PeakWindowCard({ peak }: { peak: RollingWindowResult }) {
+function IlrCountdownCard({
+  qualifying,
+  daysUntilIlr,
+}: {
+  qualifying: QualifyingPeriodResult
+  daysUntilIlr: number
+}) {
   const fmt = (d: Date) =>
     d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
-  const cfg = RISK_CONFIG[peak.status]
-
-  // Smaller ring constants
-  const RADIUS = 50
-  const STROKE = 8
-  const SIZE = (RADIUS + STROKE) * 2
-  const CENTER = SIZE / 2
-  const CIRCUMFERENCE = 2 * Math.PI * RADIUS
-
   return (
-    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
-          Historical peak
-        </h2>
-        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase ${cfg.chip}`}>
-          {cfg.label}
-        </span>
-      </div>
-      <div className="flex flex-col items-center">
-        <div className="relative mb-3" style={{ width: SIZE, height: SIZE }}>
-          <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
-            <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="var(--color-border)" strokeWidth={STROKE} />
-            <circle
-              cx={CENTER} cy={CENTER} r={RADIUS} fill="none"
-              stroke="var(--color-green-light)" strokeWidth={STROKE} strokeLinecap="round"
-              strokeDasharray={CIRCUMFERENCE}
-              strokeDashoffset={CIRCUMFERENCE * (1 - Math.min(peak.days / 180, 1))}
-              transform={`rotate(-90 ${CENTER} ${CENTER})`}
-              className="transition-all duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-[family-name:var(--font-manrope)] font-extrabold text-3xl leading-none tracking-tight text-[var(--color-text-primary)]">
-              {peak.days}
-            </span>
-            <span className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)] mt-1">/ 180</span>
-          </div>
+    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col" style={{ boxShadow: 'var(--shadow-card)' }}>
+      <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mb-4">
+        ILR countdown
+      </h2>
+      <p className="font-[family-name:var(--font-mono)] font-semibold text-[2.5rem] leading-none tracking-[-0.03em] text-[var(--color-text-primary)]">
+        {Math.max(0, daysUntilIlr)}
+      </p>
+      <p className="text-sm text-[var(--color-text-muted)] mt-1.5">days to go</p>
+      <p className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)] mt-1">
+        Eligible from {fmt(qualifying.ilrDate)}
+      </p>
+
+      <div className="mt-auto pt-5">
+        <div
+          className="w-full h-2 bg-[var(--color-surface-sunken)] rounded-full overflow-hidden"
+          role="progressbar"
+          aria-valuenow={qualifying.percentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="ILR qualifying period progress"
+        >
+          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${qualifying.percentage}%`, background: 'var(--gradient-green)' }} />
         </div>
-        <p className="text-xs text-[var(--color-text-muted)] text-center">
-          <span className="font-semibold text-[var(--color-text-primary)]">{Math.max(0, 180 - peak.days)} days</span> remaining
-        </p>
-        <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)] mt-1 text-center">
-          {fmt(peak.windowStart)} – {fmt(peak.windowEnd)}
+        <p className="text-xs text-[var(--color-text-muted)] mt-2">
+          {qualifying.percentage}% through your 5-year span
         </p>
       </div>
     </div>
@@ -128,9 +119,8 @@ export default async function DashboardPage() {
 
   const hasCompletedTrips = trips.some((t) => t.return_date !== null)
   const peakWindow =
-    visaStartDate && hasCompletedTrips
-      ? getPeakRollingWindow(trips, visaStartDate, today)
-      : null
+    visaStartDate && hasCompletedTrips ? getPeakRollingWindow(trips, visaStartDate, today) : null
+  const series = visaStartDate ? getRollingWindowSeries(trips, visaStartDate, today) : []
 
   const tripCount = trips.length
   const isCurrentlyAbroad = trips.some((t) => !t.return_date)
@@ -146,9 +136,7 @@ export default async function DashboardPage() {
       })()
     : null
   const daysUntilIlr = ilrEligibilityDate
-    ? Math.ceil(
-        (new Date(ilrEligibilityDate).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-      )
+    ? Math.ceil((new Date(ilrEligibilityDate).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
     : null
   const complianceStatus = getRiskStatus(rollingWindow.days)
 
@@ -170,35 +158,25 @@ export default async function DashboardPage() {
       </Suspense>
 
       {/* Page header */}
-      <div className="mb-8">
-        <div className="flex flex-wrap items-start justify-between gap-y-4">
-          <div>
-            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.04em] text-[var(--color-text-primary)]">
-              <DashboardGreeting firstName={firstName} />
-            </h1>
-            <p className="font-[family-name:var(--font-inter)] text-sm text-[var(--color-text-muted)] mt-1">
-              {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
-            </p>
-          </div>
-          <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
-            <Link
-              href="/trips?modal=plan&returnTo=%2Fdashboard"
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-[var(--color-border-strong)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tinted)] transition-colors no-underline"
-            >
-              Plan trip
-            </Link>
-            <Link
-              href="/trips?modal=log&returnTo=%2Fdashboard"
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
-              style={{ background: 'var(--gradient-green)' }}
-            >
-              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
-                <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-              Log trip
-            </Link>
-          </div>
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-y-4">
+        <div>
+          <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.75rem] leading-tight tracking-[-0.04em] text-[var(--color-text-primary)]">
+            <DashboardGreeting firstName={firstName} />
+          </h1>
+          <p className="font-[family-name:var(--font-inter)] text-sm text-[var(--color-text-muted)] mt-1">
+            {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
+          </p>
         </div>
+        <Link
+          href="/trips?modal=log&returnTo=%2Fdashboard"
+          className="flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity no-underline"
+          style={{ background: 'var(--gradient-green)' }}
+        >
+          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          Log trip
+        </Link>
       </div>
 
       {/* Setup nudge — shown when user skipped onboarding without entering visa data */}
@@ -230,85 +208,55 @@ export default async function DashboardPage() {
         <AlertCard days={rollingWindow.days} status={rollingWindow.status} />
       )}
 
-      {/* Stat cards — three columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+      {/* Bento */}
+      <div className="flex flex-col gap-5">
+        {/* Hero — signature rolling-window timeline */}
+        <RollingWindowTimeline
+          days={rollingWindow.days}
+          status={rollingWindow.status}
+          windowStart={rollingWindow.windowStart}
+          windowEnd={rollingWindow.windowEnd}
+          trips={trips}
+        />
 
-        {/* Current window — hero ring */}
-        <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">
-              Current window
-            </h2>
-            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-[0.05em] uppercase ${RISK_CONFIG[rollingWindow.status].chip}`}>
-              {RISK_CONFIG[rollingWindow.status].label}
-            </span>
+        {/* Inline what-if simulator */}
+        <PlanTripSimulator
+          existingTrips={trips}
+          visaStartDate={visaStartDate}
+          currentDays={rollingWindow.days}
+        />
+
+        {/* Heatmap + ILR countdown */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div className="lg:col-span-2">
+            <AbsenceHeatmap trips={trips} today={today} />
           </div>
-          <QuotaRing days={rollingWindow.days} status={rollingWindow.status} />
+          {qualifying && daysUntilIlr !== null ? (
+            <IlrCountdownCard qualifying={qualifying} daysUntilIlr={daysUntilIlr} />
+          ) : (
+            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
+              <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mb-3">ILR countdown</h2>
+              <p className="text-sm text-[var(--color-text-muted)]">Set your visa start date in Settings to track progress.</p>
+            </div>
+          )}
         </div>
 
-        {/* Historical peak */}
-        {peakWindow ? (
-          <PeakWindowCard peak={peakWindow} />
-        ) : (
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center gap-2" style={{ boxShadow: 'var(--shadow-card)' }}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)]">Historical peak</h2>
-            <div className="w-8 h-8 rounded-full bg-[var(--color-surface-sunken)] flex items-center justify-center">
-              <svg className="w-4 h-4 text-[var(--color-text-faint)]" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 12L6.5 7l3 3.5L12 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <p className="text-sm text-[var(--color-text-muted)]">Log your first trip and we&apos;ll track your peak rolling window here.</p>
-          </div>
-        )}
+        {/* Peak trajectory */}
+        <PeakTrajectoryChart
+          series={series}
+          peakDays={peakWindow?.days ?? 0}
+          peakDate={peakWindow?.windowEnd ?? null}
+        />
 
-        {/* Qualifying period */}
-        {qualifying ? (
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)] mb-5">
-              Qualifying period
-            </h2>
-            <div className="flex flex-col items-center gap-4">
-              <div className="text-center">
-                <p className="font-[family-name:var(--font-manrope)] font-extrabold text-[3.5rem] leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
-                  {qualifying.percentage}%
-                </p>
-                <p className="text-xs text-[var(--color-text-muted)] mt-1.5">of qualifying period complete</p>
-              </div>
-              <div
-                className="w-full h-2 bg-[var(--color-surface-sunken)] rounded-full overflow-hidden"
-                role="progressbar"
-                aria-valuenow={qualifying.percentage}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label="ILR qualifying period progress"
-              >
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${qualifying.percentage}%`, background: 'var(--gradient-green)' }}
-                />
-              </div>
-              <div className="w-full flex justify-between font-[family-name:var(--font-mono)] text-[10px] text-[var(--color-text-faint)]">
-                <span>{qualifying.visaStartDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                <span>ILR {qualifying.ilrDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.06em] text-[var(--color-text-faint)] mb-3">Qualifying period</h2>
-            <p className="text-sm text-[var(--color-text-muted)]">Set your visa start date in Settings to track progress.</p>
-          </div>
-        )}
+        {/* Recent trips */}
+        <DashboardTripsPreview trips={rawTrips ?? []} />
       </div>
-
-      {/* Recent trips preview */}
-      <DashboardTripsPreview trips={rawTrips ?? []} />
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Sub-components
+// Alert card
 // ---------------------------------------------------------------------------
 
 function AlertCard({
@@ -360,4 +308,3 @@ function AlertCard({
     </div>
   )
 }
-

@@ -15,6 +15,7 @@ import {
   getCurrentRollingWindow,
   getQualifyingPeriod,
   getPeakRollingWindow,
+  getRollingWindowSeries,
   getRiskStatus,
   hasOverlappingTrip,
   isCrownDependency,
@@ -413,6 +414,48 @@ describe('Branch coverage — tripDaysInWindow internal guards', () => {
     const trips = [trip('a', 'Spain', '2025-06-15', '2025-06-15')]
     const result = getCurrentRollingWindow(trips, d('2026-01-01'))
     expect(result.days).toBe(0)
+  })
+})
+
+describe('getRollingWindowSeries', () => {
+  it('returns all-zero points (and a final today point) when there are no trips', () => {
+    const series = getRollingWindowSeries([], '2024-01-15', d('2026-06-30'))
+    expect(series.length).toBeGreaterThan(0)
+    expect(series.every((p) => p.days === 0)).toBe(true)
+  })
+
+  it('always ends exactly on today', () => {
+    const today = d('2026-06-30')
+    const series = getRollingWindowSeries([trip('a', 'Spain', '2025-03-01', '2025-04-01')], '2024-01-15', today)
+    expect(series[series.length - 1].date.getTime()).toBe(today.getTime())
+  })
+
+  it('respects the maxPoints cap', () => {
+    // ~2.5 years span, capped at 30 points → at most 31 (cap + guaranteed final today)
+    const series = getRollingWindowSeries([], '2024-01-15', d('2026-06-30'), 30)
+    expect(series.length).toBeLessThanOrEqual(31)
+  })
+
+  it('the series peak equals getPeakRollingWindow at a sampled resolution', () => {
+    const trips = [
+      trip('a', 'Spain', '2025-01-01', '2025-04-15'), // ~103 absence days
+      trip('b', 'USA', '2025-05-01', '2025-06-10'),   // ~39 absence days
+    ]
+    const today = d('2026-06-30')
+    // Daily resolution (maxPoints high) so a sample lands on the true peak window end.
+    const series = getRollingWindowSeries(trips, '2024-12-01', today, 1000)
+    const seriesPeak = Math.max(...series.map((p) => p.days))
+    const enginePeak = getPeakRollingWindow(trips, '2024-12-01', today).days
+    expect(seriesPeak).toBe(enginePeak)
+  })
+
+  it('only counts completed trips on/after the visa start (mirrors peak)', () => {
+    const trips = [
+      trip('pre', 'Spain', '2023-01-01', '2023-06-01'), // before visa start — excluded
+      trip('open', 'USA', '2025-01-01', null),          // ongoing — excluded from historical series
+    ]
+    const series = getRollingWindowSeries(trips, '2024-01-15', d('2026-06-30'))
+    expect(series.every((p) => p.days === 0)).toBe(true)
   })
 })
 
