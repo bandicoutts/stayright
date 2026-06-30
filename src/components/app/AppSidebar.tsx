@@ -70,7 +70,7 @@ export function AppSidebar({
 
   return (
     <aside
-      className="hidden lg:flex fixed top-0 left-0 z-40 h-screen w-[260px] flex-col px-4 py-5 border-r"
+      className="hidden min-[960px]:flex fixed top-0 left-0 z-40 h-screen w-[260px] flex-col px-4 py-5 border-r"
       style={{
         background: 'var(--color-sidebar-bg)',
         borderColor: 'var(--color-sidebar-border)',

@@ -57,7 +57,7 @@ export function MainLayoutClient({
       />
 
       {/* Content — offset for the sidebar on desktop; padded for the bottom nav on mobile */}
-      <div className="lg:pl-[260px]">
+      <div className="min-[960px]:pl-[260px]">
         {isPaymentFailed && (
           <div className="bg-[var(--color-status-red)] text-white text-sm font-medium px-4 py-2.5 text-center">
             Your payment failed. Please{' '}
@@ -68,7 +68,7 @@ export function MainLayoutClient({
           </div>
         )}
 
-        <main className="pb-24 lg:pb-0" id="main-content">
+        <main className="pb-24 min-[960px]:pb-0" id="main-content">
           {children}
         </main>
       </div>

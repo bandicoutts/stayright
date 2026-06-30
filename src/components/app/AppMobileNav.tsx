@@ -73,7 +73,7 @@ export function AppMobileNav({
     <>
       {/* Top bar */}
       <header
-        className="lg:hidden sticky top-0 z-40 h-[56px] flex items-center justify-between px-4 border-b"
+        className="min-[960px]:hidden sticky top-0 z-40 h-[56px] flex items-center justify-between px-4 border-b"
         style={{
           background: 'var(--color-nav-bg)',
           borderColor: 'var(--color-nav-border)',
@@ -155,7 +155,7 @@ export function AppMobileNav({
 
       {/* Bottom nav + FAB */}
       <nav
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t"
+        className="min-[960px]:hidden fixed bottom-0 left-0 right-0 z-40 border-t"
         style={{
           background: 'var(--color-nav-bg)',
           borderColor: 'var(--color-nav-border)',
