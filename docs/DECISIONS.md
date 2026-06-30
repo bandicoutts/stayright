@@ -1594,7 +1594,7 @@ Eight targeted corrections applied across the landing page and dashboard to esta
 5. **Eyebrow labels raised from `0.625rem` to `0.6875rem`** — "FEATURES" and "PRICING" section labels were 10px, below comfortable readability. Raised to 11px.
 6. **Peak ring number `font-bold` → `font-extrabold`** — the Historical Peak ring number used weight 700 while the Qualifying Period used 800. Both now use `font-extrabold` for consistency.
 7. **Hero mockup dates → `font-mono`** — date strings in the landing page mockup card used Inter; the real app renders all dates in JetBrains Mono. Mockup now matches.
-8. **Dashboard subtext explicit font family** — `"Here's your compliance status."` `<p>` had no `font-[...]` class, relying on inheritance. Now explicitly declares `font-[family-name:var(--font-inter)]`.
+8. **Dashboard subtext explicit font family** — `"Here's your compliance status."` `<p>` had no explicit font class, relying on inheritance. Now explicitly declares the body font family (the `var(--font-inter)` slot at the time, since renamed to `--font-body`).
 
 **Reasoning:**
 These are corrections to existing intent, not changes to the typographic direction. The font pairing (Manrope / Inter / JetBrains Mono) and overall scale were correct; inconsistencies had accumulated from components being built at different times without cross-referencing each other.
@@ -1975,7 +1975,7 @@ The wizard's step gating added friction the prototype's single form removes, and
 Final reskin pass — remove what the earlier phases superseded and finish the font-variable rename (reskin plan `docs/RESKIN-PLAN.md`, Phase 9).
 
 - **Deleted (confirmed no importers, no dynamic imports):** `QuotaRing.tsx` (retired from the dashboard in Phase 2), the legacy `TopNav.tsx` + `MobileNav.tsx` + `Sidebar.tsx` (replaced by `AppSidebar`/`AppMobileNav` in Phase 1), and the older `TripsClient.tsx` (superseded by `TripsTableClient`). `QuotaRingMockup` was already gone (Phase 6).
-- **Font variables renamed** `--font-manrope` → `--font-heading` and `--font-inter` → `--font-body` across all ~44 files (the next/font slots in `layout.tsx`, the `@theme` block + base styles in `globals.css`, and every `font-[family-name:var(...)]` usage). These were named for the old Manrope/Inter fonts; DECISION-074 loaded Bricolage/Hanken into those legacy slots and deferred the rename to here. Pure rename — no font or weight change.
+- **Font variables renamed** `--font-manrope` → `--font-heading` and `--font-inter` → `--font-body` across all ~44 files (the next/font slots in `layout.tsx`, the `@theme` block + base styles in `globals.css`, and every `font-family` arbitrary-value class that referenced them). These were named for the old Manrope/Inter fonts; DECISION-074 loaded Bricolage/Hanken into those legacy slots and deferred the rename to here. Pure rename — no font or weight change.
 - **Pruned dead tokens** `--color-track` and `--shadow-ring-card` (light + dark) — only the deleted `QuotaRing` referenced them. Stale code comments in `riskConfig.ts` and `layout.tsx` updated.
 
 **Reasoning:**
@@ -2019,3 +2019,18 @@ The screens DECISION-083 left on hardcoded hex are migrated to the semantic toke
 These were pre-existing light-only screens, not part of the original reskin phase list, so DECISION-083 flagged rather than touched them; the owner then asked for them done. Pure token swap — no copy, logic, or auth-flow change. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
 
 **Related:** DECISION-061 (semantic token architecture), DECISION-081 (onboarding token migration, same idiom), DECISION-083 (flagged these files); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-086] Exclude docs/markdown from Tailwind's content scan
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`globals.css` now declares `@source not "../../docs";` and `@source not "../../**/*.md";`, so Tailwind v4's automatic content detection never scans documentation for utility classes.
+
+**Reasoning:**
+ADRs and design docs quote `className` snippets in prose. Tailwind v4 auto-scans the whole project tree, and a quoted arbitrary-value class with a placeholder (the ADR-083 entry contained a `font-family` arbitrary-value class written with a literal `...` placeholder) was extracted and compiled to `font-family: var(...)`, which is invalid CSS and broke the dev server / build with a PostCSS parse error. Markdown never legitimately supplies utility classes, so excluding it is safe and prevents the whole class of regression. The offending prose was also reworded to drop the literal bracket-class token (belt-and-suspenders). Verified: `next build` compiles clean.
+
+**Related:** DECISION-008 (Tailwind v4 CSS-based config), DECISION-083 (the ADR whose snippet triggered this)
