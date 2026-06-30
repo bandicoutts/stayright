@@ -58,7 +58,7 @@ export function ReportPreview({
         {/* Letterhead */}
         <div className="rounded-md px-5 py-4 mb-6" style={{ background: '#006948' }}>
           <p className="font-[family-name:var(--font-manrope)] font-bold text-[18px] text-white leading-tight">
-            StayRight — Absence History &amp; Compliance Record
+            StayRight · Absence History &amp; Compliance Record
           </p>
           <p className="text-[11px] mt-1" style={{ color: '#CCEDE3' }}>UK Skilled Worker Visa · 180-Day Absence Rule</p>
         </div>
@@ -133,7 +133,7 @@ export function ReportPreview({
 
         {/* Footer */}
         <div className="flex justify-between mt-6 pt-2.5 border-t border-[#E8EAE8] text-[8px] text-[#9BA8A2]">
-          <span>StayRight — Absence History &amp; Compliance Record</span>
+          <span>StayRight · Absence History &amp; Compliance Record</span>
           <span>Generated {generatedOn} · For immigration advice, consult a registered adviser</span>
         </div>
       </div>

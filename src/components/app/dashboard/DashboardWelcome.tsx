@@ -59,7 +59,7 @@ export function DashboardWelcome() {
           {
             icon: '✈️',
             title: 'Log trips',
-            desc: 'Keep your travel history up to date — log every trip when you return.',
+            desc: 'Keep your travel history up to date. Log every trip when you return.',
           },
         ].map(({ icon, title, desc }) => (
           <div key={title} className="flex gap-3 p-3 bg-[var(--color-bg-tinted)] rounded-xl">

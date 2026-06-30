@@ -119,7 +119,7 @@ export function DashboardTripsPreview({ trips }: Props) {
               href="/trips"
               className="flex items-center justify-center px-5 py-3 text-xs font-medium text-[var(--color-text-muted)] hover:text-[var(--color-green-light)] hover:bg-[var(--color-surface-raised)] transition-colors border-t border-[var(--color-nav-border)] no-underline"
             >
-              + {trips.length - 3} more trip{trips.length - 3 > 1 ? 's' : ''} — view all
+              View all {trips.length} trips
             </Link>
           )}
         </div>

@@ -119,9 +119,9 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function planLabel(plan: string | null | undefined): string {
   switch (plan) {
-    case 'pro_monthly': return 'Pro — Monthly'
-    case 'pro_annual': return 'Pro — Annual'
-    case 'pro_lifetime': return 'Pro — Lifetime'
+    case 'pro_monthly': return 'Pro Monthly'
+    case 'pro_annual': return 'Pro Annual'
+    case 'pro_lifetime': return 'Pro Lifetime'
     default: return 'Free'
   }
 }
@@ -129,8 +129,8 @@ function planLabel(plan: string | null | undefined): string {
 // All four plans (DECISION-074 reconciliation: annual included; Free = 10 trips).
 const PLAN_CARDS = [
   { key: 'free', name: 'Free', price: '£0', period: 'forever', features: ['Up to 10 trips', 'Live 180-day tracker', 'At-a-glance status'] },
-  { key: 'pro_monthly', name: 'Pro — Monthly', price: '£2.99', period: '/month', features: ['Unlimited trips', 'What-if simulator', 'Threshold alerts', 'PDF export'] },
-  { key: 'pro_annual', name: 'Pro — Annual', price: '£24.99', period: '/year', badge: 'Save 30%', features: ['Everything in Pro', 'Two months free'] },
+  { key: 'pro_monthly', name: 'Pro Monthly', price: '£2.99', period: '/month', features: ['Unlimited trips', 'What-if simulator', 'Threshold alerts', 'PDF export'] },
+  { key: 'pro_annual', name: 'Pro Annual', price: '£24.99', period: '/year', badge: 'Save 30%', features: ['Everything in Pro', 'Two months free'] },
   { key: 'pro_lifetime', name: 'Lifetime', price: '£49.99', period: 'once', features: ['Everything in Pro', 'No subscription, ever', 'All future updates'] },
 ] as const
 

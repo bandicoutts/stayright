@@ -120,7 +120,7 @@ function CalcPanel({
           <span className="text-xs text-[var(--color-text-muted)]">Safe to travel</span>
         )}
         {result.status === 'WARNING' && (
-          <span className="text-xs text-[var(--color-warning-text)]">Approaching the limit — plan carefully</span>
+          <span className="text-xs text-[var(--color-warning-text)]">Approaching the limit. Plan carefully.</span>
         )}
         {result.status === 'DANGER' && (
           <span className="text-xs text-[var(--color-danger-text)]">Very close to the 180-day limit</span>
@@ -566,7 +566,7 @@ export function TripFlowClient({
               )}
               {isCrownDep && (
                 <p className="text-xs text-[var(--color-green)] font-medium">
-                  Crown Dependency — 0 absence days
+                  Crown Dependency: 0 absence days
                 </p>
               )}
             </div>

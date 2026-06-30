@@ -153,7 +153,7 @@ export function ReportsClient({ hasTrips, isPro, trips, profile }: ReportsClient
         ILR evidence pack
       </h1>
       <p className="text-sm text-[var(--color-text-muted)] mb-6 max-w-2xl">
-        A Home Office–aligned absence record you can hand in with your application. Choose a period and export it as a PDF.
+        A Home Office-ready absence record you can hand in with your application. Pick a period and export it as a PDF.
       </p>
 
       {error && (

@@ -43,8 +43,8 @@ export default function Hero() {
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
             StayRight automatically tracks every rolling 12-month window of your visa
-            against the Home Office 180-day rule — so you always know you&apos;re safe.
-            No spreadsheets, no second-guessing.
+            against the Home Office 180-day rule, so you always know you&apos;re safe.
+            No spreadsheets. No second-guessing.
           </p>
 
           <div className="flex flex-wrap items-center gap-3.5 mb-10 animate-fade-up animate-fade-up-4">

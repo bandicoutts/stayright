@@ -228,7 +228,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
         >
           <span className="flex items-center justify-center gap-2">
             {loading && <Spinner />}
-            {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
+            {loading ? 'Redirecting to checkout…' : `Upgrade to Pro · ${currentPlan.detail}`}
           </span>
         </button>
 

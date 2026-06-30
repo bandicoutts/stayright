@@ -9,7 +9,7 @@ const SPREADSHEET = [
 ];
 
 const STAYRIGHT = [
-  'Log a trip in seconds — dates in, done',
+  'Log a trip in seconds. Dates in, done',
   'Every rolling 12-month window checked automatically',
   'Always-right maths you never have to verify',
   'Simulate any trip before you book it',
@@ -36,7 +36,7 @@ export default function Comparison() {
           className="font-[family-name:var(--font-inter)] leading-[1.55] mb-11 max-w-[600px]"
           style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
         >
-          One wrong formula and your ILR timeline is off — and you might not find out
+          One wrong formula and your ILR timeline is off, and you might not find out
           until it&apos;s too late.
         </p>
 

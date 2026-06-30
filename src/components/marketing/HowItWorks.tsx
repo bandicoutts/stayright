@@ -1,7 +1,7 @@
 const STEPS = [
   { n: '01', title: 'Log your trips', body: 'Enter the dates you left and returned to the UK. That’s the only manual step.' },
   { n: '02', title: 'We check every window', body: 'StayRight scans every rolling 12-month period across your qualifying span, automatically.' },
-  { n: '03', title: 'Know you’re safe', body: 'See your status and days remaining — instantly, and always. No surprises, ever.', highlight: true },
+  { n: '03', title: 'Know you’re safe', body: 'See your status and the days you have left, instantly and always. No surprises.', highlight: true },
 ];
 
 export default function HowItWorks() {
