@@ -51,7 +51,7 @@ export function ReportPreview({
 
   return (
     <div
-      className="mx-auto w-full max-w-[820px] rounded-lg overflow-hidden text-[#191C1D]"
+      className="w-full max-w-[820px] rounded-lg overflow-hidden text-[#191C1D]"
       style={{ background: '#ffffff', boxShadow: 'var(--shadow-card)', border: '1px solid var(--color-border)' }}
     >
       <div className="p-6 sm:p-10 font-[family-name:var(--font-inter)]">

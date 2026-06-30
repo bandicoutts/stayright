@@ -140,6 +140,13 @@ export function ReportsClient({ hasTrips, isPro, trips, profile }: ReportsClient
   const statusTone =
     status === 'SAFE' ? 'var(--color-green)' : status === 'WARNING' ? 'var(--color-status-amber)' : 'var(--color-status-red)'
 
+  const previewLabel = (
+    <span className="inline-flex items-center gap-1.5 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.1em] uppercase text-[var(--color-text-faint)]">
+      <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.2" /><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" /></svg>
+      Live preview · A4
+    </span>
+  )
+
   return (
     <div className="p-6 md:p-8">
       <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
@@ -153,7 +160,11 @@ export function ReportsClient({ hasTrips, isPro, trips, profile }: ReportsClient
         <div className="mb-5 px-4 py-3 bg-[var(--color-danger-bg)] text-[var(--color-danger-text)] text-sm rounded-xl">{error}</div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] gap-x-8 lg:gap-y-2.5 items-start max-w-6xl">
+        {/* Header row (desktop) — empty left cell aligns the cards below */}
+        <div className="hidden lg:block" aria-hidden="true" />
+        <div className="hidden lg:block">{previewLabel}</div>
+
         {/* Left panel */}
         <div className="lg:sticky lg:top-6 flex flex-col gap-4">
           {/* Period selector */}
@@ -234,10 +245,7 @@ export function ReportsClient({ hasTrips, isPro, trips, profile }: ReportsClient
 
         {/* Right: live preview */}
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.1em] uppercase text-[var(--color-text-faint)] mb-2 flex items-center gap-1.5">
-            <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.2"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2"/></svg>
-            Live preview · A4
-          </p>
+          <div className="lg:hidden mb-2">{previewLabel}</div>
           {!hasTrips ? (
             <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-16 text-center text-sm text-[var(--color-text-muted)]" style={{ boxShadow: 'var(--shadow-card)' }}>
               No absence data to report yet. Log your trips first, then come back to generate your ILR absence pack.
