@@ -67,7 +67,7 @@ export function AbsenceHeatmap({ trips, today }: Props) {
 
   return (
     <div
-      className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6"
+      className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 h-full flex flex-col"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
       <div className="flex items-center justify-between mb-4">
@@ -79,43 +79,46 @@ export function AbsenceHeatmap({ trips, today }: Props) {
         </span>
       </div>
 
-      {/* Fluid: columns flex to the card width; cells stay square. No scroll. */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${WEEKS}, minmax(0, 1fr))`,
-          gridTemplateRows: 'repeat(7, auto)',
-          gridAutoFlow: 'column',
-          gap: '2px',
-        }}
-      >
-        {columns.flatMap((col, c) =>
-          col.map((cell, r) => (
-            <div
-              key={`${c}-${r}`}
-              className="aspect-square w-full rounded-[2px]"
-              style={{
-                background: cell.future
-                  ? 'transparent'
-                  : cell.absent
-                    ? 'var(--color-green)'
-                    : 'var(--color-surface-sunken)',
-              }}
-              title={new Date(cell.ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (cell.absent ? ' · abroad' : '')}
-            />
-          ))
-        )}
-      </div>
-      <div className="relative h-3 mt-2">
-        {monthLabels.map((m, i) => (
-          <span
-            key={i}
-            className="absolute font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-faint)]"
-            style={{ left: `${(m.col / WEEKS) * 100}%` }}
-          >
-            {m.label}
-          </span>
-        ))}
+      {/* Centred so the tile matches the ILR countdown height without an awkward gap. */}
+      <div className="flex-1 flex flex-col justify-center">
+        {/* Fluid: columns flex to the card width; cells stay square. No scroll. */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${WEEKS}, minmax(0, 1fr))`,
+            gridTemplateRows: 'repeat(7, auto)',
+            gridAutoFlow: 'column',
+            gap: '2px',
+          }}
+        >
+          {columns.flatMap((col, c) =>
+            col.map((cell, r) => (
+              <div
+                key={`${c}-${r}`}
+                className="aspect-square w-full rounded-[2px]"
+                style={{
+                  background: cell.future
+                    ? 'transparent'
+                    : cell.absent
+                      ? 'var(--color-green)'
+                      : 'var(--color-surface-sunken)',
+                }}
+                title={new Date(cell.ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (cell.absent ? ' · abroad' : '')}
+              />
+            ))
+          )}
+        </div>
+        <div className="relative h-3 mt-2">
+          {monthLabels.map((m, i) => (
+            <span
+              key={i}
+              className="absolute font-[family-name:var(--font-mono)] text-[9px] text-[var(--color-text-faint)]"
+              style={{ left: `${(m.col / WEEKS) * 100}%` }}
+            >
+              {m.label}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )

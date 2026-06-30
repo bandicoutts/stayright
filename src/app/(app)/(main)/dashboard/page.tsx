@@ -42,7 +42,7 @@ function IlrCountdownCard({
     d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
   return (
-    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col" style={{ boxShadow: 'var(--shadow-card)' }}>
+    <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 h-full flex flex-col" style={{ boxShadow: 'var(--shadow-card)' }}>
       <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mb-4">
         ILR countdown
       </h2>
@@ -227,14 +227,14 @@ export default async function DashboardPage() {
         />
 
         {/* Heatmap + ILR countdown */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:items-stretch">
+          <div className="lg:col-span-2 h-full">
             <AbsenceHeatmap trips={trips} today={today} />
           </div>
           {qualifying && daysUntilIlr !== null ? (
             <IlrCountdownCard qualifying={qualifying} daysUntilIlr={daysUntilIlr} />
           ) : (
-            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 h-full flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
               <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mb-3">ILR countdown</h2>
               <p className="text-sm text-[var(--color-text-muted)]">Set your visa start date in Settings to track progress.</p>
             </div>
