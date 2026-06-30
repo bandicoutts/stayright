@@ -1875,3 +1875,30 @@ A live A4 preview lets the user see exactly what they'll hand to the Home Office
 - `reports.spec.ts` rewritten for the new UI (heading "ILR evidence pack"; presets; "Upgrade to export" / "Export PDF"; custom-range validation). Paywall + download-event assertions preserved.
 
 **Related:** DECISION-023 (client PDF), DECISION-024 (no export history), DECISION-025 (notes → reason), DECISION-074; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-079] Reskin Phase 5 — Settings recomposed into six jump-nav sections
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`SettingsClient` moves from three tabs to the prototype's six scrollable sections with a sticky jump nav + scrollspy (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- Sections: **Visa & ILR** (route, start date, ILR eligibility date shown once), **Account** (name, email, password), **Subscription & billing**, **Notifications & alerts**, **Appearance**, **Data & privacy**.
+- Jump nav is a sticky left list with icons; an `IntersectionObserver` highlights the active section. All sections render on one page (anchor links scroll to each).
+- **Subscription** shows **all four plans** (Free / Pro Monthly £2.99 / Pro Annual £24.99 / Pro Lifetime £49.99) as cards with the current plan marked; paid cards start Stripe Checkout (`/api/stripe/checkout`), recurring plans get a "Manage billing" portal link. Reuses existing Stripe wiring + `upgrade_clicked` event.
+- **Notifications** maps onto the real five columns with corrected copy: **"Email me at 120 days"** / **"Email me at 150 days"** / return reminder / ILR reminder / monthly summary. Pro-gated.
+- **Appearance** is a System / Light / Dark chooser backed by `next-themes` (mounted-guard to avoid hydration mismatch).
+- **Data & privacy** holds export + the delete-account flow (confirmation text "delete my account" preserved).
+- Server actions, the five notification columns, and Stripe routes are unchanged; name editing and visa editing both persist the full profile via `updateProfileAction`.
+
+**Reasoning:**
+A single scannable page with a jump nav matches the prototype and surfaces billing + appearance that were previously buried or absent. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 129 unit tests pass; confirmed all six sections render (desktop).
+
+**Consequences:**
+- `settings.spec.ts` rewritten for the section nav (Visa & ILR / Account / Subscription / Notifications / Appearance / Data & privacy), four-plan prices, 120/150 copy; export + delete-confirmation assertions preserved.
+- Added `CreditCard` + `Palette` to the Icons re-export.
+
+**Related:** DECISION-017 (onboarding), DECISION-027 (Stripe checkout), DECISION-069 (signOut), DECISION-074 (pricing/plans), DECISION-078; `docs/RESKIN-PLAN.md`
