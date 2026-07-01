@@ -34,7 +34,7 @@ export function DashboardTripsPreview({ trips }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base tracking-tight text-[var(--color-text-primary)]">
+        <h2 className="font-[family-name:var(--font-heading)] font-bold text-base tracking-tight text-[var(--color-text-primary)]">
           Recent trips
         </h2>
         <Link
@@ -119,7 +119,7 @@ export function DashboardTripsPreview({ trips }: Props) {
               href="/trips"
               className="flex items-center justify-center px-5 py-3 text-xs font-medium text-[var(--color-text-muted)] hover:text-[var(--color-green-light)] hover:bg-[var(--color-surface-raised)] transition-colors border-t border-[var(--color-nav-border)] no-underline"
             >
-              + {trips.length - 3} more trip{trips.length - 3 > 1 ? 's' : ''} — view all
+              View all {trips.length} trips
             </Link>
           )}
         </div>

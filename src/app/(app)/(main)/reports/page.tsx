@@ -22,24 +22,38 @@ export default async function ReportsPage() {
   if (!profile?.onboarding_completed) redirect('/onboarding')
 
   // Subscription — must check both plan AND status (H-1: past_due users lose Pro access)
-  const [{ data: subscription }, { count: tripCount }] = await Promise.all([
+  const [{ data: subscription }, { data: profileData }, { data: rawTrips }] = await Promise.all([
     supabase
       .from('subscriptions')
       .select('plan, status')
       .eq('user_id', user.id)
       .single(),
     supabase
+      .from('profiles')
+      .select('first_name, last_name, visa_route, visa_start_date')
+      .eq('id', user.id)
+      .single(),
+    supabase
       .from('trips')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id),
+      .select('id, destination, departure_date, return_date, notes')
+      .eq('user_id', user.id)
+      .order('departure_date', { ascending: true }),
   ])
 
   const isPro = isPlanPro(subscription?.plan, subscription?.status)
+  const trips = rawTrips ?? []
 
   return (
     <ReportsClient
-      hasTrips={(tripCount ?? 0) > 0}
+      hasTrips={trips.length > 0}
       isPro={isPro}
+      trips={trips}
+      profile={{
+        firstName: profileData?.first_name ?? '',
+        lastName: profileData?.last_name ?? null,
+        visaRoute: profileData?.visa_route ?? 'Skilled Worker',
+        visaStartDate: profileData?.visa_start_date ?? null,
+      }}
     />
   )
 }

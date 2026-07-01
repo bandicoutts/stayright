@@ -221,7 +221,7 @@ function getRiskStyle(status: string) {
 function generateFooter(reportType: string, generatedOn: string) {
   return (
     <View style={s.footer} fixed>
-      <Text style={s.footerText}>StayRight — {reportType}</Text>
+      <Text style={s.footerText}>StayRight · {reportType}</Text>
       <Text style={s.footerText}>Generated {generatedOn} · For immigration advice, consult a registered adviser</Text>
     </View>
   )
@@ -238,7 +238,7 @@ function PageHeader({ title, profile, generatedOn }: {
   return (
     <>
       <View style={s.headerBar}>
-        <Text style={s.headerTitle}>StayRight — {title}</Text>
+        <Text style={s.headerTitle}>StayRight · {title}</Text>
         <Text style={s.headerSub}>UK Skilled Worker Visa · 180-Day Absence Rule</Text>
       </View>
       <View style={s.metaRow}>

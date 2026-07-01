@@ -26,7 +26,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           >
             S
           </div>
-          <span className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.0625rem] tracking-[-0.03em] text-[var(--color-text-primary)]">
+          <span className="font-[family-name:var(--font-heading)] font-extrabold text-[1.0625rem] tracking-[-0.03em] text-[var(--color-text-primary)]">
             Stayright
           </span>
         </Link>

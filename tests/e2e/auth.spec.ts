@@ -40,9 +40,9 @@ test.describe('Auth flows', () => {
 
   test('logout clears session and redirects to /login', async ({ page }) => {
     await login(page)
-    // The layout uses TopNav (<header>), not a sidebar (<aside>).
-    // The user menu button (aria-label="User menu") opens a popover with "Sign out".
-    await page.getByRole('button', { name: 'User menu' }).click()
+    // The desktop layout uses a left sidebar (<aside>). The account button
+    // (aria-label="Account menu") opens a popover with "Sign out".
+    await page.getByRole('button', { name: 'Account menu' }).click()
     await page.getByRole('button', { name: /sign out/i }).click()
     await page.waitForURL(/\/login/, { timeout: 10_000 })
     await expect(page).toHaveURL(/\/login/)

@@ -1,23 +1,26 @@
 // diagnostics check
 import type { Metadata } from 'next';
-import { Manrope, Inter, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
+import { Bricolage_Grotesque, Hanken_Grotesk, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
 import './globals.css';
 import { PostHogProvider } from '@/components/PostHogProvider';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import CookieBanner from '@/components/marketing/CookieBanner';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-const manrope = Manrope({
+// Reskin fonts (DECISION-074): Bricolage Grotesque (headings) + Hanken Grotesk
+// (body), exposed as the semantic CSS variables `--font-heading` / `--font-body`
+// (renamed from the legacy `--font-manrope` / `--font-inter` slots in Phase 9).
+const heading = Bricolage_Grotesque({
   subsets: ['latin'],
-  weight: ['300', '700', '800'],
-  variable: '--font-manrope',
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-heading',
   display: 'swap',
 });
 
-const inter = Inter({
+const body = Hanken_Grotesk({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-body',
   display: 'swap',
 });
 
@@ -61,7 +64,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${manrope.variable} ${inter.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${heading.variable} ${body.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

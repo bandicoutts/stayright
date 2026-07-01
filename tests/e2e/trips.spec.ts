@@ -29,11 +29,7 @@ const MONTH_NAMES = [
 ]
 
 async function navigateCalendarToMonth(page: Page, targetYear: number, targetMonth: number) {
-  const headingLocator = page
-    .locator('[aria-label="Next month"]')
-    .locator('..')
-    .locator('p')
-    .first()
+  const headingLocator = page.getByRole('button', { name: 'Choose month and year' })
 
   for (let i = 0; i < 36; i++) {
     const text = await headingLocator.textContent()
@@ -57,11 +53,11 @@ async function clickDay(page: Page, year: number, month: number, day: number) {
   await page.getByRole('button', { name: label, exact: true }).click()
 }
 
-async function goToStep2(page: Page, destination: string) {
+// Single-sheet modal (reskin Phase 8): destination + dates live on one form,
+// no step navigation. Fill the destination and move focus off the combobox.
+async function fillDestination(page: Page, destination: string) {
   await page.getByLabel('Destination').fill(destination)
   await page.keyboard.press('Tab') // Tab, not Escape — Escape triggers the discard dialog
-  await page.getByRole('button', { name: 'Next →' }).click()
-  await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
 }
 
 // ---------------------------------------------------------------------------
@@ -74,11 +70,11 @@ test.describe('Calculations — live CalcPanel', () => {
   test.beforeEach(async ({ page }) => {
     await suppressCookieBanner(page)
     await page.goto('/trips?modal=plan')
-    await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Destination')).toBeVisible({ timeout: 10_000 })
   })
 
   test('TC1 — standard trip: depart May 1, return May 9 → 7 absence days', async ({ page }) => {
-    await goToStep2(page, 'France')
+    await fillDestination(page, 'France')
     await navigateCalendarToMonth(page, 2026, 4)
     await clickDay(page, 2026, 4, 1)
     await clickDay(page, 2026, 4, 9)
@@ -87,7 +83,7 @@ test.describe('Calculations — live CalcPanel', () => {
   })
 
   test('TC2 — next-day return: depart May 1, return May 2 → 0 absence days', async ({ page }) => {
-    await goToStep2(page, 'Germany')
+    await fillDestination(page, 'Germany')
     await navigateCalendarToMonth(page, 2026, 4)
     await clickDay(page, 2026, 4, 1)
     await clickDay(page, 2026, 4, 2)
@@ -99,11 +95,8 @@ test.describe('Calculations — live CalcPanel', () => {
     await page.getByLabel('Destination').fill('Jersey')
     await page.keyboard.press('Tab')
     await expect(
-      page.getByText(/Crown Dependencies count as UK presence/i)
+      page.getByText(/Crown Dependencies count as UK presence/i).first()
     ).toBeVisible({ timeout: 5_000 })
-
-    await page.getByRole('button', { name: 'Next →' }).click()
-    await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
 
     await navigateCalendarToMonth(page, 2026, 4)
     await clickDay(page, 2026, 4, 5)
@@ -112,7 +105,7 @@ test.describe('Calculations — live CalcPanel', () => {
   })
 
   test('TC4 — year-boundary trip: Dec 20 2026 – Jan 10 2027 → 20 absence days', async ({ page }) => {
-    await goToStep2(page, 'USA')
+    await fillDestination(page, 'USA')
     await navigateCalendarToMonth(page, 2026, 11)
     await clickDay(page, 2026, 11, 20)
     await navigateCalendarToMonth(page, 2027, 0)
@@ -122,7 +115,7 @@ test.describe('Calculations — live CalcPanel', () => {
   })
 
   test('TC5 — risk badge is one of the four valid labels', async ({ page }) => {
-    await goToStep2(page, 'Italy')
+    await fillDestination(page, 'Italy')
     await navigateCalendarToMonth(page, 2026, 5)
     await clickDay(page, 2026, 5, 1)
     await clickDay(page, 2026, 5, 8)
@@ -144,32 +137,32 @@ test.describe('Trip CRUD', () => {
     await suppressCookieBanner(page)
   })
 
-  test('trips page loads with "Trip Log" heading', async ({ page }) => {
+  test('trips page loads with "Your travel history" heading', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
   })
 
-  test('trip modal Step 1 shows "Where are you going?"', async ({ page }) => {
+  test('trip modal opens as a single sheet with the Destination field', async ({ page }) => {
     await page.goto('/trips?modal=plan')
-    await expect(
-      page.getByText('Where are you going?')
-    ).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Destination')).toBeVisible({ timeout: 10_000 })
   })
 
-  test('saving a trip from /trips → returns to /trips (not /dashboard)', async ({ page }) => {
+  test('saving a trip → success state, then "Done" returns to /trips (not /dashboard)', async ({ page }) => {
     await page.goto('/trips?modal=log')
-    await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Destination')).toBeVisible({ timeout: 10_000 })
 
-    await goToStep2(page, 'Trips Return Test')
+    await fillDestination(page, 'Trips Return Test')
     await navigateCalendarToMonth(page, 2024, 5) // June 2024
     await clickDay(page, 2024, 5, 3)
     await clickDay(page, 2024, 5, 12)
 
-    await page.getByRole('button', { name: 'Next →' }).click()
-    await expect(page.getByText('Step 3 of 3')).toBeVisible({ timeout: 5_000 })
-    await page.getByRole('button', { name: 'Save trip' }).click()
+    await page.getByRole('button', { name: 'Log trip' }).click()
 
-    // Should return to /trips, not /dashboard
+    // Success state appears in-place (no immediate navigation)
+    await expect(page.getByText('Trip logged')).toBeVisible({ timeout: 15_000 })
+    await page.getByRole('button', { name: 'Done' }).click()
+
+    // "Done" should return to /trips, not /dashboard
     await page.waitForURL('**/trips', { timeout: 15_000 })
     expect(page.url()).not.toContain('/dashboard')
     expect(page.url()).not.toContain('modal=')
@@ -177,7 +170,7 @@ test.describe('Trip CRUD', () => {
 
   test('search input filters trip list', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
 
     const searchInput = page.getByPlaceholder('Search destinations…')
     await expect(searchInput).toBeVisible()
@@ -190,7 +183,7 @@ test.describe('Trip CRUD', () => {
 
   test('delete trip shows confirmation dialog', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
 
     const deleteBtn = page.getByRole('button', { name: 'Delete' }).first()
     if (await deleteBtn.isVisible({ timeout: 3_000 })) {
@@ -203,7 +196,7 @@ test.describe('Trip CRUD', () => {
 
   test('cancel delete dismisses the confirmation dialog', async ({ page }) => {
     await page.goto('/trips')
-    await expect(page.getByText('Trip Log')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText('Your travel history')).toBeVisible({ timeout: 10_000 })
 
     const deleteBtn = page.getByRole('button', { name: 'Delete' }).first()
     if (await deleteBtn.isVisible({ timeout: 3_000 })) {

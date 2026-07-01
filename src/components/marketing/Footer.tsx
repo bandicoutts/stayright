@@ -53,13 +53,13 @@ export default function Footer() {
           <div className="lg:col-span-1 flex flex-col gap-3">
             <Link
               href="/"
-              className="font-[family-name:var(--font-manrope)] font-extrabold tracking-[-0.03em] no-underline"
+              className="font-[family-name:var(--font-heading)] font-extrabold tracking-[-0.03em] no-underline"
               style={{ fontSize: '1.125rem', color: '#E8EDE9' }}
             >
               Stayright
             </Link>
             <p
-              className="font-[family-name:var(--font-inter)] leading-relaxed"
+              className="font-[family-name:var(--font-body)] leading-relaxed"
               style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.40)' }}
             >
               Know your number. Travel freely.
@@ -70,7 +70,7 @@ export default function Footer() {
           {columns.map((col) => (
             <div key={col.heading} className="flex flex-col gap-3">
               <h4
-                className="font-[family-name:var(--font-inter)] font-semibold tracking-[0.10em] uppercase"
+                className="font-[family-name:var(--font-body)] font-semibold tracking-[0.10em] uppercase"
                 style={{ fontSize: '0.625rem', color: 'rgba(255,255,255,0.35)' }}
               >
                 {col.heading}
@@ -80,7 +80,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="font-[family-name:var(--font-inter)] no-underline transition-colors duration-150 hover:text-white"
+                      className="font-[family-name:var(--font-body)] no-underline transition-colors duration-150 hover:text-white"
                       style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)' }}
                     >
                       {link.label}
@@ -101,7 +101,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <p
-            className="font-[family-name:var(--font-inter)]"
+            className="font-[family-name:var(--font-body)]"
             style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}
           >
             © {year} Stayright. Built for UK Skilled Worker visa holders.

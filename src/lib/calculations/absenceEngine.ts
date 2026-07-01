@@ -229,6 +229,61 @@ export function getPeakRollingWindow(
   }
 }
 
+export interface RollingWindowSeriesPoint {
+  date: Date
+  days: number
+}
+
+/**
+ * Returns a time series of the rolling 12-month window day-count, sampled from
+ * visaStartDate to today. Powers the dashboard PeakTrajectoryChart.
+ *
+ * Like getPeakRollingWindow, only completed trips on/after the visa start are
+ * counted (the historical trajectory is a record of what actually happened).
+ * Sampling is capped at ~maxPoints to keep the SVG path light; the final point
+ * always lands on `today`.
+ */
+export function getRollingWindowSeries(
+  trips: TripInput[],
+  visaStartDate: string,
+  today: Date = new Date(),
+  maxPoints = 80
+): RollingWindowSeriesPoint[] {
+  const start = parseDate(visaStartDate)
+  const end = stripTime(today)
+  if (end < start) return []
+
+  const totalDays = Math.max(1, daysBetween(start, end))
+  const step = Math.max(1, Math.ceil(totalDays / Math.max(1, maxPoints)))
+
+  const completed = trips.filter(
+    (trip) => trip.return_date && trip.departure_date >= visaStartDate
+  )
+
+  const pointAt = (windowEnd: Date): RollingWindowSeriesPoint => {
+    const windowStart = new Date(windowEnd)
+    windowStart.setFullYear(windowStart.getFullYear() - 1)
+    const intervals = completed
+      .map((trip) => tripAbsenceInterval(trip, windowStart, windowEnd))
+      .filter((i): i is { start: Date; end: Date } => i !== null)
+    return { date: new Date(windowEnd), days: countDedupedDays(intervals) }
+  }
+
+  const points: RollingWindowSeriesPoint[] = []
+  const cursor = new Date(start)
+  while (cursor <= end) {
+    points.push(pointAt(new Date(cursor)))
+    cursor.setDate(cursor.getDate() + step)
+  }
+
+  // Always include today as the final sample.
+  if (points.length === 0 || points[points.length - 1].date.getTime() !== end.getTime()) {
+    points.push(pointAt(end))
+  }
+
+  return points
+}
+
 /**
  * Returns the risk status for a given number of absence days.
  * Thresholds per PRD Section 4c and MEMORY.md.

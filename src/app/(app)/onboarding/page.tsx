@@ -53,42 +53,47 @@ export default async function OnboardingWelcomePage({
       {/* Progress dots — 2 filled if visa step already done, else 1 */}
       <div className="flex justify-center gap-2 mb-8">
         <div className="h-2 w-8 rounded-full bg-[var(--color-green)]" />
-        <div className={`h-2 rounded-full ${visaStepDone ? 'w-8 bg-[var(--color-green)]' : 'w-2 bg-[#191C1D]/15'}`} />
-        <div className="h-2 w-2 rounded-full bg-[#191C1D]/15" />
+        <div className={`h-2 rounded-full ${visaStepDone ? 'w-8 bg-[var(--color-green)]' : 'w-2 bg-[var(--color-border-strong)]'}`} />
+        <div className="h-2 w-2 rounded-full bg-[var(--color-border-strong)]" />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8 text-center">
-        <div className="w-16 h-16 bg-[#006948]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <ShieldCheck className="w-8 h-8 text-[#006948]" />
+      <div
+        className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-8 text-center"
+        style={{ boxShadow: 'var(--shadow-card)' }}
+      >
+        <div className="w-16 h-16 bg-[var(--color-green-pale)] rounded-2xl flex items-center justify-center mx-auto mb-5">
+          <ShieldCheck className="w-8 h-8 text-[var(--color-green)]" />
         </div>
 
         {visaStepDone ? (
           <>
-            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">
+            <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">
               Welcome back
             </h1>
-            <p className="text-sm text-[#3D4A42] mb-8 leading-relaxed">
+            <p className="text-sm text-[var(--color-text-muted)] mb-8 leading-relaxed">
               Your visa details are saved. One more step — add your travel history to get a complete picture.
             </p>
             <Link
               href="/onboarding/trips"
-              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity mb-3"
+              className="flex items-center justify-center gap-2 w-full text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity mb-3"
+              style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
             >
               Continue where you left off →
             </Link>
           </>
         ) : (
           <>
-            <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-2">
+            <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl tracking-tight text-[var(--color-text-primary)] mb-2">
               Know exactly where you stand
             </h1>
-            <p className="text-sm text-[#3D4A42] mb-8 leading-relaxed">
+            <p className="text-sm text-[var(--color-text-muted)] mb-8 leading-relaxed">
               In 2 minutes you&apos;ll have a live view of your 180-day window and
               ILR timeline — no spreadsheets required.
             </p>
             <Link
               href="/onboarding/visa"
-              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity mb-3"
+              className="flex items-center justify-center gap-2 w-full text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity mb-3"
+              style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
             >
               Let&apos;s go →
             </Link>

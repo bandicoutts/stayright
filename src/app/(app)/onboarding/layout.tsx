@@ -12,14 +12,14 @@ export const metadata: Metadata = {
 
 export default function OnboardingLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex flex-col">
+    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col">
       <header className="px-6 py-5 shrink-0">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-[#191C1D] hover:text-[#006948] transition-colors"
+          className="inline-flex items-center gap-2 text-[var(--color-text-primary)] hover:text-[var(--color-green)] transition-colors"
         >
-          <Shield className="w-5 h-5 text-[#006948]" weight="regular" />
-          <span className="font-[family-name:var(--font-manrope)] font-bold text-base tracking-tight">
+          <Shield className="w-5 h-5 text-[var(--color-green)]" weight="regular" />
+          <span className="font-[family-name:var(--font-heading)] font-bold text-base tracking-tight">
             StayRight
           </span>
         </Link>

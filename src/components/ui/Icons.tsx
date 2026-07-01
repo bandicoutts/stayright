@@ -7,8 +7,11 @@
  */
 
 export {
+  House,
   Shield,
   ShieldCheck,
+  CreditCard,
+  Palette,
   Envelope,
   Check,
   Plus,

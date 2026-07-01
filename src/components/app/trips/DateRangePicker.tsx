@@ -12,6 +12,10 @@ const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
+const MONTH_ABBR = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+]
 
 // ---------------------------------------------------------------------------
 // Types
@@ -75,6 +79,11 @@ export function DateRangePicker({
     return new Date().getMonth()
   })
 
+  // Month/year jump picker — lets the user leap to a distant month without
+  // stepping one month at a time (e.g. logging a 2023 trip from 2026).
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [pickerYear, setPickerYear] = useState(viewYear)
+
   // Which date the user should pick next
   const [picking, setPicking] = useState<'departure' | 'return'>(() =>
     departureDate && !(returnDate && returnDateKnown) ? 'return' : 'departure'
@@ -103,6 +112,17 @@ export function DateRangePicker({
   function nextMonth() {
     if (viewMonth === 11) { setViewYear((y) => y + 1); setViewMonth(0) }
     else setViewMonth((m) => m + 1)
+  }
+
+  function togglePicker() {
+    setPickerYear(viewYear)
+    setPickerOpen((o) => !o)
+  }
+
+  function selectPickerMonth(monthIndex: number) {
+    setViewYear(pickerYear)
+    setViewMonth(monthIndex)
+    setPickerOpen(false)
   }
 
   // ---------------------------------------------------------------------------
@@ -165,6 +185,10 @@ export function DateRangePicker({
 
   // ---------------------------------------------------------------------------
   // Render helper: single day cell
+  //
+  // The whole grid column is the tap target (>=44px tall, full column wide) so
+  // it's hard to mis-tap on a phone; the circular brand visual is a centred
+  // inner element rather than the hit area itself.
   // ---------------------------------------------------------------------------
 
   function renderCell(day: number) {
@@ -192,11 +216,11 @@ export function DateRangePicker({
       iso > (departureDate ?? '')
 
     return (
-      <div key={iso} className="relative py-[3px]">
-        {/* Range background band — sits behind the circle */}
+      <div key={iso} className="relative">
+        {/* Range background band — sits behind the circle, vertically centred */}
         {(isInRange || isRangeStart || isRangeEnd) && (
           <div
-            className={`absolute inset-y-0 bg-[var(--color-green-pale)] ${
+            className={`absolute inset-y-[5px] bg-[var(--color-green-pale)] ${
               isRangeStart ? 'left-1/2 right-0' :
               isRangeEnd   ? 'left-0 right-1/2' :
               'left-0 right-0'
@@ -204,7 +228,7 @@ export function DateRangePicker({
           />
         )}
 
-        {/* Day circle */}
+        {/* Full-column tap target (44px tall) wrapping the visual circle */}
         <button
           type="button"
           onClick={() => handleDayClick(iso)}
@@ -214,23 +238,24 @@ export function DateRangePicker({
           onMouseLeave={() => setHoverDate(null)}
           aria-label={`${day} ${MONTH_NAMES[viewMonth]} ${viewYear}${isSelected ? ', selected' : ''}`}
           aria-pressed={isSelected}
-          className={`
-            relative z-10 mx-auto flex w-9 h-9 items-center justify-center
-            rounded-full text-sm transition-colors cursor-pointer
-            ${isSelected
-              ? 'bg-[var(--color-green)] text-white font-semibold'
-              : isHoverEnd
-              ? 'bg-[var(--color-green-pale)] text-[var(--color-green)] font-medium'
-              : 'hover:bg-[var(--color-surface-warm)] hover:shadow-sm text-[var(--color-text-primary)]'
-            }
-          `}
+          className="group relative z-10 flex w-full h-11 items-center justify-center cursor-pointer"
         >
-          {day}
+          <span
+            className={`flex w-9 h-9 items-center justify-center rounded-full text-sm transition-colors ${
+              isSelected
+                ? 'bg-[var(--color-green)] text-white font-semibold'
+                : isHoverEnd
+                ? 'bg-[var(--color-green-pale)] text-[var(--color-green)] font-medium'
+                : 'text-[var(--color-text-primary)] group-hover:bg-[var(--color-surface-warm)] group-hover:shadow-sm'
+            }`}
+          >
+            {day}
+          </span>
         </button>
 
         {/* Today dot — shown only when the day is not selected */}
         {isToday && !isSelected && (
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--color-green)]" />
+          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--color-green)]" />
         )}
       </div>
     )
@@ -244,7 +269,9 @@ export function DateRangePicker({
   const retIsSet = returnDateKnown ? !!returnDate : true
 
   let prompt: string
-  if (!depIsSet) {
+  if (pickerOpen) {
+    prompt = 'Jump to a month'
+  } else if (!depIsSet) {
     prompt = 'Tap your departure date'
   } else if (returnDateKnown && !retIsSet) {
     prompt = 'Now tap your return date'
@@ -313,26 +340,39 @@ export function DateRangePicker({
         {/* Instruction prompt */}
         <p className="text-xs text-center text-[var(--color-text-muted)] mb-3 font-medium">{prompt}</p>
 
-        {/* Month navigation */}
-        <div className="flex items-center justify-between mb-2 px-1">
+        {/* Month navigation — centre label opens the month/year jump picker */}
+        <div className="flex items-center justify-between mb-2">
           <button
             type="button"
             onClick={prevMonth}
+            disabled={pickerOpen}
             aria-label="Previous month"
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)]"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
               <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-          <p className="text-sm font-semibold text-[var(--color-text-primary)] select-none">
+
+          <button
+            type="button"
+            onClick={togglePicker}
+            aria-expanded={pickerOpen}
+            aria-label="Choose month and year"
+            className="flex items-center gap-1.5 px-3 h-11 rounded-lg text-sm font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] border border-transparent hover:border-[var(--color-border)] transition-colors cursor-pointer select-none"
+          >
             {MONTH_NAMES[viewMonth]} {viewYear}
-          </p>
+            <svg className={`w-3.5 h-3.5 text-[var(--color-text-muted)] transition-transform ${pickerOpen ? 'rotate-180' : ''}`} viewBox="0 0 16 16" fill="none">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
           <button
             type="button"
             onClick={nextMonth}
+            disabled={pickerOpen}
             aria-label="Next month"
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)]"
+            className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
           >
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
               <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -340,23 +380,81 @@ export function DateRangePicker({
           </button>
         </div>
 
-        {/* Weekday labels */}
-        <div className="grid grid-cols-7 mb-1">
-          {WEEKDAYS.map((d) => (
-            <div
-              key={d}
-              className="text-center text-xs font-medium text-[var(--color-text-faint)] select-none py-0.5"
-            >
-              {d}
+        {pickerOpen ? (
+          /* ── Month / year jump picker ──────────────────────────────── */
+          <div>
+            {/* Year stepper */}
+            <div className="flex items-center justify-between mb-3">
+              <button
+                type="button"
+                onClick={() => setPickerYear((y) => y - 1)}
+                aria-label="Previous year"
+                className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)]"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <span className="font-[family-name:var(--font-mono)] text-base font-semibold text-[var(--color-text-primary)] select-none tabular-nums">
+                {pickerYear}
+              </span>
+              <button
+                type="button"
+                onClick={() => setPickerYear((y) => y + 1)}
+                aria-label="Next year"
+                className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer border border-transparent hover:border-[var(--color-border)]"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
             </div>
-          ))}
-        </div>
 
-        {/* Day grid */}
-        <div className="grid grid-cols-7">
-          {Array.from({ length: offset }, (_, i) => <div key={`e${i}`} />)}
-          {Array.from({ length: numDays }, (_, i) => renderCell(i + 1))}
-        </div>
+            {/* Month grid (3 × 4) */}
+            <div className="grid grid-cols-3 gap-1.5">
+              {MONTH_ABBR.map((m, idx) => {
+                const isCurrentView = idx === viewMonth && pickerYear === viewYear
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => selectPickerMonth(idx)}
+                    aria-label={`${MONTH_NAMES[idx]} ${pickerYear}`}
+                    aria-pressed={isCurrentView}
+                    className={`h-11 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                      isCurrentView
+                        ? 'bg-[var(--color-green)] text-white'
+                        : 'text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] border border-transparent hover:border-[var(--color-border)]'
+                    }`}
+                  >
+                    {m}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        ) : (
+          /* ── Day grid ──────────────────────────────────────────────── */
+          <>
+            {/* Weekday labels */}
+            <div className="grid grid-cols-7 mb-1">
+              {WEEKDAYS.map((d) => (
+                <div
+                  key={d}
+                  className="text-center text-xs font-medium text-[var(--color-text-faint)] select-none py-0.5"
+                >
+                  {d}
+                </div>
+              ))}
+            </div>
+
+            {/* Day grid */}
+            <div className="grid grid-cols-7">
+              {Array.from({ length: offset }, (_, i) => <div key={`e${i}`} />)}
+              {Array.from({ length: numDays }, (_, i) => renderCell(i + 1))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* ── Quick actions ────────────────────────────────────────────── */}

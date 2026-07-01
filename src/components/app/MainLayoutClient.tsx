@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
-import { TopNav } from '@/components/app/TopNav'
+import { type ReactNode } from 'react'
+import { AppSidebar } from '@/components/app/AppSidebar'
+import { AppMobileNav } from '@/components/app/AppMobileNav'
 import { PostHogIdentify } from '@/components/app/PostHogIdentify'
 import { LoginTracker } from '@/components/app/LoginTracker'
 import { ReturnVisitTracker } from '@/components/ReturnVisitTracker'
@@ -29,42 +30,48 @@ export function MainLayoutClient({
   isPaymentFailed,
   children,
 }: Props) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
   const isPro = isPlanPro(subscriptionPlan, subscriptionStatus)
   const planLabel = isPro ? 'Pro' : null
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--color-bg)]">
+    <div className="min-h-screen bg-[var(--color-bg)]">
       <PostHogIdentify userId={userId} />
       <LoginTracker />
       <ReturnVisitTracker />
       <NavigationTracker />
 
-      <TopNav
+      {/* Desktop: persistent left sidebar */}
+      <AppSidebar
         userName={userName}
         userEmail={userEmail}
         planLabel={planLabel}
-        isPro={isPro}
         userInitial={userInitial}
-        isMenuOpen={isMenuOpen}
-        onOpenMenu={() => setIsMenuOpen(true)}
-        onCloseMenu={() => setIsMenuOpen(false)}
       />
 
-      {isPaymentFailed && (
-        <div className="bg-[var(--color-status-red)] text-white text-sm font-medium px-4 py-2.5 text-center">
-          Your payment failed. Please{' '}
-          <a href="/settings" className="underline font-semibold">
-            update your payment method
-          </a>{' '}
-          to keep Pro features.
-        </div>
-      )}
+      {/* Mobile: top bar + bottom nav + FAB */}
+      <AppMobileNav
+        userName={userName}
+        userEmail={userEmail}
+        planLabel={planLabel}
+        userInitial={userInitial}
+      />
 
-      <main className="flex-1" id="main-content">
-        {children}
-      </main>
+      {/* Content — offset for the sidebar on desktop; padded for the bottom nav on mobile */}
+      <div className="min-[960px]:pl-[260px]">
+        {isPaymentFailed && (
+          <div className="bg-[var(--color-status-red)] text-white text-sm font-medium px-4 py-2.5 text-center">
+            Your payment failed. Please{' '}
+            <a href="/settings" className="underline font-semibold">
+              update your payment method
+            </a>{' '}
+            to keep Pro features.
+          </div>
+        )}
+
+        <main className="pb-24 min-[960px]:pb-0" id="main-content">
+          {children}
+        </main>
+      </div>
     </div>
   )
 }

@@ -184,7 +184,7 @@ export function LoginForm({ initialError, defaultTab = 'signup' }: Props) {
         </div>
 
         {/* Heading */}
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
+        <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
           {tab === 'signup' ? 'Create account' : 'Welcome back'}
         </h1>
         <p className="text-sm text-[var(--color-text-muted)] mb-6">

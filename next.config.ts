@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
   // Marking it external prevents webpack from bundling it and breaking those imports.
   serverExternalPackages: ['@react-pdf/renderer'],
 
+  // Dev-only error/build indicator — move it off the bottom-left so it doesn't
+  // overlap the mobile bottom nav while developing. Not present in production.
+  devIndicators: {
+    position: 'top-right',
+  },
+
   async headers() {
     return [
       {

@@ -30,17 +30,20 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="bg-white rounded-2xl shadow-sm border border-[#191C1D]/8 p-8">
-        <h1 className="font-[family-name:var(--font-manrope)] font-extrabold text-2xl text-[#191C1D] mb-1">
+      <div
+        className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-8"
+        style={{ boxShadow: 'var(--shadow-card)' }}
+      >
+        <h1 className="font-[family-name:var(--font-heading)] font-extrabold text-2xl text-[var(--color-text-primary)] mb-1">
           Reset your password
         </h1>
-        <p className="text-sm text-[#3D4A42] mb-6">
+        <p className="text-sm text-[var(--color-text-muted)] mb-6">
           Enter your email and we&apos;ll send you a reset link. It expires in 24
           hours.
         </p>
 
         {error && (
-          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-[#BA1A1A]">
+          <div className="mb-4 px-4 py-3 bg-[var(--color-danger-bg)] border border-[var(--color-danger-border)] rounded-xl text-sm text-[var(--color-danger-text)]">
             {error}
           </div>
         )}
@@ -49,7 +52,7 @@ export default function ResetPasswordPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-[#191C1D] mb-1.5"
+              className="block text-sm font-medium text-[var(--color-text-primary)] mb-1.5"
             >
               Email address
             </label>
@@ -61,14 +64,15 @@ export default function ResetPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full border border-[#191C1D]/15 rounded-xl px-4 py-3 text-sm text-[#191C1D] placeholder:text-[#3D4A42]/40 focus:outline-none focus:ring-2 focus:ring-[#006948] focus:border-transparent transition-shadow"
+              className="w-full border border-[var(--color-border-strong)] bg-[var(--color-surface-warm)] rounded-xl px-4 py-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--color-green)] focus:border-transparent transition-shadow"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-[#006948] to-[#00855D] text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+            className="w-full text-white rounded-xl px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+            style={{ background: 'var(--gradient-green)', boxShadow: 'var(--shadow-button)' }}
           >
             {loading ? 'Sending…' : 'Send reset link'}
           </button>
@@ -77,7 +81,7 @@ export default function ResetPasswordPage() {
         <div className="mt-5 text-center">
           <Link
             href="/login"
-            className="text-sm text-[#3D4A42] hover:text-[#006948] transition-colors"
+            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-green)] transition-colors"
           >
             ← Back to sign in
           </Link>

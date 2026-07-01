@@ -117,7 +117,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
         <div className="text-4xl mb-4" aria-hidden="true">👑</div>
         <h2
           id="paywall-title"
-          className="font-[family-name:var(--font-manrope)] font-extrabold text-[1.375rem] leading-tight tracking-tight text-[var(--color-text-primary)] mb-2"
+          className="font-[family-name:var(--font-heading)] font-extrabold text-[1.375rem] leading-tight tracking-tight text-[var(--color-text-primary)] mb-2"
         >
           Unlock StayRight Pro
         </h2>
@@ -130,7 +130,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
       <div className="grid grid-cols-2 gap-3 px-6 pb-6">
         {/* Free column */}
         <div className="bg-[var(--color-bg-tinted)] border border-[var(--color-border)] rounded-xl p-4">
-          <p className="font-[family-name:var(--font-manrope)] font-bold text-[15px] text-[var(--color-text-primary)] mb-1">Free</p>
+          <p className="font-[family-name:var(--font-heading)] font-bold text-[15px] text-[var(--color-text-primary)] mb-1">Free</p>
           <p className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)] mb-4">£0 / forever</p>
           {[
             { label: '10 trips', included: true },
@@ -155,7 +155,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
               Recommended
             </span>
           </div>
-          <p className="font-[family-name:var(--font-manrope)] font-bold text-[15px] text-[var(--color-green-light)] mb-1">Pro</p>
+          <p className="font-[family-name:var(--font-heading)] font-bold text-[15px] text-[var(--color-green-light)] mb-1">Pro</p>
           <p className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)] mb-4">from £2.99/month</p>
           {[
             { label: 'Unlimited trips', included: true },
@@ -228,7 +228,7 @@ export function PaywallModal({ open, onClose, inline = false, triggerReason = 'u
         >
           <span className="flex items-center justify-center gap-2">
             {loading && <Spinner />}
-            {loading ? 'Redirecting to checkout…' : `Upgrade to Pro — ${currentPlan.detail}`}
+            {loading ? 'Redirecting to checkout…' : `Upgrade to Pro · ${currentPlan.detail}`}
           </span>
         </button>
 

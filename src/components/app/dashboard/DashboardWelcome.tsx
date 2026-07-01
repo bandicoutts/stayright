@@ -26,7 +26,7 @@ export function DashboardWelcome() {
     >
       <div className="flex items-start justify-between gap-4 mb-4">
         <div>
-          <h2 className="font-[family-name:var(--font-manrope)] font-bold text-base text-[var(--color-text-primary)]">
+          <h2 className="font-[family-name:var(--font-heading)] font-bold text-base text-[var(--color-text-primary)]">
             You&apos;re all set up
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
@@ -59,7 +59,7 @@ export function DashboardWelcome() {
           {
             icon: '✈️',
             title: 'Log trips',
-            desc: 'Keep your travel history up to date — log every trip when you return.',
+            desc: 'Keep your travel history up to date. Log every trip when you return.',
           },
         ].map(({ icon, title, desc }) => (
           <div key={title} className="flex gap-3 p-3 bg-[var(--color-bg-tinted)] rounded-xl">

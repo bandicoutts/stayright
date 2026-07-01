@@ -33,7 +33,7 @@ const MONTH_NAMES = [
 ]
 
 async function navigateCalendarToMonth(page: Page, targetYear: number, targetMonth: number) {
-  const headingLocator = page.locator('[aria-label="Next month"]').locator('..').locator('p').first()
+  const headingLocator = page.getByRole('button', { name: 'Choose month and year' })
   for (let i = 0; i < 36; i++) {
     const text = await headingLocator.textContent()
     const current = text?.trim() ?? ''
@@ -56,11 +56,10 @@ async function clickDay(page: Page, year: number, month: number, day: number) {
   await page.getByRole('button', { name: label, exact: true }).click()
 }
 
-async function goToStep2(page: Page, destination: string) {
+// Single-sheet modal (reskin Phase 8): destination + dates on one form.
+async function fillDestination(page: Page, destination: string) {
   await page.getByLabel('Destination').fill(destination)
   await page.keyboard.press('Tab') // dismiss autocomplete without triggering modal's Escape handler
-  await page.getByRole('button', { name: 'Next →' }).click()
-  await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
 }
 
 // ---------------------------------------------------------------------------
@@ -131,11 +130,11 @@ test.describe('Calculations — live CalcPanel', () => {
   test.beforeEach(async ({ page }) => {
     await suppressCookieBanner(page)
     await page.goto('/trips?modal=plan')
-    await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Destination')).toBeVisible({ timeout: 10_000 })
   })
 
   test('TC1 — standard trip: depart May 1, return May 9 → 7 absence days', async ({ page }) => {
-    await goToStep2(page, 'France')
+    await fillDestination(page, 'France')
     await navigateCalendarToMonth(page, 2026, 4)
     await clickDay(page, 2026, 4, 1)
     await clickDay(page, 2026, 4, 9)
@@ -144,7 +143,7 @@ test.describe('Calculations — live CalcPanel', () => {
   })
 
   test('TC2 — next-day return: depart May 1, return May 2 → 0 absence days', async ({ page }) => {
-    await goToStep2(page, 'Germany')
+    await fillDestination(page, 'Germany')
     await navigateCalendarToMonth(page, 2026, 4)
     await clickDay(page, 2026, 4, 1)
     await clickDay(page, 2026, 4, 2)
@@ -156,10 +155,8 @@ test.describe('Calculations — live CalcPanel', () => {
     await page.getByLabel('Destination').fill('Jersey')
     await page.keyboard.press('Tab') // dismiss autocomplete without triggering modal's Escape handler
     await expect(
-      page.getByText(/Crown Dependencies count as UK presence/i)
+      page.getByText(/Crown Dependencies count as UK presence/i).first()
     ).toBeVisible({ timeout: 5_000 })
-    await page.getByRole('button', { name: 'Next →' }).click()
-    await expect(page.getByText('Step 2 of 3')).toBeVisible({ timeout: 5_000 })
     await navigateCalendarToMonth(page, 2026, 4)
     await clickDay(page, 2026, 4, 5)
     await clickDay(page, 2026, 4, 12)
@@ -167,7 +164,7 @@ test.describe('Calculations — live CalcPanel', () => {
   })
 
   test('TC4 — year-boundary trip: Dec 20 2026 – Jan 10 2027 → 20 absence days', async ({ page }) => {
-    await goToStep2(page, 'USA')
+    await fillDestination(page, 'USA')
     await navigateCalendarToMonth(page, 2026, 11)
     await clickDay(page, 2026, 11, 20)
     await navigateCalendarToMonth(page, 2027, 0)
@@ -185,23 +182,19 @@ test.describe('DB roundtrip', () => {
   test('saving a trip via log modal → trip appears in the trips table', async ({ page }) => {
     await suppressCookieBanner(page)
     await page.goto('/trips?modal=log')
-    await expect(page.getByText('Step 1 of 3')).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByLabel('Destination')).toBeVisible({ timeout: 10_000 })
 
-    // Step 1 — destination
-    await goToStep2(page, 'Smoke Test Country')
-
-    // Step 2 — dates
+    // Single sheet — destination + dates
+    await fillDestination(page, 'Smoke Test Country')
     await navigateCalendarToMonth(page, 2024, 4) // May 2024
     await clickDay(page, 2024, 4, 1)              // departure May 1
     await clickDay(page, 2024, 4, 10)             // return May 10
 
-    await page.getByRole('button', { name: 'Next →' }).click()
-    await expect(page.getByText('Step 3 of 3')).toBeVisible({ timeout: 5_000 })
+    await page.getByRole('button', { name: 'Log trip' }).click()
 
-    // Step 3 — save
-    await page.getByRole('button', { name: 'Save trip' }).click()
-
-    // TripFlowClient redirects back to /trips after save (same-page return)
+    // Success state → "View in Trips" lands on the trips table
+    await expect(page.getByText('Trip logged')).toBeVisible({ timeout: 15_000 })
+    await page.getByRole('button', { name: 'View in Trips' }).click()
     await page.waitForURL('**/trips', { timeout: 15_000 })
 
     await expect(page.getByText(/Smoke Test Country/)).toBeVisible({ timeout: 10_000 })

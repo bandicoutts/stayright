@@ -1,10 +1,16 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
+/* Never scan docs/markdown for utility classes. ADRs and design docs quote
+   className snippets in prose; a pasted arbitrary value (e.g. a font-family
+   class with a placeholder) would otherwise emit invalid CSS and break the build. */
+@source not "../../docs";
+@source not "../../**/*.md";
+
 @theme {
   /* Fonts */
-  --font-manrope: var(--font-manrope);
-  --font-inter: var(--font-inter);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
   --font-serif: var(--font-serif);
 
   /* Backgrounds */
@@ -19,6 +25,7 @@
   /* Text */
   --color-text-primary:     var(--color-text-primary);
   --color-text-2:           var(--color-text-2);
+  --color-text-3:           var(--color-text-3);
   --color-text-muted:       var(--color-text-muted);
   --color-text-faint:       var(--color-text-faint);
 
@@ -27,6 +34,9 @@
   --color-green-dark:       var(--color-green-dark);
   --color-green-light:      var(--color-green-light);
   --color-green-pale:       var(--color-green-pale);
+
+  /* Teal — secondary accent only */
+  --color-teal:             var(--color-teal);
 
   /* Semantic */
   --color-safe-bg:          var(--color-safe-bg);
@@ -50,14 +60,14 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-text-primary);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "liga" 1, "kern" 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-manrope);
+  font-family: var(--font-heading);
   letter-spacing: -0.035em;
 }
 
@@ -90,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
 @layer utilities {
   /* Eyebrow label — section meta above headings */
   .t-eyebrow {
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-body), system-ui, sans-serif;
     font-weight: 600;
     font-size: 11px;
     letter-spacing: 0.20em;

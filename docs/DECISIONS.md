@@ -1594,7 +1594,7 @@ Eight targeted corrections applied across the landing page and dashboard to esta
 5. **Eyebrow labels raised from `0.625rem` to `0.6875rem`** — "FEATURES" and "PRICING" section labels were 10px, below comfortable readability. Raised to 11px.
 6. **Peak ring number `font-bold` → `font-extrabold`** — the Historical Peak ring number used weight 700 while the Qualifying Period used 800. Both now use `font-extrabold` for consistency.
 7. **Hero mockup dates → `font-mono`** — date strings in the landing page mockup card used Inter; the real app renders all dates in JetBrains Mono. Mockup now matches.
-8. **Dashboard subtext explicit font family** — `"Here's your compliance status."` `<p>` had no `font-[...]` class, relying on inheritance. Now explicitly declares `font-[family-name:var(--font-inter)]`.
+8. **Dashboard subtext explicit font family** — `"Here's your compliance status."` `<p>` had no explicit font class, relying on inheritance. Now explicitly declares the body font family (the `var(--font-inter)` slot at the time, since renamed to `--font-body`).
 
 **Reasoning:**
 These are corrections to existing intent, not changes to the typographic direction. The font pairing (Manrope / Inter / JetBrains Mono) and overall scale were correct; inconsistencies had accumulated from components being built at different times without cross-referencing each other.
@@ -1750,3 +1750,344 @@ The two-column layout also improves UX: users see the compliance panel placehold
 - `TripModal.tsx` focus trap updated: `getFocusables()` now filters out elements inside `[inert]` containers so inactive steps' inputs are not included in the trap cycle.
 
 **Related:** DECISION-031, DECISION-046, DECISION-072
+
+---
+
+### [DECISION-074] Reskin foundation — green-led/obsidian palette remap + Bricolage/Hanken fonts
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+First phase of the prototype reskin (full plan: `docs/RESKIN-PLAN.md`). Three foundation changes, values only — token and CSS-variable **names are unchanged** so every existing component inherits without edits:
+
+1. **Palette remap (`src/styles/tokens.css`).** Retire the "Sage & Stone" taupe/forest values; adopt the prototype's green-led / obsidian palette: light bg `#F4F0E8`, dark bg `#08090C`; green leads (`#006948` light / `#1AA873` dark); status colours solid (amber/red per mode); green/status/safe tokens now overridden per theme in `.dark`. Added a new `--color-teal` token (`#0E7C8F` light / `#46C7D1` dark) — a **secondary accent only** (highlights, timeline, "planned").
+2. **Fonts (`src/app/layout.tsx`).** Manrope→**Bricolage Grotesque** (headings), Inter→**Hanken Grotesk** (body); JetBrains Mono + Instrument Serif unchanged. Loaded into the existing `--font-manrope` / `--font-inter` variable slots so the ~150 existing usages inherit; variables to be renamed `--font-heading`/`--font-body` in the reskin cleanup phase.
+3. **`globals.css`** exposes `--color-teal` (and the previously-missing `--color-text-3`) in the Tailwind `@theme` block.
+
+**Reasoning:**
+The prototype is the source of truth for look. Remapping token *values* (not names) lets the whole app re-skin by inheritance, keeping the diff small and reviewable. Verified: `tsc --noEmit` clean, ESLint clean, 124 unit tests pass, `next build` compiles and the new Google fonts resolve.
+
+**Consequences:**
+- `.impeccable.md` token table updated to match (was stale — described a `#F5FAF7` green-tint light bg never shipped).
+- The legacy `--font-manrope`/`--font-inter` variable names now point at non-Manrope/Inter fonts until the cleanup-phase rename.
+- The PDF engine (`src/lib/pdf/reportDocuments.tsx`) keeps its hardcoded print-targeted `#006948` — intentionally not token-driven.
+
+**Related:** DECISION-006, DECISION-008, DECISION-009; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-075] Reskin Phase 1 — app shell migrated from TopNav to a persistent left sidebar
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+Realises DECISION-019 (the shell was a top bar in practice). The authenticated `(main)` shell is now a persistent **left sidebar** on desktop and a **bottom nav + FAB** on mobile (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- `AppSidebar.tsx` (new): fixed 260px left sidebar (`hidden lg:flex`) — logo, four nav items (Dashboard/Trips/Reports/Settings) with icons + active state, footer with `ThemeToggle` and an account card whose popover holds Settings + Sign out.
+- `AppMobileNav.tsx` (new): a slim sticky top bar (logo + theme + account menu) and a fixed bottom nav with a centered raised **FAB**. The FAB deep-links to `/trips?modal=log`, reusing TripsTableClient's existing `?modal=` URL-driven modal (no global modal needed).
+- `MainLayoutClient.tsx`: renders both shells responsively; content wrapper is offset `lg:pl-[260px]` and padded `pb-24` on mobile for the bottom nav. Analytics trackers + payment-failed banner preserved.
+- `TopNav.tsx` / `MobileNav.tsx` are now unused — retained until the Phase 9 cleanup to keep diffs reviewable.
+- Sign-out keeps `signOut({ scope: 'local' })`.
+
+**Reasoning:**
+The prototype's signature shell is a left sidebar; a bottom-nav + FAB is the standard mobile pattern and surfaces "Log trip" as the primary action. Reusing the `?modal=` deep link avoids a global modal/context. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 124 unit tests pass; `auth.spec.ts` logout selector updated (User menu → Account menu).
+
+**Consequences:**
+- E2E specs that drive nav by visible link text still work; only the account-menu label changed.
+- Browser screenshot verification deferred — the preview/Chrome MCP tooling disconnected during a session reset.
+
+**Related:** DECISION-019, DECISION-069 (signOut scope); DECISION-074; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-076] Reskin Phase 2 — dashboard recompose: rolling-window timeline + bento
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The dashboard is recomposed around the signature rolling-window timeline and a trimmed bento (reskin plan: `docs/RESKIN-PLAN.md`). The circular QuotaRing is retired as the hero.
+
+- **`RollingWindowTimeline.tsx`** (new): hero verdict whose word + colour **derive from `getRiskStatus`** (so 124 days reads WARNING/amber, never a green "you're safe"); a 0–180 track with **watch lines at 120 and 150** (the prototype's 160/170 corrected to the real thresholds); a trailing-12-month trip span strip with a "today" marker. The verdict word carries the status — there is no separate "Compliant/Approaching" status chip in the window header (removed as redundant).
+- **`AbsenceHeatmap.tsx`** (new): GitHub-style 7×52 daily-absence grid over the trailing year.
+- **`PeakTrajectoryChart.tsx`** (new): SVG sparkline of the rolling-window value across the qualifying span with a dashed 180 line and the peak marked. Backed by a new pure engine helper **`getRollingWindowSeries`** (additive; 5 unit tests; existing exports unchanged).
+- **`PlanTripSimulator.tsx`** (new): inline what-if reusing `calculateWhatIf` (projected to the trip's return date per DECISION-022) with **Save as planned** via the existing `addTripAction` (planned = future-dated trip, the derive approach from the reskin schema decision).
+- Page bento: hero timeline → simulator → (heatmap + ILR countdown) → trajectory → recent trips. The header's "Plan trip" button is removed (the simulator covers planning); "Log trip" stays.
+
+**Reasoning:**
+The timeline is the brand's signature graphic and shows where absences fall against the limit — far more than a generic gauge. Deriving the verdict from `getRiskStatus` closes the prototype's incorrect "124 = safe/green" framing. The simulator reuses existing pure calculations and the existing server action, so no business logic changes. Verified: `tsc --noEmit` clean, ESLint clean, **129 unit tests pass**, `next build` compiles.
+
+**Consequences:**
+- `QuotaRing.tsx` / `PeakWindowCard` no longer referenced on the dashboard — retained until the Phase 9 cleanup.
+- `dashboard.spec.ts` updated: ring tests → timeline/verdict; the "Plan trip" modal-link test → inline-simulator presence; "Log trip" + save round-trip unchanged.
+
+**Related:** DECISION-002 (thresholds), DECISION-005 (compute don't store), DECISION-022 (what-if to return date), DECISION-074, DECISION-075; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-077] Reskin Phase 3 — Trips recomposed to a list with badges, Crown chip, peak span + List/Timeline toggle
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`TripsTableClient` is recomposed from a sortable table into the prototype's list (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- Header "Your travel history" with a **single header stat** (current rolling window N/180) plus mono meta chips (X abroad, Y planned).
+- **Conditional row badges**, derived (no schema change, per the reskin schema decision): "Abroad now" (departed, no return — amber dashed), "Planned" (`departure_date > today` — teal dashed), "Crown Dependency" (neutral chip + tooltip).
+- **Crown chip** shows the day count as `0d` with a "doesn't count" sub-label, value from `isCrownDependency`.
+- **Peak-window-as-a-span**: an explainer banner (amber left edge) names the tightest 12-month window from `getPeakRollingWindow`; rows overlapping that window get an amber left edge.
+- **List / Timeline toggle** — the Timeline is a NEW Gantt view (`TripsTimelineView.tsx`) plotting trips on a shared time axis with a today marker.
+- Preserved: search, single delete (with the "Delete this trip?" dialog), edit, the trip modal, paywall, `?modal=` deep links, optimistic delete, and PostHog events.
+- **Bulk delete retained** (per owner request): a hover-revealed per-row checkbox + a selection bar (select-all, Clear, "Delete N") with a confirmation dialog, calling the existing `bulkDeleteTripsAction`.
+- **Dropped** (not in the prototype, not covered by tests): sortable column headers and the "window at departure" column.
+
+**Reasoning:**
+The prototype's list reads more like a travel record than a data grid, and surfaces the compliance-relevant signals (badges, peak window, day counts) directly. Planned/abroad/taken are derived from dates, keeping the `trips` schema frozen. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 129 unit tests pass; confirmed both views visually.
+
+**Consequences:**
+- `trips.spec.ts` heading assertions updated ("Trip Log" → "Your travel history"); search + delete-dialog assertions unchanged.
+
+**Related:** DECISION-005 (compute don't store), DECISION-011 (Crown Dependencies), DECISION-031 (trip modal), DECISION-074, DECISION-076; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-078] Reskin Phase 4 — Reports restyled to an evidence pack (period selector + A4 live preview)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`ReportsClient` is recomposed from three download cards into the prototype's evidence-pack (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- Two-column layout: a left panel with a **period selector** (presets: Full qualifying period / Last 12 months / Calendar year / Custom range), a compliance chip, and the export controls; a right **A4 live preview** (`ReportPreview.tsx`).
+- The live preview is an on-screen **mirror** of the `@react-pdf` absence record — letterhead, applicant + period meta, compliance statement, a 4-up summary (total days absent /180, rolling-window peak, days in period, compliance), the absence table, and footer. It derives the same figures from `absenceEngine` (not a second source of truth).
+- **Same engine + route + Pro-gating preserved.** Presets map onto the existing report types: Full → `type=ilr`; Last 12 months / Calendar year / Custom → `type=custom` with computed `start`/`end`. The rolling-window history report is preserved as a secondary "Also export rolling-window history" action (`type=rolling`).
+- **No "Previous reports" list** (D3 / DECISION-024 — reports are on-demand, no storage).
+- `reports/page.tsx` now passes trips + profile (name, visa route, visa start) so the preview can render; `/api/reports/pdf` and `reportDocuments.tsx` are unchanged.
+
+**Reasoning:**
+A live A4 preview lets the user see exactly what they'll hand to the Home Office before exporting, which the three opaque download buttons did not. Reusing the existing PDF engine keeps a single export path and avoids divergence. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 129 unit tests pass; confirmed visually at desktop width.
+
+**Consequences:**
+- `reports.spec.ts` rewritten for the new UI (heading "ILR evidence pack"; presets; "Upgrade to export" / "Export PDF"; custom-range validation). Paywall + download-event assertions preserved.
+
+**Related:** DECISION-023 (client PDF), DECISION-024 (no export history), DECISION-025 (notes → reason), DECISION-074; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-079] Reskin Phase 5 — Settings recomposed into six jump-nav sections
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`SettingsClient` moves from three tabs to the prototype's six scrollable sections with a sticky jump nav + scrollspy (reskin plan: `docs/RESKIN-PLAN.md`).
+
+- Sections: **Visa & ILR** (route, start date, ILR eligibility date shown once), **Account** (name, email, password), **Subscription & billing**, **Notifications & alerts**, **Appearance**, **Data & privacy**.
+- Jump nav is a sticky left list with icons; an `IntersectionObserver` highlights the active section. All sections render on one page (anchor links scroll to each).
+- **Subscription** shows **all four plans** (Free / Pro Monthly £2.99 / Pro Annual £24.99 / Pro Lifetime £49.99) as cards with the current plan marked; paid cards start Stripe Checkout (`/api/stripe/checkout`), recurring plans get a "Manage billing" portal link. Reuses existing Stripe wiring + `upgrade_clicked` event.
+- **Notifications** maps onto the real five columns with corrected copy: **"Email me at 120 days"** / **"Email me at 150 days"** / return reminder / ILR reminder / monthly summary. Pro-gated.
+- **Appearance** is a System / Light / Dark chooser backed by `next-themes` (mounted-guard to avoid hydration mismatch).
+- **Data & privacy** holds export + the delete-account flow (confirmation text "delete my account" preserved).
+- Server actions, the five notification columns, and Stripe routes are unchanged; name editing and visa editing both persist the full profile via `updateProfileAction`.
+
+**Reasoning:**
+A single scannable page with a jump nav matches the prototype and surfaces billing + appearance that were previously buried or absent. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, 129 unit tests pass; confirmed all six sections render (desktop).
+
+**Consequences:**
+- `settings.spec.ts` rewritten for the section nav (Visa & ILR / Account / Subscription / Notifications / Appearance / Data & privacy), four-plan prices, 120/150 copy; export + delete-confirmation assertions preserved.
+- Added `CreditCard` + `Palette` to the Icons re-export.
+
+**Related:** DECISION-017 (onboarding), DECISION-027 (Stripe checkout), DECISION-069 (signOut), DECISION-074 (pricing/plans), DECISION-078; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-080] Reskin Phase 6 — Marketing landing reskin (hero timeline + comparison + how-it-works)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The landing is reskinned to the marketing prototype (`StayRight.dc.html`; reskin plan `docs/RESKIN-PLAN.md`).
+
+- **Hero** (`Hero.tsx`): new headline "Travel freely. / Stay under 180. / Reach ILR." and the `QuotaRingMockup` is replaced with the app's **`RollingWindowTimeline`** as the signature graphic (consistent app↔marketing). It uses a **SAFE sample** (three sample trips → ~106/180, well under 120) so the verdict derives to a truthful green "You're safe"; watch lines render at **120 · 150** (the prototype's 160/170 corrected).
+- **`Comparison.tsx`** (new): "spreadsheet vs StayRight" two-column ✕/✓.
+- **`HowItWorks.tsx`** (new): three steps (Log your trips / We check every window / Know you're safe), anchored at `#how` for the hero's "See how it works".
+- Page order: Nav → Hero → Comparison → Features → How-it-works → Pricing → Trust → Footer.
+- **Features / Pricing / Nav / Footer / TrustBar kept** — they already inherit the Phase-0 palette/fonts and the pricing copy is already correct: Free shows "Up to 10 trips" (matches `FREE_TRIP_LIMIT`), all four plans are reachable (monthly/annual toggle + £49.99 lifetime), and there are no incorrect threshold numbers. No invented testimonials/credentials (`.impeccable.md` copy rule).
+
+**Reasoning:**
+The signature timeline is the brand's core graphic and now appears identically on marketing and in-app. The SAFE sample + 120/150 watch lines apply the reskin's "code wins" corrections to the marketing surface. The existing Features/Pricing were already on-brand and numerically correct, so they were left rather than rebuilt. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles; hero + comparison + features confirmed rendering; `landing.spec` (h1 / £2.99 / cookie banner) unaffected.
+
+**Related:** DECISION-002 (thresholds), DECISION-074 (palette/fonts), DECISION-076 (RollingWindowTimeline), DECISION-079; `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-081] Reskin Phase 7 — Onboarding restyled to the new design system (flow unchanged)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The existing 2-step onboarding flow is restyled to the reskin tokens/idioms; the flow, server actions, and analytics are untouched (reskin plan `docs/RESKIN-PLAN.md`, D4).
+
+- Files restyled: `onboarding/layout.tsx`, `onboarding/page.tsx` (welcome), `onboarding/visa/VisaForm.tsx`, `onboarding/trips/TripForm.tsx`. All hardcoded hex (`#F8F9FA`, `#191C1D`, `#3D4A42`, `#006948`, `#00855D`, `bg-white`, `red-50`/`amber-50`, etc.) replaced with semantic tokens (`--color-bg`, `--color-surface`, `--color-text-*`, `--gradient-green`, `--color-danger-*`, `--color-warning-*`, `--color-green-pale`). The flow was previously light-only; it now **themes** (light + dark) like the rest of the app.
+- Cards use the shared idiom (`bg-[var(--color-surface)] rounded-2xl border + var(--shadow-card)`); primary buttons use `var(--gradient-green)` + `var(--shadow-button)`; inputs use the surface-warm/border-strong field style; step labels and trip date ranges adopt the JetBrains-Mono eyebrow/data voice.
+- **No flow change:** 2-step structure, progress dots, `saveVisaProfileAction`/`saveTripAction`/`deleteTripAction`/`completeOnboardingAction`, the `FREE_TRIP_LIMIT` quota guard, overlap detection, pre-visa note, mid-flow resume, and every PostHog event (`onboarding_visa_setup_completed`, `onboarding_trips_added`, `onboarding_skipped`, `signup_completed`) are unchanged. Copy is unchanged (restyle only).
+
+**Reasoning:**
+Onboarding was the last unstyled surface — hardcoded light-only hex made it look off-brand once the rest of the app moved to the green-led/obsidian palette. A token-only restyle brings it in line (and adds dark mode for free) without touching the verified flow logic. Verified: `tsc --noEmit` clean, ESLint clean on all four files, `next build` compiles, `vitest` 129/129 green. `onboarding.spec` only asserts the redirect guards (no form-internal selectors), so it is unaffected.
+
+**Related:** DECISION-017 (onboarding_completed gating), DECISION-074 (palette/fonts), DECISION-075 (shell), DECISION-076 (PlanTripSimulator idiom); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-082] Reskin Phase 8 — Trip modal recomposed to a single-sheet form + success state
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`TripFlowClient` is recomposed from a 3-step wizard (destination → dates → confirm) into a **single scrolling sheet**, and a **success state** replaces the save-then-navigate behaviour (reskin plan `docs/RESKIN-PLAN.md`, Phase 8).
+
+- **Single sheet:** destination (combobox + inline "Counts as 0 days" Crown hint), travel dates (`DateRangePicker`, including the "I'll log my return later" → null-return path), the live `CalcPanel` compliance impact, and the reason-for-travel field are all visible at once. The step indicator and the Next/Back gating are gone; validation runs once on submit (`validate()` consolidates the former per-step checks: destination required, departure required, return after departure, overlap blocks).
+- **Success state:** after a successful save the sheet shows a green check + "Trip logged" / "Changes saved" + the trip summary, with **View in Trips / Log another / Done** actions (Log another resets the form; Done → `redirectTo`/`returnTo`). Previously the flow navigated away immediately. `TripModal` now passes `onSaved` so the success screen does not trip the unsaved-changes guard.
+- **Notes → "Reason for travel"** (DECISION-025): the field is relabelled and annotated ("Appears as 'Reason for travel' in your ILR export").
+- **Planned is still derived (D2 / DECISION-077):** the prototype's "Mark as a planned trip" checkbox is rendered as a **derived, read-only "Planned" chip** shown when `departure_date > today` — no `trips.status` column, no persisted flag. A non-functional checkbox would have implied stored state we deliberately don't have.
+- **Logic preserved verbatim:** `addTripAction`/`updateTripAction`, edit-mode prefill + self-exclusion from the what-if base, `calculateWhatIf` projected to the return date (DECISION-022), Crown-Dependency 0-day handling, overlap detection, and every PostHog event (`trip_plan_opened`, `trip_plan_completed`, `trip_logged`, `trip_edited`, `trip_count_milestone`, `trip_plan_just_checking`). `TripModal` chrome and the already-tokenized `DateRangePicker`/`DestinationAutocomplete`/`PaywallModal` are unchanged apart from the `onSaved` wire-up.
+
+**Reasoning:**
+The wizard's step gating added friction the prototype's single form removes, and saving with no acknowledgement felt abrupt — the success state gives a clear "done, now what?" moment and a fast "Log another" loop. Keeping the calculation/action/event layer untouched means the recompose is presentational + navigational only. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green. E2E specs that drove the wizard (`trips.spec`, `smoke.spec`, `dashboard.spec`) were updated to the single-sheet + success-state selectors (Next/Step assertions removed; save → "Trip logged" → View in Trips/Done).
+
+**Related:** DECISION-022 (what-if projects to return date), DECISION-025 (notes → Reason for Travel), DECISION-073 (prior modal layout), DECISION-075 (FAB opens the modal), DECISION-077 (planned derived); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-083] Reskin Phase 9 — Cleanup: retire dead components, rename font variables, prune dead tokens
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+Final reskin pass — remove what the earlier phases superseded and finish the font-variable rename (reskin plan `docs/RESKIN-PLAN.md`, Phase 9).
+
+- **Deleted (confirmed no importers, no dynamic imports):** `QuotaRing.tsx` (retired from the dashboard in Phase 2), the legacy `TopNav.tsx` + `MobileNav.tsx` + `Sidebar.tsx` (replaced by `AppSidebar`/`AppMobileNav` in Phase 1), and the older `TripsClient.tsx` (superseded by `TripsTableClient`). `QuotaRingMockup` was already gone (Phase 6).
+- **Font variables renamed** `--font-manrope` → `--font-heading` and `--font-inter` → `--font-body` across all ~44 files (the next/font slots in `layout.tsx`, the `@theme` block + base styles in `globals.css`, and every `font-family` arbitrary-value class that referenced them). These were named for the old Manrope/Inter fonts; DECISION-074 loaded Bricolage/Hanken into those legacy slots and deferred the rename to here. Pure rename — no font or weight change.
+- **Pruned dead tokens** `--color-track` and `--shadow-ring-card` (light + dark) — only the deleted `QuotaRing` referenced them. Stale code comments in `riskConfig.ts` and `layout.tsx` updated.
+
+**Reasoning:**
+The legacy nav/ring/trips components were kept through Phases 1–3 to keep each diff reviewable; with the reskin shipped they are pure dead weight and were removed once a grep confirmed no references. The font-variable rename removes the last misleading legacy names (a reader seeing `--font-manrope` would expect Manrope, not Bricolage). Verified end-to-end: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green, no dangling imports of any deleted file. Note left for the owner: the auth screens (`(auth)/auth/*`) and `error.tsx`/`not-found.tsx` still carry a few hardcoded hex values (e.g. `#191C1D`) — they were never in the reskin phase list, so they were left untouched beyond the mechanical font rename.
+
+**Related:** DECISION-074 (loaded Bricolage/Hanken into the legacy slots), DECISION-075 (AppSidebar/AppMobileNav), DECISION-076 (QuotaRing retired), DECISION-077 (TripsClient superseded); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-084] DateRangePicker — full-cell tap targets + month/year jump picker
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The trip-modal calendar (`DateRangePicker`) is reworked for touch and for fast navigation to distant months (impeccable `adapt`: 44×44px touch targets, no hover-dependence for core actions).
+
+- **Tap targets:** each day's hit area is now the **full grid column at 44px tall** (`w-full h-11`) instead of a 36px centred circle with dead gaps — so on a phone it's hard to mis-tap an adjacent day. The circular brand visual is kept as a centred 36px inner `<span>`; the range band sits behind it. Month/year nav chevrons bumped 32px → 44px.
+- **Month/year jump:** the centre "Month Year" label is now a button that toggles an in-card picker — a year stepper (◄ year ►) plus a 3×4 month grid. Logging a 2023 trip from 2026 is ~3 taps (year ◄×3 → month) instead of stepping back 36 months. Selecting a month closes the picker and jumps the calendar; the ±1-month chevrons remain for fine adjustment (disabled while the picker is open).
+- **Touch-safe:** hover-preview of the range end stays as a pointer-only enhancement; the core flow is tap-departure → tap-return, no hover required.
+
+**Reasoning:**
+The 36px centred targets were the mobile pain point the owner flagged ("easy to select the right date, unlikely to select the wrong one"), and stepping one month at a time made back-dated trips tedious. Both are pure interaction/layout changes — selection logic, the departure/return state machine, the "log return later" (null-return) path, and the `onDeparture/onReturn/onReturnDateKnown` contract are unchanged, so `TripFlowClient` and onboarding's `TripForm` consume it without edits. The three E2E calendar helpers (`trips`/`smoke`/`dashboard`) were repointed to read the month label from the new "Choose month and year" button (the month-stepping path is unchanged). Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
+
+**Related:** DECISION-082 (single-sheet modal that hosts the picker), DECISION-043 (WCAG/touch); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-085] Auth + error screens migrated to semantic tokens (completes the DECISION-083 deferral)
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The screens DECISION-083 left on hardcoded hex are migrated to the semantic token system (DECISION-061) so they theme light+dark like the rest of the app.
+
+- Files: `error.tsx`, `not-found.tsx`, and the auth screens `auth/check-email`, `auth/verify-email`, `auth/new-password`, `auth/reset-password`. Replacements: `#F8F9FA`→`--color-bg`, `bg-white`→`--color-surface`, `#191C1D`→`--color-text-primary`, `#191C1D/8`→`--color-border`, `#191C1D/15`→`--color-border-strong`, `#3D4A42`→`--color-text-muted`, `#3D4A42/40`→`--color-text-faint`, `#006948`→`--color-green`, `#006948/10`→`--color-green-pale`, `#BA1A1A`→`--color-danger-text`, `bg-red-50/border-red-200`→`--color-danger-bg/-border`, and the `from-[#006948] to-[#00855D]` solid/gradient buttons → `var(--gradient-green)` + `var(--shadow-button)`. Cards adopt the shared `var(--shadow-card)` idiom.
+- **Deliberately kept hardcoded:** the Google logo SVG fills in `LoginForm` (`#4285F4/#34A853/#FBBC05/#EA4335` — brand-mandated, like the PDF brand colours) and the `#fff` wordmark text on the green logo badge in `(auth)/layout.tsx` (white-on-green, correct in both themes).
+
+**Reasoning:**
+These were pre-existing light-only screens, not part of the original reskin phase list, so DECISION-083 flagged rather than touched them; the owner then asked for them done. Pure token swap — no copy, logic, or auth-flow change. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
+
+**Related:** DECISION-061 (semantic token architecture), DECISION-081 (onboarding token migration, same idiom), DECISION-083 (flagged these files); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-086] Exclude docs/markdown from Tailwind's content scan
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+`globals.css` now declares `@source not "../../docs";` and `@source not "../../**/*.md";`, so Tailwind v4's automatic content detection never scans documentation for utility classes.
+
+**Reasoning:**
+ADRs and design docs quote `className` snippets in prose. Tailwind v4 auto-scans the whole project tree, and a quoted arbitrary-value class with a placeholder (the ADR-083 entry contained a `font-family` arbitrary-value class written with a literal `...` placeholder) was extracted and compiled to `font-family: var(...)`, which is invalid CSS and broke the dev server / build with a PostCSS parse error. Markdown never legitimately supplies utility classes, so excluding it is safe and prevents the whole class of regression. The offending prose was also reworded to drop the literal bracket-class token (belt-and-suspenders). Verified: `next build` compiles clean.
+
+**Related:** DECISION-008 (Tailwind v4 CSS-based config), DECISION-083 (the ADR whose snippet triggered this)
+
+---
+
+### [DECISION-087] Remove the "Plan a trip" button from the Trips page header
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The outline "Plan a trip" button in the Trips page header (`TripsTableClient`) is removed; only the primary "Log trip" action remains.
+
+**Reasoning:**
+Planning now happens through the inline what-if simulator on the dashboard (DECISION-076; `.impeccable.md` principle 6 — "planning happens through simulation, not a separate button"). A second "Plan a trip" entry point on the Trips page duplicated that and competed with "Log trip". The modal's `plan` mode is left intact and still reachable via `/trips?modal=plan` (the calculation E2E specs open the modal that way), so no behaviour or test changes are needed — this only drops the redundant header button. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles.
+
+**Related:** DECISION-076 (inline dashboard simulator owns planning), DECISION-082 (single-sheet modal); `docs/RESKIN-PLAN.md`
+
+---
+
+### [DECISION-088] RollingWindowTimeline — recompose for hierarchy and a non-colliding axis
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The dashboard's signature tile (`RollingWindowTimeline`) is recomposed for cleaner hierarchy and spacing (impeccable `arrange` + `adapt`); no data or calculation change.
+
+- **Verdict block (left):** previously two large elements competed — a ~2.85rem verdict heading *and* a ~6.25rem number, with the number baseline-aligned (`leading-[0.82]`) to a 17px unit so a lone digit floated with dead space. Now there is **one hero** (the number, `clamp(3.25rem,7.5vw,5rem)`, `leading-none`, tightly baseline-aligned to a `text-base` unit), the verdict is a **calm status pill** (soft `--color-*-bg` tint + tone text + dot) above it, and a single supporting "N days to spare/over" line. Even vertical rhythm (eyebrow → pill → number → support).
+- **Track block (right):** the two metrics are wrapped into two groups separated by one consistent `space-y-6`, each keeping its own tight internal spacing; the scattered micro-labels (9.5/10/11px) are unified. The month axis stepped **every 2 months (6 ticks) → every 3 (≈4 ticks)** and edge-clamping widened, fixing the collision the owner saw (`JulSeptNovJanMarMay`).
+- **Alignment:** the grid is `items-start` (was `items-center`), so the shorter verdict column top-aligns with the taller track column instead of floating centred.
+
+**Reasoning:**
+The tile "didn't look well put together": competing big numbers broke "one hero metric per screen" (`.impeccable.md` §5), centred alignment looked wonky against the taller column, and the dense axis collided on the narrow right column. All changes are presentational — the props, `tripSpans`, animated fill, watch lines (120/150), today marker, and verdict-derives-from-status contract (DECISION-002) are unchanged, so the marketing Hero that reuses this component inherits the improvement. Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green.
+
+**Related:** DECISION-076 (introduced the timeline), DECISION-002 (thresholds the verdict derives from), DECISION-080 (marketing Hero reuses it); `.impeccable.md` (one-hero-metric principle)
+
+---
+
+### [DECISION-089] Speedometer gauge replaces the rolling-window timeline as the signature graphic
+**Date:** 2026-06-30
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The dashboard + marketing-Hero signature graphic becomes a **270° speedometer gauge** (`WindowSpeedometer`, per the owner's "Window — 2A Spec"), replacing `RollingWindowTimeline` (deleted). One component is used in both places (`dashboard/page.tsx`, marketing `Hero.tsx`).
+
+- **Gauge (CSS, no SVG):** a `conic-gradient` zone ring (green/amber/red) `from 225deg` over a 270° arc with a 90° gap at the bottom; an inner hole punches it to a ~22px band; a needle pivots from the hub to `225 + days/180·270` deg (animated in on mount, reduced-motion safe). Zone breaks sit at `120/180·270 = 180°` and `150/180·270 = 225°`. Below: a `{days} / 180` readout and a status pill. Right column: zone legend, the trailing-12-months track (reused `tripSpans` logic + quarterly axis), and a two-cell stat strip.
+- **Code wins on logic:** colour + word still derive from the engine's `RiskStatus` (DECISION-002), not the spec's `>=` JS — so the 120/150 boundaries match `getRiskStatus`. The needle clamps to `[0,180]`; the readout shows the real (possibly >180) number.
+- **Adaptations from the spec (look reconciled to our system):**
+  - **Themed, not dark-only.** Every spec hex maps to a semantic token (status → `--color-green-light`/`--color-status-amber`/`--color-status-red`; surfaces/text/borders → tokens), with `color-mix()` for the zone tints and pill bg/border, so it works light + dark (DECISION-D8).
+  - **Fonts:** kept our JetBrains Mono (`--font-mono`, light weight) for the readout/values rather than adding Space Grotesk — avoids a 4th webfont outside the DECISION-074 type system. (Switchable if we later want the exact spec face.)
+  - **Status copy** adopts the spec's single words (Safe / Approaching / Close to limit / Over limit) — drops the old "You're safe".
+  - **Second stat is adaptive** (next of 120 → 150 → 180 → "over"), so it stays truthful past 120 (the spec's fixed "until 120" would read 0 at 140 days).
+
+**Reasoning:**
+The owner prefers the speedometer to the timeline/ring; a gauge reads the at-a-glance "how close am I" faster than a linear bar and keeps "one hero metric." Reusing one component keeps app↔marketing consistency (the `.impeccable.md` signature-graphic note now means the gauge). Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green; geometry hand-checked against the spec's sanity values (days=9 → needle 238.5°, z1 180°, z2 225°). `dashboard.spec` updated (readout `/ 180`, new status words; gauge carries `role="progressbar"`). Live visual check still pending — the dev port was held by the owner's server.
+
+**Related:** DECISION-002 (thresholds), DECISION-076/080/088 (the timeline this supersedes), DECISION-074 (type system), DECISION-061 (tokens); `Stayright Window - 2A Spec.md`
