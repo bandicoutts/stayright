@@ -16,6 +16,13 @@
       "autoPort": false
     },
     {
+      "name": "stayright-prod-3002",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start", "--", "-p", "3002"],
+      "port": 3002,
+      "autoPort": false
+    },
+    {
       "name": "wireframes",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "docs/wireframes/iOS", "-p", "4321"],

@@ -169,3 +169,18 @@ h1, h2, h3, h4, h5, h6 {
     transform: none !important;
   }
 }
+
+/* Speedometer dial ring (WindowSpeedometer). Authored as real CSS on purpose:
+   a runtime conic-gradient string in an inline style gets its `deg` units
+   stripped before each var() by the production JS minifier ("225deg, var(" →
+   "225var("), which invalidates the gradient and hides the dial (DECISION-091).
+   Zone breaks are fixed: 120/180·270 = 180deg, 150/180·270 = 225deg. */
+.gauge-dial {
+  background: conic-gradient(
+    from 225deg,
+    var(--gauge-safe) 0deg 180deg,
+    var(--gauge-caution) 180deg 225deg,
+    var(--gauge-breach) 225deg 270deg,
+    transparent 270deg 360deg
+  );
+}

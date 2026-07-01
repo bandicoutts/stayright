@@ -2109,3 +2109,18 @@ Two fixes to `WindowSpeedometer` (DECISION-089) after live review.
 `color-mix` in gradients is not portable; concrete tokens are both robust and themeable. Container queries let one component be correct in both contexts without a variant prop. Verified live on `localhost:3001` (a second dev config added to `.claude/launch.json`, since Next 16 allows only one dev server per project dir): dashboard renders three compact columns with a visible dial in light + dark; the marketing Hero stacks vertically with the dial on top. `tsc --noEmit` clean, ESLint clean, `next build` compiles.
 
 **Related:** DECISION-089 (the component), DECISION-061 (tokens), DECISION-043 (responsive/adapt); `.impeccable.md`
+
+---
+
+### [DECISION-091] Speedometer dial ring moved to a CSS class (survives production minifying)
+**Date:** 2026-07-01
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+The gauge's zone ring `conic-gradient` is authored as a static `.gauge-dial` class in `globals.css` instead of a runtime string in an inline `style`.
+
+**Reasoning:**
+DECISION-090 fixed the *dev* rendering, but the dial was still invisible in **production** on Vercel. Root cause, found by inspecting the deployed JS chunk: the production JS minifier mangles the runtime gradient string, stripping the `deg` unit before each `var()` — `conic-gradient(from 225deg, var(--gauge-safe) 0deg 180deg, …)` became `conic-gradient(from 225var(--gauge-safe) 0deg 180var(--gauge-caution) …)`, which is invalid CSS, so the whole `background` was dropped (the needle survived because its `rotate(Ndeg)` is a simple string). Dev doesn't minify, so it looked fine locally — the reason the earlier fix shipped broken. The zone breaks are fixed geometry (120/150/180 → 180deg/225deg), so the gradient needs no runtime values and belongs in a real CSS file, where the CSS minifier (Lightning CSS) handles it correctly. The `z1/z2` JS constants and the `zoneDisc` string were removed; the needle still animates via inline `rotate`. **Verified against a production build this time** (`next build` + `next start`): the built CSS keeps the gradient intact (no `225var`), and `getComputedStyle` on the served page resolves it to `conic-gradient(from 225deg, rgba(46,209,143,0.42) …)` — a visible dial in dark mode. `tsc`/ESLint/build clean.
+
+**Related:** DECISION-089/090 (the gauge + first fix attempt), DECISION-008 (Tailwind/CSS build), DECISION-086 (another minifier-vs-CSS gotcha)

@@ -102,9 +102,9 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
   const spare = Math.max(0, LIMIT - days)
   const mark = nextMark(days)
 
-  // Zone boundaries + needle angle (spec §4.1)
-  const z1 = (T1 / LIMIT) * SWEEP
-  const z2 = (T2 / LIMIT) * SWEEP
+  // Needle angle (spec §4.1). The zone ring is fixed geometry (120/150/180 →
+  // 180deg/225deg) and lives in the `.gauge-dial` CSS class (globals.css), so
+  // the production JS minifier can't mangle the gradient string (DECISION-091).
   const needleDeg = START + (clamped / LIMIT) * SWEEP
 
   // Sweep the needle in from the arc start on mount (respecting reduced motion).
@@ -116,12 +116,6 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
 
   const spans = tripSpans(trips, windowStart, windowEnd)
   const labels = quarterLabels(windowStart)
-
-  const zoneDisc = `conic-gradient(from ${START}deg, ` +
-    `var(--gauge-safe) 0deg ${z1}deg, ` +
-    `var(--gauge-caution) ${z1}deg ${z2}deg, ` +
-    `var(--gauge-breach) ${z2}deg ${SWEEP}deg, ` +
-    `transparent ${SWEEP}deg 360deg)`
 
   const LEGEND: { tone: string; label: string }[] = [
     { tone: 'var(--color-green-light)', label: `Safe ≤ ${T1}` },
@@ -153,8 +147,9 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
             aria-valuemax={LIMIT}
             aria-label="Days abroad in the current rolling window"
           >
-            {/* Zone disc → ring (inner hole punches it out) */}
-            <div className="absolute inset-0 rounded-full" style={{ background: zoneDisc }} />
+            {/* Zone disc → ring (inner hole punches it out). Gradient is the
+                static `.gauge-dial` class so it survives production minifying. */}
+            <div className="gauge-dial absolute inset-0 rounded-full" />
             <div className="absolute inset-[18px] rounded-full" style={{ background: 'var(--color-surface)' }} />
             {/* Needle */}
             <div
