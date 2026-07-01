@@ -42,6 +42,12 @@
   --color-status-amber:     #A96209;
   --color-status-red:       #C92A3A;
 
+  /* ── Gauge zone tints — explicit rgba (color-mix inside conic-gradient
+        is unreliable across browsers, so the dial needs concrete values) ── */
+  --gauge-safe:             rgba(10, 125, 84, 0.26);
+  --gauge-caution:          rgba(169, 98, 9, 0.28);
+  --gauge-breach:           rgba(201, 42, 58, 0.28);
+
   --color-warning-bg:       #FFF8EC;
   --color-warning-border:   #F5E2BE;
   --color-warning-text:     #7A4A08;
@@ -110,6 +116,11 @@
   /* Status — brighter on dark (still solid) */
   --color-status-amber:     #F6B94D;
   --color-status-red:       #FB7185;
+
+  /* Gauge zone tints — higher alpha to read on the obsidian card */
+  --gauge-safe:             rgba(46, 209, 143, 0.42);
+  --gauge-caution:          rgba(246, 185, 77, 0.42);
+  --gauge-breach:           rgba(251, 113, 133, 0.42);
 
   --color-warning-bg:       rgba(246, 185, 77, 0.12);
   --color-warning-border:   rgba(246, 185, 77, 0.25);
