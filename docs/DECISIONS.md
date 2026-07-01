@@ -2091,3 +2091,21 @@ The dashboard + marketing-Hero signature graphic becomes a **270° speedometer g
 The owner prefers the speedometer to the timeline/ring; a gauge reads the at-a-glance "how close am I" faster than a linear bar and keeps "one hero metric." Reusing one component keeps app↔marketing consistency (the `.impeccable.md` signature-graphic note now means the gauge). Verified: `tsc --noEmit` clean, ESLint clean, `next build` compiles, `vitest` 129/129 green; geometry hand-checked against the spec's sanity values (days=9 → needle 238.5°, z1 180°, z2 225°). `dashboard.spec` updated (readout `/ 180`, new status words; gauge carries `role="progressbar"`). Live visual check still pending — the dev port was held by the owner's server.
 
 **Related:** DECISION-002 (thresholds), DECISION-076/080/088 (the timeline this supersedes), DECISION-074 (type system), DECISION-061 (tokens); `Stayright Window - 2A Spec.md`
+
+---
+
+### [DECISION-090] Speedometer fixes — visible dial (no color-mix in gradient) + container-query layout
+**Date:** 2026-07-01
+**Status:** Decided
+**Decided by:** David Coutts (founder)
+
+**Decision:**
+Two fixes to `WindowSpeedometer` (DECISION-089) after live review.
+
+- **Dial rendered invisible:** the zone ring used `color-mix()` *inside* the `conic-gradient`, which fails to parse in the target browser (standalone `color-mix` — e.g. the pill — is fine), so the whole `background` was dropped and only the needle showed. Fixed by adding explicit rgba tint tokens `--gauge-safe/-caution/-breach` (light + dark, higher alpha on the obsidian card) and referencing them via `var()` in the gradient. The dial now renders reliably in both themes.
+- **Layout was viewport-keyed, not container-keyed:** the three-column split used `lg:` (viewport), so the marketing Hero — whose card is only ~590px — showed three cramped columns beside the gauge, wasting vertical space, while the full-width dashboard card looked stretched. Fixed by making the card an `@container` and switching the breakpoints to `@min-[720px]:`. Now a **wide card → three columns** (dashboard) and a **narrow card → stacked** (gauge, then legend, trailing timeline, and the two stats below — the Hero's preferred vertical layout). Also made the tile more compact (gauge 220→176px, readout 60→44px, padding 8→7, stats beside the timeline not below).
+
+**Reasoning:**
+`color-mix` in gradients is not portable; concrete tokens are both robust and themeable. Container queries let one component be correct in both contexts without a variant prop. Verified live on `localhost:3001` (a second dev config added to `.claude/launch.json`, since Next 16 allows only one dev server per project dir): dashboard renders three compact columns with a visible dial in light + dark; the marketing Hero stacks vertically with the dial on top. `tsc --noEmit` clean, ESLint clean, `next build` compiles.
+
+**Related:** DECISION-089 (the component), DECISION-061 (tokens), DECISION-043 (responsive/adapt); `.impeccable.md`

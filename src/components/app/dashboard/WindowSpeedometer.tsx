@@ -118,9 +118,9 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
   const labels = quarterLabels(windowStart)
 
   const zoneDisc = `conic-gradient(from ${START}deg, ` +
-    `color-mix(in srgb, var(--color-green-light) 30%, transparent) 0deg ${z1}deg, ` +
-    `color-mix(in srgb, var(--color-status-amber) 32%, transparent) ${z1}deg ${z2}deg, ` +
-    `color-mix(in srgb, var(--color-status-red) 36%, transparent) ${z2}deg ${SWEEP}deg, ` +
+    `var(--gauge-safe) 0deg ${z1}deg, ` +
+    `var(--gauge-caution) ${z1}deg ${z2}deg, ` +
+    `var(--gauge-breach) ${z2}deg ${SWEEP}deg, ` +
     `transparent ${SWEEP}deg 360deg)`
 
   const LEGEND: { tone: string; label: string }[] = [
@@ -131,20 +131,22 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
 
   return (
     <div
-      className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 md:p-8"
+      className="@container bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 md:p-7"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+      <span className="block font-[family-name:var(--font-mono)] text-[11px] tracking-[0.16em] uppercase text-[var(--color-text-faint)] mb-5">
+        Current window
+      </span>
 
-        {/* ── Left: gauge + readout + pill ─────────────────────────────── */}
-        <div className="w-full lg:w-[250px] shrink-0 flex flex-col items-center gap-4">
-          <span className="self-start font-[family-name:var(--font-mono)] text-[11px] tracking-[0.16em] uppercase text-[var(--color-text-faint)]">
-            Current window
-          </span>
+      {/* Adapts to the CARD width (not the viewport): wide card → three columns
+          (dashboard); narrow card → stacked gauge · legend · timeline · stats
+          (marketing hero). */}
+      <div className="flex flex-col @min-[720px]:flex-row @min-[720px]:items-center gap-7 @min-[720px]:gap-10">
 
-          {/* Gauge */}
+        {/* ── Gauge + readout + pill ───────────────────────────────────── */}
+        <div className="shrink-0 self-center @min-[720px]:self-auto flex flex-col items-center gap-3">
           <div
-            className="relative w-[220px] h-[220px]"
+            className="relative w-[176px] h-[176px]"
             role="progressbar"
             aria-valuenow={days}
             aria-valuemin={0}
@@ -153,30 +155,30 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
           >
             {/* Zone disc → ring (inner hole punches it out) */}
             <div className="absolute inset-0 rounded-full" style={{ background: zoneDisc }} />
-            <div className="absolute inset-[22px] rounded-full" style={{ background: 'var(--color-surface)' }} />
+            <div className="absolute inset-[18px] rounded-full" style={{ background: 'var(--color-surface)' }} />
             {/* Needle */}
             <div
-              className="absolute left-1/2 top-1/2 w-[3px] h-[40%] rounded-full transition-transform duration-700 ease-[cubic-bezier(0.34,1.4,0.5,1)] motion-reduce:transition-none"
+              className="absolute left-1/2 top-1/2 w-[3px] h-[38%] rounded-full transition-transform duration-700 ease-[cubic-bezier(0.34,1.4,0.5,1)] motion-reduce:transition-none"
               style={{ background: tone, transformOrigin: 'bottom center', transform: `translate(-50%,-100%) rotate(${angle}deg)` }}
             />
             {/* Hub */}
-            <div className="absolute left-1/2 top-1/2 w-3.5 h-3.5 rounded-full" style={{ background: 'var(--color-text-primary)', transform: 'translate(-50%,-50%)' }} />
+            <div className="absolute left-1/2 top-1/2 w-3 h-3 rounded-full" style={{ background: 'var(--color-text-primary)', transform: 'translate(-50%,-50%)' }} />
           </div>
 
           {/* Readout */}
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-1.5">
             <span
-              className="font-[family-name:var(--font-mono)] font-light leading-none tracking-[-0.03em] text-[clamp(3rem,9vw,3.75rem)]"
+              className="font-[family-name:var(--font-mono)] font-light leading-none tracking-[-0.03em] text-[2.75rem]"
               style={{ color: tone }}
             >
               {days}
             </span>
-            <span className="font-[family-name:var(--font-mono)] font-light text-[1.375rem] text-[var(--color-text-muted)]">/ {LIMIT}</span>
+            <span className="font-[family-name:var(--font-mono)] font-light text-[1.125rem] text-[var(--color-text-muted)]">/ {LIMIT}</span>
           </div>
 
           {/* Status pill */}
           <span
-            className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold"
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[12px] font-semibold"
             style={{
               color: tone,
               background: `color-mix(in srgb, ${tone} 12%, transparent)`,
@@ -188,10 +190,9 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
           </span>
         </div>
 
-        {/* ── Right: legend + timeline + stats ─────────────────────────── */}
-        <div className="w-full flex-1 flex flex-col gap-6">
-          {/* Zone legend */}
-          <div className="flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-mono)] text-[11.5px] text-[var(--color-text-muted)]">
+        {/* ── Legend + trailing timeline ───────────────────────────────── */}
+        <div className="flex-1 min-w-0 flex flex-col gap-3.5">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-muted)]">
             {LEGEND.map((z) => (
               <span key={z.label} className="inline-flex items-center gap-2">
                 <span className="w-[9px] h-[9px] rounded-full" style={{ background: z.tone }} />
@@ -200,19 +201,18 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
             ))}
           </div>
 
-          {/* Trailing 12 months */}
           <div>
             <div className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] uppercase text-[var(--color-text-faint)] mb-2">
               Trailing 12 months
             </div>
             <div
-              className="relative h-[60px] rounded-[10px] border border-[var(--color-border)] overflow-hidden"
+              className="relative h-[52px] rounded-[10px] border border-[var(--color-border)] overflow-hidden"
               style={{ background: 'var(--color-surface-sunken)' }}
             >
               {spans.map((s, i) => (
                 <div
                   key={i}
-                  className="absolute top-2.5 bottom-2.5 rounded-[4px]"
+                  className="absolute top-2 bottom-2 rounded-[4px]"
                   style={{
                     left: `${s.leftPct}%`,
                     width: `${s.widthPct}%`,
@@ -229,17 +229,18 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Stat strip */}
-          <div className="flex border-t border-[var(--color-border)] pt-5">
-            <div className="flex-1">
-              <p className="font-[family-name:var(--font-mono)] font-medium text-[1.625rem] leading-none text-[var(--color-text-primary)]">{spare}</p>
-              <p className="font-[family-name:var(--font-mono)] text-[10.5px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mt-1.5">Days of headroom</p>
-            </div>
-            <div className="flex-1 pl-8 border-l border-[var(--color-border)]">
-              <p className="font-[family-name:var(--font-mono)] font-medium text-[1.625rem] leading-none text-[var(--color-text-primary)]">{mark.value}</p>
-              <p className="font-[family-name:var(--font-mono)] text-[10.5px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mt-1.5">{mark.caption}</p>
-            </div>
+        {/* ── Stats — beside the timeline on a wide card, below it (side by
+               side) when the card is narrow ─────────────────────────────── */}
+        <div className="shrink-0 flex flex-row @min-[720px]:flex-col gap-6 @min-[720px]:gap-5 @min-[720px]:w-[220px] @min-[720px]:border-l @min-[720px]:border-[var(--color-border)] @min-[720px]:pl-8">
+          <div>
+            <p className="font-[family-name:var(--font-mono)] font-medium text-[1.5rem] leading-none text-[var(--color-text-primary)]">{spare}</p>
+            <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mt-1.5">Days of headroom</p>
+          </div>
+          <div>
+            <p className="font-[family-name:var(--font-mono)] font-medium text-[1.5rem] leading-none text-[var(--color-text-primary)]">{mark.value}</p>
+            <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mt-1.5">{mark.caption}</p>
           </div>
         </div>
 
