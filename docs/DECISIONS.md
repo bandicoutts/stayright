@@ -15,7 +15,7 @@ Scan this table to find relevant decisions. Read the full entry only if the summ
 | DECISION-001 | Tech stack selection | Next.js + Supabase + Vercel + Stripe + Resend; TypeScript strict throughout | Decided |
 | DECISION-002 | Absence day counting formula | `absence = (return − departure) − 1`; neither departure nor return day counts | Decided |
 | DECISION-003 | No native mobile app in v1 | Web-only; PWA covers mobile use case | Decided |
-| DECISION-004 | Freemium model with 3-trip free tier | Free up to 3 trips; Pro unlocks unlimited trips and PDF export | Decided |
+| DECISION-004 | Freemium model with 10-trip free tier | Free up to 10 trips; Pro unlocks unlimited trips and PDF export | Decided |
 | DECISION-005 | Calculations never stored, always computed on read | DB stores raw trip dates only; engine always recalculates | Decided |
 | DECISION-006 | Design system source of truth | DESIGN.md + tokens.css are authoritative; wireframes are reference only | Decided |
 | DECISION-007 | Wireframe folder structure | `/docs/wireframes/` with per-screen subdirectories | Decided |
@@ -183,7 +183,7 @@ Mobile is the first priority for v2 once product-market fit is established on we
 
 ---
 
-### [DECISION-004] Freemium model — free tier limit raised from 3 to 10 trips
+### [DECISION-004] Freemium model — free tier limit raised to 10 trips
 **Date:** 2026-03-21 (revised 2026-03-28)
 **Status:** Decided
 **Decided by:** David Flynn-Coutts (founder); revised following CPO audit recommendation
@@ -192,11 +192,11 @@ Mobile is the first priority for v2 once product-market fit is established on we
 The free tier allows up to 10 trips logged. Pro is £2.99/month or £24.99/year. No family tier in v1. No 14-day free trial — the free tier itself serves as the trial experience.
 
 **Reasoning:**
-The original 3-trip limit was reached within minutes of onboarding for a typical Skilled Worker visa holder (2–5 years of history, 10–30 trips). Forcing a credit card before the user sees a single meaningful calculation is a conversion killer. The CPO audit identified this as a [CRITICAL] churn risk. Raising the limit to 10 gives users enough room to enter meaningful history and experience a real calculation result before the paywall triggers. 10 trips still leaves the majority of active users below the ceiling while preserving a strong upgrade incentive.
+The original lower limit was reached within minutes of onboarding for a typical Skilled Worker visa holder (2–5 years of history, 10–30 trips). Forcing a credit card before the user sees a single meaningful calculation is a conversion killer. The CPO audit identified this as a [CRITICAL] churn risk. Raising the limit to 10 gives users enough room to enter meaningful history and experience a real calculation result before the paywall triggers. 10 trips still leaves the majority of active users below the ceiling while preserving a strong upgrade incentive.
 
 **Alternatives considered:**
 - 14-day free trial — rejected. Adds Stripe trial period complexity. The free tier already serves this purpose with less engineering.
-- Keep at 3 trips — rejected. Causes churn at the most critical conversion moment (first calculation).
+- Keep the lower trip limit — rejected. Causes churn at the most critical conversion moment (first calculation).
 - No free tier (paid only) — rejected. Creates too much friction for a new product with no brand recognition.
 - Family tier at £4.99/month — rejected for v1. Multi-tenancy adds significant complexity for marginal revenue. Validate demand first.
 
@@ -585,10 +585,10 @@ Standalone pages are simpler to implement, have better URL semantics (users can 
 **Decision:**
 The `PaywallModal` component (`src/components/app/trips/PaywallModal.tsx`) is fully built to the PRD §4l spec — including plan selection cards, benefit list, and CTA button — but clicking "Upgrade to Pro" shows a "Coming soon" toast rather than opening Stripe Checkout. The Stripe integration will be wired in the dedicated payments sprint.
 
-The component accepts an `inline` prop. When `inline={true}`, it renders as a full-width card (no overlay backdrop), used on `/trips/plan` and `/trips/log` when a Free user has reached the 3-trip limit. When `inline={false}` (default), it renders as a focus-trapped overlay modal, used from the `TripsClient` add trip button.
+The component accepts an `inline` prop. When `inline={true}`, it renders as a full-width card (no overlay backdrop), used on `/trips/plan` and `/trips/log` when a Free user has reached the 10-trip limit. When `inline={false}` (default), it renders as a focus-trapped overlay modal, used from the `TripsClient` add trip button.
 
 **Reasoning:**
-Building the paywall UI now ensures paywall triggers are correctly gated in the trip flow. Deferring Stripe prevents blocking the trip feature on payment infrastructure. The `inline` variant avoids shipping dead pages (a Free user navigating to `/trips/plan` with 3 trips would otherwise see an empty page).
+Building the paywall UI now ensures paywall triggers are correctly gated in the trip flow. Deferring Stripe prevents blocking the trip feature on payment infrastructure. The `inline` variant avoids shipping dead pages (a Free user navigating to `/trips/plan` at the 10-trip limit would otherwise see an empty page).
 
 **Alternatives considered:**
 - Skip the paywall UI until Stripe is ready — rejected. Paywall gates must be present for Free users to avoid broken flows. The UI stub communicates intent correctly.
@@ -767,7 +767,7 @@ Five new env vars required: `RESEND_API_KEY`, `CRON_SECRET`. Domain `stayright.c
 Following a penetration test that identified 2 Critical, 1 High, and 2 Medium findings, the following security fixes were implemented as a single coherent change:
 
 **C-1 / C-2 — Free tier quota enforced in every trip write Server Action:**
-`addTripAction` (main), `saveTripAction` (onboarding) now fetch the user's subscription plan and status and count existing trips before performing any DB insert. If the user is Free-tier (or past_due/unpaid) and already has ≥ 3 trips, the action returns `{ error: '...' }` without touching the database. The `PaywallModal` in the UI remains as UX only. The invariant is: no trip insert can bypass the quota gate, regardless of how the Server Action is called.
+`addTripAction` (main), `saveTripAction` (onboarding) now fetch the user's subscription plan and status and count existing trips before performing any DB insert. If the user is Free-tier (or past_due/unpaid) and already has at least `FREE_TRIP_LIMIT` trips, the action returns `{ error: '...' }` without touching the database. The `PaywallModal` in the UI remains as UX only. The invariant is: no trip insert can bypass the quota gate, regardless of how the Server Action is called.
 
 **H-1 — Past_due/unpaid subscriptions lose Pro access:**
 A new shared utility `isPlanPro(plan, status)` in `src/lib/subscriptionUtils.ts` is the single source of truth for Pro access checks. It returns `false` when `status` is `past_due` or `unpaid`. All seven locations that previously computed `isPro` from `plan` alone were updated to use `isPlanPro()`. These are: `trips/page.tsx`, `reports/page.tsx`, `dashboard/page.tsx`, `trips/plan/page.tsx`, `trips/log/page.tsx`, `trips/[id]/edit/page.tsx`, and `api/cron/daily/route.ts`.
@@ -982,13 +982,13 @@ Use `posthog-js` (v1.x, Cloud EU) for product analytics, initialised client-side
 **Decided by:** David Flynn-Coutts
 
 **Decision:**
-When a free user at the 3-trip limit triggers the trip drawer (via "Plan a Trip", "Log a Past Trip", or any edit entry point), the drawer does **not** open. Instead, `setShowPaywall(true)` is called directly on `TripsClient`, firing the existing `PaywallModal` overlay. The drawer never renders paywall content. `PaywallModal` is unchanged.
+When a free user at the 10-trip limit triggers the trip drawer (via "Plan a Trip", "Log a Past Trip", or any edit entry point), the drawer does **not** open. Instead, `setShowPaywall(true)` is called directly on `TripsClient`, firing the existing `PaywallModal` overlay. The drawer never renders paywall content. `PaywallModal` is unchanged.
 
 **Reasoning:**
 The drawer is a trip entry/edit form. Showing a paywall inside it would create a confusing experience — the user expects a form and gets a sales screen. The PaywallModal already handles this case cleanly as a standalone overlay. Keeping the two concerns separate also means zero changes to `PaywallModal` or its callers.
 
 **Implementation rule:**
-In `TripsClient`, before opening the drawer, check `!isPro && tripCount >= 3`. If true: `setShowPaywall(true)`, return early. Do not set drawer open state.
+In `TripsClient`, before opening the drawer, check `!isPro && tripCount >= FREE_TRIP_LIMIT`. If true: `setShowPaywall(true)`, return early. Do not set drawer open state.
 
 **Alternatives considered:**
 - Render paywall inside the drawer — rejected. Confusing UX; the drawer is a form container, not a sales screen.
@@ -1004,7 +1004,7 @@ In `TripsClient`, before opening the drawer, check `!isPro && tripCount >= 3`. I
 **Decided by:** David Coutts
 
 **Decision:**
-The Recent Trips card (last 3 trips rendered inline on the dashboard) has been removed. The dashboard is now purely a compliance status screen: quota ring, qualifying period progress, ILR timeline, and quick-action CTAs. A compact summary line replaces the trip cards: "{n} trips logged · {n} days abroad recorded" with a "View all trips →" link to `/trips`.
+The Recent Trips card has been removed. The dashboard is now purely a compliance status screen: quota ring, qualifying period progress, ILR timeline, and quick-action CTAs. A compact summary line replaces the trip cards: "{n} trips logged · {n} days abroad recorded" with a "View all trips →" link to `/trips`.
 
 **Reasoning:**
 The dashboard's job is to answer "am I compliant?" at a glance. Rendering trip rows on the same screen duplicates the trips page, creates visual clutter, and distracts from the quota ring — the primary compliance indicator. The compact summary gives the same at-a-glance context (how many trips, total days) without the noise. Detailed trip history belongs on the dedicated `/trips` page.

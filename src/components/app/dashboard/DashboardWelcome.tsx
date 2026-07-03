@@ -27,10 +27,10 @@ export function DashboardWelcome() {
       <div className="flex items-start justify-between gap-4 mb-4">
         <div>
           <h2 className="font-[family-name:var(--font-heading)] font-bold text-base text-[var(--color-text-primary)]">
-            You&apos;re all set up
+            Setup complete
           </h2>
           <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
-            Here&apos;s what to look for on your dashboard.
+            Your dashboard now uses your visa start date and saved trips.
           </p>
         </div>
         <button
@@ -49,17 +49,17 @@ export function DashboardWelcome() {
           {
             icon: '⏱',
             title: 'Rolling window',
-            desc: 'Your 180-day absence count, updated live as you add trips.',
+            desc: 'Your current 180-day absence count, based on saved trips.',
           },
           {
             icon: '📅',
             title: 'Qualifying period',
-            desc: 'Your progress toward ILR eligibility, based on your visa start date.',
+            desc: 'Your progress toward ILR eligibility from your visa start date.',
           },
           {
             icon: '✈️',
             title: 'Log trips',
-            desc: 'Keep your travel history up to date. Log every trip when you return.',
+            desc: 'Add trips when you return so the count stays current.',
           },
         ].map(({ icon, title, desc }) => (
           <div key={title} className="flex gap-3 p-3 bg-[var(--color-bg-tinted)] rounded-xl">
@@ -76,7 +76,7 @@ export function DashboardWelcome() {
         onClick={() => setShow(false)}
         className="mt-4 text-sm font-medium text-[var(--color-green)] hover:underline cursor-pointer"
       >
-        Got it →
+        Got it
       </button>
     </div>
   )

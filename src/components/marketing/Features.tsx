@@ -10,33 +10,33 @@ import {
 const FEATURES = [
   {
     icon: Calendar,
-    title: 'Rolling-window calculation',
-    description: 'Checks every possible 12-month period across your whole qualifying span, not just a single calendar year.',
+    title: 'Rolling-window checks',
+    description: 'Checks each 12-month period across your qualifying span, not only the calendar year.',
   },
   {
     icon: Calculator,
     title: 'What-if trip simulator',
-    description: 'Add a future trip and see instantly whether it keeps you under 180 days, before you book a thing.',
+    description: 'Add dates for a planned trip and see how it affects your 180-day count before you book.',
   },
   {
     icon: ShieldCheck,
     title: 'Live 180-day tracker',
-    description: 'A real-time count of days used and days left in your tightest rolling window, always up to date.',
+    description: 'See days used and days left in your highest rolling window, based on your saved trips.',
   },
   {
     icon: AirplaneTilt,
     title: 'Quick trip logging',
-    description: 'Enter the dates you left and returned. Compliance recalculates the moment you save.',
+    description: 'Enter the dates you left and returned. StayRight recalculates when you save.',
   },
   {
     icon: Check,
-    title: 'At-a-glance status',
-    description: 'One clear signal: safe, getting close, or over the line. No maths in your head.',
+    title: 'Status at a glance',
+    description: 'See whether your current window is safe, getting close, or over the limit.',
   },
   {
     icon: FileArrowDown,
     title: 'One-click ILR export',
-    description: 'Generate a clean, Home Office-ready PDF of your full travel history whenever you need it.',
+    description: 'Generate a PDF of your travel history when you need records for your ILR application.',
   },
 ];
 
@@ -48,13 +48,13 @@ export default function Features() {
           className="font-[family-name:var(--font-mono)] tracking-[0.16em] uppercase mb-4"
           style={{ fontSize: '0.8125rem', color: 'var(--color-green-light)' }}
         >
-          everything the rule demands
+          what StayRight tracks
         </div>
         <h2
           className="font-[family-name:var(--font-heading)] font-bold leading-[1.02] tracking-[-0.03em] mb-12 max-w-[720px]"
           style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: 'var(--color-text-primary)' }}
         >
-          Six tools that keep your timeline airtight.
+          The main checks in one place.
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

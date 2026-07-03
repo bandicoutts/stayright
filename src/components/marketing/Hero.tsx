@@ -33,18 +33,18 @@ export default function Hero() {
             className="font-[family-name:var(--font-heading)] font-extrabold leading-[0.98] tracking-[-0.04em] mb-6 animate-fade-up animate-fade-up-2"
             style={{ fontSize: 'clamp(2.75rem, 5.6vw, 5rem)', color: 'var(--color-text-primary)' }}
           >
-            Travel freely.<br />
-            <span style={{ color: 'var(--color-green-light)' }}>Stay under 180.</span><br />
-            Reach ILR.
+            Track your visa absences.<br />
+            <span style={{ color: 'var(--color-green-light)' }}>Check trips before you book.</span><br />
+            Keep your ILR record clear.
           </h1>
 
           <p
             className="font-[family-name:var(--font-body)] leading-[1.6] mb-10 max-w-[480px] animate-fade-up animate-fade-up-3"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-2)' }}
           >
-            StayRight automatically tracks every rolling 12-month window of your visa
-            against the Home Office 180-day rule, so you always know you&apos;re safe.
-            No spreadsheets. No second-guessing.
+            StayRight checks your travel history against the Home Office
+            180-day rule. See your current count, test future trips, and keep a
+            record for your ILR application.
           </p>
 
           <div className="flex flex-wrap items-center gap-3.5 mb-10 animate-fade-up animate-fade-up-4">
@@ -60,12 +60,12 @@ export default function Hero() {
               className="inline-flex items-center px-7 py-[14px] rounded-xl font-[family-name:var(--font-body)] text-[15px] font-medium no-underline transition-colors duration-200"
               style={{ color: 'var(--color-text-2)', border: '1px solid var(--color-border-strong)' }}
             >
-              See how it works →
+              See how it works
             </Link>
           </div>
 
           <div className="flex flex-wrap gap-2 animate-fade-up animate-fade-up-5">
-            {['Free to start', 'No credit card', 'UK-based team', 'Cancel anytime'].map((tag) => (
+            {['Free to start', 'No credit card', 'Built in the UK', 'Cancel anytime'].map((tag) => (
               <span
                 key={tag}
                 className="font-[family-name:var(--font-body)] tracking-[0.02em]"

@@ -25,7 +25,7 @@ import {
 import type { Metadata } from 'next'
 import type { TripInput, QualifyingPeriodResult } from '@/lib/calculations/absenceEngine'
 
-export const metadata: Metadata = { title: 'Dashboard — StayRight' }
+export const metadata: Metadata = { title: 'Dashboard | StayRight' }
 
 // ---------------------------------------------------------------------------
 // ILR countdown module
@@ -49,7 +49,7 @@ function IlrCountdownCard({
       <p className="font-[family-name:var(--font-mono)] font-semibold text-[2.5rem] leading-none tracking-[-0.03em] text-[var(--color-text-primary)]">
         {Math.max(0, daysUntilIlr)}
       </p>
-      <p className="text-sm text-[var(--color-text-muted)] mt-1.5">days to go</p>
+      <p className="text-sm text-[var(--color-text-muted)] mt-1.5">days until ILR eligibility</p>
       <p className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-faint)] mt-1">
         Eligible from {fmt(qualifying.ilrDate)}
       </p>
@@ -66,7 +66,7 @@ function IlrCountdownCard({
           <div className="h-full rounded-full transition-all duration-700" style={{ width: `${qualifying.percentage}%`, background: 'var(--gradient-green)' }} />
         </div>
         <p className="text-xs text-[var(--color-text-muted)] mt-2">
-          {qualifying.percentage}% through your 5-year span
+          {qualifying.percentage}% of your 5-year qualifying period
         </p>
       </div>
     </div>
@@ -164,7 +164,7 @@ export default async function DashboardPage() {
             <DashboardGreeting firstName={firstName} />
           </h1>
           <p className="font-[family-name:var(--font-body)] text-sm text-[var(--color-text-muted)] mt-1">
-            {isCurrentlyAbroad ? 'You are currently abroad.' : "Here's your compliance status."}
+            {isCurrentlyAbroad ? 'You are currently outside the UK.' : 'Your current absence status.'}
           </p>
         </div>
         <Link
@@ -196,9 +196,9 @@ export default async function DashboardPage() {
         <div className="mb-6 px-4 py-3 bg-[var(--color-warning-bg)] border border-[var(--color-warning-border)] rounded-xl flex items-center gap-3">
           <span className="text-lg shrink-0">✈️</span>
           <p className="text-sm text-[var(--color-text-primary)]">
-            <span className="font-semibold">Your absence days are still counting.</span>{' '}
+            <span className="font-semibold">This trip is still open.</span>{' '}
             <Link href="/trips" className="underline font-medium">Log your return date</Link>{' '}
-            as soon as you&apos;re back in the UK to keep your compliance status accurate.
+            when you are back in the UK so your absence count stays accurate.
           </p>
         </div>
       )}
@@ -236,7 +236,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] p-6 h-full flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--shadow-card)' }}>
               <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mb-3">ILR countdown</h2>
-              <p className="text-sm text-[var(--color-text-muted)]">Set your visa start date in Settings to track progress.</p>
+              <p className="text-sm text-[var(--color-text-muted)]">Add your visa start date in Settings to track ILR progress.</p>
             </div>
           )}
         </div>
@@ -271,13 +271,13 @@ function AlertCard({
       bg: 'bg-[var(--color-warning-bg)] border-[var(--color-warning-border)]',
       text: 'text-[var(--color-warning-text)]',
       icon: '⚠️',
-      message: `You have used ${days} of your 180 days in the current rolling window. You are approaching the limit.`,
+      message: `You have used ${days} of 180 days in the current rolling window. Check planned travel before you book.`,
     },
     DANGER: {
       bg: 'bg-[var(--color-danger-bg)] border-[var(--color-danger-border)]',
       text: 'text-[var(--color-danger-text)]',
       icon: '🚨',
-      message: `You have used ${days} of your 180 days. You are very close to the limit. Plan carefully before any further travel.`,
+      message: `You have used ${days} of 180 days. Review your trip history before adding more travel.`,
     },
     BREACH: {
       bg: 'bg-[var(--color-danger-bg)] border-[var(--color-danger-border)]',
@@ -285,14 +285,14 @@ function AlertCard({
       icon: '🚫',
       message: (
         <>
-          You have exceeded 180 days of absence ({days} days used). You should seek qualified immigration advice immediately.{' '}
+          You have exceeded 180 absence days ({days} days used). Speak to a qualified immigration adviser before relying on this record.{' '}
           <Link
             href="https://solicitors.lawsociety.org.uk/"
             target="_blank"
             rel="noopener noreferrer"
             className="underline font-semibold"
           >
-            Find an immigration solicitor →
+            Find an immigration solicitor
           </Link>
         </>
       ),

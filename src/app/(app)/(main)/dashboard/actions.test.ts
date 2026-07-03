@@ -144,7 +144,7 @@ describe('addTripAction', () => {
     expect(result).toEqual(expect.objectContaining({ error: expect.stringContaining('Free plan') }))
   })
 
-  it('allows a Pro user past the 3-trip quota', async () => {
+  it('allows a Pro user past the free trip quota', async () => {
     mockGetUser.mockResolvedValue(authedUser())
 
     // 5 existing trips but user is Pro

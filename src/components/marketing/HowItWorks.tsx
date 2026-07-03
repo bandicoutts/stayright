@@ -1,7 +1,7 @@
 const STEPS = [
   { n: '01', title: 'Log your trips', body: 'Enter the dates you left and returned to the UK. That’s the only manual step.' },
-  { n: '02', title: 'We check every window', body: 'StayRight scans every rolling 12-month period across your qualifying span, automatically.' },
-  { n: '03', title: 'Know you’re safe', body: 'See your status and the days you have left, instantly and always. No surprises.', highlight: true },
+  { n: '02', title: 'Check every window', body: 'StayRight scans each rolling 12-month period across your qualifying span.' },
+  { n: '03', title: 'Plan with the numbers', body: 'See your current status, days left, and the effect of a planned trip.', highlight: true },
 ];
 
 export default function HowItWorks() {
@@ -18,7 +18,7 @@ export default function HowItWorks() {
           className="font-[family-name:var(--font-heading)] font-bold leading-[1.02] tracking-[-0.03em] mb-12 max-w-[720px]"
           style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: 'var(--color-text-primary)' }}
         >
-          Three steps to total peace of mind.
+          How the absence check works.
         </h2>
 
         <div className="grid md:grid-cols-3 gap-5">

@@ -41,7 +41,7 @@ export function DashboardTripsPreview({ trips }: Props) {
           href="/trips"
           className="text-sm font-medium text-[var(--color-green-light)] hover:text-[var(--color-green)] transition-colors no-underline"
         >
-          View all →
+          View all
         </Link>
       </div>
 
@@ -119,7 +119,7 @@ export function DashboardTripsPreview({ trips }: Props) {
               href="/trips"
               className="flex items-center justify-center px-5 py-3 text-xs font-medium text-[var(--color-text-muted)] hover:text-[var(--color-green-light)] hover:bg-[var(--color-surface-raised)] transition-colors border-t border-[var(--color-nav-border)] no-underline"
             >
-              View all {trips.length} trips
+              View {trips.length} trips
             </Link>
           )}
         </div>

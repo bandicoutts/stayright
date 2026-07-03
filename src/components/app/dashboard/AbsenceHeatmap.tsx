@@ -72,7 +72,7 @@ export function AbsenceHeatmap({ trips, today }: Props) {
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)]">
-          Absence heatmap
+          Absence days
         </h2>
         <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-muted)]">
           {totalAbroad}d abroad · 12 mo

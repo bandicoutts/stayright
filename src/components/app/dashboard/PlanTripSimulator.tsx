@@ -94,7 +94,7 @@ export function PlanTripSimulator({ existingTrips, visaStartDate, currentDays }:
           What-if
         </span>
       </div>
-      <p className="text-sm text-[var(--color-text-muted)] mb-4">Try a trip before you book it.</p>
+      <p className="text-sm text-[var(--color-text-muted)] mb-4">Enter planned dates to see the projected rolling-window count.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-3">
@@ -114,12 +114,12 @@ export function PlanTripSimulator({ existingTrips, visaStartDate, currentDays }:
             type="button"
             onClick={handleSave}
             disabled={!canSave || saving}
-            title={!hasDestination && datesValid ? 'Add a destination to save' : undefined}
+            title={!hasDestination && datesValid ? 'Add a destination before saving' : undefined}
             className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-opacity disabled:opacity-40 hover:opacity-90"
             style={{ background: 'var(--gradient-green)' }}
           >
             {saving ? <Spinner /> : saved ? <Check className="w-4 h-4" weight="bold" /> : null}
-            {saved ? 'Saved' : 'Save as planned'}
+            {saved ? 'Trip saved' : 'Save planned trip'}
           </button>
         </div>
       </div>
@@ -147,7 +147,7 @@ export function PlanTripSimulator({ existingTrips, visaStartDate, currentDays }:
               {delta >= 0 ? `+${delta}` : delta} days
             </p>
             <p className="text-xs text-[var(--color-text-muted)]">
-              {projection.days > LIMIT ? `${projection.days - LIMIT} over the limit` : `${LIMIT - projection.days} days to spare`}
+              {projection.days > LIMIT ? `${projection.days - LIMIT} days over the limit` : `${LIMIT - projection.days} days left`}
             </p>
           </div>
         </div>

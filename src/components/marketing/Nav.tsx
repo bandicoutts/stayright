@@ -78,7 +78,7 @@ export default function Nav() {
           >
             S
           </div>
-          Stayright
+          StayRight
         </Link>
 
         {/* Desktop nav links — left-aligned after logo, matching dashboard */}
@@ -119,7 +119,7 @@ export default function Nav() {
               boxShadow: 'var(--shadow-button)',
             }}
           >
-            Try free
+            Start free
           </Link>
         </div>
 
@@ -174,7 +174,7 @@ export default function Nav() {
                 boxShadow: 'var(--shadow-button)',
               }}
             >
-              Try free
+              Start free
             </Link>
           </div>
         </div>

@@ -102,7 +102,7 @@ The primary use case is **decision support at the point of booking**, not daily 
 | **Referral system** | Premature before product-market fit is established. |
 | **Calendar & email sync** | Integration complexity not justified for v1. Manual entry is sufficient. |
 | **Real-time passport sync** | Does not exist as a viable integration. Remove from all marketing copy. |
-| **14-day free trial** | The free tier (3 trips, full rolling window visibility) already lets users experience the product before paying. Trial adds engineering complexity (trial tracking, expiry logic, trial-to-paid conversion) for minimal incremental conversion benefit. Users upgrade when they hit the paywall, not after a time-limited trial. |
+| **14-day free trial** | The free tier (10 trips, full rolling window visibility) already lets users experience the product before paying. Trial adds engineering complexity (trial tracking, expiry logic, trial-to-paid conversion) for minimal incremental conversion benefit. Users upgrade when they hit the paywall, not after a time-limited trial. |
 | **Any feature not explicitly listed in section 2.1** | If it's not listed above, it's not in v1. |
 
 ---
@@ -118,9 +118,9 @@ The primary use case is **decision support at the point of booking**, not daily 
 | Attribute | Value |
 |---|---|
 | **Price** | £0 forever |
-| **Trips** | Up to 3 trips logged |
+| **Trips** | Up to 10 trips logged |
 | **Rolling window status** | Visible (quota ring, days used) |
-| **What-if simulator** | Available for the first 3 trips only; paywall after 3 saved trips |
+| **What-if simulator** | Available for the first 10 trips only; paywall after 10 saved trips |
 | **PDF export** | Not available |
 | **Email alerts** | Not available |
 | **Platform** | Web (responsive) |
@@ -143,8 +143,8 @@ The primary use case is **decision support at the point of booking**, not daily 
 ### 3.3 Paywall Triggers
 
 The paywall appears when a Free user:
-1. Attempts to log a 4th trip
-2. Attempts to run a what-if simulation when they already have 3 saved trips
+1. Attempts to log an 11th trip
+2. Attempts to run a what-if simulation when they already have 10 saved trips
 3. Attempts to generate a PDF export
 4. Attempts to configure email alert thresholds
 
@@ -192,7 +192,7 @@ The paywall is a modal (see Section 4l for full spec).
 **Flow:**
 1. **Welcome screen** — "Welcome to StayRight" → "Let's go" / "Skip setup"
 2. **Visa setup** — Enter first name (required), select visa route (Skilled Worker pre-selected), enter visa start date, confirm qualifying period (auto-calculated as 5 years from start date). **No last name field at this stage** — see DECISION-033.
-3. **Bulk past trip entry** — "Add your travel history" — a streamlined form to quickly add multiple past trips (destination + departure date + return date). Show a running count: "3 trips added". Allow "Add another" or "Done".
+3. **Bulk past trip entry** — "Add your travel history" — a streamlined form to quickly add multiple past trips (destination + departure date + return date). Show a running count such as "2 trips added". Allow "Add another" or "Done".
 4. **Dashboard** — Arrive at a populated dashboard showing the quota ring based on entered trips
 
 **Acceptance criteria:**
@@ -309,7 +309,7 @@ A multi-leg trip (user travels to multiple destinations before returning to the 
 2. **Qualifying period progress** — Linear progress bar showing how far through the 5-year qualifying period the user is. Shows start date, ILR eligibility date, and percentage.
 3. **"Plan a Trip" CTA** — Primary action button. Opens the what-if simulator. Helper text: "See the impact before you book".
 4. **"Log a Past Trip" CTA** — Secondary action. Opens the trip entry form in retroactive mode. Helper text: "Add trips you've already taken".
-5. **Recent trip history** — Last 2–3 trips with destination, dates, duration, and risk status chip.
+5. **Recent trip history** — A small set of recent trips with destination, dates, duration, and risk status chip.
 6. **ILR eligibility timeline** — Vertical timeline showing target eligibility date and application window.
 7. **Amber alert card** — Contextual warning when the user is approaching thresholds. Only shown when relevant.
 8. **Compliance disclaimer** — Small text below the quota ring: "Calculations follow official Home Office guidance. Always verify with an immigration adviser if you are approaching the limit." Always visible.
@@ -320,7 +320,7 @@ A multi-leg trip (user travels to multiple destinations before returning to the 
 - [ ] Qualifying period progress bar shows correct percentage and dates
 - [ ] "Plan a Trip" button opens the what-if simulator modal
 - [ ] "Log a Past Trip" button opens the trip entry form with dates defaulting to empty (not today)
-- [ ] Recent history shows the most recent 3 trips, sorted by departure date descending
+- [ ] Recent history shows the most recent trips, sorted by departure date descending
 - [ ] Each trip card shows country flag emoji, destination name, date range, duration, and risk chip
 - [ ] Amber alert card appears when rolling window is between 121–150 days
 - [ ] Red alert card appears when rolling window exceeds 150 days
@@ -356,7 +356,7 @@ A multi-leg trip (user travels to multiple destinations before returning to the 
 - [ ] "Just checking" closes the modal without saving
 - [ ] The "I'm leaving today" toggle sets the departure date to today
 - [ ] The "I'll log my return later" option allows saving a trip with departure date only (return date null), displayed as "Currently abroad" on the trip list
-- [ ] Free users who already have 3 trips see the paywall modal (Section 4l) when trying to use the simulator
+- [ ] Free users who already have 10 trips see the paywall modal (Section 4l) when trying to use the simulator
 - [ ] The calculation API is rate-limited to 60 requests per minute per user to prevent abuse
 
 **Edge cases:**
@@ -561,8 +561,8 @@ Email sections in order:
 - [ ] Stripe Checkout opens with the correct price for the selected plan
 - [ ] On successful payment, the user's plan updates instantly (webhook)
 - [ ] On cancellation, Pro features remain until the end of the billing period
-- [ ] After billing period ends, user reverts to Free tier restrictions (3 trips, no exports, no alerts)
-- [ ] User's existing data (trips, settings) is preserved on downgrade — they just can't add more trips beyond 3 or generate exports
+- [ ] After billing period ends, user reverts to Free tier restrictions (10 trips, no exports, no alerts)
+- [ ] User's existing data (trips, settings) is preserved on downgrade — they just can't add more trips beyond 10 or generate exports
 - [ ] Annual plan shows annual price and "save 30%" on Stripe Checkout
 - [ ] Lifetime plan shows one-time price on Stripe Checkout and never recurs
 - [ ] Lifetime users are never shown renewal prompts, payment failure banners, or "Manage subscription" links
@@ -800,7 +800,7 @@ There is **no Calendar** nav item in v1.
 | **Free tier name** | "Free" |
 | **Free tier price** | "£0" |
 | **Free tier price suffix** | "/forever" |
-| **Free tier feature 1** | "Up to 3 trips logged" |
+| **Free tier feature 1** | "Up to 10 trips logged" |
 | **Free tier feature 2** | "Basic rolling window tracker" |
 | **Free tier blocked feature** | "Risk alerts" (shown greyed out with block icon) |
 | **Free tier CTA** | "Get Started" |

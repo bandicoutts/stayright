@@ -89,7 +89,7 @@ export async function saveTripAction(data: {
   if (!isPlanPro(subscription?.plan, subscription?.status)) {
     if ((existingTrips ?? []).length >= FREE_TRIP_LIMIT) {
       return {
-        error: `You've added ${FREE_TRIP_LIMIT} trips — great start! You can add unlimited trips with Pro.`,
+        error: `You have added ${FREE_TRIP_LIMIT} trips. Upgrade to Pro to add unlimited trips.`,
         quota: true,
       }
     }

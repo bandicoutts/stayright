@@ -3,7 +3,7 @@ import Footer from '@/components/marketing/Footer';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blog — StayRight',
+  title: 'Blog | StayRight',
 };
 
 export default function BlogPage() {
@@ -16,7 +16,11 @@ export default function BlogPage() {
             Blog
           </h1>
           <p className="font-[family-name:var(--font-body)] text-lg text-[var(--color-text-2)] leading-relaxed mb-10">
-            Placeholder for blog articles.
+            Practical notes on the UK 180-day absence rule, trip planning, and
+            keeping travel records for ILR.
+          </p>
+          <p className="font-[family-name:var(--font-body)] text-base text-[var(--color-text-muted)] leading-relaxed">
+            Articles are coming soon.
           </p>
         </div>
       </main>

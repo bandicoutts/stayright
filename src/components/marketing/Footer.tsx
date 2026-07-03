@@ -62,7 +62,7 @@ export default function Footer() {
               className="font-[family-name:var(--font-body)] leading-relaxed"
               style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.40)' }}
             >
-              Know your number. Travel freely.
+              Track your 180-day absence count.
             </p>
           </div>
 

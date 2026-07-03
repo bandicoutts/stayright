@@ -9,7 +9,7 @@ import { isCrownDependency, type RiskStatus, type TripInput } from '@/lib/calcul
 // BREACH) — never hard-coded.
 const VERDICT: Record<RiskStatus, string> = {
   SAFE: 'Safe',
-  WARNING: 'Approaching',
+  WARNING: 'Watch',
   DANGER: 'Close to limit',
   BREACH: 'Over limit',
 }
@@ -90,9 +90,9 @@ function quarterLabels(windowStart: Date): string[] {
 // The second stat tracks the *next* meaningful threshold, so it stays truthful
 // past the 120-day mark (the spec's fixed "until 120" would read 0 at 140 days).
 function nextMark(days: number): { value: number; caption: string } {
-  if (days < T1) return { value: T1 - days, caption: `Until the ${T1}-day mark` }
-  if (days < T2) return { value: T2 - days, caption: `Until the ${T2}-day mark` }
-  if (days < LIMIT) return { value: LIMIT - days, caption: `Until the ${LIMIT}-day limit` }
+  if (days < T1) return { value: T1 - days, caption: `To the ${T1}-day watch point` }
+  if (days < T2) return { value: T2 - days, caption: `To the ${T2}-day warning point` }
+  if (days < LIMIT) return { value: LIMIT - days, caption: `To the ${LIMIT}-day limit` }
   return { value: days - LIMIT, caption: 'Days over the limit' }
 }
 
@@ -118,9 +118,9 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
   const labels = quarterLabels(windowStart)
 
   const LEGEND: { tone: string; label: string }[] = [
-    { tone: 'var(--color-green-light)', label: `Safe ≤ ${T1}` },
-    { tone: 'var(--color-status-amber)', label: `Caution ${T1}–${T2}` },
-    { tone: 'var(--color-status-red)', label: `Breach ${T2}–${LIMIT}` },
+    { tone: 'var(--color-green-light)', label: `Safe up to ${T1}` },
+    { tone: 'var(--color-status-amber)', label: `Watch ${T1}-${T2}` },
+    { tone: 'var(--color-status-red)', label: `Limit ${T2}-${LIMIT}` },
   ]
 
   return (
@@ -231,7 +231,7 @@ export function WindowSpeedometer({ days, status, windowStart, windowEnd, trips 
         <div className="shrink-0 flex flex-row @min-[720px]:flex-col gap-6 @min-[720px]:gap-5 @min-[720px]:w-[220px] @min-[720px]:border-l @min-[720px]:border-[var(--color-border)] @min-[720px]:pl-8">
           <div>
             <p className="font-[family-name:var(--font-mono)] font-medium text-[1.5rem] leading-none text-[var(--color-text-primary)]">{spare}</p>
-            <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mt-1.5">Days of headroom</p>
+            <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] uppercase text-[var(--color-text-faint)] mt-1.5">Days left</p>
           </div>
           <div>
             <p className="font-[family-name:var(--font-mono)] font-medium text-[1.5rem] leading-none text-[var(--color-text-primary)]">{mark.value}</p>

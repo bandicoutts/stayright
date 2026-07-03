@@ -1,19 +1,19 @@
 import { Check, X } from '@/components/ui/Icons';
 
 const SPREADSHEET = [
-  'Manual date entry for every single trip',
-  'Recalculate every rolling window by hand',
-  'One broken formula = a wrong answer you trust',
-  'No safe way to plan a future trip',
-  'Quiet anxiety every time you travel',
+  'Enter every trip and formula yourself',
+  'Recheck each rolling 12-month window by hand',
+  'Miss one formula and the count is wrong',
+  'Hard to test a trip before booking',
+  'No clear record when you need evidence',
 ];
 
 const STAYRIGHT = [
-  'Log a trip in seconds. Dates in, done',
-  'Every rolling 12-month window checked automatically',
-  'Always-right maths you never have to verify',
-  'Simulate any trip before you book it',
-  'Calm, clear confirmation that you’re safe',
+  'Log each trip with departure and return dates',
+  'Check every rolling 12-month window',
+  'Use the same absence formula each time',
+  'Test planned travel before you book',
+  'Export your travel history for ILR records',
 ];
 
 export default function Comparison() {
@@ -24,20 +24,20 @@ export default function Comparison() {
           className="font-[family-name:var(--font-mono)] tracking-[0.16em] uppercase mb-4"
           style={{ fontSize: '0.8125rem', color: 'var(--color-green-light)' }}
         >
-          the old way vs StayRight
+          spreadsheets vs StayRight
         </div>
         <h2
           className="font-[family-name:var(--font-heading)] font-bold leading-[1.02] tracking-[-0.03em] mb-3 max-w-[760px]"
           style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: 'var(--color-text-primary)' }}
         >
-          A spreadsheet can&apos;t watch your back. StayRight can.
+          Spreadsheets make the 180-day rule easy to misread.
         </h2>
         <p
           className="font-[family-name:var(--font-body)] leading-[1.55] mb-11 max-w-[600px]"
           style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
         >
-          One wrong formula and your ILR timeline is off, and you might not find out
-          until it&apos;s too late.
+          StayRight keeps the calculation, trip history, and planned travel check
+          in one place.
         </p>
 
         <div className="grid md:grid-cols-2 gap-5">

@@ -67,8 +67,8 @@ export default function CookieBanner() {
     >
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
         <p className="text-sm text-[var(--color-text-muted)] font-[family-name:var(--font-body)] leading-relaxed max-w-xl">
-          We use cookies to keep you logged in and to understand how StayRight
-          is used. You can manage your preferences.{' '}
+          We use necessary cookies to keep you signed in. With your consent, we
+          use analytics cookies to understand how StayRight is used.{' '}
           <Link
             href="/cookie-policy"
             className="text-[var(--color-green)] hover:underline"

@@ -39,10 +39,10 @@ export function PeakTrajectoryChart({ series, peakDays, peakDate }: Props) {
     >
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-text-faint)]">
-          Peak trajectory
+          Rolling-window history
         </h2>
         <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-text-muted)]">
-          peak <span className="font-semibold" style={{ color: peakColor }}>{peakDays}</span>
+          highest <span className="font-semibold" style={{ color: peakColor }}>{peakDays}</span>
           {peakDate ? ` · ${fmt(peakDate)}` : ''}
         </span>
       </div>
@@ -71,7 +71,7 @@ export function PeakTrajectoryChart({ series, peakDays, peakDate }: Props) {
         </svg>
       ) : (
         <p className="text-sm text-[var(--color-text-muted)] py-6 text-center">
-          Log a few trips and your 12-month trajectory will plot here.
+          Log trips to see how your rolling-window count changes over time.
         </p>
       )}
 

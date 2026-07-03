@@ -29,7 +29,7 @@ export default function Pricing() {
             className="font-[family-name:var(--font-heading)] font-extrabold leading-[1.06] tracking-[-0.038em] mt-3"
             style={{ fontSize: 'clamp(2rem, 3.2vw, 3.25rem)', color: 'var(--color-text-primary)' }}
           >
-            Protect your path{' '}
+            Choose the plan for your trip history{' '}
             <em
               className="not-italic"
               style={{
@@ -40,14 +40,15 @@ export default function Pricing() {
                 color: 'var(--color-text-muted)',
               }}
             >
-              to ILR.
+              and ILR records.
             </em>
           </h2>
           <p
             className="font-[family-name:var(--font-body)] leading-[1.65] mt-4"
             style={{ fontSize: '1.0625rem', color: 'var(--color-text-muted)' }}
           >
-            Avoid the cost and stress of a rejected application.
+            Start with 10 saved trips. Upgrade when you need unlimited logging,
+            alerts, and PDF exports.
           </p>
 
         </div>
@@ -177,7 +178,7 @@ export default function Pricing() {
                 border: '1px solid var(--color-border-strong)',
               }}
             >
-              Get Started
+              Start free
             </Link>
           </div>
 
@@ -203,7 +204,7 @@ export default function Pricing() {
                   boxShadow: 'var(--shadow-button)',
                 }}
               >
-                Most Popular
+                Most popular
               </span>
             </div>
 
@@ -238,8 +239,8 @@ export default function Pricing() {
             <ul className="flex flex-col gap-[10px] flex-1 mb-7">
               {[
                 'Unlimited trips',
-                'Trip simulator',
-                'Limit & breach alerts',
+                'What-if trip simulator',
+                'Limit and breach alerts',
                 'PDF export for your ILR application',
               ].map((text) => (
                 <li key={text} className="flex items-start gap-[10px]">
@@ -265,7 +266,7 @@ export default function Pricing() {
                 border: 'none',
               }}
             >
-              Start Pro Trial
+              Start Pro
             </Link>
           </div>
         </div>
@@ -281,7 +282,7 @@ export default function Pricing() {
             className="font-medium no-underline hover:underline transition-colors"
             style={{ color: 'var(--color-green)' }}
           >
-            Get lifetime Pro access for £49.99 →
+            Get lifetime Pro for £49.99
           </Link>
         </p>
 

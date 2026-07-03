@@ -3,7 +3,7 @@ import Footer from '@/components/marketing/Footer';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Help Centre — StayRight',
+  title: 'Help Centre | StayRight',
 };
 
 export default function HelpCentrePage() {
@@ -16,8 +16,24 @@ export default function HelpCentrePage() {
             Help Centre
           </h1>
           <p className="font-[family-name:var(--font-body)] text-lg text-[var(--color-text-2)] leading-relaxed mb-10">
-            Placeholder for Support articles and FAQ.
+            Get help with logging trips, checking the 180-day rule, updating
+            your visa profile, and exporting your travel history.
           </p>
+          <div className="grid gap-4 text-left">
+            {[
+              'How absence days are counted',
+              'How to log a trip with no return date',
+              'How the what-if trip check works',
+              'How to export your ILR travel history',
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 text-sm font-medium text-[var(--color-text-primary)]"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
       </main>
       <Footer />

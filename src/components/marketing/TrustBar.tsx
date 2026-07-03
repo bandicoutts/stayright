@@ -1,11 +1,11 @@
 const trustCells = [
   {
-    value: 'Home Office aligned',
-    label: 'Built for Skilled Worker compliance',
+    value: 'Built by a Skilled Worker visa holder',
+    label: 'Made for the UK ILR absence rule',
   },
   {
     value: 'GDPR compliant',
-    label: 'Your data stays in the UK',
+    label: 'Data stored in the UK',
   },
 ];
 

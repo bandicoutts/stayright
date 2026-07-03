@@ -29,13 +29,13 @@ export function SetupNudge() {
           </svg>
         </div>
         <p className="text-sm text-[var(--color-text-primary)]">
-          <span className="font-semibold">Finish setting up your profile</span>{' '}
-          to see your compliance status.{' '}
+          <span className="font-semibold">Add your visa start date</span>{' '}
+          to calculate your ILR timeline.{' '}
           <Link
             href="/onboarding/visa?force=1"
             className="text-[var(--color-green)] font-medium underline underline-offset-2"
           >
-            Complete setup →
+            Complete setup
           </Link>
         </p>
       </div>
